@@ -1,0 +1,19 @@
+# This ignore file must be placed at the root of your git repository to
+# prevent unwanted files or folders to be uploaded to your repository. 
+
+
+# Turbo Framework files and folders 
+target/
+bin/
+cache.properties
+Setup-Release.txt
+
+
+# Operating system common files
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+thumbs.db
