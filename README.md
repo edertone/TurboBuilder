@@ -30,7 +30,7 @@ To build a project with turbo builder, you must do the following:
 
 - Create a Setup-Build.xml file at the root of your project. You can use the template that is found on this repository as a starting point. You must define all the parameters inside the file depending on your build needs.
 
-- Execute the .turboBuilder/Builder.xml file with ant, via your favourite IDE. If everything works as expected, the builder will read the setup parameters and perform all of the defined operations.
+- Execute the .turboBuilder/Builder.xml with ant, via your favourite IDE or command line. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project to a /target folder, and the second one performs the built files cleanup. If everything works as expected, the builder will read the parameters from Setup-build.xml and perform all of the operations defined there.
 
 Note: To enable ant Ftp support, you must add apache commons to ant's include path. Download it here: http://commons.apache.org/net/index.html
 
