@@ -3,7 +3,7 @@
 A general purpose project builder for the most common developer needs.
 
 ### Features
-- Cross IDE
+- Works on any IDE that can run Ant tasks, or via command line
 - Support for multiple development languages: Js, Css, Php and Ts
 - Covers the whole project development cycle: Build, deploy, validate, test and production release
 - Automatic deploy to a remote ftp location
