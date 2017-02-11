@@ -66,8 +66,8 @@
 		
 		<!-- Set default values for some properties in case they are not specified on the Setup-build.xml -->
 		<property name="Build.versionNumber" value="0.0" />
-		<property name="Build.createPhars" value="true" />
-		<property name="Build.createMergedJs" value="false" />
+		<property name="Build.Php.createPhars" value="true" />
+		<property name="Build.Js.createMergedJs" value="false" />
 		<property name="Build.keepUnPackedFiles" value="false" />
 				
 		<property name="Release.enabled" value="false" />
@@ -137,11 +137,11 @@
 					self.project.executeTarget("runJsTestsLocalServer");
 				}
 			
-				if(project.getProperty("Build.createPhars") == "true"){
+				if(project.getProperty("Build.Php.createPhars") == "true"){
 					self.project.executeTarget("createPhars");
 				}
 			
-				if(project.getProperty("Build.createMergedJs") == "true"){
+				if(project.getProperty("Build.Js.createMergedJs") == "true"){
 					self.project.executeTarget("createMergedJs");
 				}
 			

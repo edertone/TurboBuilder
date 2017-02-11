@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SetupBuild xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:noNamespaceSchemaLocation=".turboBuilder/Setup-Build.xsd">
+			xsi:noNamespaceSchemaLocation=".turboBuilder/BuilderSetupSchema.xsd">
 
-	<Build />
+	<Build>
+	
+		<Php createPhars="false" />
+		
+		<Js createMergedJs="true" />
+	
+		<Ts alwaysStrict="true"
+			sourceMap="false"
+			target="ES5" />	   
+		   
+	</Build>
 
 	<Release gitChangeLog="true"
-			 optimizePhp="false"
-			 phpDoc="true" />
+			 jsDoc="true" />
 	
 	<Validate checkProjectStructure="true"
 			  validateCss="true" />
 	
-	<Test>	
+	<Test>
 	
-		<Php enabled="true" 
-			 mode="commandLine" />	
-			 	  
-	</Test>
+		<Js enabled="true"
+			localServerPath="C:\xampp\htdocs\unitTests"
+			localServerUrl="http://localhost/unitTests">
 			
+			<Browser enabled="false"
+					 osPath="C:\Program Files (x86)\Mozilla Firefox\firefox.exe"/>
+					 
+		 	<Browser enabled="false"
+					 osPath="C:\Program Files (x86)\Internet Explorer\iexplore.exe"/>
+					 
+		 	<Browser enabled="true"
+					 osPath="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"/>
+			
+		</Js>
+	
+	</Test>
+				
 </SetupBuild>
