@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SetupBuild xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:noNamespaceSchemaLocation=".turboBuilder/BuilderSetupSchema.xsd">
+			xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/BuilderSetupSchema.xsd">
 
-	<Build>
+	<!-- 
+		Setup-build.xml contains all the turbo builder configuration.
+		Remember to use an IDE or editor that supports XSD to benefit from real time documentation and code autocompletion	
+	 -->
+
+	<!-- Build node contains all the setup related to the project build process -->
+	<Build keepUnPackedFiles="false">
 	
 		<Php createPhars="false" />
 		
@@ -14,29 +20,56 @@
 		   
 	</Build>
 
+	<!-- Contains all the parameters to use when generating the project release version -->
 	<Release gitChangeLog="true"
-			 jsDoc="true" />
+			 gitChangeLogCount="5"
+			 optimizeCss="true"
+			 optimizeHtml="true"
+			 optimizeJs="true"
+			 optimizePhp="false"
+			 optimizePictures="true"
+			 phpDoc="false"
+			 jsDoc="false" />
 	
+	<!-- TODO: Validate setup is under development and does not work yet -->
 	<Validate checkProjectStructure="true"
 			  validateCss="true" />
 	
+	<!-- Contains all the parameters related to unit tests execution -->
 	<Test>
 	
-		<Js enabled="true"
-			localServerPath="C:\xampp\htdocs\unitTests"
+		<Php enabled="false" 
+			 mode="commandLine"
+			 localServerPath="C:/xampp/htdocs/unitTests" />
+		
+		<Js enabled="false"
+			localServerPath="C:/xampp/htdocs/unitTests"
 			localServerUrl="http://localhost/unitTests">
 			
 			<Browser enabled="false"
-					 osPath="C:\Program Files (x86)\Mozilla Firefox\firefox.exe"/>
+					 osPath="C:/Program Files (x86)/Mozilla Firefox/firefox.exe"/>
 					 
 		 	<Browser enabled="false"
-					 osPath="C:\Program Files (x86)\Internet Explorer\iexplore.exe"/>
+					 osPath="C:/Program Files (x86)/Internet Explorer/iexplore.exe"/>
 					 
 		 	<Browser enabled="true"
-					 osPath="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"/>
+					 osPath="C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"/>
 			
 		</Js>
 	
 	</Test>
+	
+	<!-- Defines all the paths to the command line tools that are required for some of the builder features. -->
+	<Tools cssValidatorPath="C:/BuildTools/W3c-css-validator/css-validator.jar"
+		   htmlCompressorPath="C:/BuildTools/htmlcompressor/htmlcompressor-1.5.3.jar"
+		   jpgOptimizerPath="C:/BuildTools/jpegtran/jpegtran.exe"
+		   jsDocPath="C:/Program Files/nodejs/node_modules/.bin/jsdoc.cmd"
+		   jsDocTemplatePath="C:/Program Files/nodejs/node_modules/ink-docstrap/template"
+		   minifierPath="C:/BuildTools/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar"
+		   mysqlPath="C:/xampp/mysql/bin/mysql.exe"
+		   phpDocPath="C:/BuildTools/PhpDocumentor/phpDocumentor.phar"
+		   phpPath="C:/xampp/php/php.exe"
+		   pngOptimizerPath="C:/BuildTools/optipng-0.7.4-win32/optipng.exe"
+		   pngQuantPath="C:/BuildTools/pngquant-windows/pngquant.exe" />
 				
 </SetupBuild>
