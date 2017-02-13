@@ -5,14 +5,15 @@
 
 	<description>
 	
-		Turbo Framework project builder.
-		Used to automatize the most common development build operations related to turbo framework projects.
-		Recommended for eclipse, but may work well on other ides. 
+		Turbo builder main project.
+		Used to automatize the most common development build operations. 
 			
-		VERY IMPORTANT - Eclipse setup !! 
+		VERY IMPORTANT!! 
 		An extra library is required to execute FTP operations with ant. Download it here:	http://commons.apache.org/net/index.html
-		and copy it to:	C:\Program Files\eclipse\plugins\org.apache.ant_1.8.2.v20110505-1300\lib
-		Then go to "Window/Preferences/Ant/Runtime/ClassPath" and add this lib as an external jar to "Ant home entries" (Say yes to ignore possible problem if prompted)
+		
+		To set it up with eclipse:
+			- Copy it to:	C:\Program Files\eclipse\plugins\org.apache.ant_1.8.2.v20110505-1300\lib
+			- Then go to "Window/Preferences/Ant/Runtime/ClassPath" and add this lib as an external jar to "Ant home entries" (Say yes to ignore possible problem if prompted)
 	
 	</description>
 		
