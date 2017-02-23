@@ -18,7 +18,7 @@
 	</description>
 		
 	
-	<!-- Define all the build global properties and load the build configuration from the Setup-build.xml file -->
+	<!-- Define all the build global properties and load the build configuration from the TurboBuilder.xml file -->
 	<target name="defineGlobalProperties" >
 	
 		<!-- Create a property containing the current project name, based on the root project folder -->
@@ -36,17 +36,17 @@
 		<!-- The location for the cache file, which contains modified files since last build. This path can be overwritten by external builds that want to execute this project build but track the cache externally -->
 		<property name="cacheFilePath" location="cache.properties" />
 	
-		<fail message="Setup-Build.xml not found">
+		<fail message="TurboBuilder.xml not found">
 		    <condition>
 		    	<not>
-		    		<available file="${srcFolderPath}/../Setup-Build.xml" />
+		    		<available file="${srcFolderPath}/../TurboBuilder.xml" />
 		    	</not>
 		    </condition>
 		</fail>
 		
-		<xmlproperty file="${srcFolderPath}/../Setup-Build.xml" keepRoot="false" semanticattributes="true" />
+		<xmlproperty file="${srcFolderPath}/../TurboBuilder.xml" keepRoot="false" semanticattributes="true" />
 		
-		<!-- Get the latest tag if defined on GIT and not specified on Setup-Build.xml -->
+		<!-- Get the latest tag if defined on GIT and not specified on TurboBuilder.xml -->
 		<exec executable="git" failonerror="false" resultproperty="gitLatestTagResult" outputproperty="gitLatestTag" >
 	    	<arg line="describe --abbrev=0 --tags"/>
 	    </exec> 
@@ -62,10 +62,10 @@
 		    ]]>
 		</script>
 		
-		<!-- Load the Release.enabled property if defined on the Setup-Release.txt file -->
-		<property file="../Setup-Release.txt" />
+		<!-- Load the Release.enabled property if defined on the TurboBuilder-Release.txt file -->
+		<property file="../TurboBuilder-Release.txt" />
 		
-		<!-- Set default values for some properties in case they are not specified on the Setup-build.xml -->
+		<!-- Set default values for some properties in case they are not specified on the TurboBuilder.xml -->
 		<property name="Build.versionNumber" value="0.0" />
 		<property name="Build.Php.createPhars" value="true" />
 		<property name="Build.Js.createMergedJs" value="false" />
@@ -103,7 +103,7 @@
 	</target>
 	
 	
-	<!-- The main build task that executes all the build tasks as defined on the setup-build.xml file -->
+	<!-- The main build task that executes all the build tasks as defined on the TurboBuilder.xml file -->
 	<target name="build" depends="defineGlobalProperties">
 
 		<!-- Get the current build number from the build.number file and store it on the ${build.number} property -->
@@ -161,8 +161,8 @@
 		    ]]>
 		</script>		
 
-		<!-- Reset the Setup-Release.txt file so release build is not generated again if enabled -->
-		<echo file="../Setup-Release.txt" message="Release.enabled = false" />
+		<!-- Reset the TurboBuilder-Release.txt file so release build is not generated again the next time build is executed -->
+		<echo file="../TurboBuilder-Release.txt" message="Release.enabled = false" />
 				
 	</target>
 	
@@ -867,21 +867,36 @@
 	
 	<!-- Clean all the project elements -->
 	<target name="clean" depends="defineGlobalProperties">
+		
 		<delete file="${cacheFilePath}" failonerror="true" />
 		<delete dir="${targetFolderPath}" failonerror="true" />
-		<antcall target="cleanFtp" />
-		<antcall target="cleanLocalHost" />
+				
+		<!-- Perform all the build tasks -->
+		<script language="javascript">
+			<![CDATA[
+				
+				if(project.getProperty("Deploy.Ftp.enabled") == "true"){						
+					self.project.executeTarget("cleanFtp");
+				}
+			
+				if(project.getProperty("Deploy.LocalHost.enabled") == "true"){
+					self.project.executeTarget("cleanLocalHost");
+				}
+			
+		    ]]>
+		</script>
+		
 	</target>
 
 
 	<!-- Delete the localhost files if necessary -->
-	<target name="cleanLocalHost" if="${Deploy.LocalHost.enabled}">
+	<target name="cleanLocalHost">
 		<delete dir="${Deploy.LocalHost.destPath}" />
 	</target>
 	
 	
 	<!-- Clean the files on the ftp remote location if FTP deploy is enabled -->
-	<target name="cleanFtp" if="${Deploy.Ftp.enabled}">
+	<target name="cleanFtp">
 
 		<!-- Delete the remote ftp files -->
 		<ftp verbose="true" passive="true" action="delete" userid="${Deploy.Ftp.user}" password="${Deploy.Ftp.psw}" server="${Deploy.Ftp.server}" remotedir="/turbotest">

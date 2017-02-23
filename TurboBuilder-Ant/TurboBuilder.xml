@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SetupBuild xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<TurboBuilder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/BuilderSetupSchema.xsd">
 
 	<!-- 
-		Setup-build.xml contains all the turbo builder configuration.
+		Defines all the turbo builder configuration.
 		Remember to use an IDE or editor that supports XSD to benefit from real time documentation and code autocompletion	
 	 -->
 
@@ -60,7 +60,8 @@
 	</Test>
 	
 	<!-- Defines all the paths to the command line tools that are required for some of the builder features. -->
-	<Tools cssValidatorPath="C:/BuildTools/W3c-css-validator/css-validator.jar"
+	<Tools rootPath="User_home/TurboBuilder-Tools"
+		   cssValidatorPath="C:/BuildTools/W3c-css-validator/css-validator.jar"
 		   htmlCompressorPath="C:/BuildTools/htmlcompressor/htmlcompressor-1.5.3.jar"
 		   jpgOptimizerPath="C:/BuildTools/jpegtran/jpegtran.exe"
 		   jsDocPath="C:/Program Files/nodejs/node_modules/.bin/jsdoc.cmd"
@@ -72,4 +73,4 @@
 		   pngOptimizerPath="C:/BuildTools/optipng-0.7.4-win32/optipng.exe"
 		   pngQuantPath="C:/BuildTools/pngquant-windows/pngquant.exe" />
 				
-</SetupBuild>
+</TurboBuilder>
