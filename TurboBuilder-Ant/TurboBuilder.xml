@@ -2,10 +2,12 @@
 <TurboBuilder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/BuilderSetupSchema.xsd">
 
+
 	<!-- 
 		Defines all the turbo builder configuration.
 		Remember to use an IDE or editor that supports XSD to benefit from real time documentation and code autocompletion	
 	 -->
+
 
 	<!-- Build node contains all the setup related to the project build process -->
 	<Build keepUnPackedFiles="false">
@@ -20,6 +22,7 @@
 		   
 	</Build>
 
+
 	<!-- Contains all the parameters to use when generating the project release version -->
 	<Release gitChangeLog="true"
 			 gitChangeLogCount="5"
@@ -31,9 +34,11 @@
 			 phpDoc="false"
 			 jsDoc="false" />
 	
+	
 	<!-- TODO: Validate setup is under development and does not work yet -->
 	<Validate checkProjectStructure="true"
 			  validateCss="true" />
+	
 	
 	<!-- Contains all the parameters related to unit tests execution -->
 	<Test>
@@ -59,18 +64,8 @@
 	
 	</Test>
 	
-	<!-- Defines all the paths to the command line tools that are required for some of the builder features. -->
-	<Tools rootPath="User_home/TurboBuilder-Tools"
-		   cssValidatorPath="C:/BuildTools/W3c-css-validator/css-validator.jar"
-		   htmlCompressorPath="C:/BuildTools/htmlcompressor/htmlcompressor-1.5.3.jar"
-		   jpgOptimizerPath="C:/BuildTools/jpegtran/jpegtran.exe"
-		   jsDocPath="C:/Program Files/nodejs/node_modules/.bin/jsdoc.cmd"
-		   jsDocTemplatePath="C:/Program Files/nodejs/node_modules/ink-docstrap/template"
-		   minifierPath="C:/BuildTools/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar"
-		   mysqlPath="C:/xampp/mysql/bin/mysql.exe"
-		   phpDocPath="C:/BuildTools/PhpDocumentor/phpDocumentor.phar"
-		   phpPath="C:/xampp/php/php.exe"
-		   pngOptimizerPath="C:/BuildTools/optipng-0.7.4-win32/optipng.exe"
-		   pngQuantPath="C:/BuildTools/pngquant-windows/pngquant.exe" />
+	
+	<!-- Defines all the paths to the command line tools that are required by some of the builder features -->
+	<Tools />
 				
 </TurboBuilder>

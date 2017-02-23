@@ -88,14 +88,16 @@
 		<property name="Test.Php.mode" value="commandLine" />
 		<property name="Test.Js.enabled" value="false" />	
 				
-		<property name="Tools.minifierPath" value="C:/BuildTools/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar" />
-		<property name="Tools.htmlCompressorPath" value="C:/BuildTools/htmlcompressor/htmlcompressor-1.5.3.jar" />
-		<property name="Tools.pngQuantPath" value="C:/BuildTools/pngquant-windows/pngquant.exe" />
-		<property name="Tools.pngOptimizerPath" value="C:/BuildTools/optipng-0.7.4-win32/optipng.exe" />
-		<property name="Tools.jpgOptimizerPath" value="C:/BuildTools/jpegtran/jpegtran.exe" />
-		<property name="Tools.cssValidatorPath" value="C:/BuildTools/W3c-css-validator/css-validator.jar" />
+		<property name="Tools.path" value="${user.home}/TurboBuilder-Tools" />
+		<property name="Tools.minifierPath" value="${Tools.path}/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar" />
+		<property name="Tools.htmlCompressorPath" value="${Tools.path}/htmlcompressor/htmlcompressor-1.5.3.jar" />
+		<property name="Tools.pngQuantPath" value="${Tools.path}/pngquant-windows/pngquant.exe" />
+		<property name="Tools.pngOptimizerPath" value="${Tools.path}/optipng-0.7.4-win32/optipng.exe" />
+		<property name="Tools.jpgOptimizerPath" value="${Tools.path}/jpegtran/jpegtran.exe" />
+		<property name="Tools.cssValidatorPath" value="${Tools.path}/W3c-css-validator/css-validator.jar" />
+		<property name="Tools.phpDocPath" value="${Tools.path}/PhpDocumentor/phpDocumentor.phar" />
+		
 		<property name="Tools.mysqlPath" value="C:/xampp/mysql/bin/mysql.exe" />	
-		<property name="Tools.phpDocPath" value="C:/BuildTools/PhpDocumentor/phpDocumentor.phar" />
 		<property name="Tools.jsDocPath" value="C:/Program Files/nodejs/node_modules/.bin/jsdoc.cmd" />
 		<property name="Tools.jsDocTemplatePath" value="C:/Program Files/nodejs/node_modules/ink-docstrap/template" />
 		<property name="Tools.phpPath" value="C:/xampp/php/php.exe" />
@@ -106,6 +108,15 @@
 	<!-- The main build task that executes all the build tasks as defined on the TurboBuilder.xml file -->
 	<target name="build" depends="defineGlobalProperties">
 
+		<!-- TurboBuilder-Tools folder must exist and contain at least one of the expected tools -->
+		<fail message="TurboBuilder-Tools NOT found. These tools are required to perform most of the builder tasks. Make sure the folder '${Tools.path}' exists and contains all the turbobuilder required command line executables: Minifiers, compressors, optimizers...">
+		    <condition>
+		    	<not>
+		    		<available file="${Tools.minifierPath}" />
+		    	</not>
+		    </condition>
+		</fail>
+		
 		<!-- Get the current build number from the build.number file and store it on the ${build.number} property -->
 		<loadproperties srcFile="build.number"/>
 		
