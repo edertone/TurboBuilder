@@ -59,8 +59,6 @@ To build a project with turbo builder, you must do the following:
         
 - Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project to the /target folder, and the second one performs the built files cleanup (basically deletes the target). If everything works as expected, the builder will read the parameters from TurboBuilder.xml setup and perform all of the specified operations.
 
-Note: To enable ant Ftp support, you must add apache commons to ant's include path. Download it here: http://commons.apache.org/net/index.html
-
 ### Dependencies
 
 Following are mandatory:
@@ -73,7 +71,7 @@ Following are only necessary if we want to use the respective feature:
 - nodeJs
 - php.exe
 
-The following tools are bundled inside the TurboBuilder-Tools package that must be downloaded:
+The following tools are bundled inside the TurboBuilder-Tools package:
 - yuicompressor-2.4.7
 - htmlcompressor-1.5.3.jar
 - pngquant.exe
@@ -81,6 +79,9 @@ The following tools are bundled inside the TurboBuilder-Tools package that must 
 - jpegtran.exe
 - W3c-css-validator
 - PhpDocumentor
+
+To enable ant Ftp support, you must add apache commons to ant's include path. 
+Download it here: http://commons.apache.org/net/index.html
 
 ### Support
 Turbo builder is 100% free and open source. But we will be really pleased to receive any help, support, comments or donations to improve it. If you find any bug on your enviroment or OS, please tell us so we can improve the script.
