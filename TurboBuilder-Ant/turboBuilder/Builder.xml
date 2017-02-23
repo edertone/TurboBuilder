@@ -117,12 +117,16 @@
 		    </condition>
 		</fail>
 		
-		<!-- Get the current build number from the build.number file and store it on the ${build.number} property -->
-		<loadproperties srcFile="build.number"/>
-		
-		<!-- Increase the project build number. We will increase it even if the build fails, to prevent overlapping files from different builds -->
+		<!-- 
+			Increase the project build number. 
+			We will increase it even if the build fails, to prevent overlapping files from different builds.
+			(Note that this file will be auto generated if it does not exist)
+		-->
 		<buildnumber/>
 			
+		<!-- Get the current build number from the build.number file and store it on the ${build.number} property -->
+		<loadproperties srcFile="build.number"/>
+				
 		<!-- Perform all the build tasks -->
 		<script language="javascript">
 			<![CDATA[
