@@ -26,11 +26,38 @@ Turbo builder is based on Apache Ant, but we don't discard translating it to ano
 
 To build a project with turbo builder, you must do the following:
 
-- Create a .turboBuilder folder at the root of your project and copy there all the files from this_repository/turboBuilder folder
+- Download the command line utilities that are required by the builder. You can find all them [Here](TurboBuilder-Tools/). There is a [Readme.txt](TurboBuilder-Tools/README.txt) file with information to know where the tools must be placed on your computer.
 
-- Create a Setup-Build.xml file at the root of your project. You can use the template that is found on this repository as a starting point. You must define all the parameters inside the file depending on your build needs.
+- Create a .turboBuilder folder at the root of your project and copy there all [these files](TurboBuilder-Ant/turboBuilder/).
 
-- Execute the .turboBuilder/Builder.xml with ant, via your favourite IDE or command line. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project to a /target folder, and the second one performs the built files cleanup. If everything works as expected, the builder will read the parameters from Setup-build.xml and perform all of the operations defined there.
+- Create a TurboBuilder.xml file at the root of your project to configure the build process. You can use [this template](TurboBuilder-Ant/TurboBuilder.xml) as a starting point. You must change all the parameters inside the file depending on your build needs.
+
+- make sure that your project is organized with the following directories structure:
+  ```
+  MyProjectFolder
+  │   TurboBuilder.xml
+  │
+  ├───src
+  │   ├───main
+  │   │   ├───css
+  │   │   ├───js
+  │   │   ├───php
+  │   │   │       AutoLoader.php
+  │   │   │
+  │   │   ├───resources
+  │   │   └───ts
+  │   └───test
+  │       ├───js
+  │       └───php
+  │               AutoLoader.php
+  │               index.php
+  │
+  └───.turboBuilder
+          Build.xml
+          BuildSetupSchema.xsd
+  ```
+        
+- Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project to the /target folder, and the second one performs the built files cleanup (basically deletes the target). If everything works as expected, the builder will read the parameters from TurboBuilder.xml setup and perform all of the specified operations.
 
 Note: To enable ant Ftp support, you must add apache commons to ant's include path. Download it here: http://commons.apache.org/net/index.html
 
@@ -41,19 +68,19 @@ Following are mandatory:
 - Apache Ant
 
 Following are only necessary if we want to use the respective feature:
+- mysql.exe
+- jsdoc.cmd
+- nodeJs
+- php.exe
+
+The following tools are bundled inside the TurboBuilder-Tools package that must be downloaded:
 - yuicompressor-2.4.7
 - htmlcompressor-1.5.3.jar
 - pngquant.exe
 - optipng.exe
 - jpegtran.exe
 - W3c-css-validator
-- mysql.exe
 - PhpDocumentor
-- jsdoc.cmd
-- nodeJs
-- php.exe
-
-Paths to all of these tools must be defined under the tag \<Tools\> at the Setup-build.xml file
 
 ### Support
 Turbo builder is 100% free and open source. But we will be really pleased to receive any help, support, comments or donations to improve it. If you find any bug on your enviroment or OS, please tell us so we can improve the script.
