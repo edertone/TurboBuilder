@@ -19,12 +19,10 @@ A general purpose project builder for the most common developer needs.
 - Automatic project structure and conventions validation
 - Run unit tests for Php and JS as part of the build process
 
-All of the listed features can be enabled or disabled via the main Setup-Build.xml file.
+All of the listed features can be enabled or disabled via the main [TurboBuilder.xml](TurboBuilder-Ant/TurboBuilder.xml) file.
 
 ### How it works
-Turbo builder is based on Apache Ant, but we don't discard translating it to another build tool if necessary.
-
-To build a project with turbo builder, you must do the following:
+Turbo builder is currently based on [Apache Ant](http://ant.apache.org). To build a project with turbo builder, you must do the following:
 
 - Download the command line utilities that are required by the builder. You can find all them [Here](TurboBuilder-Tools/). There is a [Readme.txt](TurboBuilder-Tools/README.txt) file with information to know where the tools must be placed on your computer.
 
