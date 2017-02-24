@@ -108,7 +108,7 @@
 	<!-- The main build task that executes all the build tasks as defined on the TurboBuilder.xml file -->
 	<target name="build" depends="defineGlobalProperties">
 
-		<!-- Update TurboBuilder if necessary -->
+		<!-- Update TurboBuilder if necessary or run the build process -->
 		<script language="javascript">
 			<![CDATA[
 				
@@ -118,16 +118,19 @@
 			
 				}else{
 				
-					self.project.executeTarget("build-continue");				
+					self.project.executeTarget("buildFullProcess");				
 				}
 		    ]]>
 		</script>
 	
+		<!-- Reset the TurboBuilder-OneTime.properties file -->
+		<echo file="../TurboBuilder-OneTime.properties" message="# The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.generate = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest available version${line.separator}Update.builder = false" />
+				
 	</target>
 	
 		
 	<!-- Continues the build execution after update verification is performed -->
-	<target name="build-continue">
+	<target name="buildFullProcess">
 		
 		<!-- TurboBuilder-Tools folder must exist and contain at least one of the expected tools -->
 		<fail message="TurboBuilder-Tools NOT found. These tools are required to perform most of the builder tasks. Make sure the folder '${Tools.path}' exists and contains all the turbobuilder required command line executables: Minifiers, compressors, optimizers...">
@@ -950,20 +953,10 @@
 	</target>
 		
 
-	<!-- Reset the TurboBuilder-OneTime.properties file -->
-	<target name="resetTurboBuilderOneTime">
-		
-		<echo file="../TurboBuilder-OneTime.properties" message="# The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.generate = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest available version${line.separator}Update.builder = false" />
-		
-	</target>
-	
-		
 	<!-- Update the TurboBuilder project files -->
 	<target name="updateTurboBuilder">
 		
 		<ant antfile="Update.xml" />
-		
-		<antcall target="resetTurboBuilderOneTime" />
 		
 		<echo message="TURBOBUILDER UPDATED!" />
 		
