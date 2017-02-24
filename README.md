@@ -25,15 +25,15 @@ All of the listed features can be enabled or disabled via the main [TurboBuilder
 
 TurboBuilder is currently based on [Apache Ant](http://ant.apache.org). You should be familiar with it to setup and run the builder tasks. Follow the next steps to configure your project:
 
-- [Download the latest version](https://github.com/edertone/TurboBuilder/archive/master.zip)
+1. [Download the latest version](https://github.com/edertone/TurboBuilder/archive/master.zip)
 
-- Install the command line utilities that are required by the builder. You can find them inside the TurboBuilder-Tools/ folder. There is also a [Readme.txt](TurboBuilder-Tools/README.txt) file with detailed information on how to install the tools on your computer.
+2. Install the command line utilities that are required by the builder. You can find them inside the TurboBuilder-Tools/ folder. There is also a [Readme.txt](TurboBuilder-Tools/README.txt) file with detailed information on how to install the tools on your computer.
 
-- Create a .turboBuilder folder at the root of your project and copy there all the files from [TurboBuilder-Ant/turboBuilder/](TurboBuilder-Ant/turboBuilder/).
+3. Create a .turboBuilder folder at the root of your project and copy there all the files from [TurboBuilder-Ant/turboBuilder/](TurboBuilder-Ant/turboBuilder/).
 
-- Create a TurboBuilder.xml file at the root of your project to configure the build process. You can use [this template](TurboBuilder-Ant/TurboBuilder.xml) as a starting point. You must change all the parameters inside the file depending on your build needs.
+4. Create a TurboBuilder.xml file at the root of your project to configure the build process. You can use [this template](TurboBuilder-Ant/TurboBuilder.xml) as a starting point. You must change all the parameters inside the file depending on your build needs.
 
-- make sure that your project is organized with the following directories structure:
+5. make sure that your project is organized with the following directories structure:
   ```
   MyProjectFolder
   │   TurboBuilder.xml
@@ -58,7 +58,7 @@ TurboBuilder is currently based on [Apache Ant](http://ant.apache.org). You shou
           BuildSetupSchema.xsd
   ```
 
-- Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project and creates a target folder which contains the results of the build process. The second target cleans the built files (basically deletes the target). All the build process is configured via the TurboBuilder.xml setup values.
+6. Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project and creates a target folder which contains the results of the build process. The second target cleans the built files (basically deletes the target). All the build process is configured via the TurboBuilder.xml setup values.
 
 ### Setup the build
 
