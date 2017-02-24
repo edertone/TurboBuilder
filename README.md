@@ -19,7 +19,7 @@ A general purpose project builder for the most common developer needs.
 - Automatic project structure and conventions validation
 - Run unit tests for Php and JS as part of the build process
 
-All of the listed features can be enabled or disabled via the main [TurboBuilder.xml](TurboBuilder-Ant/TurboBuilder.xml) file.
+All of the listed features can be enabled or disabled via the main [TurboBuilder.xml](TurboBuilder-Ant/TurboBuilder.xml) setup file.
 
 ### How to use it
 
@@ -58,11 +58,17 @@ TurboBuilder is currently based on [Apache Ant](http://ant.apache.org). You shou
           BuildSetupSchema.xsd
   ```
 
-- Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project to the /target folder, and the second one performs the built files cleanup (basically deletes the target). If everything works as expected, the builder will read the parameters from TurboBuilder.xml setup and perform all of the specified operations.
+- Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project and creates a target folder which contains the results of the build process. The second target cleans the built files (basically deletes the target). All the build process is configured via the TurboBuilder.xml setup values.
+
+### Setup the build
+
+As said before, there are two setup files that control what is done when the project is built:
+- [TurboBuilder.xml](TurboBuilder-Ant/TurboBuilder.xml) : The file that contains the main builder setup parameters.
+- [TurboBuilder-OneTime.properties](TurboBuilder-Ant/TurboBuilder-OneTime.properties): A file that contains parameters for operations that will be executed only a single time. After each build, the values on this file are reset to their defaults.
 
 ### Update an existing project
 
-You can easily update TurboBuilder on a project that is already using it by executing the provided .turboBuilder/Update.xml ant script file. Simply run the script and it will launch it's default task that will download the latest versions of the files to your project folder.
+You can easily update TurboBuilder on a project that is already using it by setting to true the Update.builder flag that is found on the TurboBuilder-OneTime.properties file. It will take care of downloading the latest versions of the files to your project folder.
 
 
 ### Dependencies

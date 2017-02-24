@@ -71,7 +71,7 @@
 		<property name="Build.Js.createMergedJs" value="false" />
 		<property name="Build.keepUnPackedFiles" value="false" />
 				
-		<property name="Release.enabled" value="false" />
+		<property name="Release.generate" value="false" />
 		<property name="Release.phpDoc" value="false" />
 		<property name="Release.jsDoc" value="false" />
 		<property name="Release.gitChangeLog" value="false" />
@@ -154,7 +154,7 @@
 				
 				self.project.executeTarget("copyMainFiles");
 			
-				if(project.getProperty("Release.enabled") == "true"){
+				if(project.getProperty("Release.generate") == "true"){
 					self.project.executeTarget("createReleaseVersion");
 				}
 						
@@ -327,7 +327,7 @@
 		<script language="javascript">
 			<![CDATA[
 					      								
-				if(project.getProperty("Release.enabled") == "true"){
+				if(project.getProperty("Release.generate") == "true"){
 			
 					self.project.executeTarget("runJsTestsAuxConcatFromRelease");
 							
@@ -798,7 +798,7 @@
 		<script language="javascript">
 			<![CDATA[
 				
-				if(project.getProperty("Release.enabled") == "true"){
+				if(project.getProperty("Release.generate") == "true"){
 					self.project.executeTarget("createPharsRelease");
 				}
 			
@@ -843,7 +843,7 @@
 		<script language="javascript">
 			<![CDATA[
 				
-				if(project.getProperty("Release.enabled") == "true"){
+				if(project.getProperty("Release.generate") == "true"){
 					self.project.executeTarget("createMergedJsRelease");
 				}
 			
@@ -953,7 +953,7 @@
 	<!-- Reset the TurboBuilder-OneTime.properties file -->
 	<target name="resetTurboBuilderOneTime">
 		
-		<echo file="../TurboBuilder-OneTime.properties" message="#The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.enabled = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest version available${line.separator}UpdateBuilder.enabled = false" />
+		<echo file="../TurboBuilder-OneTime.properties" message="# The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.generate = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest available version${line.separator}UpdateBuilder.enabled = false" />
 		
 	</target>
 	
@@ -964,6 +964,8 @@
 		<ant antfile="Update.xml" />
 		
 		<antcall target="resetTurboBuilderOneTime" />
+		
+		<echo message="TURBOBUILDER UPDATED!" />
 		
 	</target>
 			
