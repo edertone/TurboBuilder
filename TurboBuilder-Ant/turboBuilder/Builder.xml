@@ -112,7 +112,7 @@
 		<script language="javascript">
 			<![CDATA[
 				
-				if(project.getProperty("UpdateBuilder.enabled") == "true"){
+				if(project.getProperty("Update.builder") == "true"){
 					
 					self.project.executeTarget("updateTurboBuilder");
 			
@@ -953,7 +953,7 @@
 	<!-- Reset the TurboBuilder-OneTime.properties file -->
 	<target name="resetTurboBuilderOneTime">
 		
-		<echo file="../TurboBuilder-OneTime.properties" message="# The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.generate = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest available version${line.separator}UpdateBuilder.enabled = false" />
+		<echo file="../TurboBuilder-OneTime.properties" message="# The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.generate = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest available version${line.separator}Update.builder = false" />
 		
 	</target>
 	
