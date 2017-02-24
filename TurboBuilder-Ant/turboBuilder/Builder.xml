@@ -199,8 +199,6 @@
 			
 		    ]]>
 		</script>		
-
-		<antcall target="resetTurboBuilderOneTime" />
 	
 	</target>
 	
