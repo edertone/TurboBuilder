@@ -62,8 +62,8 @@
 		    ]]>
 		</script>
 		
-		<!-- Load the Release.enabled property if defined on the TurboBuilder-Release.txt file -->
-		<property file="../TurboBuilder-Release.txt" />
+		<!-- Load the properties that are defined on the TurboBuilder-OneTime.properties file -->
+		<property file="../TurboBuilder-OneTime.properties" />
 		
 		<!-- Set default values for some properties in case they are not specified on the TurboBuilder.xml -->
 		<property name="Build.versionNumber" value="0.0" />
@@ -108,6 +108,27 @@
 	<!-- The main build task that executes all the build tasks as defined on the TurboBuilder.xml file -->
 	<target name="build" depends="defineGlobalProperties">
 
+		<!-- Update TurboBuilder if necessary -->
+		<script language="javascript">
+			<![CDATA[
+				
+				if(project.getProperty("UpdateBuilder.enabled") == "true"){
+					
+					self.project.executeTarget("updateTurboBuilder");
+			
+				}else{
+				
+					self.project.executeTarget("build-continue");				
+				}
+		    ]]>
+		</script>
+	
+	</target>
+	
+		
+	<!-- Continues the build execution after update verification is performed -->
+	<target name="build-continue">
+		
 		<!-- TurboBuilder-Tools folder must exist and contain at least one of the expected tools -->
 		<fail message="TurboBuilder-Tools NOT found. These tools are required to perform most of the builder tasks. Make sure the folder '${Tools.path}' exists and contains all the turbobuilder required command line executables: Minifiers, compressors, optimizers...">
 		    <condition>
@@ -176,9 +197,8 @@
 		    ]]>
 		</script>		
 
-		<!-- Reset the TurboBuilder-Release.txt file so release build is not generated again the next time build is executed -->
-		<echo file="../TurboBuilder-Release.txt" message="Release.enabled = false" />
-				
+		<antcall target="resetTurboBuilderOneTime" />
+	
 	</target>
 	
 	
@@ -929,4 +949,22 @@
 
 	</target>
 		
+
+	<!-- Reset the TurboBuilder-OneTime.properties file -->
+	<target name="resetTurboBuilderOneTime">
+		
+		<echo file="../TurboBuilder-OneTime.properties" message="#The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.enabled = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest version available${line.separator}UpdateBuilder.enabled = false" />
+		
+	</target>
+	
+		
+	<!-- Update the TurboBuilder project files -->
+	<target name="updateTurboBuilder">
+		
+		<ant antfile="Update.xml" />
+		
+		<antcall target="resetTurboBuilderOneTime" />
+		
+	</target>
+			
 </project>
