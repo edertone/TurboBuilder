@@ -1,0 +1,2 @@
+- Add feature to allow validating that copyright headers match a defined template on a configurable set of project files
+	
