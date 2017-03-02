@@ -4,6 +4,7 @@ A general purpose project builder for the most common developer needs.
 
 ### Features
 - Works on any IDE that can run Ant tasks, or via command line
+- Generates a 'target' folder containing all the results of the build or the production release version
 - Support for multiple development languages: Js, Css, Php and Ts
 - Covers the whole project development cycle: Build, deploy, validate, test and production release
 - Automatic deploy to a remote ftp location
@@ -11,7 +12,6 @@ A general purpose project builder for the most common developer needs.
 - Automatic merging of all the project javascript files to a single .js
 - Automatic php phar generation
 - Automatic version number generation
-- Automatic database creation / deletion
 - Automatic jsdoc and phpdoc generation
 - Automatic js, css, html and php minification
 - Automatic images compression and optimitzation for jpg and png files
