@@ -1,2 +1,4 @@
 - Add feature to allow validating that copyright headers match a defined template on a configurable set of project files
-	
+- Add feature to validate that all namespace declarations meet the rules
+- Add feature to validate that all public methods have a corresponding test
+- Add a feature to store and recover binary data using a storage folder
