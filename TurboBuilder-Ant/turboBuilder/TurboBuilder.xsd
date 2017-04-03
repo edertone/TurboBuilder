@@ -42,7 +42,7 @@
 								
 								<xs:complexType>
 								
-									<xs:attribute name="createPhars" use="required" type="xs:boolean">
+									<xs:attribute name="createPhar" use="required" type="xs:boolean">
 										<xs:annotation>
 											<xs:documentation>
 												Specifies if all the Php files that are deployed to the target folder by the build process 
