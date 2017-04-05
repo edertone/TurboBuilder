@@ -36,13 +36,27 @@
 			 phpDoc="false"
 			 jsDoc="false" />
 	
+		
+	<Validate enabled="false">
 	
-	<!-- TODO: Validate setup is under development and does not work yet -->
-	<Validate checkProjectStructure="true"
-			  validateCss="true" />
+		<ProjectStructure enabled="false" />
+
+		<PhpNamespaces enabled="false" />
+
+		<Css enabled="false" />
+
+		<CopyrightHeaders enabled="false">
+		
+			<Header path="documents/copyrightHeaders/TurboCommons-Generic.txt" appliesTo="src/main/php" />
+			
+			<Header path="documents/copyrightHeaders/TurboCommons-Generic.txt" appliesTo="src/test/php" />
+		
+		</CopyrightHeaders>
+	
+	</Validate>
 	
 	
-	<!-- Contains all the parameters related to unit tests execution -->
+	<!-- Contains all the parameters related to unit tests execution as part of the build process -->
 	<Test>
 	
 		<Php enabled="false" 
