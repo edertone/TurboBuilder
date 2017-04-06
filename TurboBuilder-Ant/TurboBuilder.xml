@@ -5,6 +5,7 @@
 
 	<!-- 
 		Defines all the turbo builder configuration.
+		All the values defined here are the same as the default ones, so they can be ommited if the value does not need to be modified.
 		Remember to use an IDE or editor that supports XSD to benefit from real time documentation and code autocompletion	
 	 -->
 
@@ -39,17 +40,22 @@
 		
 	<Validate enabled="false">
 	
-		<ProjectStructure enabled="false" />
+		<ProjectStructure enabled="true" />
 
-		<PhpNamespaces enabled="false" />
+		<PhpNamespaces enabled="true" />
 
 		<Css enabled="false" />
 
 		<CopyrightHeaders enabled="false">
 		
-			<Header path="documents/copyrightHeaders/TurboCommons-Generic.txt" appliesTo="src/main/php" />
+			<Header path="path/to/some/CoyprightHeaderFile.txt" 
+					appliesTo="src/main/php"
+					includes=""
+					excludes="" />
 			
-			<Header path="documents/copyrightHeaders/TurboCommons-Generic.txt" appliesTo="src/test/php" />
+			<Header path="path/to/some/CoyprightHeaderFile.txt" 
+					appliesTo="src/test/php"
+					includes="**/*.php" />
 		
 		</CopyrightHeaders>
 	

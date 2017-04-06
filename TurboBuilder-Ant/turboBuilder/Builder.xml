@@ -83,8 +83,8 @@
 		<property name="Release.optimizeCss" value="true" />
 								
 		<property name="Validate.enabled" value="false" />
-		<property name="Validate.ProjectStructure.enabled" value="false" />
-		<property name="Validate.PhpNamespaces.enabled" value="false" />
+		<property name="Validate.ProjectStructure.enabled" value="true" />
+		<property name="Validate.PhpNamespaces.enabled" value="true" />
 		<property name="Validate.Css.enabled" value="false" />
 		<property name="Validate.CopyrightHeaders.enabled" value="false" />
 							
