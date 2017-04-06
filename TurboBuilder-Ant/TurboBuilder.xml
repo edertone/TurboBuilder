@@ -42,7 +42,11 @@
 	
 		<ProjectStructure enabled="true" />
 
-		<PhpNamespaces enabled="true" />
+		<PhpNamespaces enabled="true"
+					   mandatory="true"		
+					   forcePath="true"
+					   mustContain="some\namespace\string"
+					   excludes="" />
 
 		<Css enabled="false" />
 

@@ -85,6 +85,10 @@
 		<property name="Validate.enabled" value="false" />
 		<property name="Validate.ProjectStructure.enabled" value="true" />
 		<property name="Validate.PhpNamespaces.enabled" value="true" />
+		<property name="Validate.PhpNamespaces.mandatory" value="true" />
+		<property name="Validate.PhpNamespaces.forcePath" value="true" />
+		<property name="Validate.PhpNamespaces.mustContain" value="" />
+		<property name="Validate.PhpNamespaces.excludes" value="" />
 		<property name="Validate.Css.enabled" value="false" />
 		<property name="Validate.CopyrightHeaders.enabled" value="false" />
 							

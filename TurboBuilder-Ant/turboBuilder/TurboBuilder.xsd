@@ -266,7 +266,40 @@
 												Activates or deactivates the php namespaces validation rule
 											</xs:documentation>
 										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="mandatory" use="optional" default="true" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Forces that all php files inside this project must have a defined namespace
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="forcePath" use="optional" default="true" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												If enabled, all namespaces declared on all php files inside the project must contain the file path after main folder. 
+												For example, a file located at: 'src\main\php\managers\' must have a namespace that contains 'php\managers\'
+											</xs:documentation>
+										</xs:annotation>
 									</xs:attribute>	
+									
+									<xs:attribute name="mustContain" use="optional" default="" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>
+												Specifies a string that must be present on the namespace to be considered valid
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>	
+									
+									<xs:attribute name="excludes" use="optional" default="" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>
+												comma- or space-separated list of patterns of files that must be excluded; no files (except default excludes) are excluded when omitted. For example: "**" , "**/*.js"
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>		
 																	
 								</xs:complexType>
 								

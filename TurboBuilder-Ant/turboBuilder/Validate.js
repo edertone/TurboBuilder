@@ -32,7 +32,7 @@ if(project.getProperty("Validate.ProjectStructure.enabled") === "true"){
 //Apply the PhpNamespaces rule if enabled
 if(project.getProperty("Validate.PhpNamespaces.enabled") === "true"){
 		
-	var phpFiles = getFilesList(projectSrcDir, "**/*.php");
+	var phpFiles = getFilesList(projectSrcDir, "**/*.php", project.getProperty("Validate.PhpNamespaces.excludes"));
 	
 	for(var i = 0; i < phpFiles.length; i++){
 		
@@ -50,6 +50,20 @@ if(project.getProperty("Validate.PhpNamespaces.enabled") === "true"){
 				
 				antErrors.push(phpFiles[i] + " namespace <" + fileNamespace + "> is invalid. Must contain <" + namespace + ">");
 			}
+			
+			var mustContain = project.getProperty("Validate.PhpNamespaces.mustContain");
+			
+			if(mustContain != "" && fileNamespace.indexOf(mustContain) < 0){
+				
+				antErrors.push(phpFiles[i] + " namespace <" + fileNamespace + "> is invalid. Must contain <" + mustContain + ">");
+			}
+			
+		}else{
+			
+			if(project.getProperty("Validate.PhpNamespaces.mandatory") === "true"){
+			
+				antErrors.push(phpFiles[i] + " does not contain a namespace declaration");
+			}			
 		}
 	}		
 }
