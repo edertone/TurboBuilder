@@ -59,7 +59,8 @@
 			
 			<Header path="path/to/some/CoyprightHeaderFile.txt" 
 					appliesTo="src/test/php"
-					includes="**/*.php" />
+					includes="**/*.php"
+					excludes="" />
 		
 		</CopyrightHeaders>
 	

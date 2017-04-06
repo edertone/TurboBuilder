@@ -362,7 +362,7 @@
 													</xs:annotation>
 												</xs:attribute>	
 												
-												<xs:attribute name="includes" use="optional" type="xs:string">
+												<xs:attribute name="includes" use="required" type="xs:string">
 													<xs:annotation>
 														<xs:documentation>
 															comma- or space-separated list of patterns of files that must be included; all files are included when omitted. For example: "**" , "**/*.js"
@@ -370,7 +370,7 @@
 													</xs:annotation>
 												</xs:attribute>	
 												
-												<xs:attribute name="excludes" use="optional" type="xs:string">
+												<xs:attribute name="excludes" use="required" type="xs:string">
 													<xs:annotation>
 														<xs:documentation>
 															comma- or space-separated list of patterns of files that must be excluded; no files (except default excludes) are excluded when omitted. For example: "**" , "**/*.js"
