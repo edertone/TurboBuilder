@@ -73,8 +73,8 @@
 			 dest="Validate.js"
 			 httpusecaches="false" />
 		
-		<get src="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/ValidateUtils.js"
-			 dest="ValidateUtils.js"
+		<get src="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/Utils.js"
+			 dest="Utils.js"
 			 httpusecaches="false" />
 
 		<get src="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/TurboBuilder.xsd"
