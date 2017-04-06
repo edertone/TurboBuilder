@@ -1,0 +1,2 @@
+- Add feature to validate that all public methods have a corresponding test
+- Add a feature to store and recover binary data using a storage folder

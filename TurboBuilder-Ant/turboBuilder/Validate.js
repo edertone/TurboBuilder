@@ -83,14 +83,12 @@ if(project.getProperty("Validate.CopyrightHeaders.enabled") === "true"){
 	
 	var paths = project.getProperty("Validate.CopyrightHeaders.Header").split(",");
 	var appliesTo = project.getProperty("Validate.CopyrightHeaders.Header.appliesTo").split(",");
-	var includes = project.getProperty("Validate.CopyrightHeaders.Header.includes").split(",");
-	var excludes = project.getProperty("Validate.CopyrightHeaders.Header.excludes").split(",");
-	
+		
 	for(var i = 0; i < paths.length; i++){
 		
 		var header = loadFileAsString(projectBaseDir + paths[i]);
 		
-		var files = getFilesList(projectBaseDir + appliesTo[i], includes[i], excludes[i]);
+		var files = getFilesList(projectBaseDir + appliesTo[i], project.getProperty("Validate.CopyrightHeaders.Header.includes"), project.getProperty("Validate.CopyrightHeaders.Header.excludes"));
 		
 		for(var j = 0; j < files.length; j++){
 			
