@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * This is the script that performs all the enabled turbo builder validations
  */

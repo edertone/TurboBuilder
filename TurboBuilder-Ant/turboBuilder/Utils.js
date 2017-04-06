@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Utility methods used by TurboBuilder
  */
