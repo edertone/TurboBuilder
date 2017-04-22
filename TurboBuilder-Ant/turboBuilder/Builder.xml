@@ -82,15 +82,7 @@
 		<property name="Release.optimizeJs" value="true" />
 		<property name="Release.optimizeCss" value="true" />
 								
-		<property name="Validate.enabled" value="false" />
-		<property name="Validate.ProjectStructure.enabled" value="true" />
-		<property name="Validate.PhpNamespaces.enabled" value="true" />
-		<property name="Validate.PhpNamespaces.mandatory" value="true" />
-		<property name="Validate.PhpNamespaces.forcePath" value="true" />
-		<property name="Validate.PhpNamespaces.mustContain" value="" />
-		<property name="Validate.PhpNamespaces.excludes" value="" />
-		<property name="Validate.Css.enabled" value="false" />
-		<property name="Validate.CopyrightHeaders.enabled" value="false" />
+		<property name="Validate.enabled" value="true" />
 							
 		<property name="Test.Php.enabled" value="false" />
 		<property name="Test.Php.mode" value="commandLine" />
@@ -167,12 +159,12 @@
 				
 				self.project.executeTarget("copyMainFiles");
 			
-				if(project.getProperty("Release.generate") == "true"){
-					self.project.executeTarget("createReleaseVersion");
-				}
-			
 				if(project.getProperty("Validate.enabled") == "true"){
 					self.project.executeTarget("validateProject");
+				}
+						
+				if(project.getProperty("Release.generate") == "true"){
+					self.project.executeTarget("createReleaseVersion");
 				}
 			
 				if(project.getProperty("Test.Php.enabled") == "true"){
@@ -875,6 +867,12 @@
 	<!-- Generate a release version of the single JS file -->
 	<target name="createMergedJsRelease">
 
+		<!-- Copy the unminified version to release folder -->
+		<copy failonerror="true" 
+			  file="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js" 
+			  tofile="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.js" />
+		
+		<!-- Generate the minified version -->
 		<echo file="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.min.js" 
 			  append="true" 
 			  message="/** ${projectBaseName} ${Build.versionNumber}.${build.number} */&#13;&#10;" />

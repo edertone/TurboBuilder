@@ -5,7 +5,7 @@
 
 	<!-- 
 		Defines all the turbo builder configuration.
-		All the values defined here are the same as the default ones, so they can be ommited if the value does not need to be modified.
+		All the values are defined here with their default values to be used as a guide. They can be ommited if the value does not need to be modified.
 		Remember to use an IDE or editor that supports XSD to benefit from real time documentation and code autocompletion	
 	 -->
 
@@ -19,9 +19,13 @@
 	
 		<Java createJar="false" />
 	
-		<Ts alwaysStrict="true"
-			sourceMap="false"
-			target="ES5" />	   
+		<!--  TODO -->
+		<Ts createTsModule="false"
+			createMergedJs="false"
+			createUnpackedJsFiles="false"
+			compilerAlwaysStrict="true"
+			compilerSourceMap="false"
+			compilerTarget="ES3,ES5,ES6" />	   
 		   
 	</Build>
 
@@ -38,28 +42,38 @@
 			 jsDoc="false" />
 	
 		
-	<Validate enabled="false">
+	<Validate enabled="true">
 	
-		<ProjectStructure enabled="true" />
+		<ProjectStructure enabled="true"
+						  forceAssetsFolder="true"
+						  forceTODOFile="true"
+						  resourcesStructure="true"
+						  phpStructure="true"
+						  jsStructure="true"
+						  tsStructure="true"
+						  javaStructure="true"
+						  cssStructure="true"
+						  checkGitIgnore="true" />
 
+		<JsNamespaces enabled="true"
+				   	  mandatory="true"		
+				   	  forcePath="true"
+				   	  mustContain="some_js_namespace_here"
+				   	  excludes="" />
+							   
 		<PhpNamespaces enabled="true"
 					   mandatory="true"		
 					   forcePath="true"
-					   mustContain="some\namespace\string"
+					   mustContain="some\php\namespace\string\here"
 					   excludes="" />
 
-		<Css enabled="false" />
+		<Css enabled="true" />
 
-		<CopyrightHeaders enabled="false">
+		<CopyrightHeaders enabled="true">
 		
 			<Header path="path/to/some/CoyprightHeaderFile.txt" 
-					appliesTo="src/main/php"
-					includes=""
-					excludes="" />
-			
-			<Header path="path/to/some/CoyprightHeaderFile.txt" 
-					appliesTo="src/test/php"
-					includes="**/*.php"
+					appliesTo="src"
+					includes="**/*.codeFileExtension"
 					excludes="" />
 		
 		</CopyrightHeaders>

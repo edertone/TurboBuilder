@@ -1,8 +1,47 @@
 "use strict";
 
 /**
+ * --------------------------------------------------------------------------------------------------------------------------------------
  * Utility methods used by TurboBuilder
+ * --------------------------------------------------------------------------------------------------------------------------------------
  */
+
+
+/**
+ * Check that the specified value is found inside an array
+ */
+function inArray(value, array){
+	
+	for(var i = 0; i < array.length; i++){
+		
+		if(array[i] === value){
+			
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+/**
+ * Check if the specified file or folder exists or not
+ */
+function fileExists(path){
+
+	try{
+	
+		var f = new java.io.File(path);
+	    
+		return f.exists();
+		
+	}catch(e){
+
+		// Nothing to do
+	}
+	
+	return false;
+}
 
 
 /**
@@ -30,6 +69,35 @@ function loadFileAsString(path, replaceWhiteSpaces){
 	}
 
 	return lines;
+}
+
+
+/**
+ * Get a list with all the first level folders inside the specified path.
+ * 
+ * @param path A full file system path from which we want to get the list of first level folders
+ * 
+ * @returns An array containing all the first level folders inside the given path. Each array element will be 
+ * relative to the provided path. For example, if we provide "src/main" as path, 
+ * resulting folders may be like "php", "css", ... and so.
+ */
+function getFoldersList(path){
+	
+	var ds = project.createDataType("dirset");
+	
+	ds.setDir(new java.io.File(path));
+	ds.setIncludes("*");
+	
+	var srcFolders = ds.getDirectoryScanner(project).getIncludedDirectories();
+    
+    var result = [];
+    
+    for (var i = 0; i<srcFolders.length; i++){
+        
+    	result.push(srcFolders[i]);
+    }
+    
+    return result;
 }
 
 
@@ -74,37 +142,4 @@ function getFilesList(path, includes, excludes){
     }
     
     return result;
-}
-
-
-/**
- * Output to ant console the warnings and errors if exist
- */
-function echoWarningsAndErrors(antWarnings, antErrors){
-	
-	//Define the echo task to use for warnings and errors
-	var echo = project.createTask("echo");
-	var error = new org.apache.tools.ant.taskdefs.Echo.EchoLevel();
-	error.setValue("error");
-	echo.setLevel(error);
-
-	//Display all the detected warnings
-	for(var i = 0; i < antWarnings.length; i++){
-
-		echo.setMessage("WARNING: " + antWarnings[i]);
-		echo.perform();
-	}
-
-	//Display all the detected errors
-	for(i = 0; i < antErrors.length; i++){
-
-		echo.setMessage("ERROR: " + antErrors[i]);
-		echo.perform();
-	}
-
-	//Set a failure to the ant build if errors are present
-	if(antErrors.length > 0){
-
-		project.setProperty("javascript.fail.message", "Source analisis detected errors.");
-	}
 }
