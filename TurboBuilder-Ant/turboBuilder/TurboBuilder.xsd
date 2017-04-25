@@ -42,6 +42,14 @@
 								
 								<xs:complexType>
 								
+									<xs:attribute name="enabled" use="required" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Activate or deactivate the build process for php files
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>	
+									
 									<xs:attribute name="createPhar" use="required" type="xs:boolean">
 										<xs:annotation>
 											<xs:documentation>
@@ -64,6 +72,14 @@
 								
 								<xs:complexType>
 								
+									<xs:attribute name="enabled" use="required" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Activate or deactivate the build process for Js files
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
 									<xs:attribute name="createMergedJs" use="required" type="xs:boolean">
 										<xs:annotation>
 											<xs:documentation>Generate a .js file on the target folder containing all the project javascript files merged. This file can then be easily distributed or used on other projects.</xs:documentation>
@@ -83,6 +99,14 @@
 								
 								<xs:complexType>
 								
+									<xs:attribute name="enabled" use="required" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Activate or deactivate the build process for java files
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
 									<xs:attribute name="createJar" use="required" type="xs:boolean">
 										<xs:annotation>
 											<xs:documentation>
@@ -104,21 +128,41 @@
 								
 								<xs:complexType>
 								
-									<xs:attribute name="alwaysStrict" use="required" type="xs:boolean">
+									<xs:attribute name="enabled" use="required" type="xs:boolean">
 										<xs:annotation>
-											<xs:documentation>TODO</xs:documentation>
+											<xs:documentation>
+												Activate or deactivate the build process for ts files
+											</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
 									
-									<xs:attribute name="sourceMap" use="required" type="xs:boolean">
+									<xs:attribute name="createMergedJs" use="required" type="xs:boolean">
 										<xs:annotation>
-											<xs:documentation>TODO</xs:documentation>
+											<xs:documentation>
+												Generate a .js file on the target folder containing all the compiled ts files merged. 
+												A separate file will be generated for each one of the defined compiler targets.
+												These files can then be easily distributed or used on other projects.
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								
+									<xs:attribute name="compilerAlwaysStrict" use="required" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>Enable or disable the generation of "use strict" on the generated javascript files. It is recommended to enable it.</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
 									
-									<xs:attribute name="target" use="required" type="xs:string">
+									<xs:attribute name="compilerSourceMap" use="required" type="xs:boolean">
 										<xs:annotation>
-											<xs:documentation>TODO</xs:documentation>
+											<xs:documentation>TODO - this description is missing</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="compilerTargets" use="required" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>
+												Defines the javascript language versions that will be generated when compiling the ts files (Each language version will be generated independently).
+											</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>
 																											

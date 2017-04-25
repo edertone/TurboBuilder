@@ -67,9 +67,19 @@
 		
 		<!-- Set default values for some properties in case they are not specified on the TurboBuilder.xml -->
 		<property name="Build.versionNumber" value="0.0" />
+		<property name="Build.Php.enabled" value="false" />
 		<property name="Build.Php.createPhar" value="false" />
+		<property name="Build.Js.enabled" value="false" />
 		<property name="Build.Js.createMergedJs" value="false" />
+		<property name="Build.Java.enabled" value="false" />
 		<property name="Build.Java.createJar" value="false" />
+		<property name="Build.Ts.enabled" value="false" />
+		<property name="Build.Ts.createMergedTs" value="false" />
+		<property name="Build.Ts.createMergedJs" value="false" />
+		<property name="Build.Ts.compilerAlwaysStrict" value="true" />
+		<property name="Build.Ts.compilerSourceMap" value="false" />
+		<property name="Build.Ts.compilerTargets" value="ES3,ES5,ES6" />   
+		
 		<property name="Build.keepUnPackedFiles" value="false" />
 				
 		<property name="Release.generate" value="false" />
@@ -101,6 +111,7 @@
 		<property name="Tools.jsDocPath" value="C:/Program Files/nodejs/node_modules/.bin/jsdoc.cmd" />
 		<property name="Tools.jsDocTemplatePath" value="C:/Program Files/nodejs/node_modules/ink-docstrap/template" />
 		<property name="Tools.phpPath" value="C:/xampp/php/php.exe" />
+		<property name="Tools.tsCompilerPath" value="${user.home}/AppData/Roaming/npm/tsc.cmd" />
 		
 		<property name="Update.builder" value="false" />
 				
@@ -183,16 +194,38 @@
 					self.project.executeTarget("runJsTestsLocalServer");
 				}
 			
-				if(project.getProperty("Build.Php.createPhar") == "true"){
-					self.project.executeTarget("createPhar");
+				if(project.getProperty("Build.Php.enabled") == "true"){
+							
+					if(project.getProperty("Build.Php.createPhar") == "true"){
+						self.project.executeTarget("createPhar");
+					}
+				}
+				
+				if(project.getProperty("Build.Js.enabled") == "true"){
+			
+					if(project.getProperty("Build.Js.createMergedJs") == "true"){
+						self.project.executeTarget("createMergedJs");
+					}
+				}	
+				
+				if(project.getProperty("Build.Java.enabled") == "true"){
+				
+					if(project.getProperty("Build.Java.createJar") == "true"){
+						self.project.executeTarget("createJar");
+					}
 				}
 			
-				if(project.getProperty("Build.Js.createMergedJs") == "true"){
-					self.project.executeTarget("createMergedJs");
-				}
+				if(project.getProperty("Build.Ts.enabled") == "true"){
 			
-				if(project.getProperty("Build.Java.createJar") == "true"){
-					self.project.executeTarget("createJar");
+					self.project.executeTarget("typeScript-compile");
+			
+					if(project.getProperty("Build.Ts.createMergedTs") == "true"){
+						// TODO
+					}
+				
+					if(project.getProperty("Build.Ts.createMergedJs") == "true"){
+						// self.project.executeTarget("typeScript-createMergedJs");
+					}
 				}
 						
 				if(project.getProperty("Build.keepUnPackedFiles") != "true"){
@@ -908,6 +941,54 @@
 				}			
 		    ]]>
 		</script>
+		
+	</target>
+
+	
+	<!-- Generate a js file for each one of the ts files on the project and place them on target at the same folder as the sources -->
+	<target name="typeScript-compile">
+
+		<!-- Execute the tsc compiler for each one of the project .ts files and javascript targets -->
+		<script language="javascript">
+			<![CDATA[
+				
+				load(project.getProperty("basedir") + '/Utils.js');
+			
+				var targets = project.getProperty("Build.Ts.compilerTargets").split(",");
+				var targetMainPath = project.getProperty("targetFolderPath") + "/" + project.getProperty("projectBaseName") + "/main";
+			
+				for(var i=0; i < targets.length; i++){
+				
+					// Duplicate the ts folder for the current target
+					copyFolderTo(targetMainPath + "/ts", targetMainPath + "/ts-" + targets[i]);
+			
+					// Compile the copied files with the current js target
+					var fs = project.createDataType("fileset");
+
+					fs.setDir(new java.io.File(targetMainPath + "/ts-" + targets[i]));
+					fs.setCaseSensitive(false);
+					fs.setIncludes("**/*.ts");
+			
+					var apply = project.createTask("apply");
+					apply.setExecutable(project.getProperty("Tools.tsCompilerPath"));
+					apply.setFailonerror(true);
+					apply.addFileset(fs);
+					apply.createArg().setValue("--alwaysStrict");
+					apply.createArg().setLine("--target " + targets[i]);
+					apply.createSrcfile();
+					apply.perform();
+				}
+						
+		    ]]>
+		</script>
+		
+	</target>
+	
+	
+	<!-- Generate a single JS file from all the typescript files inside a folder -->
+	<target name="typeScript-createMergedJs">
+
+		<!-- TODO -->
 		
 	</target>
 	

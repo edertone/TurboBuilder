@@ -143,3 +143,26 @@ function getFilesList(path, includes, excludes){
     
     return result;
 }
+
+
+/**
+ * Copy all the contents from the given folder to another specified folder.
+ * 
+ * @param source A file system path where the files and folders to copy are found.
+ * @param dest A file system path where the source files and folders will be copied.
+ * 
+ * @returns void
+ */
+function copyFolderTo(source, dest){
+	
+	var fs = project.createDataType("fileset");
+
+	fs.setDir(new java.io.File(source));
+    	
+	var copy = project.createTask("copy");
+	
+	copy.setTodir(new java.io.File(dest));
+	copy.setOverwrite(true);
+	copy.addFileset(fs);
+	copy.perform();
+}

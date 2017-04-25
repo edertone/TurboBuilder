@@ -1,2 +1,4 @@
 - Add feature to validate that all public methods have a corresponding test
-- Add a feature to store and recover binary data using a storage folder
+- Typescript compilation must be performed this way: 
+	2 - if createMergedJs enabled: generate a merged js file for all of the compiler js versions target
+	3 - if createTsModule enabled: Create a native ts format library module containing all the prject ts files
