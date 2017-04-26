@@ -23,7 +23,6 @@
 			  createJar="false" />
 	
 		<Ts enabled="false"
-			createMergedTs="false"
 			createMergedJs="false"
 			compilerAlwaysStrict="true"
 			compilerSourceMap="false"

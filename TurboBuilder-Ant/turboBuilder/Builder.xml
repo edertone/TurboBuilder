@@ -16,14 +16,14 @@
 			- Then go to "Window/Preferences/Ant/Runtime/ClassPath" and add this lib as an external jar to "Ant home entries" (Say yes to ignore possible problem if prompted)
 	
 	</description>
-		
-	
+
+
 	<!-- Define all the build global properties and load the build configuration from the TurboBuilder.xml file -->
 	<target name="defineGlobalProperties" >
-	
+
 		<!-- Create a property containing the current project name, based on the root project folder -->
 		<basename property="projectBaseName" file="../" />
-		
+
 		<!-- The location for the project source folder -->
 		<property name="srcFolderPath" location="../src" />
 
@@ -35,22 +35,27 @@
 
 		<!-- The location for the cache file, which contains modified files since last build. This path can be overwritten by external builds that want to execute this project build but track the cache externally -->
 		<property name="cacheFilePath" location="cache.properties" />
-	
+
 		<fail message="TurboBuilder.xml not found">
-		    <condition>
-		    	<not>
-		    		<available file="${srcFolderPath}/../TurboBuilder.xml" />
-		    	</not>
-		    </condition>
+			<condition>
+				<not>
+					<available file="${srcFolderPath}/../TurboBuilder.xml" />
+				</not>
+			</condition>
 		</fail>
-		
+
+		<!-- Validate the setup file against the xsd -->
+		<schemavalidate noNamespaceFile="TurboBuilder.xsd"
+						file="${srcFolderPath}/../TurboBuilder.xml"
+						failonerror="true" />
+
 		<xmlproperty file="${srcFolderPath}/../TurboBuilder.xml" keepRoot="false" semanticattributes="true" />
-		
+
 		<!-- Get the latest tag if defined on GIT and not specified on TurboBuilder.xml -->
 		<exec executable="git" failonerror="false" resultproperty="gitLatestTagResult" outputproperty="gitLatestTag" >
-	    	<arg line="describe --abbrev=0 --tags"/>
-	    </exec> 
-		
+			<arg line="describe --abbrev=0 --tags"/>
+		</exec>
+
 		<script language="javascript">
 			<![CDATA[
 				
@@ -61,10 +66,10 @@
 			
 		    ]]>
 		</script>
-		
+
 		<!-- Load the properties that are defined on the TurboBuilder-OneTime.properties file -->
 		<property file="../TurboBuilder-OneTime.properties" />
-		
+
 		<!-- Set default values for some properties in case they are not specified on the TurboBuilder.xml -->
 		<property name="Build.versionNumber" value="0.0" />
 		<property name="Build.Php.enabled" value="false" />
@@ -74,14 +79,13 @@
 		<property name="Build.Java.enabled" value="false" />
 		<property name="Build.Java.createJar" value="false" />
 		<property name="Build.Ts.enabled" value="false" />
-		<property name="Build.Ts.createMergedTs" value="false" />
 		<property name="Build.Ts.createMergedJs" value="false" />
 		<property name="Build.Ts.compilerAlwaysStrict" value="true" />
 		<property name="Build.Ts.compilerSourceMap" value="false" />
-		<property name="Build.Ts.compilerTargets" value="ES3,ES5,ES6" />   
-		
+		<property name="Build.Ts.compilerTargets" value="ES3,ES5,ES6" />
+
 		<property name="Build.keepUnPackedFiles" value="false" />
-				
+
 		<property name="Release.generate" value="false" />
 		<property name="Release.phpDoc" value="false" />
 		<property name="Release.jsDoc" value="false" />
@@ -91,13 +95,13 @@
 		<property name="Release.optimizePhp" value="false" />
 		<property name="Release.optimizeJs" value="true" />
 		<property name="Release.optimizeCss" value="true" />
-								
+
 		<property name="Validate.enabled" value="true" />
-							
+
 		<property name="Test.Php.enabled" value="false" />
 		<property name="Test.Php.mode" value="commandLine" />
-		<property name="Test.Js.enabled" value="false" />	
-				
+		<property name="Test.Js.enabled" value="false" />
+
 		<property name="Tools.path" value="${user.home}/TurboBuilder-Tools" />
 		<property name="Tools.minifierPath" value="${Tools.path}/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar" />
 		<property name="Tools.htmlCompressorPath" value="${Tools.path}/htmlcompressor/htmlcompressor-1.5.3.jar" />
@@ -106,18 +110,18 @@
 		<property name="Tools.jpgOptimizerPath" value="${Tools.path}/jpegtran/jpegtran.exe" />
 		<property name="Tools.cssValidatorPath" value="${Tools.path}/W3c-css-validator/css-validator.jar" />
 		<property name="Tools.phpDocPath" value="${Tools.path}/PhpDocumentor/phpDocumentor.phar" />
-		
-		<property name="Tools.mysqlPath" value="C:/xampp/mysql/bin/mysql.exe" />	
+
+		<property name="Tools.mysqlPath" value="C:/xampp/mysql/bin/mysql.exe" />
 		<property name="Tools.jsDocPath" value="C:/Program Files/nodejs/node_modules/.bin/jsdoc.cmd" />
 		<property name="Tools.jsDocTemplatePath" value="C:/Program Files/nodejs/node_modules/ink-docstrap/template" />
 		<property name="Tools.phpPath" value="C:/xampp/php/php.exe" />
 		<property name="Tools.tsCompilerPath" value="${user.home}/AppData/Roaming/npm/tsc.cmd" />
-		
+
 		<property name="Update.builder" value="false" />
-				
+
 	</target>
-	
-	
+
+
 	<!-- The main build task that executes all the build tasks as defined on the TurboBuilder.xml file -->
 	<target name="build" depends="defineGlobalProperties">
 
@@ -135,35 +139,35 @@
 				}
 		    ]]>
 		</script>
-	
+
 		<!-- Reset the TurboBuilder-OneTime.properties file -->
 		<echo file="../TurboBuilder-OneTime.properties" message="# The values on this file are always restored after each build, so it is guaranteed that any modification done here will run only once${line.separator}${line.separator}${line.separator}# Activate the release build version generation${line.separator}Release.generate = false${line.separator}${line.separator}# Replace the current project TurboBuilder files with the latest available version${line.separator}Update.builder = false" />
-				
+
 	</target>
-	
-		
+
+
 	<!-- Continues the build execution after update verification is performed -->
 	<target name="buildFullProcess">
-		
+
 		<!-- TurboBuilder-Tools folder must exist and contain at least one of the expected tools -->
 		<fail message="TurboBuilder-Tools NOT found. These tools are required to perform most of the builder tasks. Make sure the folder '${Tools.path}' exists and contains all the turbobuilder required command line executables: Minifiers, compressors, optimizers...">
-		    <condition>
-		    	<not>
-		    		<available file="${Tools.minifierPath}" />
-		    	</not>
-		    </condition>
+			<condition>
+				<not>
+					<available file="${Tools.minifierPath}" />
+				</not>
+			</condition>
 		</fail>
-		
+
 		<!-- 
 			Increase the project build number. 
 			We will increase it even if the build fails, to prevent overlapping files from different builds.
 			(Note that this file will be auto generated if it does not exist)
 		-->
 		<buildnumber/>
-			
+
 		<!-- Get the current build number from the build.number file and store it on the ${build.number} property -->
 		<loadproperties srcFile="build.number"/>
-				
+
 		<!-- Perform all the build tasks -->
 		<script language="javascript">
 			<![CDATA[
@@ -219,10 +223,6 @@
 			
 					self.project.executeTarget("typeScript-compile");
 			
-					if(project.getProperty("Build.Ts.createMergedTs") == "true"){
-						// TODO
-					}
-				
 					if(project.getProperty("Build.Ts.createMergedJs") == "true"){
 						// self.project.executeTarget("typeScript-createMergedJs");
 					}
@@ -241,22 +241,22 @@
 				}
 			
 		    ]]>
-		</script>		
-	
+		</script>
+
 	</target>
-	
-	
+
+
 	<!-- Copy all the project src/main files to the target folder. Any unwanted files/folders are excluded -->
 	<target name="copyMainFiles">
-		
+
 		<!-- Delete all files inside the target/projectName except the main folder one -->
 		<delete failonerror="false" includeemptydirs="true">
 			<fileset dir="${targetFolderPath}/${projectBaseName}" casesensitive="false">
 				<include name="**/*"/>
 				<exclude name="main/"/>
-			</fileset>			
+			</fileset>
 		</delete>
-		
+
 		<!-- Update the target/projectName/main folder with the current project state -->
 		<sync todir="${targetFolderPath}/${projectBaseName}/main" overwrite="true">
 			<fileset dir="${mainFolderPath}" casesensitive="false">
@@ -265,15 +265,15 @@
 				<exclude name="**/.git**" />
 			</fileset>
 		</sync>
-		
+
 		<!-- Replace the string @@package-build-version@@ on all the files with the real build version number -->
 		<replace dir="${targetFolderPath}/${projectBaseName}" token="@@package-build-version@@" value="${Build.versionNumber}.${build.number}" >
 			<exclude name="**/resources/"/>
 		</replace>
-		
+
 	</target>
-	
-	
+
+
 	<!-- Launch the PHP unit tests via Command line -->
 	<target name="runPhpTestsCmd">
 
@@ -284,89 +284,89 @@
 		<exec executable="${Tools.phpPath}" failonerror="true" >
 			<arg value="${targetFolderPath}/${projectBaseName}/test/php/index.php" />
 		</exec>
-		
+
 		<delete dir="${targetFolderPath}/${projectBaseName}/test" failonerror="true" />
 
 	</target>
-	
-	
+
+
 	<!-- Launch the PHP unit tests via local web server -->
 	<target name="runPhpTestsLocalServer">
-	
+
 		<!-- Test.Php.localServerPath must exist -->
 		<fail message="Test.Php.localServerPath not found. A local server folder is required to run unit tests. Create it if not exists">
-		    <condition>
-		    	<not>
-		    		<available file="${Test.Php.localServerPath}" />
-		    	</not>
-		    </condition>
+			<condition>
+				<not>
+					<available file="${Test.Php.localServerPath}" />
+				</not>
+			</condition>
 		</fail>
 
 		<copy todir="${Test.Php.localServerPath}/${projectBaseName}-unitTests/php/main" overwrite="true">
 			<fileset dir="${targetFolderPath}/${projectBaseName}/main" casesensitive="false" />
 		</copy>
-			
+
 		<copy todir="${Test.Php.localServerPath}/${projectBaseName}-unitTests/php/test" overwrite="true">
 			<fileset dir="${srcFolderPath}/test" casesensitive="false" />
 		</copy>
-		
+
 		<exec executable="${Tools.phpPath}" failonerror="true" >
 			<arg value="${Test.Php.localServerPath}/${projectBaseName}-unitTests/php/test/index.php" />
 		</exec>
 
 		<delete dir="${Test.Php.localServerPath}/${projectBaseName}-unitTests/php" failonerror="true" />
-		
+
 	</target>
-	
-	
+
+
 	<!-- Auxiliary concat to append the release files to js unit tests -->
 	<target name="runJsTestsAuxConcatFromRelease">
-	
+
 		<concat destfile="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js/index.js">
-					
+
 			<fileset dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main/js" casesensitive="false">
 				<include name="**/*.js" />
 			</fileset>
-	    
+
 		</concat>
-	
+
 	</target>
-	
-	
+
+
 	<!-- Auxiliary concat to append the non release files to js unit tests -->
 	<target name="runJsTestsAuxConcatFromBuild">
-	
+
 		<concat destfile="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js/index.js">
-					
+
 			<fileset dir="${targetFolderPath}/${projectBaseName}/main/js" casesensitive="false">
 				<include name="**/*.js" />
 			</fileset>
-	    
+
 		</concat>
-	
+
 	</target>
-	
-	
+
+
 	<!-- Launch the Js unit tests via local web server -->
 	<target name="runJsTestsLocalServer">
-	
+
 		<!-- Test.Js.localServerPath must exist -->
 		<fail message="Test.Js.localServerPath not found. A local server folder is required to run unit tests. Create it if not exists">
-		    <condition>
-		    	<not>
-		    		<available file="${Test.Js.localServerPath}" />
-		    	</not>
-		    </condition>
+			<condition>
+				<not>
+					<available file="${Test.Js.localServerPath}" />
+				</not>
+			</condition>
 		</fail>
 
 		<!-- Clear the destination folder -->
 		<delete dir="${Test.Js.localServerPath}/${projectBaseName}-unitTests" failonerror="true" />
-				
+
 		<!-- Copy all the test files to local server -->
 		<copy todir="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js" overwrite="true">
 			<fileset dir="${srcFolderPath}/test/js" casesensitive="false" />
 		</copy>
-		
+
 		<!-- Append all the Js code to the index.js file -->
 		<script language="javascript">
 			<![CDATA[
@@ -382,18 +382,18 @@
 			
 		    ]]>
 		</script>
-		
+
 		<concat destfile="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js/index.js" 
 				append="true">
-					
+
 			<fileset dir="${srcFolderPath}/test/js" casesensitive="false">
 				<include name="**/*.js" />
 				<exclude name="libs/" />
 				<exclude name="index.js" />
 			</fileset>
-	    
+
 		</concat>
-		
+
 		<!-- Launch the tests on all the enabled browsers -->
 		<script language="javascript">
 			<![CDATA[
@@ -417,15 +417,15 @@
 				}				
 			]]>
 		</script>
-				
+
 	</target>
-		
-	
+
+
 	<!-- Create the optimized release version and tag it with the current version and build number -->
 	<target name="createReleaseVersion">
 
 		<mkdir dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}"/>
-				
+
 		<script language="javascript">
 			<![CDATA[
 					
@@ -521,15 +521,15 @@
 			
 		    ]]>
 		</script>
-		
+
 	</target>
-	
-	
+
+
 	<!-- Generate the php documentation from source code -->
 	<target name="createPhpDoc">
 
 		<mkdir dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/doc/php"/>
-		
+
 		<exec executable="${Tools.phpPath}" failonerror="true" outputproperty="createPhpDocOutputRedir">
 			<arg value="${Tools.phpDocPath}" />
 			<arg value="--template=&quot;responsive-twig&quot;" />
@@ -542,10 +542,10 @@
 			<arg value="-t" />
 			<arg value="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/doc/php" />
 		</exec>
-		
+
 	</target>
-	
-	
+
+
 	<!-- Generate the js documentation from source code -->
 	<target name="createJsDoc">
 
@@ -561,25 +561,26 @@
 		</exec>
 
 	</target>
-	
-	
+
+
 	<!-- Create changelog based on a git repository -->
 	<target name="createGitChangeLog">
 
 		<!-- Create the changelog file -->
 		<property name="changeLogFilePath" value="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/Changelog.txt" />
 		<touch file="${changeLogFilePath}"/>
-		
+
 		<!-- Write the changelog file header -->
 		<echo file="${changeLogFilePath}" append="true" message="${projectBaseName}-${Build.versionNumber}.${build.number} CHANGELOG ---------------------------------------------" />
-		
+
 		<!-- Get the GIT tags sorted by date ascending -->
 		<exec executable="git" failonerror="true" outputproperty="gitTagsList">
-	    	<arg line="tag --sort version:refname"/>
-	    </exec> 
-		
+			<arg line="tag --sort version:refname"/>
+		</exec>
+
 		<!-- Split the tags and generate the respective output for the latest ${Release.gitChangeLogCount} number of versions -->
-		<script language="javascript"><![CDATA[
+		<script language="javascript">
+			<![CDATA[
 			
 			// Java 8 requires to load a compatibility library for some imports to work
 			var version = java.lang.System.getProperty("java.version");
@@ -648,10 +649,10 @@
 			}
 	       
 	    ]]></script>
-				
+
 	</target>
-	
-	
+
+
 	<!-- Apply minification to all the PNG files -->
 	<target name="minifyPNG">
 
@@ -684,14 +685,14 @@
 			<srcfile />
 			<arg value="-out" />
 			<targetfile />
-			
+
 			<mapper type="glob" from="*.png" to="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main/*.png" />
 
 		</apply>
 
 	</target>
-	
-	
+
+
 	<!-- Apply minification to all the JPG files -->
 	<target name="minifyJPG">
 
@@ -760,15 +761,15 @@
 		</delete>
 
 	</target>
-	
+
 	<!-- Compress html and php files that may contain inlined html. Those are marked with .phpTemp extension -->
 	<target name="minifyHTML">
 
-		<!-- TODO -->		
+		<!-- TODO -->
 
 	</target>
-	
-	
+
+
 	<!-- Apply minification to the js files -->
 	<target name="minifyJS">
 
@@ -815,30 +816,30 @@
 		</apply>
 
 	</target>
-	
-	
+
+
 	<!-- Generate the phar file from the files on the target folder if phar generation is enabled on setup build xml -->
 	<target name="createPhar">
 
 		<!-- Autoloader.php must exist on src/main/php/ for the phar to be correctly generated -->
 		<fail message="src/main/php/AutoLoader.php not found. This is required to create a phar that loads classes automatically">
-		    <condition>
-		    	<not>
-		    		<available file="${mainFolderPath}/php/AutoLoader.php" />
-		    	</not>
-		    </condition>
+			<condition>
+				<not>
+					<available file="${mainFolderPath}/php/AutoLoader.php" />
+				</not>
+			</condition>
 		</fail>
-		
+
 		<!--Define the contents for the stub file that will be autoexecuted when the phar file is included -->
 		<property name="phpStubFile" value="&lt;?php Phar::mapPhar(); include \'phar://${projectBaseName}.phar/php/AutoLoader.php\'; __HALT_COMPILER(); ?>"/>
-		
+
 		<!-- Create the phar using the current project name -->
 		<exec executable="${Tools.phpPath}" failonerror="true">
 			<arg value="-d display_errors" />
 			<arg value="-r" />
 			<arg value="$p = new Phar('${targetFolderPath}/${projectBaseName}/${projectBaseName}.phar', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '${projectBaseName}.phar'); $p->startBuffering(); $p->setStub('${phpStubFile}'); $p->buildFromDirectory('${targetFolderPath}/${projectBaseName}/main'); $p->compressFiles(Phar::GZ); $p->stopBuffering();" />
 		</exec>
-		
+
 		<script language="javascript">
 			<![CDATA[
 				
@@ -848,42 +849,42 @@
 			
 		    ]]>
 		</script>
-		
+
 	</target>
-	
-	
+
+
 	<!-- Generate the release version phar -->
 	<target name="createPharRelease">
 
 		<!--Define the contents for the stub file that will be autoexecuted when the phar file is included -->
 		<property name="phpStubFileRelease" value="&lt;?php Phar::mapPhar(); include \'phar://${projectBaseName}-${Build.versionNumber}.${build.number}.phar/php/AutoLoader.php\'; __HALT_COMPILER(); ?>"/>
-				
+
 		<!-- Create the phar using the current project name and version -->
 		<exec executable="${Tools.phpPath}" failonerror="true">
 			<arg value="-d display_errors" />
 			<arg value="-r" />
 			<arg value="$p = new Phar('${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.phar', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '${projectBaseName}-${Build.versionNumber}.${build.number}.phar'); $p->startBuffering(); $p->setStub('${phpStubFileRelease}'); $p->buildFromDirectory('${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main'); $p->compressFiles(Phar::GZ); $p->stopBuffering();" />
 		</exec>
-			
+
 	</target>
-	
-	
+
+
 	<!-- Generate a single JS file by merging all the js files on the target folder  -->
 	<target name="createMergedJs">
 
 		<echo file="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js" 
 					  append="true" 
 					  message="/** ${projectBaseName} ${Build.versionNumber}.${build.number} */&#13;&#10;" />
-		
+
 		<concat destfile="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js"
 				append="true">
-			
+
 			<fileset dir="${targetFolderPath}/${projectBaseName}/main" casesensitive="false">
 				<include name="**/*.js" />
 			</fileset>
-	    
+
 		</concat>
-		
+
 		<script language="javascript">
 			<![CDATA[
 				
@@ -893,10 +894,10 @@
 			
 		    ]]>
 		</script>
-				
+
 	</target>
-	
-	
+
+
 	<!-- Generate a release version of the single JS file -->
 	<target name="createMergedJsRelease">
 
@@ -904,24 +905,24 @@
 		<copy failonerror="true" 
 			  file="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js" 
 			  tofile="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.js" />
-		
+
 		<!-- Generate the minified version -->
 		<echo file="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.min.js" 
 			  append="true" 
 			  message="/** ${projectBaseName} ${Build.versionNumber}.${build.number} */&#13;&#10;" />
-				
+
 		<concat destfile="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.min.js"
 				append="true">
-					
+
 			<fileset dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main" casesensitive="false">
 				<include name="**/*.js" />
 			</fileset>
-	    
+
 		</concat>
-				
+
 	</target>
-	
-	
+
+
 	<!-- Generate the Jar file from the files on the target folder if jar generation is enabled on setup build xml -->
 	<target name="createJar">
 
@@ -929,10 +930,10 @@
 		<javac srcdir="${mainFolderPath}/java"
 			   destdir="${targetFolderPath}/${projectBaseName}/main"
 		       source="1.8" />
-		
+
 		<jar basedir="${targetFolderPath}/${projectBaseName}/main/java"
 			 destfile="${targetFolderPath}/${projectBaseName}/${projectBaseName}.jar" />
-		
+
 		<script language="javascript">
 			<![CDATA[
 				
@@ -941,74 +942,71 @@
 				}			
 		    ]]>
 		</script>
-		
+
 	</target>
 
-	
+
 	<!-- Generate a js file for each one of the ts files on the project and place them on target at the same folder as the sources -->
 	<target name="typeScript-compile">
 
 		<!-- Execute the tsc compiler for each one of the project .ts files and javascript targets -->
 		<script language="javascript">
 			<![CDATA[
-				
+							
 				load(project.getProperty("basedir") + '/Utils.js');
 			
 				var targets = project.getProperty("Build.Ts.compilerTargets").split(",");
 				var targetMainPath = project.getProperty("targetFolderPath") + "/" + project.getProperty("projectBaseName") + "/main";
 			
+				// Generate the tsconfig.json file. This is necessary to include all ts files recursively
+				// TODO - do not create it if it already exists!!
+				createFile(targetMainPath + '/ts/tsconfig.json', '{"compilerOptions": {}, "include": ["**/*"]}');
+			
 				for(var i=0; i < targets.length; i++){
 				
-					// Duplicate the ts folder for the current target
-					copyFolderTo(targetMainPath + "/ts", targetMainPath + "/ts-" + targets[i]);
-			
-					// Compile the copied files with the current js target
-					var fs = project.createDataType("fileset");
-
-					fs.setDir(new java.io.File(targetMainPath + "/ts-" + targets[i]));
-					fs.setCaseSensitive(false);
-					fs.setIncludes("**/*.ts");
-			
-					var apply = project.createTask("apply");
-					apply.setExecutable(project.getProperty("Tools.tsCompilerPath"));
-					apply.setFailonerror(true);
-					apply.addFileset(fs);
-					apply.createArg().setValue("--alwaysStrict");
-					apply.createArg().setLine("--target " + targets[i]);
-					apply.createSrcfile();
-					apply.perform();
+					// Compile the files for the current js target
+					var exec = project.createTask("exec");
+					exec.setFailonerror(true);
+					exec.setExecutable(project.getProperty("Tools.tsCompilerPath"));
+					
+					exec.createArg().setLine('--alwaysStrict');	
+					exec.createArg().setLine('--target ' + targets[i]);	
+					exec.createArg().setLine('--outDir "' + targetMainPath + '/ts-' + targets[i] + '"');	
+					exec.createArg().setLine('--rootDir "' + targetMainPath + '/ts"');
+			 		exec.createArg().setLine('--project "' + targetMainPath + '/ts"');							
+					exec.perform();
 				}
-						
+			
 		    ]]>
 		</script>
-		
+
 	</target>
-	
-	
+
+
 	<!-- Generate a single JS file from all the typescript files inside a folder -->
 	<target name="typeScript-createMergedJs">
 
 		<!-- TODO -->
-		
+
 	</target>
-	
-	
+
+
 	<!-- Generate the release version jar -->
 	<target name="createJarRelease">
 
 		<jar basedir="${mainFolderPath}/java"
 			 destfile="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.jar" />
-		
+
 	</target>
-	
-	
+
+
 	<!-- Removes all the unpacked files on the target folder -->
-	<target name="removeUnpackedFiles">		
+	<target name="removeUnpackedFiles">
 		<delete dir="${targetFolderPath}/${projectBaseName}/main" failonerror="true" />
 		<delete dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main" failonerror="false" />
 	</target>
-	
-	
+
+
 	<!-- Validate the project -->
 	<target name="validateProject" >
 
@@ -1019,8 +1017,8 @@
 		<fail if="javascript.fail.message" message="${javascript.fail.message}" />
 
 	</target>
-	
-	
+
+
 	<!-- Deploy project files to the specified localhost location -->
 	<target name="deployLocalHost">
 		<sync todir="${Deploy.LocalHost.destPath}" overwrite="true">
@@ -1028,8 +1026,8 @@
 			</fileset>
 		</sync>
 	</target>
-	
-	
+
+
 	<!-- Deploy project files to the specified remote ftp location -->
 	<target name="deployFtp">
 		<ftp verbose="true" passive="true" userid="${Deploy.Ftp.user}" password="${Deploy.Ftp.psw}" server="${Deploy.Ftp.server}" remotedir="${Deploy.Ftp.destPath}" >
@@ -1038,16 +1036,16 @@
 					<param name="cache.cachefile" value="${cacheFilePath}" />
 				</modified>
 			</fileset>
-		</ftp>	
+		</ftp>
 	</target>
-	
-	
+
+
 	<!-- Clean all the project elements -->
 	<target name="clean" depends="defineGlobalProperties">
-		
+
 		<delete file="${cacheFilePath}" failonerror="true" />
 		<delete dir="${targetFolderPath}" failonerror="true" />
-				
+
 		<!-- Perform all the build tasks -->
 		<script language="javascript">
 			<![CDATA[
@@ -1062,7 +1060,7 @@
 			
 		    ]]>
 		</script>
-		
+
 	</target>
 
 
@@ -1070,8 +1068,8 @@
 	<target name="cleanLocalHost">
 		<delete dir="${Deploy.LocalHost.destPath}" />
 	</target>
-	
-	
+
+
 	<!-- Clean the files on the ftp remote location if FTP deploy is enabled -->
 	<target name="cleanFtp">
 
@@ -1090,15 +1088,15 @@
 		</ftp>
 
 	</target>
-		
+
 
 	<!-- Update the TurboBuilder project files -->
 	<target name="updateTurboBuilder">
-		
+
 		<ant antfile="Update.xml" />
-		
+
 		<echo message="TURBOBUILDER UPDATED!" />
-		
+
 	</target>
-			
+
 </project>

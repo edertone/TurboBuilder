@@ -166,3 +166,21 @@ function copyFolderTo(source, dest){
 	copy.addFileset(fs);
 	copy.perform();
 }
+
+
+/**
+ * Create a file with the specified content
+ * 
+ * @param path Full path including the file name to be created
+ * @param contents String containing the text to be written to the file
+ * 
+ * @returns void
+ */
+function createFile(path, contents){
+	
+	var echo = project.createTask("echo");
+	
+	echo.setFile(new java.io.File(path));
+	echo.setMessage(contents);
+	echo.perform();
+}
