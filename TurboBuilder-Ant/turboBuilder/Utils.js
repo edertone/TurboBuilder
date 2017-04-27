@@ -169,6 +169,25 @@ function copyFolderTo(source, dest){
 
 
 /**
+ * Copy the specified file to the specified folder.
+ * 
+ * @param source A file system path including the filename that will be copied
+ * @param dest A file system path where the file will be copied.
+ * 
+ * @returns void
+ */
+function copyFileTo(source, dest){
+	
+	var copy = project.createTask("copy");
+	
+	copy.setFile(new java.io.File(source));
+	copy.setTodir(new java.io.File(dest));
+	copy.setOverwrite(true);
+	copy.perform();
+}
+
+
+/**
  * Create a file with the specified content
  * 
  * @param path Full path including the file name to be created
@@ -183,4 +202,22 @@ function createFile(path, contents){
 	echo.setFile(new java.io.File(path));
 	echo.setMessage(contents);
 	echo.perform();
+}
+
+
+/**
+ * change the name of a file
+ * 
+ * @param from Full path including the file name to be renamed
+ * @param to Full path including the file name that will be assigned
+ * 
+ * @returns void
+ */
+function renameFile(from, to){
+	
+	var move = project.createTask("move");
+	
+	move.setFile(new java.io.File(from));
+	move.setTofile(new java.io.File(to));
+	move.perform();
 }

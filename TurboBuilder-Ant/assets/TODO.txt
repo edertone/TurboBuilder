@@ -1,3 +1,4 @@
+- Implement js namespaces validation on Validate.js and create a global method to validate different language namespaces
 - Add feature to validate that all public methods have a corresponding test
 - Typescript compilation must be performed this way: 
 	2 - if createMergedJs enabled: generate a merged js file for all of the compiler js versions target

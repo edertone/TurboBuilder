@@ -177,7 +177,33 @@
 				if(project.getProperty("Validate.enabled") == "true"){
 					self.project.executeTarget("validateProject");
 				}
+									
+				if(project.getProperty("Build.Php.enabled") == "true"){
+							
+					if(project.getProperty("Build.Php.createPhar") == "true"){
+						self.project.executeTarget("createPhar");
+					}
+				}
+				
+				if(project.getProperty("Build.Java.enabled") == "true"){
+				
+					if(project.getProperty("Build.Java.createJar") == "true"){
+						self.project.executeTarget("createJar");
+					}
+				}
+			
+				if(project.getProperty("Build.Js.enabled") == "true"){
+			
+					if(project.getProperty("Build.Js.createMergedJs") == "true"){
+						self.project.executeTarget("javaScript-compile");
+					}
+				}	
+							
+				if(project.getProperty("Build.Ts.enabled") == "true"){
 						
+					self.project.executeTarget("typeScript-compile");
+				}
+									
 				if(project.getProperty("Release.generate") == "true"){
 					self.project.executeTarget("createReleaseVersion");
 				}
@@ -198,36 +224,6 @@
 					self.project.executeTarget("runJsTestsLocalServer");
 				}
 			
-				if(project.getProperty("Build.Php.enabled") == "true"){
-							
-					if(project.getProperty("Build.Php.createPhar") == "true"){
-						self.project.executeTarget("createPhar");
-					}
-				}
-				
-				if(project.getProperty("Build.Js.enabled") == "true"){
-			
-					if(project.getProperty("Build.Js.createMergedJs") == "true"){
-						self.project.executeTarget("createMergedJs");
-					}
-				}	
-				
-				if(project.getProperty("Build.Java.enabled") == "true"){
-				
-					if(project.getProperty("Build.Java.createJar") == "true"){
-						self.project.executeTarget("createJar");
-					}
-				}
-			
-				if(project.getProperty("Build.Ts.enabled") == "true"){
-			
-					self.project.executeTarget("typeScript-compile");
-			
-					if(project.getProperty("Build.Ts.createMergedJs") == "true"){
-						// self.project.executeTarget("typeScript-createMergedJs");
-					}
-				}
-						
 				if(project.getProperty("Build.keepUnPackedFiles") != "true"){
 					self.project.executeTarget("removeUnpackedFiles");
 				}
@@ -270,6 +266,83 @@
 		<replace dir="${targetFolderPath}/${projectBaseName}" token="@@package-build-version@@" value="${Build.versionNumber}.${build.number}" >
 			<exclude name="**/resources/"/>
 		</replace>
+
+	</target>
+
+	
+	<!-- Compile and merge all javascript files if necessary -->
+	<target name="javaScript-compile">
+
+		<echo file="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js" 
+					  append="true" 
+					  message="/** ${projectBaseName} ${Build.versionNumber}.${build.number} */&#13;&#10;" />
+
+		<concat destfile="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js"
+				append="true">
+
+			<fileset dir="${targetFolderPath}/${projectBaseName}/main/js" casesensitive="false">
+				<include name="**/*.js" />
+			</fileset>
+
+		</concat>
+
+	</target>
+	
+	
+	<!-- Compile and merge all typeScript files if necessary -->
+	<target name="typeScript-compile">
+
+		<!-- Execute the tsc compiler for each one of the project .ts files and javascript targets -->
+		<script language="javascript">
+			<![CDATA[
+							
+				load(project.getProperty("basedir") + '/Utils.js');
+			
+				var projectBaseName = project.getProperty("projectBaseName");						
+				var targets = project.getProperty("Build.Ts.compilerTargets").split(",");
+				var targetProjectBase = project.getProperty("targetFolderPath") + "/" + project.getProperty("projectBaseName")
+				var targetMainPath = targetProjectBase + "/main";
+			
+				// Generate the tsconfig.json file if it does not exist. This is necessary to include all ts files recursively
+				if(!fileExists(targetMainPath + '/ts/tsconfig.json')){
+			
+					createFile(targetMainPath + '/ts/tsconfig.json', '{"compilerOptions": {}, "include": ["**/*"]}');
+				}				
+			
+				for(var i=0; i < targets.length; i++){
+				
+					// Compile the files for the current js target
+					if(project.getProperty("Build.keepUnPackedFiles") == "true"){		
+					
+						var exec = project.createTask("exec");
+						exec.setFailonerror(true);
+						exec.setExecutable(project.getProperty("Tools.tsCompilerPath"));
+						
+						exec.createArg().setLine('--alwaysStrict');	
+						exec.createArg().setLine('--target ' + targets[i]);
+						exec.createArg().setLine('--outDir "' + targetMainPath + '/ts-' + targets[i] + '"');
+						exec.createArg().setLine('--rootDir "' + targetMainPath + '/ts"'); 		
+						exec.createArg().setLine('--project "' + targetMainPath + '/ts"');							
+						exec.perform();
+					}
+			
+					// Generate the merged JS file for the current target if merged JS is enabled			
+					if(project.getProperty("Build.Ts.createMergedJs") == "true"){
+								
+						exec = project.createTask("exec");
+						exec.setFailonerror(true);
+						exec.setExecutable(project.getProperty("Tools.tsCompilerPath"));
+						
+						exec.createArg().setLine('--alwaysStrict');	
+						exec.createArg().setLine('--target ' + targets[i]);	
+						exec.createArg().setLine('--out "' + targetProjectBase + '/' + projectBaseName + '-' + targets[i] + '.js"');
+						exec.createArg().setLine('--project "' + targetMainPath + '/ts"');							
+						exec.perform();
+					}
+				}
+			
+		    ]]>
+		</script>
 
 	</target>
 
@@ -428,28 +501,22 @@
 
 		<script language="javascript">
 			<![CDATA[
-					
-				// Java 8 requires to load a compatibility library for some imports to work
-				var version = java.lang.System.getProperty("java.version");
-				if (version.startsWith("1.8.0")) {
-				    load("nashorn:mozilla_compat.js");
-				}
-				
-				importPackage(Packages.org.apache.tools.ant.types);
-			   	importClass(java.io.File);
 			
+				load(project.getProperty("basedir") + '/Utils.js');
+					
 				var targetFolderPath = project.getProperty("targetFolderPath");
 				var projectBaseName = project.getProperty("projectBaseName");
 				var buildVersionNumber = project.getProperty("Build.versionNumber");
 				var buildNumber = project.getProperty("build.number");
+				var releaseFolderPath = targetFolderPath + "/" + projectBaseName + "-" + buildVersionNumber + "." + buildNumber;
 				var releaseOptimizePictures = project.getProperty("Release.optimizePictures");
 				var releaseOptimizePhp = project.getProperty("Release.optimizePhp");
 				var releaseOptimizeHtml = project.getProperty("Release.optimizeHtml");
 				var releaseOptimizeJs = project.getProperty("Release.optimizeJs");
 				var releaseOptimizeCss = project.getProperty("Release.optimizeCss");
 									
-				var fs = new FileSet();
-		      	fs.setDir(new File(targetFolderPath + "/" + projectBaseName));
+				var fs = project.createDataType("fileset");
+		      	fs.setDir(new java.io.File(targetFolderPath + "/" + projectBaseName));
 				fs.setCaseSensitive(false);
 			
 				var fsExcludes = [];
@@ -490,13 +557,13 @@
 				fs.setExcludes(fsExcludes.join(" "));
 			   			
 				var c = project.createTask("copy");
-				c.setTodir(new File(targetFolderPath + "/" + projectBaseName + "-" + buildVersionNumber + "." + buildNumber));
+				c.setTodir(new java.io.File(releaseFolderPath));
 				c.setOverwrite(true);
 		
 				c.addFileset(fs);
 				c.execute();
 			
-				// Call the ant tasks
+				// Call the optimization ant tasks
 				if(releaseOptimizePictures == "true"){
 					
 					self.project.executeTarget("minifyPNG");
@@ -519,6 +586,24 @@
 					self.project.executeTarget("minifyCSS");
 				}
 			
+				// Rename the merged files if exist to add the version number
+				var fs = project.createDataType("fileset");
+				
+				fs.setDir(new java.io.File(releaseFolderPath));
+				fs.setIncludes(projectBaseName + "*.js");
+				   
+			    var mergedFiles = fs.getDirectoryScanner(project).getIncludedFiles();
+			    
+			    for (var i = 0; i < mergedFiles.length; i++){
+			        
+					if(releaseOptimizeJs == "true"){
+			
+						renameFile(releaseFolderPath + '/' + mergedFiles[i], releaseFolderPath + '/' + mergedFiles[i].substring(0, mergedFiles[i].length - 3) + "-" + buildVersionNumber + "." + buildNumber + '.min.js');
+						copyFileTo(targetFolderPath + '/' + projectBaseName + '/' + mergedFiles[i], releaseFolderPath);
+					}
+					
+					renameFile(releaseFolderPath + '/' + mergedFiles[i], releaseFolderPath + '/' + mergedFiles[i].substring(0, mergedFiles[i].length - 3) + "-" + buildVersionNumber + "." + buildNumber + '.js');
+				}
 		    ]]>
 		</script>
 
@@ -775,11 +860,11 @@
 
 		<apply executable="java" failonerror="true">
 
-			<fileset dir="${targetFolderPath}/${projectBaseName}/main" casesensitive="false">
+			<fileset dir="${targetFolderPath}/${projectBaseName}" casesensitive="false">
 				<include name="**/*.js" />
 			</fileset>
 
-			<mapper type="glob" from="*.js" to="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main/*.js" />
+			<mapper type="glob" from="*.js" to="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/*.js" />
 
 			<arg line="-jar" />
 			<arg line="-Xss64m" />
@@ -868,61 +953,7 @@
 
 	</target>
 
-
-	<!-- Generate a single JS file by merging all the js files on the target folder  -->
-	<target name="createMergedJs">
-
-		<echo file="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js" 
-					  append="true" 
-					  message="/** ${projectBaseName} ${Build.versionNumber}.${build.number} */&#13;&#10;" />
-
-		<concat destfile="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js"
-				append="true">
-
-			<fileset dir="${targetFolderPath}/${projectBaseName}/main" casesensitive="false">
-				<include name="**/*.js" />
-			</fileset>
-
-		</concat>
-
-		<script language="javascript">
-			<![CDATA[
-				
-				if(project.getProperty("Release.generate") == "true"){
-					self.project.executeTarget("createMergedJsRelease");
-				}
-			
-		    ]]>
-		</script>
-
-	</target>
-
-
-	<!-- Generate a release version of the single JS file -->
-	<target name="createMergedJsRelease">
-
-		<!-- Copy the unminified version to release folder -->
-		<copy failonerror="true" 
-			  file="${targetFolderPath}/${projectBaseName}/${projectBaseName}.js" 
-			  tofile="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.js" />
-
-		<!-- Generate the minified version -->
-		<echo file="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.min.js" 
-			  append="true" 
-			  message="/** ${projectBaseName} ${Build.versionNumber}.${build.number} */&#13;&#10;" />
-
-		<concat destfile="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/${projectBaseName}-${Build.versionNumber}.${build.number}.min.js"
-				append="true">
-
-			<fileset dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main" casesensitive="false">
-				<include name="**/*.js" />
-			</fileset>
-
-		</concat>
-
-	</target>
-
-
+	
 	<!-- Generate the Jar file from the files on the target folder if jar generation is enabled on setup build xml -->
 	<target name="createJar">
 
@@ -942,51 +973,6 @@
 				}			
 		    ]]>
 		</script>
-
-	</target>
-
-
-	<!-- Generate a js file for each one of the ts files on the project and place them on target at the same folder as the sources -->
-	<target name="typeScript-compile">
-
-		<!-- Execute the tsc compiler for each one of the project .ts files and javascript targets -->
-		<script language="javascript">
-			<![CDATA[
-							
-				load(project.getProperty("basedir") + '/Utils.js');
-			
-				var targets = project.getProperty("Build.Ts.compilerTargets").split(",");
-				var targetMainPath = project.getProperty("targetFolderPath") + "/" + project.getProperty("projectBaseName") + "/main";
-			
-				// Generate the tsconfig.json file. This is necessary to include all ts files recursively
-				// TODO - do not create it if it already exists!!
-				createFile(targetMainPath + '/ts/tsconfig.json', '{"compilerOptions": {}, "include": ["**/*"]}');
-			
-				for(var i=0; i < targets.length; i++){
-				
-					// Compile the files for the current js target
-					var exec = project.createTask("exec");
-					exec.setFailonerror(true);
-					exec.setExecutable(project.getProperty("Tools.tsCompilerPath"));
-					
-					exec.createArg().setLine('--alwaysStrict');	
-					exec.createArg().setLine('--target ' + targets[i]);	
-					exec.createArg().setLine('--outDir "' + targetMainPath + '/ts-' + targets[i] + '"');	
-					exec.createArg().setLine('--rootDir "' + targetMainPath + '/ts"');
-			 		exec.createArg().setLine('--project "' + targetMainPath + '/ts"');							
-					exec.perform();
-				}
-			
-		    ]]>
-		</script>
-
-	</target>
-
-
-	<!-- Generate a single JS file from all the typescript files inside a folder -->
-	<target name="typeScript-createMergedJs">
-
-		<!-- TODO -->
 
 	</target>
 

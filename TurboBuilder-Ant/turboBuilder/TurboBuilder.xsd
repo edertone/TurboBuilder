@@ -299,7 +299,9 @@
 							<xs:element name="PhpNamespaces" minOccurs="0" maxOccurs="1">
 								
 								<xs:annotation>
-									<xs:documentation>A validation rule that verifies that all Php files on the project declare a well formed namespace. To be valid, the namespace must at least contain the path where the Php file is placed.</xs:documentation>
+									<xs:documentation>
+										A validation rule that verifies that all Php files on the project declare a well formed namespace.
+									</xs:documentation>
 								</xs:annotation>
 								
 								<xs:complexType>
@@ -325,6 +327,62 @@
 											<xs:documentation>
 												If enabled, all namespaces declared on all php files inside the project must contain the file path after main folder. 
 												For example, a file located at: 'src\main\php\managers\' must have a namespace that contains 'php\managers\'
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>	
+									
+									<xs:attribute name="mustContain" use="optional" default="" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>
+												Specifies a string that must be present on the namespace to be considered valid
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>	
+									
+									<xs:attribute name="excludes" use="optional" default="" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>
+												comma- or space-separated list of patterns of files that must be excluded; no files (except default excludes) are excluded when omitted. For example: "**" , "**/*.js"
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>		
+																	
+								</xs:complexType>
+								
+							</xs:element>
+							
+							<!-- JsNamespaces element -->
+							<xs:element name="JsNamespaces" minOccurs="0" maxOccurs="1">
+								
+								<xs:annotation>
+									<xs:documentation>
+										A validation rule that verifies that all Js files on the project declare a well formed namespace.
+									</xs:documentation>
+								</xs:annotation>
+								
+								<xs:complexType>
+								
+									<xs:attribute name="enabled" use="required" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Activates or deactivates the Js namespaces validation rule
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="mandatory" use="optional" default="true" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												Forces that all Js files inside this project must have a defined namespace
+											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
+									<xs:attribute name="forcePath" use="optional" default="true" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>
+												If enabled, all namespaces declared on all Js files inside the project must contain the file path after main folder. 
+												For example, a file located at: 'src\main\js\managers\' must have a namespace that contains 'js_managers'
 											</xs:documentation>
 										</xs:annotation>
 									</xs:attribute>	

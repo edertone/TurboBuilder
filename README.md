@@ -2,24 +2,42 @@
 
 A general purpose project builder for the most common developer needs.
 
-### Features
+### Main features
+
 - Works on any IDE that can run Ant tasks, or via command line
-- Generates a 'target' folder containing all the results of the build or the production release version
-- Support for multiple development languages: Js, Css, Php and Ts
-- Covers the whole project development cycle: Build, deploy, validate, test and production release
+- Covers the whole project development cycle: Build, deploy, validate, test and generate a production release
+
+All of the features can be enabled / disabled and configured via the main [TurboBuilder.xml](TurboBuilder-Ant/TurboBuilder.xml) setup file:
+
+#### Build features
+
+- Automatic version number generation
+- Generates a 'target' folder containing the results of the build
+- Supports multiple development languages: JavaScript, Css, Php, TypeScript and Java
+
+#### Deploy features
+
 - Automatic deploy to a remote ftp location
 - Automatic deploy to a localhost location
-- Automatic merging of all the project javascript files to a single .js
+
+#### Validate features
+
+- Automatic project structure and conventions validation
+- Namespace validation for the languages that support it (Make sure all the declared namespaces follow the same rules).
+
+#### Test features
+
+- Run unit tests as part of the build process (for supported languages)
+
+#### Release features
+
+- Automatic merging of all the project javascript or typescript files to a single .js
 - Automatic php phar generation
-- Automatic version number generation
+- Automatic typescript transpilation to one or more javascript language versions at the same time
 - Automatic jsdoc and phpdoc generation
 - Automatic js, css, html and php minification
 - Automatic images compression and optimitzation for jpg and png files
 - Automatic git changelog generation
-- Automatic project structure and conventions validation
-- Run unit tests for Php and JS as part of the build process
-
-All of the listed features can be enabled or disabled via the main [TurboBuilder.xml](TurboBuilder-Ant/TurboBuilder.xml) setup file.
 
 ### How to use it
 
@@ -31,9 +49,9 @@ TurboBuilder is currently based on [Apache Ant](http://ant.apache.org). You shou
 
 3. Create a .turboBuilder folder at the root of your project and copy there all the files from [TurboBuilder-Ant/turboBuilder/](TurboBuilder-Ant/turboBuilder/).
 
-4. Create a TurboBuilder.xml file at the root of your project to configure the build process. You can use [this template](TurboBuilder-Ant/TurboBuilder.xml) as a starting point. You must change all the parameters inside the file depending on your build needs.
+4. Create a TurboBuilder.xml file at the root of your project to configure the build process. You can use [this template](TurboBuilder-Ant/TurboBuilder.xml) as a starting point. You must change all the parameters inside the file depending on your build needs. Note that inline documentation and autocompletion is available for this xml file via the provided xsd. Any editor or IDE that can provide this feature will be able to show inline doc and autocompletion.
 
-5. make sure that your project is organized with the following directories structure:
+5. make sure that your project is organized with the following directories structure (unused folders are not mandatory):
   ```
   MyProjectFolder
   │   TurboBuilder.xml
@@ -41,12 +59,14 @@ TurboBuilder is currently based on [Apache Ant](http://ant.apache.org). You shou
   ├───src
   │   ├───main
   │   │   ├───css
+  │   │   ├───java
   │   │   ├───js
   │   │   ├───php
   │   │   │       AutoLoader.php
   │   │   │
   │   │   ├───resources
-  │   │   └───ts
+  │   │   ├───ts
+  │   |   │       tsconfig.json
   │   └───test
   │       ├───js
   │       └───php
@@ -54,8 +74,11 @@ TurboBuilder is currently based on [Apache Ant](http://ant.apache.org). You shou
   │               index.php
   │
   └───.turboBuilder
-          Build.xml
-          BuildSetupSchema.xsd
+          Builder.xml
+          TurboBuilder.xsd
+          Update.xml
+          Utils.js
+          Validate.js
   ```
 
 6. Execute the .turboBuilder/Builder.xml ant script with your favourite IDE or command line as part of your project build process. There are two ant targets that can be executed: 'build' and 'clean'. The first one builds the project and creates a target folder which contains the results of the build process. The second target cleans the built files (basically deletes the target). All the build process is configured via the TurboBuilder.xml setup values.
@@ -68,7 +91,7 @@ As said before, there are two setup files that control what is done when the pro
 
 ### Update an existing project
 
-You can easily update TurboBuilder on a project that is already using it by setting to true the Update.builder flag that is found on the TurboBuilder-OneTime.properties file. It will take care of downloading the latest versions of the files to your project folder.
+You can easily update TurboBuilder on a project that is already using it by setting to true the Update.builder flag that is found on the TurboBuilder-OneTime.properties file and launching a build. It will take care of downloading the latest versions of the files to your project folder.
 
 
 ### Dependencies
@@ -82,6 +105,7 @@ Following are only necessary if we want to use the respective feature:
 - jsdoc.cmd
 - nodeJs
 - php.exe
+- Typescript compiler
 
 The following tools are bundled inside the TurboBuilder-Tools package:
 - yuicompressor-2.4.7
