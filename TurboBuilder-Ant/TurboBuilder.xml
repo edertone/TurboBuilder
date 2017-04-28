@@ -52,6 +52,7 @@
 						  phpStructure="true"
 						  jsStructure="true"
 						  tsStructure="true"
+						  tsConfigFile="true"
 						  javaStructure="true"
 						  cssStructure="true"
 						  checkGitIgnore="true" />
@@ -74,8 +75,8 @@
 		
 			<Header path="path/to/some/CoyprightHeaderFile.txt" 
 					appliesTo="src"
-					includes="**/*.codeFileExtension"
-					excludes="" />
+					includes="**/*.languageFileExtension"
+					excludes="**/libs/**" />
 		
 		</CopyrightHeaders>
 	

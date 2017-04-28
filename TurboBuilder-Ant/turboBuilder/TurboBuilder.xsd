@@ -791,6 +791,8 @@
 							</xs:annotation>
 						</xs:attribute>			
 												
+						<!-- TODO - add missing attributes -->
+						
 					</xs:complexType>
 					
 				</xs:element>				

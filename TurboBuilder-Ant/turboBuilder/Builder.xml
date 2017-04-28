@@ -103,7 +103,7 @@
 		<property name="Test.Js.enabled" value="false" />
 
 		<property name="Tools.path" value="${user.home}/TurboBuilder-Tools" />
-		<property name="Tools.minifierPath" value="${Tools.path}/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar" />
+		<property name="Tools.jsMinifierPath" value="${Tools.path}/closure-compiler-v20170423/closure-compiler-v20170423.jar" />
 		<property name="Tools.htmlCompressorPath" value="${Tools.path}/htmlcompressor/htmlcompressor-1.5.3.jar" />
 		<property name="Tools.pngQuantPath" value="${Tools.path}/pngquant-windows/pngquant.exe" />
 		<property name="Tools.pngOptimizerPath" value="${Tools.path}/optipng-0.7.4-win32/optipng.exe" />
@@ -153,7 +153,7 @@
 		<fail message="TurboBuilder-Tools NOT found. These tools are required to perform most of the builder tasks. Make sure the folder '${Tools.path}' exists and contains all the turbobuilder required command line executables: Minifiers, compressors, optimizers...">
 			<condition>
 				<not>
-					<available file="${Tools.minifierPath}" />
+					<available file="${Tools.jsMinifierPath}" />
 				</not>
 			</condition>
 		</fail>
@@ -578,12 +578,12 @@
 					self.project.executeTarget("minifyHTML");
 				}
 			
-				if(releaseOptimizeJs == "true"){
-					self.project.executeTarget("minifyJS");
-				}
-			
 				if(releaseOptimizeCss == "true"){
 					self.project.executeTarget("minifyCSS");
+				}
+			
+				if(releaseOptimizeJs == "true"){
+					self.project.executeTarget("minifyJS");
 				}
 			
 				// Rename the merged files if exist to add the version number
@@ -667,14 +667,6 @@
 		<script language="javascript">
 			<![CDATA[
 			
-			// Java 8 requires to load a compatibility library for some imports to work
-			var version = java.lang.System.getProperty("java.version");
-			if (version.startsWith("1.8.0")) {
-			    load("nashorn:mozilla_compat.js");
-			}
-			
-			importClass(java.io.File);
-			
 			// get the list of tags on the git repo and clean up any unwanted character
 			var tags = project.getProperty("gitTagsList").split("\n").reverse();
 			
@@ -683,10 +675,8 @@
 				tags[i] = tags[i].replace(/\r?\n|\r/g, "");
 			}
 			
-			var changeLogFile = new File(project.getProperty("changeLogFilePath"));
-	        
 			var echo = project.createTask("echo");
-			echo.setFile(changeLogFile);
+			echo.setFile(new java.io.File(project.getProperty("changeLogFilePath")));
 			echo.setAppend(true);
 			
 			echo.setMessage("\n\n");
@@ -868,10 +858,11 @@
 
 			<arg line="-jar" />
 			<arg line="-Xss64m" />
-			<arg path="${Tools.minifierPath}" />
-			<arg line="--charset UTF-8" />
+			<arg path="${Tools.jsMinifierPath}" />
+			<arg line="--js" />
 			<srcfile />
-			<arg line="-o" />
+			<arg line="--warning_level QUIET" />
+			<arg line="--js_output_file" />
 			<targetfile />
 
 		</apply>
@@ -892,7 +883,7 @@
 
 			<arg line="-jar" />
 			<arg line="-Xss64m" />
-			<arg path="${Tools.minifierPath}" />
+			<arg path="${Tools.jsMinifierPath}" />
 			<arg line="--charset UTF-8" />
 			<srcfile />
 			<arg line="-o" />
