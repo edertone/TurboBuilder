@@ -146,6 +146,12 @@
 										</xs:annotation>
 									</xs:attribute>
 								
+									<xs:attribute name="compilerDeclarationFile" use="required" type="xs:boolean">
+										<xs:annotation>
+											<xs:documentation>Enable or disable the generation of d.ts files as part of the compilation process. These files allow us to use the compiled javascript source in other ts projects while retaining type information.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									
 									<xs:attribute name="compilerAlwaysStrict" use="required" type="xs:boolean">
 										<xs:annotation>
 											<xs:documentation>Enable or disable the generation of "use strict" on the generated javascript files. It is recommended to enable it.</xs:documentation>

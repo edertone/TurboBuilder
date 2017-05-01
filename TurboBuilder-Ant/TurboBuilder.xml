@@ -24,6 +24,7 @@
 	
 		<Ts enabled="false"
 			createMergedJs="false"
+			compilerDeclarationFile="true"
 			compilerAlwaysStrict="true"
 			compilerSourceMap="false"
 			compilerTargets="ES3,ES5,ES6" />	   
