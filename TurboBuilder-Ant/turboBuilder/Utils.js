@@ -221,3 +221,23 @@ function renameFile(from, to){
 	move.setTofile(new java.io.File(to));
 	move.perform();
 }
+
+
+/**
+ * Open an url with the specified browser
+ * 
+ * @param url Url to open 
+ * @param browserExecutable Full path to the browser executable
+ * 
+ * @returns void
+ */
+function launchOnBrowser(url, browserExecutable){
+	
+	var exec = project.createTask("exec");
+	exec.setExecutable(browserExecutable);
+	exec.setSpawn(true);
+
+	exec.createArg().setLine(encodeURI(url));
+	
+	exec.perform();
+}

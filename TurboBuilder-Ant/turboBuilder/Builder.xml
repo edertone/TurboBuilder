@@ -123,7 +123,7 @@
 
 
 	<!-- The main build task that executes all the build tasks as defined on the TurboBuilder.xml file -->
-	<target name="build" depends="defineGlobalProperties">
+	<target name="build" depends="defineGlobalProperties" description="This is the task that must be called to execute the build process">
 
 		<!-- Update TurboBuilder if necessary or run the build process -->
 		<script language="javascript">
@@ -135,7 +135,7 @@
 			
 				}else{
 				
-					self.project.executeTarget("buildFullProcess");				
+					self.project.executeTarget("-buildContinue");				
 				}
 		    ]]>
 		</script>
@@ -147,7 +147,7 @@
 
 
 	<!-- Continues the build execution after update verification is performed -->
-	<target name="buildFullProcess">
+	<target name="-buildContinue">
 
 		<!-- TurboBuilder-Tools folder must exist and contain at least one of the expected tools -->
 		<fail message="TurboBuilder-Tools NOT found. These tools are required to perform most of the builder tasks. Make sure the folder '${Tools.path}' exists and contains all the turbobuilder required command line executables: Minifiers, compressors, optimizers...">
@@ -222,6 +222,10 @@
 			
 				if(project.getProperty("Test.Js.enabled") == "true"){						
 					self.project.executeTarget("runJsTestsLocalServer");
+				}
+			
+				if(project.getProperty("Test.Ts.enabled") == "true"){						
+					self.project.executeTarget("runTsTestsLocalServer");
 				}
 			
 				if(project.getProperty("Build.keepUnPackedFiles") != "true"){
@@ -303,10 +307,12 @@
 				var targetProjectBase = project.getProperty("targetFolderPath") + "/" + project.getProperty("projectBaseName")
 				var targetMainPath = targetProjectBase + "/main";
 			
-				// Generate the tsconfig.json file if it does not exist. This is necessary to include all ts files recursively
+				// The tsconfig.json file must exist to define the ts files that need to be included in the build and their proper sort
 				if(!fileExists(targetMainPath + '/ts/tsconfig.json')){
 			
-					createFile(targetMainPath + '/ts/tsconfig.json', '{"compilerOptions": {}, "include": ["**/*"]}');
+					fail = project.createTask("fail");
+		            fail.setMessage("Could not find typescript config file at: " + targetMainPath + '/ts/tsconfig.json');
+		            fail.perform();
 				}				
 			
 				for(var i=0; i < targets.length; i++){
@@ -416,39 +422,11 @@
 	</target>
 
 
-	<!-- Auxiliary concat to append the release files to js unit tests -->
-	<target name="runJsTestsAuxConcatFromRelease">
-
-		<concat destfile="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js/index.js">
-
-			<fileset dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main/js" casesensitive="false">
-				<include name="**/*.js" />
-			</fileset>
-
-		</concat>
-
-	</target>
-
-
-	<!-- Auxiliary concat to append the non release files to js unit tests -->
-	<target name="runJsTestsAuxConcatFromBuild">
-
-		<concat destfile="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js/index.js">
-
-			<fileset dir="${targetFolderPath}/${projectBaseName}/main/js" casesensitive="false">
-				<include name="**/*.js" />
-			</fileset>
-
-		</concat>
-
-	</target>
-
-
 	<!-- Launch the Js unit tests via local web server -->
 	<target name="runJsTestsLocalServer">
 
 		<!-- Test.Js.localServerPath must exist -->
-		<fail message="Test.Js.localServerPath not found. A local server folder is required to run unit tests. Create it if not exists">
+		<fail message="Test.Js.localServerPath not found. A local server folder is required to run JS unit tests. Create it if not exists">
 			<condition>
 				<not>
 					<available file="${Test.Js.localServerPath}" />
@@ -460,26 +438,44 @@
 		<delete dir="${Test.Js.localServerPath}/${projectBaseName}-unitTests" failonerror="true" />
 
 		<!-- Copy all the test files to local server -->
-		<copy todir="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js" overwrite="true">
-			<fileset dir="${srcFolderPath}/test/js" casesensitive="false" />
+		<copy todir="${Test.Js.localServerPath}/${projectBaseName}-unitTests/ts" overwrite="true">
+			<fileset dir="${srcFolderPath}/test/ts" casesensitive="false" />
 		</copy>
 
-		<!-- Append all the Js code to the index.js file -->
+		<!-- Append all the Js code that needs to be tested to the index.js file -->
 		<script language="javascript">
 			<![CDATA[
-					      								
+			
+				var targetFolderPath = project.getProperty("targetFolderPath");
+				var projectBaseName = project.getProperty("projectBaseName");
+				var buildVersionNumber = project.getProperty("Build.versionNumber");
+				var buildNumber = project.getProperty("build.number");
+				
+				var fs = project.createDataType("fileset");
+				
+				fs.setCaseSensitive(false);
+				fs.setIncludes("**/*.js");
+			
 				if(project.getProperty("Release.generate") == "true"){
-			
-					self.project.executeTarget("runJsTestsAuxConcatFromRelease");
-							
+		
+					fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName + '-' + buildVersionNumber + '.' + buildNumber + '/main/js'));
+
 				}else{
-			
-					self.project.executeTarget("runJsTestsAuxConcatFromBuild");
+					
+					fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName + '/main/js'));
 				}
+			
+				var concat = project.createDataType("concat");
+				
+				concat.setDestfile(new java.io.File(project.getProperty("Test.Js.localServerPath") + '/' + projectBaseName + '-unitTests/js/index.js'));
+				concat.addFileset(fs);
+				concat.setAppend(false);
+				concat.perform();
 			
 		    ]]>
 		</script>
 
+		<!-- Append all the Js tests to the index.js file -->
 		<concat destfile="${Test.Js.localServerPath}/${projectBaseName}-unitTests/js/index.js" 
 				append="true">
 
@@ -495,6 +491,8 @@
 		<script language="javascript">
 			<![CDATA[
 			    
+				load(project.getProperty("basedir") + '/Utils.js');
+							
 				var browsersEnabled = project.getProperty("Test.Js.Browser.enabled").split(",");
 				var browserPaths = project.getProperty("Test.Js.Browser.osPath").split(",");
 				var url = project.getProperty("Test.Js.localServerUrl") + "/" + project.getProperty("projectBaseName") + "-unitTests/js/index.html";
@@ -503,20 +501,102 @@
 					
 					if(browsersEnabled[i] === "true"){
 			
-						var exec = project.createTask("exec");
-						exec.setExecutable(browserPaths[i]);
-						exec.setSpawn(true);
-					
-						exec.createArg().setLine(encodeURI(url));
-						
-						exec.perform();
+						launchOnBrowser(url, browserPaths[i]);
 					}						
 				}				
 			]]>
 		</script>
 
 	</target>
+	
+	
+	<!-- Launch the Ts unit tests via local web server -->
+	<target name="runTsTestsLocalServer">
+	
+		<!-- Test.Ts.localServerPath must exist -->
+		<fail message="Test.Ts.localServerPath not found. A local server folder is required to run TS unit tests. Create it if not exists">
+			<condition>
+				<not>
+					<available file="${Test.Ts.localServerPath}" />
+				</not>
+			</condition>
+		</fail>
 
+		<!-- Clear the destination folder -->
+		<delete dir="${Test.Ts.localServerPath}/${projectBaseName}-unitTests" failonerror="true" />
+
+		<!-- Append all the Ts code that needs to be tested to the index.js file for each one of the defined targets -->
+		<script language="javascript">
+			<![CDATA[
+			
+				load(project.getProperty("basedir") + '/Utils.js');
+							
+				var localServerPath = project.getProperty("Test.Ts.localServerPath");
+				var srcFolderPath = project.getProperty("srcFolderPath");
+				var targetFolderPath = project.getProperty("targetFolderPath");
+				var projectBaseName = project.getProperty("projectBaseName");
+				var buildVersionNumber = project.getProperty("Build.versionNumber");
+				var buildNumber = project.getProperty("build.number");
+				var targets = project.getProperty("Test.Ts.targets").split(",");
+				
+				for(var i=0; i < targets.length; i++){
+					
+					// Copy all the test files to local server on the current target
+					copyFolderTo(project.getProperty("srcFolderPath") + '/test/ts', localServerPath + '/' + projectBaseName + '-unitTests/ts-' + targets[i]);
+			
+					var fs = project.createDataType("fileset");
+					
+					fs.setCaseSensitive(false);
+					fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName));
+				
+					if(project.getProperty("Release.generate") == "true"){
+			
+						fs.setIncludes(projectBaseName + '-' + 'targets[i]' + '-' + buildVersionNumber + '.' + buildNumber + '.min.js');
+	
+					}else{
+						
+						fs.setIncludes(projectBaseName + '-' + targets[i] + '.js');
+					}
+				
+					var concat = project.createDataType("concat");
+					concat.setDestfile(new java.io.File(localServerPath + '/' + projectBaseName + '-unitTests/ts-' + targets[i] + '/index.js'));
+					concat.addFileset(fs);
+					concat.setAppend(false);
+					concat.perform();
+			
+					// Append all the tests to the index.js file 
+					var fs = project.createDataType("fileset");
+					fs.setCaseSensitive(false);
+					fs.setDir(new java.io.File(srcFolderPath + '/test/ts'));
+					fs.setIncludes('**/*.js');
+					fs.setExcludes('libs/');
+					fs.setExcludes('index.js');
+			
+					var concat = project.createDataType("concat");
+					concat.setDestfile(new java.io.File(localServerPath + '/' + projectBaseName + '-unitTests/ts-' + targets[i] + '/index.js'));
+					concat.addFileset(fs);
+					concat.setAppend(true);
+					concat.perform();
+			
+					// Launch the tests on all the enabled browsers
+					var browsersEnabled = project.getProperty("Test.Ts.Browser.enabled").split(",");
+					var browserPaths = project.getProperty("Test.Ts.Browser.osPath").split(",");
+					var url = project.getProperty("Test.Ts.localServerUrl") + "/" + project.getProperty("projectBaseName") + '-unitTests/ts-' + targets[i] + '/index.html';
+				
+					for(var j=0; j < browserPaths.length; j++){
+						
+						if(browsersEnabled[j] === "true"){
+				
+							launchOnBrowser(url, browserPaths[j]);
+						}						
+					}
+				}
+						
+		    ]]>
+		</script>
+		
+	</target>
+	
 
 	<!-- Create the optimized release version and tag it with the current version and build number -->
 	<target name="createReleaseVersion">
@@ -1042,7 +1122,7 @@
 
 
 	<!-- Clean all the project elements -->
-	<target name="clean" depends="defineGlobalProperties">
+	<target name="clean" depends="defineGlobalProperties" description="This is the task that must be called to clean the project build">
 
 		<delete file="${cacheFilePath}" failonerror="true" />
 		<delete dir="${targetFolderPath}" failonerror="true" />
