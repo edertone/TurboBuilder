@@ -25,7 +25,7 @@
 		<Ts enabled="false"
 			createMergedJs="false"
 			compilerDeclarationFile="true"
-			compilerAlwaysStrict="true"
+			compilerStrict="true"
 			compilerSourceMap="false"
 			compilerTargets="ES3,ES5,ES6" />	   
 		   
@@ -58,18 +58,21 @@
 						  cssStructure="true"
 						  checkGitIgnore="true" />
 
-		<JsNamespaces enabled="true"
-				   	  mandatory="true"		
-				   	  forcePath="true"
-				   	  mustContain="some_js_namespace_here"
-				   	  excludes="" />
-							   
-		<PhpNamespaces enabled="true"
+		<PhpNamespaces enabled="false"
 					   mandatory="true"		
-					   forcePath="true"
-					   mustContain="some\php\namespace\string\here"
+					   mustContain="some\php\namespace\string\here\$1\$2"
 					   excludes="" />
-
+		
+		<JsNamespaces enabled="false"
+				   	  mandatory="true"		
+				   	  mustContain="some_js_namespace_here_$1_$2"
+				   	  excludes="" />
+				   	  
+   	 	<TsNamespaces enabled="false"
+				   	  mandatory="true"		
+				   	  mustContain="some_ts_namespace_here_$1_$2"
+				   	  excludes="" />
+		
 		<Css enabled="true" />
 
 		<CopyrightHeaders enabled="true">
