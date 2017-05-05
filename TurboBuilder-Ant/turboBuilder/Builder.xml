@@ -547,14 +547,15 @@
 					var fs = project.createDataType("fileset");
 					
 					fs.setCaseSensitive(false);
-					fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName));
-				
+					
 					if(project.getProperty("Release.generate") == "true"){
 			
-						fs.setIncludes(projectBaseName + '-' + 'targets[i]' + '-' + buildVersionNumber + '.' + buildNumber + '.min.js');
+						fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName + '-' + buildVersionNumber + '.' + buildNumber));
+						fs.setIncludes(projectBaseName + '-' + targets[i] + '-' + buildVersionNumber + '.' + buildNumber + '.min.js');
 	
 					}else{
 						
+						fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName));
 						fs.setIncludes(projectBaseName + '-' + targets[i] + '.js');
 					}
 				

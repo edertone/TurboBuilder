@@ -1,9 +1,10 @@
 # TurboBuilder
 
-A general purpose project builder for the most common developer needs.
+A general purpose project builder to automate common development tasks.
 
 ### Main features
 
+- Supports multiple development languages: JavaScript, Css, Php, TypeScript and Java
 - Works on any IDE that can run Ant tasks, or via command line
 - Covers the whole project development cycle: Build, deploy, validate, test and generate a production release
 
@@ -11,9 +12,9 @@ All of the features can be enabled / disabled and configured via the main [Turbo
 
 #### Build features
 
+- Compiles source code for several modern languages
 - Automatic version number generation
-- Generates a 'target' folder containing the results of the build
-- Supports multiple development languages: JavaScript, Css, Php, TypeScript and Java
+- Generates a 'target' folder containing all the results of the build
 
 #### Deploy features
 
@@ -23,7 +24,8 @@ All of the features can be enabled / disabled and configured via the main [Turbo
 #### Validate features
 
 - Automatic project structure and conventions validation
-- Namespace validation for the languages that support it (Make sure all the declared namespaces follow the same rules).
+- Verify that all project files have the same copyright header based on a template
+- Namespace validation for the languages that support it (Make sure all the declared namespaces follow the same rules)
 
 #### Test features
 
@@ -32,10 +34,11 @@ All of the features can be enabled / disabled and configured via the main [Turbo
 #### Release features
 
 - Automatic merging of all the project javascript or typescript files to a single .js
-- Automatic php phar generation
-- Automatic typescript transpilation to one or more javascript language versions at the same time
-- Automatic jsdoc and phpdoc generation
-- Automatic js, css, html and php minification
+- Php phar generation
+- Java jar generation
+- Typescript transpilation to one or more javascript language versions at the same time
+- Jsdoc and phpdoc generation
+- Js, css, html and php minification
 - Automatic images compression and optimitzation for jpg and png files
 - Automatic git changelog generation
 
@@ -108,7 +111,7 @@ Following are only necessary if we want to use the respective feature:
 - Typescript compiler
 
 The following tools are bundled inside the TurboBuilder-Tools package:
-- yuicompressor-2.4.7
+- closure compiler
 - htmlcompressor-1.5.3.jar
 - pngquant.exe
 - optipng.exe
