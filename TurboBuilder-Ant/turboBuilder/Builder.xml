@@ -205,7 +205,12 @@
 				}
 									
 				if(project.getProperty("Release.generate") == "true"){
+					
 					self.project.executeTarget("createReleaseVersion");
+			
+					if(project.getProperty("Build.Php.createPhar") == "true"){
+						self.project.executeTarget("createPharRelease");
+					}
 				}
 			
 				if(project.getProperty("Test.Php.enabled") == "true"){
@@ -1020,16 +1025,6 @@
 			<arg value="-r" />
 			<arg value="$p = new Phar('${targetFolderPath}/${projectBaseName}/${projectBaseName}.phar', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '${projectBaseName}.phar'); $p->startBuffering(); $p->setStub('${phpStubFile}'); $p->buildFromDirectory('${targetFolderPath}/${projectBaseName}/main'); $p->compressFiles(Phar::GZ); $p->stopBuffering();" />
 		</exec>
-
-		<script language="javascript">
-			<![CDATA[
-				
-				if(project.getProperty("Release.generate") == "true"){
-					self.project.executeTarget("createPharRelease");
-				}
-			
-		    ]]>
-		</script>
 
 	</target>
 
