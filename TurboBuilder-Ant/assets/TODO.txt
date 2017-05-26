@@ -1,3 +1,4 @@
 - Implement js namespaces validation on Validate.js and create a global method to validate different language namespaces
 - Add feature to validate that all public methods have a corresponding test
 - Add feature to validate that javascript files start with "use strict"
+- Add feature to validate that allows us to define one or more strings that are forbidden to appear on the project or some parts of it. If the string or strings are found, build will fail.
