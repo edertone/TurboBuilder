@@ -23,6 +23,7 @@
 			  createJar="false" />
 	
 		<Ts enabled="false"
+            createMergedTs="false"
 			createMergedJs="false"
 			compilerDeclarationFile="true"
 			compilerStrict="true"
@@ -92,7 +93,8 @@
 	
 		<Php enabled="false" 
 			 mode="commandLine"
-			 localServerPath="" />
+			 localServerPath=""
+             coverageReport="true" />
 		
 		<Js enabled="false"
 			localServerPath="C:/xampp/htdocs/unitTests"
