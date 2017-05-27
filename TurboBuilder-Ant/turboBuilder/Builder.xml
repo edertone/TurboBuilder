@@ -661,7 +661,7 @@
 					self.project.executeTarget("createJsDoc");
 				}
 			
-				if(project.getProperty("Release.gitChangeLog") !== "false"){
+				if(project.getProperty("Release.gitChangeLog") == "true"){
 					self.project.executeTarget("createGitChangeLog");
 				}
 			
