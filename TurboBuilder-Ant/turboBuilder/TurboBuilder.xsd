@@ -230,7 +230,7 @@
 							</xs:annotation>
 						</xs:attribute>
 						
-						<xs:attribute name="gitChangeLog" default="false" type="xs:boolean">
+						<xs:attribute name="gitChangeLog" default="true" type="xs:boolean">
 							<xs:annotation>
 								<xs:documentation>Enable or disable the automatic GIT changelog generation to the 'target/projectName-version/changelog' folder</xs:documentation>
 							</xs:annotation>

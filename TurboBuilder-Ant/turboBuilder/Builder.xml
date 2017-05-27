@@ -89,7 +89,7 @@
 		<property name="Release.generate" value="false" />
 		<property name="Release.phpDoc" value="false" />
 		<property name="Release.jsDoc" value="false" />
-		<property name="Release.gitChangeLog" value="false" />
+		<property name="Release.gitChangeLog" value="true" />
 		<property name="Release.gitChangeLogCount" value="5" />
 		<property name="Release.optimizePictures" value="true" />
 		<property name="Release.optimizePhp" value="false" />
@@ -661,7 +661,7 @@
 					self.project.executeTarget("createJsDoc");
 				}
 			
-				if(project.getProperty("Release.gitChangeLog") == "true"){
+				if(project.getProperty("Release.gitChangeLog") !== "false"){
 					self.project.executeTarget("createGitChangeLog");
 				}
 			
