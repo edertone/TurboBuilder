@@ -100,6 +100,7 @@
 		<property name="Test.Php.enabled" value="false" />
 		<property name="Test.Php.mode" value="commandLine" />
 		<property name="Test.Php.coverageReport" value="true" />
+		<property name="Test.Php.coverageReportOpenAfterTests" value="true" />
 		<property name="Test.Js.enabled" value="false" />
 
 		<property name="Tools.path" value="${user.home}/TurboBuilder-Tools" />
@@ -393,15 +394,18 @@
 		<script language="javascript">
 			<![CDATA[
 			    
+				var coverageReportPath = project.getProperty("targetFolderPath") + '/' + project.getProperty("projectBaseName") + '/coverage/php';
+						
 				var exec = project.createTask("exec");
 				exec.setExecutable(project.getProperty("Tools.phpPath"));
-				exec.setFailonerror(true);
+				exec.setResultProperty('RuntimeProperty-runPhpTestsCmd-TestsResult');
+				exec.setFailonerror(false);
 				
 				exec.createArg().setLine('"' + project.getProperty("Tools.phpUnitPath") + '"');
 							
 				if(project.getProperty("Test.Php.coverageReport") !== "false"){
 				
-					exec.createArg().setLine('--coverage-html "' + project.getProperty("targetFolderPath") + '/' + project.getProperty("projectBaseName") + '/coverage/php"');							
+					exec.createArg().setLine('--coverage-html "' + coverageReportPath + '"');							
 				}
 			
 				exec.createArg().setLine('--configuration "' + project.getProperty("targetFolderPath") + '/' + project.getProperty("projectBaseName") + '/test/php/PhpUnitSetup.xml"');
@@ -410,7 +414,26 @@
 				exec.createArg().setLine('"' + project.getProperty("targetFolderPath") + "/" + project.getProperty("projectBaseName") + '/"');
 							
 				exec.perform();
+							
+				// Open the coverage report if necessary
+				if(project.getProperty("Test.Php.coverageReport") !== "false"
+					&& project.getProperty("Test.Php.coverageReportOpenAfterTests") !== "false"){
 				
+					var exec = project.createTask("exec");
+					exec.setExecutable("cmd");
+					exec.setSpawn(true);
+					exec.createArg().setValue("/c");
+					exec.createArg().setValue('"' + coverageReportPath + '/index.html"');				
+					exec.perform();
+				}		
+			
+				// Fail if unit tests failed. This is done here otherwise if the tests exec task failed, the coverage report won't be shown
+				if(project.getProperty("RuntimeProperty-runPhpTestsCmd-TestsResult") !== '0'){
+			
+					fail = project.createTask("fail");
+		            fail.setMessage("There are PHP unit test failures");
+		            fail.perform();
+				}			
 			]]>
 		</script>
 		

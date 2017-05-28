@@ -626,6 +626,14 @@
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>
+                                    
+                                    <xs:attribute name="coverageReportOpenAfterTests" use="required" type="xs:boolean">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                If this flag is enabled, the coverage report will be automatically opened by the OS browser after the unit tests execute (even if there are test failures)
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
 								</xs:complexType>
 								
 							</xs:element>

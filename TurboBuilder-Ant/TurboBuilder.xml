@@ -93,7 +93,8 @@
 		<Php enabled="false" 
 			 mode="commandLine"
 			 localServerPath=""
-             coverageReport="true" />
+             coverageReport="true"
+             coverageReportOpenAfterTests="true" />
 		
 		<Js enabled="false"
 			localServerPath="C:/xampp/htdocs/unitTests"
