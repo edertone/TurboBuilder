@@ -2,3 +2,6 @@
 - Add feature to validate that all public methods have a corresponding test
 - Add feature to validate that javascript files start with "use strict"
 - Add feature to validate that allows us to define one or more strings that are forbidden to appear on the project or some parts of it. If the string or strings are found, build will fail.
+- Add feature remove all comments from htaccess file as part of the build. See: 
+	http://stackoverflow.com/questions/1765847/deleting-new-lines-with-regular-expression-from-ant-task
+	https://ant.apache.org/manual/Types/filterchain.html

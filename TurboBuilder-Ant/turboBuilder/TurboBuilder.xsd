@@ -218,15 +218,9 @@
 					
 					<xs:complexType>
 					
-						<xs:attribute name="phpDoc" default="false" type="xs:boolean">
+						<xs:attribute name="generateCodeDocumentation" default="true" type="xs:boolean">
 							<xs:annotation>
-								<xs:documentation>Enable or disable the automatic documentation generation for the Php code to the 'target/projectName-version/doc/php' folder</xs:documentation>
-							</xs:annotation>
-						</xs:attribute>		
-						
-						<xs:attribute name="jsDoc" default="false" type="xs:boolean">
-							<xs:annotation>
-								<xs:documentation>Enable or disable the automatic documentation generation for the JS code to the 'target/projectName-version/doc/js' folder</xs:documentation>
+								<xs:documentation>Enable or disable the automatic code documentation generation for all the supported languages to the 'target/projectName-version/doc' folder</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
 						

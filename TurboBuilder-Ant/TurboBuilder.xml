@@ -41,8 +41,7 @@
 			 optimizeJs="true"
 			 optimizePhp="false"
 			 optimizePictures="true"
-			 phpDoc="false"
-			 jsDoc="false" />
+			 generateCodeDocumentation="true" />
 	
 		
 	<Validate enabled="true">

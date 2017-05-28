@@ -87,8 +87,7 @@
 		<property name="Build.keepUnPackedFiles" value="false" />
 
 		<property name="Release.generate" value="false" />
-		<property name="Release.phpDoc" value="false" />
-		<property name="Release.jsDoc" value="false" />
+		<property name="Release.generateCodeDocumentation" value="true" />
 		<property name="Release.gitChangeLog" value="true" />
 		<property name="Release.gitChangeLogCount" value="5" />
 		<property name="Release.optimizePictures" value="true" />
@@ -653,12 +652,15 @@
 			
 				var fsExcludes = [];
 			
-				if(project.getProperty("Release.phpDoc") == "true"){
-					self.project.executeTarget("createPhpDoc");
-				}
-			
-				if(project.getProperty("Release.jsDoc") == "true"){
-					self.project.executeTarget("createJsDoc");
+				if(project.getProperty("Release.generateCodeDocumentation") == "true"){
+					
+					if(project.getProperty("Build.Php.enabled") == "true"){
+						self.project.executeTarget("createPhpDoc");
+					}
+
+					if(project.getProperty("Build.Js.enabled") == "true"){
+						self.project.executeTarget("createJsDoc");
+					}
 				}
 			
 				if(project.getProperty("Release.gitChangeLog") == "true"){
