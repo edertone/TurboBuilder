@@ -47,7 +47,7 @@
 	<Validate enabled="true">
 	
 		<ProjectStructure enabled="true"
-	                      forceAssetsFolder="true"
+	                      forceSupportFolder="true"
 	                      forceTODOFile="true"
 	                      resourcesStructure="true"
 	                      phpStructure="true"
