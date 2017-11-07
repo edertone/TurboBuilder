@@ -1,0 +1,31 @@
+{
+  "name": "turbobuilder",
+  "version": "0.0.1",
+  "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "turbobuilder": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edertone/TurboBuilder"
+  },
+  "dependencies": {
+    "@types/node": "^7.0.5"
+  },
+  "keywords": [
+    "project",
+    "builder",
+    "tool"
+  ],
+  "author": "edertone",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/edertone/TurboBuilder/issues"
+  },
+  "homepage": "turbobuilder.org"
+}

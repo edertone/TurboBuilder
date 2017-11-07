@@ -6,6 +6,7 @@
 target/
 bin/
 cache.properties
+TurboBuilder-OneTime.properties
 
 
 # Operating system common files to ignore
@@ -16,3 +17,6 @@ cache.properties
 ehthumbs.db
 Thumbs.db
 thumbs.db
+
+#Other
+node_modules
