@@ -147,13 +147,21 @@
                                                     </xs:annotation>
                                                 </xs:attribute>
                                                 
-                                                <xs:attribute name="mergedFileName" use="optional" default="" type="xs:string">
+                                                <xs:attribute name="mergedFileName" use="required" type="xs:string">
                                                     <xs:annotation>
                                                         <xs:documentation>
                                                             TODO
                                                         </xs:documentation>
                                                     </xs:annotation>
-                                                </xs:attribute>  
+                                                </xs:attribute> 
+                                                
+                                                <xs:attribute name="globalVar" use="required" type="xs:string">
+                                                    <xs:annotation>
+                                                        <xs:documentation>
+                                                            TODO
+                                                        </xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:attribute>   
                                                                                 
                                             </xs:complexType>
                                             

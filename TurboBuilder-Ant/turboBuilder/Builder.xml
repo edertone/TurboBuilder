@@ -311,11 +311,13 @@
 			
 				var targets = [];
 				var targetFileNames = [];
+				var targetGlobalVars = [];
 			
 				if(project.getProperty("Build.Ts.CompilerTarget.target") != null){
 
 					targets = project.getProperty("Build.Ts.CompilerTarget.target").split(",");
 					targetFileNames = project.getProperty("Build.Ts.CompilerTarget.mergedFileName").split(",");
+					targetGlobalVars = project.getProperty("Build.Ts.CompilerTarget.globalVar").split(",");
 				}
 							
 				var projectBaseName = project.getProperty("projectBaseName");	
@@ -389,8 +391,8 @@
 					
 					exec.createArg().setLine('"' + targetProjectBase + '/dist/' + targets[i] + '/tmp/index.js"');
 					exec.createArg().setLine('"' + targetProjectBase + '/dist/' + targets[i] + '/' + (targetFileNames[i] == undefined ? projectBaseName : targetFileNames[i]) + '.js"');
-					//exec.createArg().setLine('-p');
-					exec.createArg().setLine('--output-library org_turbocommons');							
+					exec.createArg().setLine('--output-library ' + targetGlobalVars[i]);							
+					exec.setOutputproperty('devnull');
 					exec.perform();
 			
 					// Delete temp folder
@@ -607,26 +609,36 @@
 				var projectBaseName = project.getProperty("projectBaseName");
 				var buildVersionNumber = project.getProperty("Build.versionNumber");
 				var buildNumber = project.getProperty("build.number");
-				var targets = project.getProperty("Test.Ts.targets").split(",");
+			
+				var targets = [];
+				var targetFileNames = [];
+			
+				if(project.getProperty("Build.Ts.CompilerTarget.target") != null){
+
+					targets = project.getProperty("Build.Ts.CompilerTarget.target").split(",");
+					targetFileNames = project.getProperty("Build.Ts.CompilerTarget.mergedFileName").split(",");
+				}
+			
 				
 				for(var i=0; i < targets.length; i++){
 					
-					// Copy all the test files to local server on the current target
+					// Copy all the test files structure to local server on the current target
 					copyFolderTo(project.getProperty("srcFolderPath") + '/test/ts', localServerPath + '/' + projectBaseName + '-unitTests/ts-' + targets[i]);
 			
+					// Add the compiled js project to the tests index file
 					var fs = project.createDataType("fileset");
 					
 					fs.setCaseSensitive(false);
 					
 					if(project.getProperty("Release.generate") == "true"){
 			
-						fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName + '-' + buildVersionNumber + '.' + buildNumber));
-						fs.setIncludes(projectBaseName + '-' + targets[i] + '-' + buildVersionNumber + '.' + buildNumber + '.min.js');
+						fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName + '-' + buildVersionNumber + '.' + buildNumber + '/dist/' + targets[i]));
+						fs.setIncludes(targetFileNames[i] + '-' + buildVersionNumber + '.' + buildNumber + '.js');
 	
 					}else{
 						
-						fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName));
-						fs.setIncludes(projectBaseName + '-' + targets[i] + '.js');
+						fs.setDir(new java.io.File(targetFolderPath + '/' + projectBaseName + '/dist/' + targets[i]));
+						fs.setIncludes(targetFileNames[i] + '.js');
 					}
 				
 					var concat = project.createDataType("concat");
@@ -769,20 +781,15 @@
 				// Rename the merged files if exist to add the version number
 				var fs = project.createDataType("fileset");
 				
-				fs.setDir(new java.io.File(releaseFolderPath));
-				fs.setIncludes(projectBaseName + "*.js");
+				fs.setDir(new java.io.File(releaseFolderPath + '/dist'));
+				fs.setIncludes("**/*.js");
+				fs.setExcludes("TS/**");
 				   
 			    var mergedFiles = fs.getDirectoryScanner(project).getIncludedFiles();
 			    
 			    for (var i = 0; i < mergedFiles.length; i++){
 			        
-					if(releaseOptimizeJs == "true"){
-			
-						renameFile(releaseFolderPath + '/' + mergedFiles[i], releaseFolderPath + '/' + mergedFiles[i].substring(0, mergedFiles[i].length - 3) + "-" + buildVersionNumber + "." + buildNumber + '.min.js');
-						copyFileTo(targetFolderPath + '/' + projectBaseName + '/' + mergedFiles[i], releaseFolderPath);
-					}
-					
-					renameFile(releaseFolderPath + '/' + mergedFiles[i], releaseFolderPath + '/' + mergedFiles[i].substring(0, mergedFiles[i].length - 3) + "-" + buildVersionNumber + "." + buildNumber + '.js');
+					renameFile(releaseFolderPath + '/dist/' + mergedFiles[i], releaseFolderPath + '/dist/' + mergedFiles[i].substring(0, mergedFiles[i].length - 3) + "-" + buildVersionNumber + "." + buildNumber + '.js');
 				}
 		    ]]>
 		</script>
