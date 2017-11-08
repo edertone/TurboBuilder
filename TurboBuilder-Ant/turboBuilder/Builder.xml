@@ -610,6 +610,7 @@
 				var buildVersionNumber = project.getProperty("Build.versionNumber");
 				var buildNumber = project.getProperty("build.number");
 			
+				var targetsToRun = project.getProperty("Test.Ts.targets").split(",");
 				var targets = [];
 				var targetFileNames = [];
 			
@@ -622,6 +623,11 @@
 				
 				for(var i=0; i < targets.length; i++){
 					
+					if(targetsToRun.indexOf(targets[i]) == -1){
+			
+						continue;
+					}
+			
 					// Copy all the test files structure to local server on the current target
 					copyFolderTo(project.getProperty("srcFolderPath") + '/test/ts', localServerPath + '/' + projectBaseName + '-unitTests/ts-' + targets[i]);
 			
