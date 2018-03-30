@@ -3,6 +3,11 @@
 'use strict';
 
 
+/**
+ * This is the main entry point for the turbobuilder command line application
+ */
+
+
 const program = require('commander');
 const packageJson = require('../../../package.json');
 const { StringUtils } = require('turbocommons-ts');

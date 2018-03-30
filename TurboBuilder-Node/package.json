@@ -1,6 +1,6 @@
 {
   "name": "turbobuilder",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
   "bin": {
   	"tb": "./src/main/js/turbobuilder.js",
