@@ -1,9 +1,0 @@
-{
-
-	"compilerOptions": {}, 
-	"include": ["index.ts",
-				"model/*",
-				"utils/*",
-				"managers/*"]
-
-}
