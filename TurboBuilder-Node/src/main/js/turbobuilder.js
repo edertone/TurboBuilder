@@ -8,9 +8,21 @@
  */
 
 
+// define global constants
+global.SETUP_FILE_NAME = 'turbobuilder.xml';
+
+
+// Import all required modules
+const { StringUtils } = require('turbocommons-ts');
 const program = require('commander');
 const packageJson = require('../../../package.json');
-const { StringUtils } = require('turbocommons-ts');
+const setup = require('./setup');
+const build = require('./build');
+
+
+// Initialize global variables
+global.loadedSetup = setup.loadSetupFromXml();
+global.latestGitTag = setup.getLatestGitTag();
 
 
 /**
@@ -20,26 +32,23 @@ const { StringUtils } = require('turbocommons-ts');
 program
     .alias('tb')
     .version(packageJson.version, '-v, --version')
-    .option('-b, --build', 'Perform the all the operations to generate the project files')
+    .option('-u, --validate', 'Performs project validation as defined in turbobuilder.xml')
     .option('-t, --test', 'Execute all the defined tests')
     .option('-r, --release', 'Generate the production ready project version')
     .option('-p, --publish', 'Copy the project generated files to the specified locations')
     .parse(process.argv);
 
 
-let anyOptionDefined = false;
+// Perform the build as defined on xml setup
+build.execute();
 
-if (program.build){
-    
-    anyOptionDefined = true;
+if (program.validate){
     
     // TODO - Implement this feature on a sepparate js file
-    console.log('build');
+    console.log('validate');
 }
 
 if (program.test){
-    
-    anyOptionDefined = true;
     
     // TODO - Implement this feature on a sepparate js file
     console.log('test');
@@ -47,23 +56,12 @@ if (program.test){
 
 if (program.release){
     
-    anyOptionDefined = true;
-    
     // TODO - Implement this feature on a sepparate js file
     console.log('release');
 }
 
 if (program.publish){
     
-    anyOptionDefined = true;
-    
     // TODO - Implement this feature on a sepparate js file
     console.log('publish');
-}
-
-
-//If no option was specified display the program help
-if(!anyOptionDefined){
- 
-    program.help();
 }
