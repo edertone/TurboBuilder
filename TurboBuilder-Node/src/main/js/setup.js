@@ -4,6 +4,7 @@
 
 
 var fs = require('fs');
+const { COPYFILE_EXCL } = fs.constants;
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
 
@@ -51,4 +52,33 @@ exports.getLatestGitTag = function () {
 
         return '0';
     }    
+}
+
+
+/**
+ * Create a default turbocommons.xml setup file on the current folder
+ */
+exports.createSetup = function () {
+    
+    let setupPath = __dirname + '/../resources/turbobuilder.xml';
+    
+    if (!fs.existsSync(setupPath)) {
+        
+        console.log(setupPath + ' file not found');
+        
+        process.exit(1);
+    }
+    
+    try{
+        
+        fs.copyFileSync(setupPath,'./' + global.SETUP_FILE_NAME, COPYFILE_EXCL);
+        
+        console.log('Created ' + global.SETUP_FILE_NAME + ' file');
+        
+    }catch(e){
+    
+        console.log('Error creating ' + global.SETUP_FILE_NAME + ' file. Does it already exist?');
+    }    
+    
+    process.exit(0);
 }

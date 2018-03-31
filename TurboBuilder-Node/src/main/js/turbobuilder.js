@@ -20,11 +20,6 @@ const setup = require('./setup');
 const build = require('./build');
 
 
-// Initialize global variables
-global.loadedSetup = setup.loadSetupFromXml();
-global.latestGitTag = setup.getLatestGitTag();
-
-
 /**
  * This application uses the commander npm module to easily manage the command line args.
  * All cmd interface and options are defined here
@@ -36,7 +31,19 @@ program
     .option('-t, --test', 'Execute all the defined tests')
     .option('-r, --release', 'Generate the production ready project version')
     .option('-p, --publish', 'Copy the project generated files to the specified locations')
+    .option('-c, --createsetup', 'Create a ' + global.SETUP_FILE_NAME + ' setup file on the current folder')
     .parse(process.argv);
+
+
+// Generate the default setup xml file if necessary
+if (program.createsetup){
+    
+    setup.createSetup();
+}
+
+//Initialize global variables
+global.loadedSetup = setup.loadSetupFromXml();
+global.latestGitTag = setup.getLatestGitTag();
 
 
 // Perform the build as defined on xml setup
