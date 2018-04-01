@@ -5,38 +5,97 @@
  */
 
 
-const { StringUtils } = require('turbocommons-ts');
+const { StringUtils, ObjectUtils } = require('turbocommons-ts');
 const path = require('path');
 var fs = require('fs');
 
 
 /**
- * Aux method that validates that a given list of files exists
+ * Array that will contain all the warnings detected by this script and will be displayed at the end
  */
-let allFilesExist = function (basePath, files) {
+let warnings = [];
+
+
+/**
+ * Array that will contain all the errors detected by this script and will be displayed at the end
+ */
+let errors = [];
+
+
+/**
+ * Auxiliary method to validate that only the allowed contents exist on the specified folders
+ */
+let validateAllowedFolders = function (foldersToInspect, allowedContents){
     
-    for(var i = 0; i < files.length; i++){
+    for(let i = 0; i < foldersToInspect.length; i++){
         
-        if (!fs.existsSync(path.resolve(basePath + files[i]))) {
+        var inspectedList = getFoldersList(foldersToInspect[i]);
+        
+        for(let j = 0; j < inspectedList.length; j++){
             
-            return path.resolve(basePath + files[i]);
+            if(!inArray(inspectedList[j], allowedContents)){
+                    
+                errors.push(inspectedList[j] + " is not allowed inside " + foldersToInspect[i]);
+            }                       
+        }
+    }
+}
+
+
+/**
+ * Validates the project structure
+ */
+let validateProjectStructure = function () {
+    
+    if(!global.setupValidate.ProjectStructure.enabled){
+    
+        return;
+    }
+    
+    // Check that all the project mandatory folders and files exist
+    for (let key of ObjectUtils.getKeys(global.runtimePaths)) {
+        
+        // Ignore files that are not mandatory or disabled via setup
+        if(key === 'target' ||
+           (key === 'extras' && !global.setupValidate.ProjectStructure.forceExtrasFolder) ||
+           (key === 'readmeFile' && !global.setupValidate.ProjectStructure.forceReadmeFile) ||
+           (key === 'todoFile' && !global.setupValidate.ProjectStructure.forceTODOFile)){
+            
+            continue;
+        }
+        
+        if (!fs.existsSync(global.runtimePaths[key])) {
+            
+            errors.push(global.runtimePaths[key] + " does not exist");
         }
     }
     
-    return '';
+    // Check that no strange files or folders exist
+    //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
+    
+    // Validate that gitIgnore file is correct
+    if(global.setupValidate.ProjectStructure.checkGitIgnore === true){
+        
+        // TODO - validate git ignore    
+    }   
 }
+
 
 /**
  * Perform all the validation tasks
  */
 exports.execute = function () {
     
-//    let tmp = allFilesExist(global.RUNTIME_PATH,
-//            ["src/main", "src/test", "TurboBuilder.xml", "TurboBuilder-OneTime.properties"]);
-//    
-//    if(allFilesExist(global.RUNTIME_PATH,
-//            ["src/main", "src/test", "TurboBuilder.xml", "TurboBuilder-OneTime.properties"]) !== ''){
-//        
-//        console.log('File does not exist ' + tmp);
-//    }    
+    validateProjectStructure();
+     
+    // If errors happened, show them and quit 
+    if(errors.length > 0){
+
+        for(var i = 0; i < errors.length; i++){
+            
+            console.log('Validation error: ' + errors[i]);
+        }
+        
+        process.exit(1);
+    }
 }

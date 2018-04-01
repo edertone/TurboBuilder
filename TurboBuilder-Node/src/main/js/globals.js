@@ -10,26 +10,94 @@ const path = require('path');
 
 
 /**
- * The name for the main xml setup file that contains the builder configuration
+ * All the relevant project folder names
  */
-global.SETUP_FILE_NAME = 'turbobuilder.xml';
+global.folderNames = {
+        extras: 'extras',
+        target: 'target'
+        
+};
 
 /**
- * Path where the builder main script has been called at execution time (via cmd)
+ * All the relevant project file names
  */
-global.RUNTIME_PATH = './';
+global.fileNames = {
+        setup: 'turbobuilder.xml',
+        readme: 'README.md',
+        todo: 'TODO.txt'
+};
 
 /**
- * Path to the project base folder
+ * All the relevant paths relative to the main installation folder
  */
-global.ROOT_PATH = path.resolve(__dirname + '/../../../');
+global.installationPaths = {
+        root: path.resolve(__dirname + '/../../..'),
+        setupFile: path.resolve(__dirname + '/../../../' + global.fileNames.setup),
+        readmeFile: path.resolve(__dirname + '/../../../' + global.fileNames.readme),
+        extras: path.resolve(__dirname + '/../../../' + global.folderNames.extras),
+        todoFile: path.resolve(__dirname + '/../../../extras/' + global.fileNames.todo),
+        src: path.resolve(__dirname + '/../../../src'),
+        target: path.resolve(__dirname + '/../../../' + global.folderNames.target),
+        main: path.resolve(__dirname + '/../../../src/main'),
+        test: path.resolve(__dirname + '/../../../src/test'),
+        mainResources: path.resolve(__dirname + '/../../../src/main/resources')
+};
 
 /**
- * Path to the project src folder
+ * All the relevant paths relative to the folder where the application's been executed
  */
-global.SRC_PATH = path.resolve(global.ROOT_PATH + '/src/');
+global.runtimePaths = {
+        root: path.resolve('./'),
+        setupFile: path.resolve('./' + global.fileNames.setup),
+        readmeFile: path.resolve('./' + global.fileNames.readme),
+        extras: path.resolve('./' + global.folderNames.extras),
+        todoFile: path.resolve('./extras/' + global.fileNames.todo),
+        src: path.resolve('./src'),
+        target: path.resolve('./' + global.folderNames.target),
+        main: path.resolve('./src/main'),
+        test: path.resolve('./src/test'),
+        mainResources: path.resolve('./src/main/resources')
+};
 
 /**
- * Path to the project main resources folder
+ * Validate process setup as defined in the main xml setup file
+ * Check the xsd definition for documentation of each property
  */
-global.MAIN_RESOURCES_PATH = path.resolve(global.ROOT_PATH + '/src/main/resources/');
+global.setupValidate = {
+        
+        RunBeforeBuild : true,
+        
+        ProjectStructure : {
+            enabled: true,
+            forceExtrasFolder: true,
+            forceReadmeFile: true,
+            forceTODOFile: true,
+            resourcesStructure: true,
+            phpStructure: true,
+            jsStructure: true,
+            tsStructure: true,
+            tsConfigFile: true,
+            javaStructure: true,
+            cssStructure: true,
+            checkGitIgnore: true
+        },
+};
+
+/**
+ * Validate process setup as defined in the main xml setup file
+ * Check the xsd definition for documentation of each property
+ */
+global.setupBuild = {
+        
+        keepUnPackedFiles : false,
+        
+        Ts : {
+            enabled: false,
+            createMergedTs: false,
+            createMergedJs: false,
+            compilerDeclarationFile: true,
+            compilerStrict: true,
+            compilerSourceMap: false,
+            compilerTargets: "ES3,ES5,ES6"
+        },
+};

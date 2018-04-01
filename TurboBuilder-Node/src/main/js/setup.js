@@ -5,7 +5,7 @@
  */
 
 
-var fs = require('fs');
+let fs = require('fs');
 const { COPYFILE_EXCL } = fs.constants;
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
@@ -16,7 +16,7 @@ const { StringUtils } = require('turbocommons-ts');
  */
 exports.createSetup = function () {
     
-    let defaultSetupPath = global.MAIN_RESOURCES_PATH + '/default-setup.xml';
+    let defaultSetupPath = global.installationPaths.mainResources + '/turbobuilder.xml';
     
     if (!fs.existsSync(defaultSetupPath)) {
         
@@ -27,25 +27,15 @@ exports.createSetup = function () {
     
     try{
         
-        fs.copyFileSync(defaultSetupPath, global.RUNTIME_PATH + global.SETUP_FILE_NAME, COPYFILE_EXCL);
+        fs.copyFileSync(defaultSetupPath, global.runtimePaths.setupFile, COPYFILE_EXCL);
         
-        console.log('Created ' + global.SETUP_FILE_NAME + ' file');
+        console.log('Created ' + global.fileNames.setup + ' file');
         
     }catch(e){
     
-        console.log('Error creating ' + global.SETUP_FILE_NAME + ' file. Does it already exist?');
-        
+        console.log('Error creating ' + global.fileNames.setup + ' file. Does it already exist?');
         process.exit(1);
     }    
-}
-
-
-/**
- * Checks that all the required cmd tools are available and can be executed
- */
-let verifyToolsAvailable = function () {
-
-    // TODO
 }
 
 
@@ -54,17 +44,15 @@ let verifyToolsAvailable = function () {
  */
 let loadSetupFromXml = function () {
 
-    verifyToolsAvailable();
+    if (!fs.existsSync(global.runtimePaths.setupFile)) {
     
-    if (!fs.existsSync(global.RUNTIME_PATH + global.SETUP_FILE_NAME)) {
-    
-        console.log(global.SETUP_FILE_NAME + ' setup file not found');
+        console.log(global.fileNames.setup + ' setup file not found');
         
         // Terminate application with error code
         process.exit(1);
     }
     
-    return fs.readFileSync(global.RUNTIME_PATH + global.SETUP_FILE_NAME, 'utf8');
+    return fs.readFileSync(global.runtimePaths.setupFile, 'utf8');
 };
 
 
