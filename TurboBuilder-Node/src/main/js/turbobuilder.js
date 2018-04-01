@@ -2,22 +2,18 @@
 
 'use strict';
 
-
 /**
  * This is the main entry point for the turbobuilder command line application
  */
 
 
-// define global constants
-global.SETUP_FILE_NAME = 'turbobuilder.xml';
-
-
-// Import all required modules
 const { StringUtils } = require('turbocommons-ts');
+const globalsModule = require('./globals');
+const packageJson = require(global.ROOT_PATH + '/package.json');
+const setupModule = require('./setup');
+const validateModule = require('./validate');
+const buildModule = require('./build');
 const program = require('commander');
-const packageJson = require('../../../package.json');
-const setup = require('./setup');
-const build = require('./build');
 
 
 /**
@@ -27,32 +23,46 @@ const build = require('./build');
 program
     .alias('tb')
     .version(packageJson.version, '-v, --version')
-    .option('-u, --validate', 'Performs project validation as defined in turbobuilder.xml')
-    .option('-t, --test', 'Execute all the defined tests')
-    .option('-r, --release', 'Generate the production ready project version')
+    .option('-c, --create', 'Create a full project structure on the current directory')
+    .option('-l, --validate', 'Perform project validation as configured in ' + global.SETUP_FILE_NAME)
+    .option('-b, --build', 'Execute the build process as configured in ' + global.SETUP_FILE_NAME)
+    .option('-t, --test', 'Execute all tests as configured in ' + global.SETUP_FILE_NAME)
+    .option('-r, --release', 'Generate the project production ready version as configured in ' + global.SETUP_FILE_NAME)
     .option('-p, --publish', 'Copy the project generated files to the specified locations')
-    .option('-c, --createsetup', 'Create a ' + global.SETUP_FILE_NAME + ' setup file on the current folder')
     .parse(process.argv);
 
-
-// Generate the default setup xml file if necessary
-if (program.createsetup){
+// If none of the options have been passed, we will show the help
+if(!program.create &&
+   !program.validate &&
+   !program.build &&
+   !program.test &&
+   !program.release &&
+   !program.publish){
     
-    setup.createSetup();
+    program.help();
+    process.exit(0);
 }
 
-//Initialize global variables
-global.loadedSetup = setup.loadSetupFromXml();
-global.latestGitTag = setup.getLatestGitTag();
+// Generate the default setup xml file if necessary
+if (program.create){
+    
+    setupModule.createSetup();    
+    process.exit(0);
+}
 
+//Initialize the builder setup and global variables
+setupModule.init();
+
+//Perform the validation as defined on xml setup 
+if (program.validate){
+ 
+ validateModule.execute();
+}
 
 // Perform the build as defined on xml setup
-build.execute();
-
-if (program.validate){
+if (program.build){
     
-    // TODO - Implement this feature on a sepparate js file
-    console.log('validate');
+    buildModule.execute();
 }
 
 if (program.test){

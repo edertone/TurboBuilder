@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * this module contains all the code related to the build process
  */

@@ -1,4 +1,4 @@
-# Project frequently used cmd commands
+# frequently used NPM cmd commands
 
 ## Run script without installing it globally
 

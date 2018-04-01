@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * this module contains all the code related to the setup data
  */
@@ -10,9 +12,38 @@ const { StringUtils } = require('turbocommons-ts');
 
 
 /**
+ * Create a default setup file on the current folder
+ */
+exports.createSetup = function () {
+    
+    let defaultSetupPath = global.MAIN_RESOURCES_PATH + '/default-setup.xml';
+    
+    if (!fs.existsSync(defaultSetupPath)) {
+        
+        console.log(defaultSetupPath + ' file not found');
+        
+        process.exit(1);
+    }
+    
+    try{
+        
+        fs.copyFileSync(defaultSetupPath, global.RUNTIME_PATH + global.SETUP_FILE_NAME, COPYFILE_EXCL);
+        
+        console.log('Created ' + global.SETUP_FILE_NAME + ' file');
+        
+    }catch(e){
+    
+        console.log('Error creating ' + global.SETUP_FILE_NAME + ' file. Does it already exist?');
+        
+        process.exit(1);
+    }    
+}
+
+
+/**
  * Checks that all the required cmd tools are available and can be executed
  */
-exports.verifyToolsAvailable = function () {
+let verifyToolsAvailable = function () {
 
     // TODO
 }
@@ -21,11 +52,11 @@ exports.verifyToolsAvailable = function () {
 /**
  * Read the xml setup file and store all the data to a global variable
  */
-exports.loadSetupFromXml = function () {
+let loadSetupFromXml = function () {
 
-    this.verifyToolsAvailable();
+    verifyToolsAvailable();
     
-    if (!fs.existsSync('./' + global.SETUP_FILE_NAME)) {
+    if (!fs.existsSync(global.RUNTIME_PATH + global.SETUP_FILE_NAME)) {
     
         console.log(global.SETUP_FILE_NAME + ' setup file not found');
         
@@ -33,14 +64,14 @@ exports.loadSetupFromXml = function () {
         process.exit(1);
     }
     
-    return fs.readFileSync('./' + global.SETUP_FILE_NAME, 'utf8');
+    return fs.readFileSync(global.RUNTIME_PATH + global.SETUP_FILE_NAME, 'utf8');
 };
 
 
 /**
  * Get the latest tag if defined on GIT and not specified on TurboBuilder.xml
  */
-exports.getLatestGitTag = function () {
+let getLatestGitTag = function () {
     
     try{
         
@@ -56,29 +87,10 @@ exports.getLatestGitTag = function () {
 
 
 /**
- * Create a default turbocommons.xml setup file on the current folder
+ * Initialize the global variables and setup structure from the project xml
  */
-exports.createSetup = function () {
-    
-    let setupPath = __dirname + '/../resources/turbobuilder.xml';
-    
-    if (!fs.existsSync(setupPath)) {
-        
-        console.log(setupPath + ' file not found');
-        
-        process.exit(1);
-    }
-    
-    try{
-        
-        fs.copyFileSync(setupPath,'./' + global.SETUP_FILE_NAME, COPYFILE_EXCL);
-        
-        console.log('Created ' + global.SETUP_FILE_NAME + ' file');
-        
-    }catch(e){
-    
-        console.log('Error creating ' + global.SETUP_FILE_NAME + ' file. Does it already exist?');
-    }    
-    
-    process.exit(0);
+exports.init = function () {
+
+    loadSetupFromXml();
+    getLatestGitTag();
 }
