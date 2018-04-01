@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "commander": "2.15.1",
+    "http-server": "0.11.1",
     "turbocommons-ts": "0.5.4"
   },
   "keywords": [

@@ -27,7 +27,7 @@ let verifyToolsAvailable = function () {
         
         try{
             
-            execSync('tsc1', {stdio : 'pipe'});
+            execSync('tsc -v', {stdio : 'pipe'});
             
         }catch(e){
 
@@ -58,7 +58,10 @@ exports.execute = function () {
   
     verifyToolsAvailable();
     
-    buildTypeScript();
+    if(global.setupBuild.Ts.enabled){
+    
+        buildTypeScript();
+    }
     
     console.log('build done');
 };
