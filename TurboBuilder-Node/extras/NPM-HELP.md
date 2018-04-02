@@ -5,11 +5,11 @@
 
 node ./src/main/js/index.js
 
-## Install the project globally so we can use it via "turbobuilder ... or tb ..."
+## Install the project globally to execute in development via cmd "turbobuilder" "tb"
 
 npm install -g
 
-## Uninstall the project globally
+## Uninstall the project globally (we stop developing it)
 
 npm uninstall -g
 

@@ -6,6 +6,7 @@
 
 
 const { execSync } = require('child_process');
+const consoleModule = require('./console.js');
 
 
 /**
@@ -31,8 +32,7 @@ let verifyToolsAvailable = function () {
             
         }catch(e){
 
-            console.log('Could not find Typescript compiler (tsc). Run: npm install -g typescript');
-            process.exit(1);
+            consoleModule.error('Could not find Typescript compiler (tsc). Run: npm install -g typescript', true);
         }
     }
 }

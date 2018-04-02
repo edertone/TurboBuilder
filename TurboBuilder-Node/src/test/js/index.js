@@ -5,24 +5,20 @@
 
 /**
  * This script launches the tests for the turbobuilder project
- * Run it with : node src/test/js/index.js
+ * Run it with : npm test
  */
 
 
 const { execSync } = require('child_process');
-let os = require('os');
+const consoleModule = require('./../../main/js/console.js');
 
-const pathToExecutable = '"' + __dirname + '/../../main/js/turbobuilder.js"';
+global.pathToExecutable = 'node "' + __dirname + '/../../main/js/turbobuilder.js"';
 
-console.log(os.tmpdir());
 
-// when_launched_without_parameters_on_nonexistant_project_then_help_is_shown   
-process.chdir(__dirname + '/../resources/nonexistant-project');
+// Call all the tests
+require('./test-version.js');
+require('./test-help.js');
 
-let exec = execSync('node ' + pathToExecutable, {stdio : 'pipe'});
 
-if(exec.toString().indexOf("Usage: turbobuilder|tb [options]") < 0){
-
-    console.log("Failed showing help");
-    console.log(exec.toString());
-}
+// Reaching here means all tests succeeded
+consoleModule.success("All tests passed");

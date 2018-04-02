@@ -5,7 +5,8 @@
  */
 
 
-let fs = require('fs');
+const fs = require('fs');
+const consoleModule = require('./console.js');
 const { COPYFILE_EXCL } = fs.constants;
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
@@ -20,21 +21,18 @@ exports.createSetup = function () {
     
     if (!fs.existsSync(defaultSetupPath)) {
         
-        console.log(defaultSetupPath + ' file not found');
-        
-        process.exit(1);
+        consoleModule.error(defaultSetupPath + ' file not found', true);
     }
     
     try{
         
         fs.copyFileSync(defaultSetupPath, global.runtimePaths.setupFile, COPYFILE_EXCL);
         
-        console.log('Created ' + global.fileNames.setup + ' file');
+        consoleModule.log('Created ' + global.fileNames.setup + ' file');
         
     }catch(e){
     
-        console.log('Error creating ' + global.fileNames.setup + ' file. Does it already exist?');
-        process.exit(1);
+        consoleModule.error('Error creating ' + global.fileNames.setup + ' file. Does it already exist?', true);
     }    
 }
 
@@ -46,10 +44,7 @@ let loadSetupFromXml = function () {
 
     if (!fs.existsSync(global.runtimePaths.setupFile)) {
     
-        console.log(global.fileNames.setup + ' setup file not found');
-        
-        // Terminate application with error code
-        process.exit(1);
+        consoleModule.error(global.fileNames.setup + ' setup file not found', true);
     }
     
     return fs.readFileSync(global.runtimePaths.setupFile, 'utf8');
