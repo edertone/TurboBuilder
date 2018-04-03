@@ -4,31 +4,30 @@
 
 
 /**
- * test application version feature
+ * Version feature tests
  */
 
 
-const { execSync } = require('child_process');
-const consoleModule = require('./../../main/js/console.js');
+const utils = require('./index-utils.js');
+const currentVersion = '0.0.4';
 
 
-let execResult = '';
-const expectedVersion = '0.0.4';
+// Create and switch to the tests folder
+utils.switchToDirInsideTemp('test-version');
 
 
 // When -v argument is passed, application version is shown
-execResult = execSync(global.pathToExecutable + ' -v', {stdio : 'pipe'});
-
-if(execResult.toString().indexOf(expectedVersion) < 0){
-
-    consoleModule.error("Failed showing help: " + execResult.toString(), true);
-}
+utils.assertExecContains('-v', currentVersion, "Failed showing help");
 
 
-//When -version argument is passed, application version is shown
-execResult = execSync(global.pathToExecutable + ' -version', {stdio : 'pipe'});
+// When -version argument is passed, application version is shown
+utils.assertExecContains('-version', currentVersion, "Failed showing help");
 
-if(execResult.toString().indexOf(expectedVersion) < 0){
 
-    consoleModule.error("Failed showing help: " + execResult.toString(), true);
-}
+//When -v argument is passed after creating an empty project, application version is shown
+utils.exec('-g');
+utils.assertExecContains('-v', currentVersion, "Failed showing help");
+
+
+//When -version argument is passed after creating an empty project, application version is shown
+utils.assertExecContains('-version', currentVersion, "Failed showing help");

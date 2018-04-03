@@ -9,10 +9,7 @@
  */
 
 
-const { execSync } = require('child_process');
 const consoleModule = require('./../../main/js/console.js');
-
-global.pathToExecutable = 'node "' + __dirname + '/../../main/js/turbobuilder.js"';
 
 
 // Call all the tests

@@ -8,38 +8,33 @@
  */
 
 
-const { execSync } = require('child_process');
-const consoleModule = require('./../../main/js/console.js');
+const utils = require('./index-utils.js');
 
 
-let execResult = '';
-const expectedHelp = "Usage: turbobuilder|tb [options]";
+// Create and switch to the tests folder
+utils.switchToDirInsideTemp('test-help');
 
 
-//When -h argument is passed, application help is shown
-execResult = execSync(global.pathToExecutable + ' -h', {stdio : 'pipe'});
-
-if(execResult.toString().indexOf(expectedHelp) < 0){
-
-    consoleModule.error("Failed -h argument " + execResult.toString(), true);
-}
+// When -h argument is passed, application help is shown
+utils.assertExecContains('-h', "Usage: turbobuilder|tb [options]", "Failed -h argument");
 
 
-//When -help argument is passed, application help is shown
-execResult = execSync(global.pathToExecutable + ' -help', {stdio : 'pipe'});
-
-if(execResult.toString().indexOf(expectedHelp) < 0){
-
-    consoleModule.error("Failed -help argument " + execResult.toString(), true);
-}
+// When -help argument is passed, application help is shown
+utils.assertExecContains('-help', "Usage: turbobuilder|tb [options]", "Failed -help argument");
 
 
-// When launched without args on an empty folder, help info is shown   
-process.chdir(__dirname + '/../resources/nonexistant-project');
+// When launched without args on the empty tests folder, help info is shown
+utils.assertExecContains('', "Usage: turbobuilder|tb [options]", "Failed without arguments");
 
-execResult = execSync(global.pathToExecutable, {stdio : 'pipe'});
 
-if(execResult.toString().indexOf(expectedHelp) < 0){
+//When -h argument is passed after creating an empty project, application version is shown
+utils.exec('-g');
+utils.assertExecContains('-h', "Usage: turbobuilder|tb [options]", "Failed showing help");
 
-    consoleModule.error("Failed without arguments " + execResult.toString(), true);
-}
+
+//When -help argument is passed after creating an empty project, application version is shown
+utils.assertExecContains('-help', "Usage: turbobuilder|tb [options]", "Failed showing help");
+
+
+//When launched without args after creating an empty project, application version is shown
+utils.assertExecContains('', "Usage: turbobuilder|tb [options]", "Failed showing help");
