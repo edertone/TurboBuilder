@@ -9,7 +9,7 @@
 
 const { StringUtils } = require('turbocommons-ts');
 const globalsModule = require('./globals');
-const consoleModule = require('./console.js');
+const consoleModule = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const buildModule = require('./build');

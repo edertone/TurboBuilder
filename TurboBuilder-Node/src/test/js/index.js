@@ -9,13 +9,18 @@
  */
 
 
-const consoleModule = require('./../../main/js/console.js');
+const consoleModule = require('./../../main/js/console');
+const utils = require('./index-utils');
 
 
 // Call all the tests
-require('./test-version.js');
-require('./test-help.js');
+require('./test-version');
+require('./test-help');
+require('./test-generate');
 
 
 // Reaching here means all tests succeeded
+
+// TODO - utils.deleteTemp();
+
 consoleModule.success("All tests passed");

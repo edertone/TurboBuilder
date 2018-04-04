@@ -48,7 +48,7 @@ exports.warning = function (message, quit = false) {
  * Show an error to the user
  * If quit parameter is true, the application will also exit with error code 1
  */
-exports.error = function (message, quit = false) {
+exports.error = function (message, quit = true) {
     
     console.log('\x1b[31m%s\x1b[0m', message);
     

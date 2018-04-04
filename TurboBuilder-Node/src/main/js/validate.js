@@ -89,5 +89,8 @@ exports.execute = function () {
     
     validateProjectStructure();
      
-    consoleModule.errors(errors, true);
+    consoleModule.errors(errors);
+    
+    // Reaching here means validation was successful
+    consoleModule.success("validate ok");
 }

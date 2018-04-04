@@ -31,6 +31,8 @@ global.fileNames = {
  * All the relevant paths relative to the main installation folder
  */
 global.installationPaths = {
+        typeScriptBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/tsc"'),
+        typeDocBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/typedoc"'),
         root: path.resolve(__dirname + '/../../..'),
         setupFile: path.resolve(__dirname + '/../../../' + global.fileNames.setup),
         readmeFile: path.resolve(__dirname + '/../../../' + global.fileNames.readme),

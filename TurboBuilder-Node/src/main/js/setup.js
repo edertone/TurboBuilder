@@ -5,11 +5,13 @@
  */
 
 
-const fs = require('fs');
+const { FilesManager } = require('turbocommons-ts');
 const consoleModule = require('./console.js');
-const { COPYFILE_EXCL } = fs.constants;
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
+
+
+let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 /**
@@ -17,23 +19,29 @@ const { StringUtils } = require('turbocommons-ts');
  */
 exports.createSetup = function () {
     
-    let defaultSetupPath = global.installationPaths.mainResources + '/turbobuilder.xml';
+    let defaultSetupPath = global.installationPaths.mainResources + fm.dirSep() + global.fileNames.setup;
     
-    if (!fs.existsSync(defaultSetupPath)) {
+    if (fm.isFile(global.runtimePaths.setupFile)) {
         
-        consoleModule.error(defaultSetupPath + ' file not found', true);
+        consoleModule.error('File ' + global.fileNames.setup + ' already exists');
     }
     
-    try{
+    if (!fm.isFile(defaultSetupPath)) {
         
-        fs.copyFileSync(defaultSetupPath, global.runtimePaths.setupFile, COPYFILE_EXCL);
-        
-        consoleModule.log('Created ' + global.fileNames.setup + ' file');
-        
-    }catch(e){
+        consoleModule.error(defaultSetupPath + ' file not found');
+    }
     
-        consoleModule.error('Error creating ' + global.fileNames.setup + ' file. Does it already exist?', true);
-    }    
+    if(!fm.isDirectoryEmpty(global.runtimePaths.root)){
+        
+        consoleModule.error('Current folder is not empty! :' + global.runtimePaths.root);
+    }
+        
+    if(!fm.copyFile(defaultSetupPath, global.runtimePaths.setupFile)){
+        
+        consoleModule.error('Error creating ' + global.fileNames.setup + ' file');
+    }
+    
+    consoleModule.success('Created ' + global.fileNames.setup + ' file');    
 }
 
 
@@ -42,12 +50,12 @@ exports.createSetup = function () {
  */
 let loadSetupFromXml = function () {
 
-    if (!fs.existsSync(global.runtimePaths.setupFile)) {
+    if (!fm.isFile(global.runtimePaths.setupFile)) {
     
-        consoleModule.error(global.fileNames.setup + ' setup file not found', true);
+        consoleModule.error(global.fileNames.setup + ' setup file not found');
     }
     
-    return fs.readFileSync(global.runtimePaths.setupFile, 'utf8');
+    //return fm.readFileSync(global.runtimePaths.setupFile, 'utf8');
 };
 
 
