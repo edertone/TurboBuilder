@@ -20,7 +20,4 @@ require('./test-generate');
 
 
 // Reaching here means all tests succeeded
-
-// TODO - utils.deleteTemp();
-
 consoleModule.success("All tests passed");

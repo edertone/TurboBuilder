@@ -16,12 +16,39 @@ const consoleModule = require('./../../main/js/console');
 
 
 let fm = new FilesManager(fs, os, path, process);
+let executionDir = path.resolve('./');
 let tempFolder = fm.createTempDirectory('turbobuilder-tests', false);
 let pathToExecutable = 'node "' + path.resolve(__dirname + '/../../main/js/turbobuilder.js') + '"';
 
 
+// We will delete the temporary folder when application exists, may it be due to a 
+// success or an error
+process.on('exit', () => {
+    
+    this.deleteTemp();
+});
+
+
 /**
- * Move the word directory to the specified folder inside the main temp root.
+ * Move the work directory to the folder where the tests were first executed
+ */
+exports.switchToExecutionDir = function () {
+
+    process.chdir(executionDir);
+};
+
+
+/**
+ * Move the work directory to the temporary folder
+ */
+exports.switchToTemp = function () {
+  
+    process.chdir(tempFolder);
+};
+
+
+/**
+ * Move the work directory to the specified folder inside the main temp folder.
  * If folder does not exist, it will be created
  */
 exports.switchToDirInsideTemp = function (dirName) {
@@ -46,6 +73,18 @@ exports.exec = function (options) {
 
 
 /**
+ * Verify that the specified folder exists
+ */
+exports.assertIsFolder = function (path) {
+
+    if(!fm.isDirectory(path)){
+    
+        consoleModule.error('Folder does not exist: ' + path);
+    }
+};
+
+
+/**
  * Verify that the specified folder is empty
  */
 exports.assertFolderEmpty = function (path) {
@@ -53,6 +92,25 @@ exports.assertFolderEmpty = function (path) {
     if(!fm.isDirectoryEmpty(path)){
     
         consoleModule.error('Folder is not empty: ' + path);
+    }
+};
+
+
+/**
+ * Delete the specified folder and assert that it has been correctly deleted
+ */
+exports.assertFolderDelete = function (path) {
+
+    this.assertIsFolder(path);
+    
+    if(!fm.deleteDirectory(path)){
+        
+        consoleModule.error('Could not delete folder: ' + path);
+    }
+    
+    if(fm.isDirectory(path)){
+    
+        consoleModule.error('Folder was not deleted: ' + path);
     }
 };
 
@@ -104,6 +162,8 @@ exports.assertExecFails = function (options, expectedError, errorMessage) {
  * Delete the whole temp directory
  */
 exports.deleteTemp = function () {
-  
-    //fm.deleteDirectory(tempFolder);
+    
+    this.switchToExecutionDir();
+    
+    this.assertFolderDelete(tempFolder);
 };
