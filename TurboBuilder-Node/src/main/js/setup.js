@@ -6,7 +6,7 @@
 
 
 const { FilesManager } = require('turbocommons-ts');
-const consoleModule = require('./console.js');
+const console = require('./console.js');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
 
@@ -23,25 +23,25 @@ exports.createSetup = function () {
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
         
-        consoleModule.error('File ' + global.fileNames.setup + ' already exists');
+        console.error('File ' + global.fileNames.setup + ' already exists');
     }
     
     if (!fm.isFile(defaultSetupPath)) {
         
-        consoleModule.error(defaultSetupPath + ' file not found');
+        console.error(defaultSetupPath + ' file not found');
     }
     
     if(!fm.isDirectoryEmpty(global.runtimePaths.root)){
         
-        consoleModule.error('Current folder is not empty! :' + global.runtimePaths.root);
+        console.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
         
     if(!fm.copyFile(defaultSetupPath, global.runtimePaths.setupFile)){
         
-        consoleModule.error('Error creating ' + global.fileNames.setup + ' file');
+        console.error('Error creating ' + global.fileNames.setup + ' file');
     }
     
-    consoleModule.success('Created ' + global.fileNames.setup + ' file');    
+    console.success('Created ' + global.fileNames.setup + ' file');    
 }
 
 
@@ -52,7 +52,7 @@ let loadSetupFromXml = function () {
 
     if (!fm.isFile(global.runtimePaths.setupFile)) {
     
-        consoleModule.error(global.fileNames.setup + ' setup file not found');
+        console.error(global.fileNames.setup + ' setup file not found');
     }
     
     //return fm.readFileSync(global.runtimePaths.setupFile, 'utf8');

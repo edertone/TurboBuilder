@@ -7,6 +7,7 @@
 
 
 const path = require('path');
+const { StringUtils } = require('turbocommons-ts');
 
 
 /**
@@ -49,6 +50,7 @@ global.installationPaths = {
  * All the relevant paths relative to the folder where the application's been executed
  */
 global.runtimePaths = {
+        projectName: StringUtils.getFileNameWithoutExtension(path.resolve('./')),
         root: path.resolve('./'),
         setupFile: path.resolve('./' + global.fileNames.setup),
         readmeFile: path.resolve('./' + global.fileNames.readme),
@@ -67,7 +69,7 @@ global.runtimePaths = {
  */
 global.setupValidate = {
         
-        RunBeforeBuild : true,
+        runBeforeBuild : true,
         
         ProjectStructure : {
             enabled: true,

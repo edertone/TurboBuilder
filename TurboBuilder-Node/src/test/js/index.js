@@ -9,7 +9,7 @@
  */
 
 
-const consoleModule = require('./../../main/js/console');
+const console = require('./../../main/js/console');
 const utils = require('./index-utils');
 
 
@@ -20,4 +20,4 @@ require('./test-generate');
 
 
 // Reaching here means all tests succeeded
-consoleModule.success("All tests passed");
+console.success("All tests passed");

@@ -8,7 +8,7 @@
 const { StringUtils, ObjectUtils } = require('turbocommons-ts');
 const path = require('path');
 var fs = require('fs');
-const consoleModule = require('./console.js');
+const console = require('./console.js');
 
 
 /**
@@ -89,8 +89,8 @@ exports.execute = function () {
     
     validateProjectStructure();
      
-    consoleModule.errors(errors);
+    console.errors(errors);
     
     // Reaching here means validation was successful
-    consoleModule.success("validate ok");
+    console.success("validate ok");
 }

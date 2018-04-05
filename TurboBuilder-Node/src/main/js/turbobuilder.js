@@ -9,7 +9,7 @@
 
 const { StringUtils } = require('turbocommons-ts');
 const globalsModule = require('./globals');
-const consoleModule = require('./console');
+const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const buildModule = require('./build');
@@ -78,17 +78,17 @@ if (program.build){
 if (program.test){
     
     // TODO - Implement this feature on a sepparate js file
-    consoleModule.success('test');
+    console.success('test');
 }
 
 if (program.release){
     
     // TODO - Implement this feature on a sepparate js file
-    consoleModule.success('release');
+    console.success('release');
 }
 
 if (program.publish){
     
     // TODO - Implement this feature on a sepparate js file
-    consoleModule.success('publish');
+    console.success('publish');
 }

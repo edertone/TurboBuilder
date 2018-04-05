@@ -12,7 +12,7 @@ const os = require('os');
 const path = require('path');
 const { FilesManager } = require('turbocommons-ts');
 const { execSync } = require('child_process');
-const consoleModule = require('./../../main/js/console');
+const console = require('./../../main/js/console');
 
 
 let fm = new FilesManager(fs, os, path, process);
@@ -21,11 +21,14 @@ let tempFolder = fm.createTempDirectory('turbobuilder-tests', false);
 let pathToExecutable = 'node "' + path.resolve(__dirname + '/../../main/js/turbobuilder.js') + '"';
 
 
-// We will delete the temporary folder when application exists, may it be due to a 
+// We will delete the temporary folder when application exits, may it be due to a 
 // success or an error
 process.on('exit', () => {
     
-    this.deleteTemp();
+    // Switch to the original execution dir to prevent temp folder from being locked
+    this.switchToExecutionDir();
+    
+    this.assertFolderDelete(tempFolder);
 });
 
 
@@ -79,7 +82,7 @@ exports.assertIsFolder = function (path) {
 
     if(!fm.isDirectory(path)){
     
-        consoleModule.error('Folder does not exist: ' + path);
+        console.error('Folder does not exist: ' + path);
     }
 };
 
@@ -91,7 +94,7 @@ exports.assertFolderEmpty = function (path) {
 
     if(!fm.isDirectoryEmpty(path)){
     
-        consoleModule.error('Folder is not empty: ' + path);
+        console.error('Folder is not empty: ' + path);
     }
 };
 
@@ -105,12 +108,12 @@ exports.assertFolderDelete = function (path) {
     
     if(!fm.deleteDirectory(path)){
         
-        consoleModule.error('Could not delete folder: ' + path);
+        console.error('Could not delete folder: ' + path);
     }
     
     if(fm.isDirectory(path)){
     
-        consoleModule.error('Folder was not deleted: ' + path);
+        console.error('Folder was not deleted: ' + path);
     }
 };
 
@@ -126,12 +129,12 @@ exports.assertExecContains = function (options, expected, errorMessage) {
 
         if(execResult.toString().indexOf(expected) < 0){
 
-            consoleModule.error(errorMessage + "\n" + execResult.toString());
+            console.error(errorMessage + "\n" + execResult.toString());
         }
         
     }catch(e){
         
-        consoleModule.error(errorMessage + "\n" + e.stdout);
+        console.error(errorMessage + "\n" + e.stdout);
     }    
 };
 
@@ -145,25 +148,14 @@ exports.assertExecFails = function (options, expectedError, errorMessage) {
     
         let execResult = execSync(pathToExecutable + ' ' + options, {stdio : 'pipe'});
         
-        consoleModule.error(errorMessage + "\n" + pathToExecutable + ' ' + options + " did not fail:\n" + execResult.toString());
+        console.error(errorMessage + "\n" + pathToExecutable + ' ' + options + " did not fail:\n" + execResult.toString());
         
     }catch(e){
         
         // Everything ok, the exec failed, but message must match
         if(e.stdout.indexOf(expectedError) < 0){
 
-            consoleModule.error(errorMessage + "\nExpected: " + expectedError +"\nReceived: " + e.stdout);
+            console.error(errorMessage + "\nExpected: " + expectedError +"\nReceived: " + e.stdout);
         }
     }
-};
-
-
-/**
- * Delete the whole temp directory
- */
-exports.deleteTemp = function () {
-    
-    this.switchToExecutionDir();
-    
-    this.assertFolderDelete(tempFolder);
 };
