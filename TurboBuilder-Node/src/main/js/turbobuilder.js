@@ -7,13 +7,14 @@
  */
 
 
+const program = require('commander');
 const { StringUtils } = require('turbocommons-ts');
 const globalsModule = require('./globals');
 const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const buildModule = require('./build');
-const program = require('commander');
+const cleanModule = require('./clean');
 
 
 /**
@@ -62,7 +63,7 @@ if (program.validate){
     validateModule.execute();
 }
 
-// TODO
+// Perform the project cleanup
 if (program.clean){
  
     cleanModule.execute();

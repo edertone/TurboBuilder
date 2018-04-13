@@ -32,8 +32,9 @@ global.fileNames = {
  * All the relevant paths relative to the main installation folder
  */
 global.installationPaths = {
-        typeScriptBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/tsc"'),
         typeDocBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/typedoc"'),
+        typeScriptBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/tsc"'),
+        webPackBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/webpack"'),
         root: path.resolve(__dirname + '/../../..'),
         setupFile: path.resolve(__dirname + '/../../../' + global.fileNames.setup),
         readmeFile: path.resolve(__dirname + '/../../../' + global.fileNames.readme),
@@ -99,12 +100,13 @@ global.setupBuild = {
         keepUnPackedFiles : false,
         
         Ts : {
-            enabled: false,
-            createMergedTs: false,
-            createMergedJs: false,
+            enabled: true,
             compilerDeclarationFile: true,
             compilerStrict: true,
             compilerSourceMap: false,
-            compilerTargets: "ES3,ES5,ES6"
+            CompilerTarget: [
+                {target: 'ES5', mergedFileName: 'TurboCommons-ES5', globalVar: "org_turbocommons"},
+                {target: 'ES6', mergedFileName: 'TurboCommons-ES6', globalVar: "org_turbocommons"}
+            ]
         },
 };

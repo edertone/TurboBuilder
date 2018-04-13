@@ -7,7 +7,7 @@
     "test-debug": "node --inspect-brk src/test/js/index.js"
   },
   "bin": {
-  	"tb": "./src/main/js/turbobuilder.js",
+    "tb": "./src/main/js/turbobuilder.js",
     "turbobuilder": "./src/main/js/turbobuilder.js"
   },
   "repository": {
@@ -16,10 +16,11 @@
   },
   "dependencies": {
     "commander": "2.15.1",
-    "turbocommons-ts": "0.5.4",
     "http-server": "0.11.1",
+    "turbocommons-ts": "0.5.4",
     "typedoc": "0.11.1",
-    "typescript": "2.7.2"
+    "typescript": "2.7.2",
+    "webpack": "3.10.0"
   },
   "keywords": [
     "project",

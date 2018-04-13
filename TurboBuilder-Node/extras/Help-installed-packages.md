@@ -21,3 +21,7 @@ TODO
 ## typescript
 
 Used to compile the typescript code
+
+## webpack
+
+Used to merge and create web deployment packages

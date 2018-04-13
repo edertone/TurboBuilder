@@ -106,16 +106,26 @@ exports.errors = function (messages, quit = false) {
 
 /**
  * Execute the specified cmd command and show the result on the console
+ * 
+ * @param shellCommand The command to execute
+ * @param successMessage Message to show when command finishes ok. If not defined, the command output will be shown
  */
-exports.exec = function (shellCommand) {
+exports.exec = function (shellCommand, successMessage = '') {
     
     try{
         
         let result = execSync(shellCommand, {stdio : 'pipe'}).toString();
         
-        if(!StringUtils.isEmpty(result)){
+        if(successMessage !== ''){
             
-            this.success();
+            this.success(successMessage);
+            
+        }else{
+            
+            if(!StringUtils.isEmpty(result)){
+            
+                this.success(result);
+            }
         }
         
     }catch(e){
