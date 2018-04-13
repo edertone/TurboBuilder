@@ -50,17 +50,20 @@ global.installationPaths = {
  * All the relevant paths relative to the folder where the application's been executed
  */
 global.runtimePaths = {
-        projectName: StringUtils.getFileNameWithoutExtension(path.resolve('./')),
+        projectName: StringUtils.getPathElement(path.resolve('./')),
         root: path.resolve('./'),
         setupFile: path.resolve('./' + global.fileNames.setup),
         readmeFile: path.resolve('./' + global.fileNames.readme),
         extras: path.resolve('./' + global.folderNames.extras),
         todoFile: path.resolve('./extras/' + global.fileNames.todo),
         src: path.resolve('./src'),
-        target: path.resolve('./' + global.folderNames.target),
         main: path.resolve('./src/main'),
         test: path.resolve('./src/test'),
-        mainResources: path.resolve('./src/main/resources')
+        mainResources: path.resolve('./src/main/resources'),
+        target: path.resolve('./' + global.folderNames.target),
+        targetProjectName: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./'))),
+        targetMain: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./'))) + '/main',
+        targetDist: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./'))) + '/dist'
 };
 
 /**

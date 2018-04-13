@@ -8,8 +8,8 @@
  */
 
 
-const utils = require('./index-utils');
 require('./../../main/js/globals');
+const utils = require('./index-utils');
 
 
 // Create and switch to the generate folder

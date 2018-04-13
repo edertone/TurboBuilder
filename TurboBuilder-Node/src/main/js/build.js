@@ -6,7 +6,6 @@
 
 
 const { FilesManager } = require('turbocommons-ts');
-const { execSync } = require('child_process');
 const console = require('./console');
 const validateModule = require('./validate');
 
@@ -76,23 +75,7 @@ exports.createProjectStructure = function () {
  */
 let verifyToolsAvailable = function () {
 
-	// TODO - check if this is necessary or not, cause we will use node dependencies
-    console.log(execSync(global.installationPaths.typeScriptBin + ' -v', {stdio : 'pipe'}).toString());
-    
-    console.log(execSync(global.installationPaths.typeDocBin + ' -v', {stdio : 'pipe'}).toString());
-    
-    // Check that typescript compiler is available
-//    if(global.setupBuild.Ts.enabled){
-//        
-//        try{
-//            
-//            execSync('tsc -v', {stdio : 'pipe'});
-//            
-//        }catch(e){
-//
-//            console.error('Could not find Typescript compiler (tsc). Run: npm install -g typescript');
-//        }
-//    }
+	// TODO - check if this is necessary or not
 }
 
 
@@ -101,30 +84,20 @@ let verifyToolsAvailable = function () {
  */
 let copyMainFiles = function () {
     
-    // Delete all files inside the target/projectName except the main folder one
-    fm.deleteDirectory(global.runtimePaths.target + fm.dirSep() + global.runtimePaths.projectName);
-    /*
-    <!-- Delete all files inside the target/projectName except the main folder one -->
-    <delete failonerror="false" includeemptydirs="true">
-        <fileset dir="${targetFolderPath}/${projectBaseName}" casesensitive="false">
-            <include name="** / *"/>
-            <exclude name="main/"/>
-        </fileset>
-    </delete>
-
-    <!-- Update the target/projectName/main folder with the current project state -->
-    <sync todir="${targetFolderPath}/${projectBaseName}/main" overwrite="true">
-        <fileset dir="${mainFolderPath}" casesensitive="false">
-            <exclude name="** /thumbs.db**" />
-            <exclude name="**  /.svn/**" />
-            <exclude name="** /.git**" />
-        </fileset>
-    </sync>
-
-    <!-- Replace the string @@package-build-version@@ on all the files with the real build version number -->
-    <replace dir="${targetFolderPath}/${projectBaseName}" token="@@package-build-version@@" value="${Build.versionNumber}.${build.number}" >
-        <exclude name="** /resources/"/>
-    </replace>*/
+    // Delete all files inside the target/projectName folder
+    fm.deleteDirectory(global.runtimePaths.targetProjectName);
+    
+    // Copy the main folder to the target
+    fm.createDirectory(global.runtimePaths.targetMain, true);
+    
+    // Ignore all the following files: thumbs.db .svn .git
+    // TODO let filesToCopy = fm.findDirectoryItems(global.runtimePaths.main, /^(?!.*(thumbs\.db|\.svn|\.git)$)/i, 'absolute', 'files');
+    
+    // TODO fm.copyFiles(filesToCopy, global.runtimePaths.targetProjectName + fm.dirSep() + 'main');
+    
+    fm.copyDirectory(global.runtimePaths.main, global.runtimePaths.targetMain);
+    
+    // TODO - Replace the string @@package-build-version@@ on all the files with the real build version number
 }
 
 
@@ -133,9 +106,40 @@ let copyMainFiles = function () {
  */
 let buildTypeScript = function () {
     
-    let execResult = execSync('tsc', {stdio : 'pipe'});
+    let tsConfig = global.runtimePaths.main + fm.dirSep() + 'ts' + fm.dirSep() + 'tsconfig.json';
     
-    console.log(execResult.toString());
+    // Check that tsconfig file exists.
+    if (!fm.isFile(tsConfig)) {
+        
+        console.error(tsConfig + ' file not found');
+    }
+    
+    // Generate the Typescript compatible dist
+    let tsExecution = global.installationPaths.typeScriptBin;
+        
+    if(global.setupBuild.Ts.compilerStrict){
+        
+        tsExecution += ' --strict';
+    }
+    
+    if(global.setupBuild.Ts.compilerDeclarationFile){
+        
+        tsExecution += ' --declaration';
+    }
+    
+    if(global.setupBuild.Ts.compilerSourceMap){
+        
+        tsExecution += ' --sourceMap';
+    }
+    
+    tsExecution += ' --alwaysStrict';             
+    tsExecution += ' --target ES6';
+    tsExecution += ' --outDir "' + global.runtimePaths.targetDist + fm.dirSep() + 'ts"';
+    tsExecution += ' --module commonjs';
+    tsExecution += ' --rootDir "' + global.runtimePaths.targetMain + fm.dirSep() + 'ts"';      
+    tsExecution += ' --project "' + global.runtimePaths.targetMain + fm.dirSep() + 'ts"';     
+    
+    console.exec(tsExecution);
     
     // TODO
 }
@@ -145,8 +149,13 @@ let buildTypeScript = function () {
  * Execute the build process
  */
 exports.execute = function () {
-  
+
     verifyToolsAvailable();
+    
+    // TODO
+    // Read the build number from file, increase it and save it.
+    // We will increase it even if the build fails, to prevent overlapping files from different builds.
+    // (Note that this file will be auto generated if it does not exist)
     
     copyMainFiles();
     
@@ -160,5 +169,5 @@ exports.execute = function () {
         buildTypeScript();
     }
     
-    console.log('build done');
+    console.success('build ok');
 };

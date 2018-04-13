@@ -18,17 +18,17 @@ utils.assertFolderEmpty(utils.switchToDirInsideTemp('test-version'));
 
 
 // When -v argument is passed, application version is shown
-utils.assertExecContains('-v', currentVersion, "Failed showing help");
+utils.assertExecContains('-v', currentVersion, "Failed showing help with -v");
 
 
-// When -version argument is passed, application version is shown
-utils.assertExecContains('--version', currentVersion, "Failed showing help");
+// When --version argument is passed, application version is shown
+utils.assertExecContains('--version', currentVersion, "Failed showing help with --version");
 
 
 //When -v argument is passed after creating an empty project, application version is shown
 utils.exec('-g');
-utils.assertExecContains('-v', currentVersion, "Failed showing help");
+utils.assertExecContains('-v', currentVersion, "Failed showing help with -v");
 
 
 //When -version argument is passed after creating an empty project, application version is shown
-utils.assertExecContains('--version', currentVersion, "Failed showing help");
+utils.assertExecContains('--version', currentVersion, "Failed showing help with --version");

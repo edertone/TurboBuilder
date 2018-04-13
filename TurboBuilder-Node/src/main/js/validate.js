@@ -54,22 +54,22 @@ let validateProjectStructure = function () {
     }
     
     // Check that all the project mandatory folders and files exist
-    for (let key of ObjectUtils.getKeys(global.runtimePaths)) {
-        
-        // Ignore files that are not mandatory or disabled via setup
-        if(key === 'target' ||
-           (key === 'extras' && !global.setupValidate.ProjectStructure.forceExtrasFolder) ||
-           (key === 'readmeFile' && !global.setupValidate.ProjectStructure.forceReadmeFile) ||
-           (key === 'todoFile' && !global.setupValidate.ProjectStructure.forceTODOFile)){
-            
-            continue;
-        }
-        
-        if (!fs.existsSync(global.runtimePaths[key])) {
-            
-            errors.push(global.runtimePaths[key] + " does not exist");
-        }
-    }
+//    for (let key of ObjectUtils.getKeys(global.runtimePaths)) {
+//        
+//        // Ignore files that are not mandatory or disabled via setup
+//        if(key === 'target' ||
+//           (key === 'extras' && !global.setupValidate.ProjectStructure.forceExtrasFolder) ||
+//           (key === 'readmeFile' && !global.setupValidate.ProjectStructure.forceReadmeFile) ||
+//           (key === 'todoFile' && !global.setupValidate.ProjectStructure.forceTODOFile)){
+//            
+//            continue;
+//        }
+//        
+//        if (!fs.existsSync(global.runtimePaths[key])) {
+//            
+//            errors.push(global.runtimePaths[key] + " does not exist");
+//        }
+//    }
     
     // Check that no strange files or folders exist
     //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
