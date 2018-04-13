@@ -576,9 +576,9 @@
 												
 						</xs:sequence>
 					
-						<xs:attribute name="enabled" use="required" type="xs:boolean">
+						<xs:attribute name="runBeforeBuild" use="optional" default="true" type="xs:boolean">
 							<xs:annotation>
-								<xs:documentation>Globally activates or deactivates the project validation</xs:documentation>
+								<xs:documentation>When this option is enabled, validation rules will be always executed before the build step</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>	
 						

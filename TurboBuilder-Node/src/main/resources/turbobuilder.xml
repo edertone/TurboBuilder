@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TurboBuilder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Ant/turboBuilder/TurboBuilder.xsd">
+			xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/turbobuilder.xsd">
 
 
 	<!-- 
@@ -23,12 +23,15 @@
 			  createJar="false" />
 	
 		<Ts enabled="false"
-            createMergedTs="false"
-			createMergedJs="false"
 			compilerDeclarationFile="true"
 			compilerStrict="true"
-			compilerSourceMap="false"
-			compilerTargets="ES3,ES5,ES6" />	   
+			compilerSourceMap="false">
+            
+            <CompilerTarget target="ES5" mergedFileName="TurboCommons-ES5" globalVar="org_turbocommons" />
+            
+            <CompilerTarget target="ES6" mergedFileName="TurboCommons-ES6" globalVar="org_turbocommons" />
+            
+        </Ts>	   
 		   
 	</Build>
 
@@ -44,7 +47,7 @@
 			 generateCodeDocumentation="true" />
 	
 		
-	<Validate enabled="true">
+	<Validate runBeforeBuild="true">
 	
 		<ProjectStructure enabled="true"
 	                      forceSupportFolder="true"
