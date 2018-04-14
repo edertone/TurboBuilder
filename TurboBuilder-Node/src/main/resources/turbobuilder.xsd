@@ -210,11 +210,11 @@
 							</xs:annotation>
 						</xs:attribute>
 						
-						<xs:attribute name="keepUnPackedFiles" default="false" type="xs:boolean">
+						<xs:attribute name="keepUnpackedSrcFiles" default="false" type="xs:boolean">
 							<xs:annotation>
 								<xs:documentation>
-									If set to false, all the files that are copied to the target/ProjectName/ folder will be removed. Otherwise they will be kept on the folder.
-									This is useful when we are packing all the target contents inside a jar or merged js file, and we don't need the unpacked files.
+									If set to false, all the files from src folder that are copied to target folder as part of the build process will be deleted after the build
+                                    ends successfully. This is useful as we don't usually need the original sources on the target folder.
 								</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>						
@@ -576,7 +576,7 @@
 												
 						</xs:sequence>
 					
-						<xs:attribute name="runBeforeBuild" use="optional" default="true" type="xs:boolean">
+						<xs:attribute name="runBeforeBuild" use="required" type="xs:boolean">
 							<xs:annotation>
 								<xs:documentation>When this option is enabled, validation rules will be always executed before the build step</xs:documentation>
 							</xs:annotation>

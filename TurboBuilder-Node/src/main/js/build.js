@@ -109,10 +109,10 @@ let buildTypeScript = function () {
     let sep = fm.dirSep();
     let tsConfig = global.runtimePaths.main + fm.dirSep() + 'ts' + fm.dirSep() + 'tsconfig.json';
     
-    // Check that tsconfig file exists.
+    // Create a default tsconfig file if there's no specific one
     if (!fm.isFile(tsConfig)) {
         
-        console.error(tsConfig + ' file not found');
+        fm.createFile(global.runtimePaths.targetMain + sep + 'ts' + sep + 'tsconfig.json', '{"compilerOptions":{"target": "es5"}}');
     }
     
     // Generate the Typescript compatible dist version
@@ -124,10 +124,10 @@ let buildTypeScript = function () {
     
     tsExecution += ' --alwaysStrict';             
     tsExecution += ' --target ES6';
-    tsExecution += ' --outDir "' + global.runtimePaths.targetDist + fm.dirSep() + 'TS"';
+    tsExecution += ' --outDir "' + global.runtimePaths.targetDist + sep + 'TS"';
     tsExecution += ' --module commonjs';
-    tsExecution += ' --rootDir "' + global.runtimePaths.targetMain + fm.dirSep() + 'ts"';      
-    tsExecution += ' --project "' + global.runtimePaths.targetMain + fm.dirSep() + 'ts"';     
+    tsExecution += ' --rootDir "' + global.runtimePaths.targetMain + sep + 'ts"';      
+    tsExecution += ' --project "' + global.runtimePaths.targetMain + sep + 'ts"';     
     
     console.exec(tsExecution);
     
@@ -177,6 +177,23 @@ let buildTypeScript = function () {
 
 
 /**
+ * Delete all the src main files that exist on target folder
+ */
+let removeUnpackedSrcFiles = function () {
+
+    // Delete the files from the non production folder
+    if(fm.isDirectory(global.runtimePaths.targetMain) &&
+            !fm.deleteDirectory(global.runtimePaths.targetMain)){
+        
+        console.error('Could not delete unpacked src files from ' + global.runtimePaths.targetMain);
+    }
+    
+    // TODO - delete unpacked files from
+    // <delete dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main" failonerror="false" />
+}
+
+
+/**
  * Execute the build process
  */
 exports.execute = function () {
@@ -198,6 +215,11 @@ exports.execute = function () {
     if(global.setupBuild.Ts.enabled){
     
         buildTypeScript();
+    }
+    
+    if(!global.setupBuild.keepUnpackedSrcFiles){
+        
+        removeUnpackedSrcFiles();
     }
     
     console.success('build ok');

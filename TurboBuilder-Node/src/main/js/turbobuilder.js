@@ -27,10 +27,10 @@ program
     .option('-g, --generate', 'Create a full project structure on the current directory')
     .option('-l, --validate', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder')
-    .option('-b, --build', 'Execute the build process as configured in ' + global.fileNames.setup)
+    .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
     .option('-r, --release', 'Generate the project production ready version as configured in ' + global.fileNames.setup)
-    .option('-p, --publish', 'Copy the project generated files to the specified locations')
+    .option('-p, --publish', 'Copy or sync the project generated files to the locations configured in ' + global.fileNames.setup)
     .parse(process.argv);
 
 // If none of the options have been passed, we will show the help

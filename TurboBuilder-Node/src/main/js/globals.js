@@ -97,7 +97,7 @@ global.setupValidate = {
  */
 global.setupBuild = {
         
-        keepUnPackedFiles : false,
+        keepUnpackedSrcFiles : false,
         
         Ts : {
             enabled: true,

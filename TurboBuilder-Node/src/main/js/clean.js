@@ -17,7 +17,12 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 exports.execute = function () {
     
-    fm.deleteDirectory(global.runtimePaths.target);
+    if(fm.isDirectory(global.runtimePaths.target) &&
+            !fm.deleteDirectory(global.runtimePaths.target) &&
+            !fm.isDirectoryEmpty(global.runtimePaths.target)){
+        
+        console.error('could not delete ' + global.runtimePaths.target);
+    }
     
     console.success('clean ok');
 }

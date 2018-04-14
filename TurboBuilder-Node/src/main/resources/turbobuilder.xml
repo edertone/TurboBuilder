@@ -11,7 +11,7 @@
 
 
 	<!-- Build node contains all the setup related to the project build process -->
-	<Build keepUnPackedFiles="false">
+	<Build keepUnpackedSrcFiles="false">
 	
 		<Php enabled="false"
 			 createPhar="false" />
