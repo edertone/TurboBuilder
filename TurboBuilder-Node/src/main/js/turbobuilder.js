@@ -14,6 +14,7 @@ const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const buildModule = require('./build');
+const releaseModule = require('./release');
 const cleanModule = require('./clean');
 
 
@@ -72,20 +73,18 @@ if (program.clean){
 // Perform the build as defined on xml setup
 if (program.build){
     
-    //validateModule.execute();
     buildModule.execute();
+}
+
+if (program.release){
+    
+    releaseModule.execute();
 }
 
 if (program.test){
     
     // TODO - Implement this feature on a sepparate js file
     console.success('test');
-}
-
-if (program.release){
-    
-    // TODO - Implement this feature on a sepparate js file
-    console.success('release');
 }
 
 if (program.publish){

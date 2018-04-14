@@ -11,6 +11,18 @@ const validateModule = require('./validate');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+let buildPath = global.runtimePaths.targetProjectName;
+
+
+//We will delete the unpacked src files when application exits, may it be due to a 
+//success or an error
+process.on('exit', () => {
+
+    if(!global.setupBuild.keepUnpackedSrcFiles){
+        
+        this.removeUnpackedSrcFiles(buildPath);
+    }
+});
 
 
 /**
@@ -73,7 +85,7 @@ exports.createProjectStructure = function () {
 /**
  * Checks that all the required cmd tools are available and can be executed
  */
-let verifyToolsAvailable = function () {
+exports.verifyToolsAvailable = function () {
 
 	// TODO - check if this is necessary or not
 }
@@ -82,37 +94,38 @@ let verifyToolsAvailable = function () {
 /**
  * Copy all the project src/main files to the target folder. Any unwanted files/folders are excluded
  */
-let copyMainFiles = function () {
+exports.copyMainFiles = function (destPath) {
     
-    // Delete all files inside the target/projectName folder
-    fm.deleteDirectory(global.runtimePaths.targetProjectName);
+    let destMain = destPath + fm.dirSep() + 'main';
     
     // Copy the main folder to the target
-    fm.createDirectory(global.runtimePaths.targetMain, true);
+    fm.createDirectory(destMain, true);
     
     // Ignore all the following files: thumbs.db .svn .git
     // TODO let filesToCopy = fm.findDirectoryItems(global.runtimePaths.main, /^(?!.*(thumbs\.db|\.svn|\.git)$)/i, 'absolute', 'files');
     
     // TODO fm.copyFiles(filesToCopy, global.runtimePaths.targetProjectName + fm.dirSep() + 'main');
     
-    fm.copyDirectory(global.runtimePaths.main, global.runtimePaths.targetMain);
+    fm.copyDirectory(global.runtimePaths.main, destMain);
     
     // TODO - Replace the string @@package-build-version@@ on all the files with the real build version number
 }
 
 
 /**
- * Execute the typescript build process
+ * Execute the typescript build process to the specified dest folder
  */
-let buildTypeScript = function () {
+exports.buildTypeScript = function (destPath) {
     
     let sep = fm.dirSep();
-    let tsConfig = global.runtimePaths.main + fm.dirSep() + 'ts' + fm.dirSep() + 'tsconfig.json';
+    let destMain = destPath + sep + 'main';
+    let destDist = destPath + sep + 'dist';
+    let tsConfig = destMain + sep + 'ts' + sep + 'tsconfig.json';
     
     // Create a default tsconfig file if there's no specific one
     if (!fm.isFile(tsConfig)) {
         
-        fm.createFile(global.runtimePaths.targetMain + sep + 'ts' + sep + 'tsconfig.json', '{"compilerOptions":{"target": "es5"}}');
+        fm.createFile(tsConfig, '{"compilerOptions":{"target": "es5"}}');
     }
     
     // Generate the Typescript compatible dist version
@@ -124,12 +137,12 @@ let buildTypeScript = function () {
     
     tsExecution += ' --alwaysStrict';             
     tsExecution += ' --target ES6';
-    tsExecution += ' --outDir "' + global.runtimePaths.targetDist + sep + 'TS"';
+    tsExecution += ' --outDir "' + destDist + sep + 'TS"';
     tsExecution += ' --module commonjs';
-    tsExecution += ' --rootDir "' + global.runtimePaths.targetMain + sep + 'ts"';      
-    tsExecution += ' --project "' + global.runtimePaths.targetMain + sep + 'ts"';     
+    tsExecution += ' --rootDir "' + destMain + sep + 'ts"';      
+    tsExecution += ' --project "' + destMain + sep + 'ts"';     
     
-    console.exec(tsExecution);
+    console.exec(tsExecution, 'ts compiled ok');
     
     // Generate the javascript single file versions
     tsExecution = global.installationPaths.typeScriptBin;
@@ -137,7 +150,7 @@ let buildTypeScript = function () {
     
     for(var i=0; i < targets.length; i++){
         
-        let tmpFolder = global.runtimePaths.targetDist + sep + targets[i].target + sep + 'tmp';
+        let tmpFolder = destDist + sep + targets[i].target + sep + 'tmp';
         let mergedFileName = (targets[i].mergedFileName == '' ? global.runtimePaths.projectName : targets[i].mergedFileName) + '.js';
         
         // Compile the typescript project with the current JS target into a temp folder
@@ -149,23 +162,22 @@ let buildTypeScript = function () {
         tsExecution += ' --target ' + targets[i].target;
         tsExecution += ' --outDir "' + tmpFolder + '"';
         tsExecution += ' --module commonjs';
-        tsExecution += ' --rootDir "' + global.runtimePaths.targetMain + sep + 'ts"';      
-        tsExecution += ' --project "' + global.runtimePaths.targetMain + sep + 'ts"';                          
+        tsExecution += ' --rootDir "' + destMain + sep + 'ts"';      
+        tsExecution += ' --project "' + destMain + sep + 'ts"';                          
         console.exec(tsExecution);
 
         // Generate via webpack the merged JS file for the current target       
         let webPackExecution = global.installationPaths.webPackBin;
         
         webPackExecution += ' "' + tmpFolder + sep + 'index.js"';
-        webPackExecution += ' "' + global.runtimePaths.targetDist + sep + targets[i].target + sep + mergedFileName + '"';
+        webPackExecution += ' "' + destDist + sep + targets[i].target + sep + mergedFileName + '"';
         webPackExecution += ' --output-library ' + targets[i].globalVar;                            
         
         if(global.setupBuild.Ts.compilerSourceMap){
             
-            fm.createFile();
+            fm.createFile(tmpFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
             
-            createFile(global.runtimePaths.targetDist + sep + targets[i].target + '/tmp/webpack.config.js', "module.exports = {devtool: 'source-map'};");
-            webPackExecution += ' --config "' + global.runtimePaths.targetDist + sep + targets[i].target + '/tmp/webpack.config.js"';     
+            webPackExecution += ' --config "' + tmpFolder + sep + 'webpack.config.js"';     
         }
 
         console.exec(webPackExecution, 'Webpack ' + targets[i].target + ' ok');
@@ -179,13 +191,14 @@ let buildTypeScript = function () {
 /**
  * Delete all the src main files that exist on target folder
  */
-let removeUnpackedSrcFiles = function () {
+exports.removeUnpackedSrcFiles = function (destPath) {
 
+    let destMain = destPath + fm.dirSep() + 'main';
+    
     // Delete the files from the non production folder
-    if(fm.isDirectory(global.runtimePaths.targetMain) &&
-            !fm.deleteDirectory(global.runtimePaths.targetMain)){
+    if(fm.isDirectory(destMain) && !fm.deleteDirectory(destMain)){
         
-        console.error('Could not delete unpacked src files from ' + global.runtimePaths.targetMain);
+        console.error('Could not delete unpacked src files from ' + destMain);
     }
     
     // TODO - delete unpacked files from
@@ -198,14 +211,20 @@ let removeUnpackedSrcFiles = function () {
  */
 exports.execute = function () {
 
-    verifyToolsAvailable();
+    console.log("\nbuild start");
+    
+    this.verifyToolsAvailable();
     
     // TODO
     // Read the build number from file, increase it and save it.
     // We will increase it even if the build fails, to prevent overlapping files from different builds.
     // (Note that this file will be auto generated if it does not exist)
     
-    copyMainFiles();
+    // Delete all files inside the target/projectName folder
+    fm.deleteDirectory(buildPath);
+    
+    // Copy all the src main files to the target dev build folder
+    this.copyMainFiles(buildPath);
     
     if(global.setupValidate.runBeforeBuild){
         
@@ -214,12 +233,7 @@ exports.execute = function () {
     
     if(global.setupBuild.Ts.enabled){
     
-        buildTypeScript();
-    }
-    
-    if(!global.setupBuild.keepUnpackedSrcFiles){
-        
-        removeUnpackedSrcFiles();
+        this.buildTypeScript(buildPath);
     }
     
     console.success('build ok');

@@ -130,6 +130,13 @@ exports.exec = function (shellCommand, successMessage = '') {
         
     }catch(e){
 
-        this.error(e.stdout.toString());
+        if(StringUtils.isEmpty(e.stdout.toString())){
+            
+            this.error('Unknown error executing ' + shellCommand);
+            
+        }else{
+         
+            this.error(e.stdout.toString());
+        }        
     }
 }

@@ -24,5 +24,5 @@ exports.execute = function () {
         console.error('could not delete ' + global.runtimePaths.target);
     }
     
-    console.success('clean ok');
+    console.success("\nclean ok");
 }

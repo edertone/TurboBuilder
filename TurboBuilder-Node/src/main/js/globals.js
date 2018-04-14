@@ -62,9 +62,7 @@ global.runtimePaths = {
         test: path.resolve('./src/test'),
         mainResources: path.resolve('./src/main/resources'),
         target: path.resolve('./' + global.folderNames.target),
-        targetProjectName: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./'))),
-        targetMain: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./'))) + '/main',
-        targetDist: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./'))) + '/dist'
+        targetProjectName: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./')))
 };
 
 /**
@@ -92,7 +90,7 @@ global.setupValidate = {
 };
 
 /**
- * Validate process setup as defined in the main xml setup file
+ * Build process setup as defined in the main xml setup file
  * Check the xsd definition for documentation of each property
  */
 global.setupBuild = {
@@ -109,4 +107,21 @@ global.setupBuild = {
                 {target: 'ES6', mergedFileName: 'TurboCommons-ES6', globalVar: "org_turbocommons"}
             ]
         },
+};
+
+
+/**
+ * Release process setup as defined in the main xml setup file
+ * Check the xsd definition for documentation of each property
+ */
+global.setupRelease = {
+        
+        gitChangeLog: true,
+        gitChangeLogCount: 5,
+        optimizeCss: true,
+        optimizeHtml: true,
+        optimizeJs: true,
+        optimizePhp: false,
+        optimizePictures: true,
+        generateCodeDocumentation: true
 };
