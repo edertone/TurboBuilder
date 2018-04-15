@@ -16,7 +16,6 @@ const { StringUtils } = require('turbocommons-ts');
 global.folderNames = {
         extras: 'extras',
         target: 'target'
-        
 };
 
 /**

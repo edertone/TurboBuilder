@@ -11,6 +11,7 @@ const { execSync } = require('child_process');
 const console = require('./console');
 const validateModule = require('./validate');
 const buildModule = require('./build');
+const UglifyJS = require("uglify-es");
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -26,6 +27,35 @@ process.on('exit', () => {
         buildModule.removeUnpackedSrcFiles(releasePath);
     }
 });
+
+
+/**
+ * Minifies all the js files that exist on the provided path
+ */
+let minifyJs = function (destPath) {
+    
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    let jsFiles = fm.findDirectoryItems(destDist, /.*\.js$/i, 'absolute', 'files');
+    
+    for (let jsFile of jsFiles) {
+        
+        let jsCode = fm.readFile(jsFile);
+        
+        let result = UglifyJS.minify(jsCode);
+        
+        if(result.error !== undefined){
+            
+            console.error('Minification failed: ' + jsFile + "\n\n" + result.error);
+        }
+        
+        fm.deleteFile(jsFile);        
+        fm.createFile(jsFile, result.code); 
+    }
+    
+    console.success("minify Js ok");
+}
 
 
 /**
@@ -124,6 +154,8 @@ let createGitChangeLog = function (destPath) {
     
     // Create the changelog file
     fm.createFile(destPath + fm.dirSep() + 'Changelog.txt', changeLogContents);
+    
+    console.success("changelog ok");
 }
 
 
@@ -149,6 +181,11 @@ exports.execute = function () {
     if(global.setupBuild.Ts.enabled){
     
         buildModule.buildTypeScript(releasePath);
+    }
+    
+    if(global.setupRelease.optimizeJs){
+        
+        minifyJs(releasePath);
     }
     
     if(global.setupRelease.generateCodeDocumentation){

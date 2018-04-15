@@ -16,11 +16,15 @@ TODO
 
 ## typedoc
 
-TODO
+Used to generate the typescript documentation
 
 ## typescript
 
 Used to compile the typescript code
+
+## uglify-es
+
+Used to minify and compress js files
 
 ## webpack
 
