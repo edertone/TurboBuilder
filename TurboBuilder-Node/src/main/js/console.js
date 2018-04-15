@@ -108,7 +108,7 @@ exports.errors = function (messages, quit = false) {
  * Execute the specified cmd command and show the result on the console
  * 
  * @param shellCommand The command to execute
- * @param successMessage Message to show when command finishes ok. If not defined, the command output will be shown
+ * @param successMessage Message to show when command finishes ok in case the command output is not defined
  */
 exports.exec = function (shellCommand, successMessage = '') {
     

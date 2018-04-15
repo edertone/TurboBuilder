@@ -5,14 +5,16 @@
  */
 
 
+const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbocommons-ts');
+const { execSync } = require('child_process');
 const console = require('./console');
 const validateModule = require('./validate');
 const buildModule = require('./build');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
-let releasePath = global.runtimePaths.target + fm.dirSep() + global.runtimePaths.projectName + "-" + 'MAJOR' + "-" + 'MINOR';    
+let releasePath = global.runtimePaths.target + fm.dirSep() + global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion();    
 
 
 //We will delete the unpacked src files when application exits, may it be due to a 
@@ -59,13 +61,78 @@ let generateCodeDocumentation = function (destPath) {
 
 
 /**
+ * Generates the code documentation for the configured languages
+ */
+let createGitChangeLog = function (destPath) {
+    
+    // Test that git is available on OS shell
+    if(global.setupBuild.Ts.enabled){
+        
+        try{
+            
+            execSync('git --version', {stdio : 'pipe'});
+            
+        }catch(e){
+
+            console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
+        }
+    }
+    
+    // Define the changelog text
+    let changeLogContents = global.runtimePaths.projectName + '-' + buildModule.getCurrentVersion() + ' CHANGELOG ---------------------------------------------';
+    
+    // Get the GIT tags sorted by date ascending
+    let gitTagsList = execSync('git tag --sort version:refname', {stdio : 'pipe'}).toString();
+    
+    // Split the tags and generate the respective output for the latest global.setupRelease.gitChangeLogCount num of versions
+    gitTagsList = gitTagsList.split("\n").reverse();
+    
+    let tags = [];
+    
+    for(let i=0; i < gitTagsList.length; i++){
+        
+        if(!StringUtils.isEmpty(gitTagsList[i])){
+            
+            tags.push(gitTagsList[i].replace(/\r?\n|\r/g, ""));
+        }
+    }
+        
+    changeLogContents += "\n\n";
+        
+    // Log the changes from the newest defined tag to the current repo state
+    changeLogContents += execSync("git log " + tags[0] + '..HEAD --oneline --pretty=format:"%ad: %s%n%b" --date=short', {stdio : 'pipe'}).toString(); 
+              
+    // Log all the changes for each one of the defined tags
+    
+    for(let i=0; i < Math.min(global.setupRelease.gitChangeLogCount, tags.length); i++){
+    
+        changeLogContents += "\n\n\nVERSION: " + tags[i] + " ---------------------------------------------\n\n";
+        
+        let gitExecutionCommand = 'git '; 
+    
+        if(i >= (tags.length - 1)){
+    
+            gitExecutionCommand += "log " + tags[i] + ' --oneline --pretty=format:"%ad: %s%n%b" --date=short';
+    
+        }else{
+    
+            gitExecutionCommand += "log " + tags[i+1] + ".." + tags[i] + ' --oneline --pretty=format:"%ad: %s%n%b" --date=short';
+        }
+        
+        changeLogContents += execSync(gitExecutionCommand, {stdio : 'pipe'}).toString();
+    }
+    
+    // Create the changelog file
+    fm.createFile(destPath + fm.dirSep() + 'Changelog.txt', changeLogContents);
+}
+
+
+/**
  * Execute the release process
  */
 exports.execute = function () {
     
     console.log("\nrelease start");
-    
-    buildModule.verifyToolsAvailable();
     
     // TODO
     // Read the build number from file, increase it and save it.
@@ -87,6 +154,11 @@ exports.execute = function () {
     if(global.setupRelease.generateCodeDocumentation){
         
         generateCodeDocumentation(releasePath);
+    }
+    
+    if(global.setupRelease.gitChangeLog){
+        
+        createGitChangeLog(releasePath);
     }
     
     console.success('release ok');

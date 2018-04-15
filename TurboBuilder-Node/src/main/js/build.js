@@ -26,6 +26,15 @@ process.on('exit', () => {
 
 
 /**
+ * Get a string with the current project version
+ */
+exports.getCurrentVersion = function () {
+    
+    return 'MAJOR' + "." + 'MINOR' + '.' + 'PATCH'
+}
+
+
+/**
  * Generate the project folders and files on the current runtime directory
  */
 exports.createProjectStructure = function () {
@@ -79,15 +88,6 @@ exports.createProjectStructure = function () {
     console.success('Created all files ok');
     
     console.success('Generated project structure ok');
-}
-
-
-/**
- * Checks that all the required cmd tools are available and can be executed
- */
-exports.verifyToolsAvailable = function () {
-
-	// TODO - check if this is necessary or not
 }
 
 
@@ -212,8 +212,6 @@ exports.removeUnpackedSrcFiles = function (destPath) {
 exports.execute = function () {
 
     console.log("\nbuild start");
-    
-    this.verifyToolsAvailable();
     
     // TODO
     // Read the build number from file, increase it and save it.
