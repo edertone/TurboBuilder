@@ -97,7 +97,7 @@ global.setupBuild = {
         keepUnpackedSrcFiles : false,
         
         Ts : {
-            enabled: true,
+            enabled: false,
             compilerDeclarationFile: true,
             compilerStrict: true,
             compilerSourceMap: false,

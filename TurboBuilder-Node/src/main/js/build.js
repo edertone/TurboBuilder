@@ -96,6 +96,12 @@ exports.createProjectStructure = function () {
  */
 exports.copyMainFiles = function (destPath) {
     
+    // If source file is empty, alert the user
+    if(fm.findDirectoryItems(global.runtimePaths.main, /.*/i, 'relative', 'files').length === 0){
+        
+        console.error('no files to build');
+    }
+    
     let destMain = destPath + fm.dirSep() + 'main';
     
     // Copy the main folder to the target
@@ -123,9 +129,10 @@ exports.buildTypeScript = function (destPath) {
     let tsConfig = destMain + sep + 'ts' + sep + 'tsconfig.json';
     
     // Create a default tsconfig file if there's no specific one
-    if (!fm.isFile(tsConfig)) {
+    if (!fm.isFile(tsConfig) &&
+        !fm.createFile(tsConfig, '{"compilerOptions":{"target": "es5"}}')) {
         
-        fm.createFile(tsConfig, '{"compilerOptions":{"target": "es5"}}');
+        console.error('Could not create ' + tsConfig);
     }
     
     // Generate the Typescript compatible dist version

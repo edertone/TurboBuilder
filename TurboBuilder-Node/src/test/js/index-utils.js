@@ -33,6 +33,19 @@ process.on('exit', () => {
 
 
 /**
+ * Used to execute a single test and notify to the console
+ */
+exports.test = function (testModule, testTitle, testCode) {
+
+    console.log(testModule + ': ' + testTitle);
+    
+    testCode();
+    
+    console.success("ok");
+};
+
+
+/**
  * Move the work directory to the folder where the tests were first executed
  */
 exports.switchToExecutionDir = function () {
