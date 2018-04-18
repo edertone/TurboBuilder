@@ -15,37 +15,6 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 
 /**
- * Create a default setup file on the current folder
- */
-exports.createSetup = function () {
-    
-    let defaultSetupPath = global.installationPaths.mainResources + fm.dirSep() + global.fileNames.setup;
-    
-    if (fm.isFile(global.runtimePaths.setupFile)) {
-        
-        console.error('File ' + global.fileNames.setup + ' already exists');
-    }
-    
-    if (!fm.isFile(defaultSetupPath)) {
-        
-        console.error(defaultSetupPath + ' file not found');
-    }
-    
-    if(!fm.isDirectoryEmpty(global.runtimePaths.root)){
-        
-        console.error('Current folder is not empty! :' + global.runtimePaths.root);
-    }
-        
-    if(!fm.copyFile(defaultSetupPath, global.runtimePaths.setupFile)){
-        
-        console.error('Error creating ' + global.fileNames.setup + ' file');
-    }
-    
-    console.success('Created ' + global.fileNames.setup + ' file');    
-}
-
-
-/**
  * Read the xml setup file and store all the data to a global variable
  */
 let loadSetupFromXml = function () {

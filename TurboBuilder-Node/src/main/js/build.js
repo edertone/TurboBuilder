@@ -35,63 +35,6 @@ exports.getCurrentVersion = function () {
 
 
 /**
- * Generate the project folders and files on the current runtime directory
- */
-exports.createProjectStructure = function () {
-    
-    // Create src folder
-    if(!fm.createDirectory(global.runtimePaths.src)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.src);
-    }
-    
-    // Create main folder
-    if(!fm.createDirectory(global.runtimePaths.main)){
-    
-        console.error('Failed creating: ' + global.runtimePaths.main);
-    }
-    
-    // Create main resources folder
-    if(!fm.createDirectory(global.runtimePaths.mainResources)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.mainResources);
-    }
-    
-    // Create test folder
-    if(!fm.createDirectory(global.runtimePaths.test)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.test);
-    }
-    
-    // Create extras folder
-    if(!fm.createDirectory(global.runtimePaths.extras)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.extras);
-    }
-    
-    console.success('Created all folders ok');
-    
-    // Create readme file
-    if(!fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + global.fileNames.readme,
-                    global.runtimePaths.root + fm.dirSep() + global.fileNames.readme)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.root + fm.dirSep() + global.fileNames.readme);
-    }
-    
-    // Create todo file
-    if(!fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + global.fileNames.todo,
-                    global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo);        
-    }
-    
-    console.success('Created all files ok');
-    
-    console.success('Generated project structure ok');
-}
-
-
-/**
  * Copy all the project src/main files to the target folder. Any unwanted files/folders are excluded
  */
 exports.copyMainFiles = function (destPath) {

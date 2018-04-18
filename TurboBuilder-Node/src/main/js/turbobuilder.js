@@ -12,9 +12,11 @@ const { StringUtils } = require('turbocommons-ts');
 const globalsModule = require('./globals');
 const console = require('./console');
 const setupModule = require('./setup');
+const generateModule = require('./generate');
 const validateModule = require('./validate');
 const buildModule = require('./build');
 const releaseModule = require('./release');
+const testModule = require('./test');
 const cleanModule = require('./clean');
 
 
@@ -50,8 +52,7 @@ if(!program.generate &&
 // Generate the default project files if necessary
 if (program.generate){
     
-    setupModule.createSetup();  
-    buildModule.createProjectStructure();
+    generateModule.execute();
     process.exit(0);
 }
 
@@ -83,8 +84,12 @@ if (program.release){
 
 if (program.test){
     
-    // TODO - Implement this feature on a sepparate js file
-    console.success('test');
+    if (!program.build && !program.release){
+    
+        console.error('--test option only works with -b --build or -r --release options');
+    }
+    
+    testModule.execute();
 }
 
 if (program.publish){
