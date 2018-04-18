@@ -33,6 +33,18 @@ npm i -g <packagename>
 
 - It can be done by modifying the package.json version and running npm install
 
+## Generate a tarball equal to the published one
+
+This will generate a compressed file with the samen contents that will be published to npm, so you can inspect
+it to see that everything is fine:
+
+npm pack
+
+Then you can test this generated tarball file by installing it in your system like:
+
+npm install somezipfile-0.0.4.tgz
+npm install -g somezipfile-0.0.4.tgz
+
 ## Publish the project to NPM
 
 npm publish
