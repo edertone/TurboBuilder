@@ -198,5 +198,5 @@ exports.execute = function () {
         createGitChangeLog(releasePath);
     }
     
-    console.success('release ok');
+    console.success('release ok (' + global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion() + ')');
 };

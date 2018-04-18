@@ -12,7 +12,11 @@ General purpose JS library
 
 ## http-server
 
-TODO
+A basic web server used to launch unit tests or any other html resources
+
+## opn
+
+A platform independent url/file launcher
 
 ## typedoc
 

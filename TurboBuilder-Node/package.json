@@ -2,6 +2,7 @@
   "name": "turbobuilder",
   "version": "0.0.4",
   "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
+  "files" : ["src/main", "src/test"],
   "scripts": {
     "test": "node src/test/js/index.js",
     "test-debug": "node --inspect-brk src/test/js/index.js"
@@ -17,6 +18,7 @@
   "dependencies": {
     "commander": "2.15.1",
     "http-server": "0.11.1",
+    "opn": "5.3.0",
     "turbocommons-ts": "0.5.4",
     "typedoc": "0.11.1",
     "typescript": "2.7.2",

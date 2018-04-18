@@ -86,7 +86,7 @@ if (program.test){
     
     if (!program.build && !program.release){
     
-        console.error('--test option only works with -b --build or -r --release options');
+        console.error('--test must be used at the same time as -b --build or -r --release');
     }
     
     testModule.execute();

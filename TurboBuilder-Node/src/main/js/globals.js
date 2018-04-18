@@ -34,6 +34,7 @@ global.installationPaths = {
         typeDocBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/typedoc"'),
         typeScriptBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/tsc"'),
         webPackBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/webpack"'),
+        httpServerBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/http-server"'),
         root: path.resolve(__dirname + '/../../..'),
         setupFile: path.resolve(__dirname + '/../../../' + global.fileNames.setup),
         readmeFile: path.resolve(__dirname + '/../../../' + global.fileNames.readme),
@@ -43,7 +44,8 @@ global.installationPaths = {
         target: path.resolve(__dirname + '/../../../' + global.folderNames.target),
         main: path.resolve(__dirname + '/../../../src/main'),
         test: path.resolve(__dirname + '/../../../src/test'),
-        mainResources: path.resolve(__dirname + '/../../../src/main/resources')
+        mainResources: path.resolve(__dirname + '/../../../src/main/resources'),
+        testResources: path.resolve(__dirname + '/../../../src/test/resources')
 };
 
 /**
@@ -97,7 +99,7 @@ global.setupBuild = {
         keepUnpackedSrcFiles : false,
         
         Ts : {
-            enabled: false,
+            enabled: true,
             compilerDeclarationFile: true,
             compilerStrict: true,
             compilerSourceMap: false,
@@ -123,4 +125,25 @@ global.setupRelease = {
         optimizePhp: false,
         optimizePictures: true,
         generateCodeDocumentation: true
+};
+
+
+/**
+ * Test process setup as defined in the main xml setup file
+ * Check the xsd definition for documentation of each property
+ */
+global.setupTest = {
+        
+        Php : {
+            enabled: false,
+        },
+        
+        Js : {
+            enabled: false,
+        },
+        
+        Ts : {
+            enabled: true,
+            testingLibrary: 'qunit'
+        },
 };
