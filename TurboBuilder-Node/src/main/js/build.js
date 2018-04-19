@@ -11,7 +11,6 @@ const validateModule = require('./validate');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
-let buildPath = global.runtimePaths.targetProjectName;
 
 
 /**
@@ -20,11 +19,24 @@ let buildPath = global.runtimePaths.targetProjectName;
  */
 process.on('exit', () => {
 
-    if(!global.setupBuild.keepUnpackedSrcFiles){
+    if(global.setup !== null &&
+            !global.setup.build.keepUnpackedSrcFiles){
         
-        this.removeUnpackedSrcFiles(buildPath);
+        this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getBuildPath());
     }
 });
+
+
+/**
+ * Gets the path where current build version is generated
+ */
+/**
+ * Gets the path relative to project target where current build version is generated
+ */
+exports.getBuildPath = function () {
+    
+    return global.runtimePaths.projectName;    
+}
 
 
 /**
@@ -32,7 +44,7 @@ process.on('exit', () => {
  */
 exports.getCurrentVersion = function () {
     
-    return global.setupMetaData.version;
+    return global.setup.metadata.version;
 }
 
 
@@ -83,9 +95,9 @@ exports.buildTypeScript = function (destPath) {
     // Generate the Typescript compatible dist version
     let tsExecution = global.installationPaths.typeScriptBin;
         
-    tsExecution += global.setupBuild.Ts.compilerStrict ? ' --strict' : '';
-    tsExecution += global.setupBuild.Ts.compilerDeclarationFile ? ' --declaration' : '';
-    tsExecution += global.setupBuild.Ts.compilerSourceMap ? ' --sourceMap' : '';
+    tsExecution += global.setup.build.ts.compilerStrict ? ' --strict' : '';
+    tsExecution += global.setup.build.ts.compilerDeclarationFile ? ' --declaration' : '';
+    tsExecution += global.setup.build.ts.compilerSourceMap ? ' --sourceMap' : '';
     
     tsExecution += ' --alwaysStrict';             
     tsExecution += ' --target ES6';
@@ -98,7 +110,7 @@ exports.buildTypeScript = function (destPath) {
     
     // Generate the javascript single file versions
     tsExecution = global.installationPaths.typeScriptBin;
-    let targets = global.setupBuild.Ts.CompilerTarget;
+    let targets = global.setup.build.ts.compilerTargets;
     
     for(var i=0; i < targets.length; i++){
         
@@ -106,9 +118,9 @@ exports.buildTypeScript = function (destPath) {
         let mergedFileName = (targets[i].mergedFileName == '' ? global.runtimePaths.projectName : targets[i].mergedFileName) + '.js';
         
         // Compile the typescript project with the current JS target into a temp folder
-        tsExecution += global.setupBuild.Ts.compilerStrict ? ' --strict' : '';
-        tsExecution += global.setupBuild.Ts.compilerDeclarationFile ? ' --declaration' : '';
-        tsExecution += global.setupBuild.Ts.compilerSourceMap ? ' --sourceMap' : '';
+        tsExecution += global.setup.build.ts.compilerStrict ? ' --strict' : '';
+        tsExecution += global.setup.build.ts.compilerDeclarationFile ? ' --declaration' : '';
+        tsExecution += global.setup.build.ts.compilerSourceMap ? ' --sourceMap' : '';
 
         tsExecution += ' --alwaysStrict';             
         tsExecution += ' --target ' + targets[i].target;
@@ -125,7 +137,7 @@ exports.buildTypeScript = function (destPath) {
         webPackExecution += ' "' + destDist + sep + targets[i].target + sep + mergedFileName + '"';
         webPackExecution += ' --output-library ' + targets[i].globalVar;                            
         
-        if(global.setupBuild.Ts.compilerSourceMap){
+        if(global.setup.build.ts.compilerSourceMap){
             
             fm.saveFile(tmpFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
             
@@ -165,6 +177,18 @@ exports.execute = function () {
 
     console.log("\nbuild start");
     
+    // TODO - if no builder is enabled launch error
+    if(!global.setup.build.php.enabled &&
+       !global.setup.build.js.enabled &&
+       !global.setup.build.java.enabled &&
+       !global.setup.build.ts.enabled){
+        
+        console.error("Nothing to build. Please enable php, js, java or ts under build section in " + global.fileNames.setup);
+    }
+    
+    
+    let buildPath = global.runtimePaths.target + fm.dirSep() + this.getBuildPath();
+    
     // TODO
     // Read the build number from file, increase it and save it.
     // We will increase it even if the build fails, to prevent overlapping files from different builds.
@@ -176,12 +200,12 @@ exports.execute = function () {
     // Copy all the src main files to the target dev build folder
     this.copyMainFiles(buildPath);
     
-    if(global.setupValidate.runBeforeBuild){
+    if(global.setup.validate.runBeforeBuild){
         
         validateModule.execute();
     }
     
-    if(global.setupBuild.Ts.enabled){
+    if(global.setup.build.ts.enabled){
     
         this.buildTypeScript(buildPath);
     }

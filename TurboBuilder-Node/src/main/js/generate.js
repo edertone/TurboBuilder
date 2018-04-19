@@ -18,16 +18,16 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 let createSetup = function () {
     
-    let defaultSetupPath = global.installationPaths.mainResources + fm.dirSep() + global.fileNames.setup;
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-template' + fm.dirSep() + global.fileNames.setup;
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
         
         console.error('File ' + global.fileNames.setup + ' already exists');
     }
     
-    if (!fm.isFile(defaultSetupPath)) {
+    if (!fm.isFile(templateSetupPath)) {
         
-        console.error(defaultSetupPath + ' file not found');
+        console.error(templateSetupPath + ' file not found');
     }
     
     if(!fm.isDirectoryEmpty(global.runtimePaths.root)){
@@ -35,7 +35,7 @@ let createSetup = function () {
         console.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
         
-    if(!fm.copyFile(defaultSetupPath, global.runtimePaths.setupFile)){
+    if(!fm.copyFile(templateSetupPath, global.runtimePaths.setupFile)){
         
         console.error('Error creating ' + global.fileNames.setup + ' file');
     }

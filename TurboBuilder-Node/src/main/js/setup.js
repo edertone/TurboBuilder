@@ -17,14 +17,14 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 /**
  * Read the xml setup file and store all the data to a global variable
  */
-let loadSetupFromXml = function () {
+let loadSetupFromDisk = function () {
 
     if (!fm.isFile(global.runtimePaths.setupFile)) {
     
         console.error(global.fileNames.setup + ' setup file not found');
     }
     
-    //return fm.readFileSync(global.runtimePaths.setupFile, 'utf8');
+    global.setup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
 };
 
 
@@ -51,6 +51,6 @@ let getLatestGitTag = function () {
  */
 exports.init = function () {
 
-    loadSetupFromXml();
+    loadSetupFromDisk();
     getLatestGitTag();
 }

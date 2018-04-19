@@ -15,7 +15,6 @@ const UglifyJS = require("uglify-es");
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
-let releasePath = global.runtimePaths.target + fm.dirSep() + global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion();    
 
 
 /**
@@ -24,11 +23,21 @@ let releasePath = global.runtimePaths.target + fm.dirSep() + global.runtimePaths
  */
 process.on('exit', () => {
  
-    if(!global.setupBuild.keepUnpackedSrcFiles){
+    if(global.setup !== null &&
+            !global.setup.build.keepUnpackedSrcFiles){
         
-        buildModule.removeUnpackedSrcFiles(releasePath);
+        buildModule.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getReleasePath());
     }
 });
+
+
+/**
+ * Gets the path relative to project target where current release version is generated
+ */
+exports.getReleasePath = function () {
+    
+    return global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion();    
+}
 
 
 /**
@@ -70,7 +79,7 @@ let generateCodeDocumentation = function (destPath) {
     let docsPath = destPath + sep + 'docs';
     
     // Generate ts doc if ts build is enabled
-    if(global.setupBuild.Ts.enabled){
+    if(global.setup.build.ts.enabled){
         
         if(!fm.createDirectory(docsPath + sep + 'ts', true)){
            
@@ -98,7 +107,7 @@ let generateCodeDocumentation = function (destPath) {
 let createGitChangeLog = function (destPath) {
     
     // Test that git is available on OS shell
-    if(global.setupBuild.Ts.enabled){
+    if(global.setup.build.ts.enabled){
         
         try{
             
@@ -116,7 +125,7 @@ let createGitChangeLog = function (destPath) {
     // Get the GIT tags sorted by date ascending
     let gitTagsList = execSync('git tag --sort version:refname', {stdio : 'pipe'}).toString();
     
-    // Split the tags and generate the respective output for the latest global.setupRelease.gitChangeLogCount num of versions
+    // Split the tags and generate the respective output for the latest global.setup.release.gitChangeLogCount num of versions
     gitTagsList = gitTagsList.split("\n").reverse();
     
     let tags = [];
@@ -136,7 +145,7 @@ let createGitChangeLog = function (destPath) {
               
     // Log all the changes for each one of the defined tags
     
-    for(let i=0; i < Math.min(global.setupRelease.gitChangeLogCount, tags.length); i++){
+    for(let i=0; i < Math.min(global.setup.release.gitChangeLogCount, tags.length); i++){
     
         changeLogContents += "\n\n\nVERSION: " + tags[i] + " ---------------------------------------------\n\n";
         
@@ -168,6 +177,8 @@ exports.execute = function () {
     
     console.log("\nrelease start");
     
+    let releasePath = global.runtimePaths.target + fm.dirSep() + this.getReleasePath();
+    
     // TODO
     // Read the build number from file, increase it and save it.
     // We will increase it even if the build fails, to prevent overlapping files from different builds.
@@ -175,27 +186,27 @@ exports.execute = function () {
     
     buildModule.copyMainFiles(releasePath);
     
-    if(global.setupValidate.runBeforeBuild){
+    if(global.setup.validate.runBeforeBuild){
         
         validateModule.execute();
     }
     
-    if(global.setupBuild.Ts.enabled){
+    if(global.setup.build.ts.enabled){
     
         buildModule.buildTypeScript(releasePath);
     }
     
-    if(global.setupRelease.optimizeJs){
+    if(global.setup.release.optimizeJs){
         
         minifyJs(releasePath);
     }
     
-    if(global.setupRelease.generateCodeDocumentation){
+    if(global.setup.release.generateCodeDocumentation){
         
         generateCodeDocumentation(releasePath);
     }
     
-    if(global.setupRelease.gitChangeLog){
+    if(global.setup.release.gitChangeLog){
         
         createGitChangeLog(releasePath);
     }

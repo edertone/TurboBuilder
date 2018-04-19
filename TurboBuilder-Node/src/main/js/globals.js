@@ -11,6 +11,12 @@ const { StringUtils } = require('turbocommons-ts');
 
 
 /**
+ * Contains all the turbo builder setup loaded from the project config file
+ */
+global.setup = null;
+
+
+/**
  * All the relevant project folder names
  */
 global.folderNames = {
@@ -22,7 +28,7 @@ global.folderNames = {
  * All the relevant project file names
  */
 global.fileNames = {
-    setup: 'turbobuilder.xml',
+    setup: 'turbobuilder.json',
     readme: 'README.md',
     todo: 'TODO.txt'
 };
@@ -64,98 +70,4 @@ global.runtimePaths = {
     mainResources: path.resolve('./src/main/resources'),
     target: path.resolve('./' + global.folderNames.target),
     targetProjectName: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./')))
-};
-
-/**
- * Metadata setup as defined in the main xml setup file
- * Check the xsd definition for documentation of each property
- */
-global.setupMetaData = {
-        
-    version : '0.0.0'
-};
-
-/**
- * Validate process setup as defined in the main xml setup file
- * Check the xsd definition for documentation of each property
- */
-global.setupValidate = {
-        
-    runBeforeBuild : true,
-    
-    ProjectStructure : {
-        enabled: true,
-        forceExtrasFolder: true,
-        forceReadmeFile: true,
-        forceTODOFile: true,
-        resourcesStructure: true,
-        phpStructure: true,
-        jsStructure: true,
-        tsStructure: true,
-        tsConfigFile: true,
-        javaStructure: true,
-        cssStructure: true,
-        checkGitIgnore: true
-    },
-};
-
-/**
- * Build process setup as defined in the main xml setup file
- * Check the xsd definition for documentation of each property
- */
-global.setupBuild = {
-        
-    keepUnpackedSrcFiles : false,
-    
-    Ts : {
-        enabled: true,
-        compilerDeclarationFile: true,
-        compilerStrict: true,
-        compilerSourceMap: false,
-        CompilerTarget: [
-            {target: 'ES5', mergedFileName: 'TurboCommons-ES5', globalVar: "org_turbocommons"},
-            {target: 'ES6', mergedFileName: 'TurboCommons-ES6', globalVar: "org_turbocommons"}
-        ]
-    },
-};
-
-
-/**
- * Release process setup as defined in the main xml setup file
- * Check the xsd definition for documentation of each property
- */
-global.setupRelease = {
-    
-    increaseSemVerPatch: true,
-    gitChangeLog: true,
-    gitChangeLogCount: 5,
-    optimizeCss: true,
-    optimizeHtml: true,
-    optimizeJs: true,
-    optimizePhp: false,
-    optimizePictures: true,
-    generateCodeDocumentation: true
-};
-
-
-/**
- * Test process setup as defined in the main xml setup file
- * Check the xsd definition for documentation of each property
- */
-global.setupTest = {
-        
-    Php : {
-        enabled: false,
-    },
-    
-    Js : {
-        enabled: false,
-    },
-    
-    Ts : {
-        enabled: true,
-        httpServerPort: '8185',
-        browsers: ['chrome', 'firefox', 'iexplore'],
-        testingLibrary: 'qunit'
-    },
 };

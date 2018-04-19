@@ -48,7 +48,7 @@ let validateAllowedFolders = function (foldersToInspect, allowedContents){
  */
 let validateProjectStructure = function () {
     
-    if(!global.setupValidate.ProjectStructure.enabled){
+    if(!global.setup.validate.projectStructure.enabled){
     
         return;
     }
@@ -75,7 +75,7 @@ let validateProjectStructure = function () {
     //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
     
     // Validate that gitIgnore file is correct
-    if(global.setupValidate.ProjectStructure.checkGitIgnore === true){
+    if(global.setup.validate.projectStructure.checkGitIgnore === true){
         
         // TODO - validate git ignore    
     }   

@@ -9,6 +9,7 @@ const { FilesManager } = require('turbocommons-ts');
 const { spawn } = require('child_process');
 const console = require('./console');
 const buildModule = require('./build');
+const releaseModule = require('./release');
 const opn = require('opn');
 
 
@@ -29,7 +30,7 @@ let launchHttpServer = function () {
     
     httpServerCmd += ' "' + global.runtimePaths.target + '"';
     httpServerCmd += ' -c-1';
-    httpServerCmd += ' -p ' + global.setupTest.Ts.httpServerPort;
+    httpServerCmd += ' -p ' + global.setup.test.ts.httpServerPort;
     
     spawn(httpServerCmd, [], {shell: true, stdio: 'ignore', detached: true}).unref();    
    
@@ -45,9 +46,9 @@ let launchHttpServer = function () {
  */
 let testTypeScript = function (relativeBuildPaths) {
     
-    console.log("\nlaunching ts tests");
+    console.success("\nlaunching ts tests");
     
-    if(!global.setupBuild.Ts.enabled){
+    if(!global.setup.build.ts.enabled){
         
         console.error('<Build><Ts enabled="true"> is mandatory on ' + global.fileNames.setup + ' to run typescript tests');
     }
@@ -65,7 +66,7 @@ let testTypeScript = function (relativeBuildPaths) {
         fm.createDirectory(destTestsPath, true);
         
         // Generate all the files to launch the tests
-        for (let jsTargetObject of global.setupBuild.Ts.CompilerTarget) {
+        for (let jsTargetObject of global.setup.build.ts.compilerTargets) {
             
             let jsTarget = jsTargetObject.target;
             let testsTarget = destTestsPath + sep + jsTarget;
@@ -125,9 +126,9 @@ let testTypeScript = function (relativeBuildPaths) {
             }
             
             // Run tests on all configured browsers
-            for (let browser of global.setupTest.Ts.browsers) {
+            for (let browser of global.setup.test.ts.browsers) {
             
-                let httpServerUrl = 'http://localhost:' + global.setupTest.Ts.httpServerPort + '/';
+                let httpServerUrl = 'http://localhost:' + global.setup.test.ts.httpServerPort + '/';
                 
                 httpServerUrl += relativeBuildPath + '/test/' + jsTarget;
                 
@@ -136,8 +137,6 @@ let testTypeScript = function (relativeBuildPaths) {
             }
         }
     }
-    
-    console.success('done');
 }
 
 
@@ -146,21 +145,32 @@ let testTypeScript = function (relativeBuildPaths) {
  */
 exports.execute = function (build, release) {
     
+    console.log("\ntest start");
+    
+    if(!global.setup.test.php.enabled &&
+       !global.setup.test.js.enabled &&
+       !global.setup.test.ts.enabled){
+        
+        console.error("Nothing to test. Please enable php, js or ts under test section in " + global.fileNames.setup);
+    }
+    
     // Check which build paths must be tested
     let pathsToTest = [];
     
     if(build){
         
-        pathsToTest.push(global.runtimePaths.projectName);
+        pathsToTest.push(buildModule.getBuildPath());
     }
     
     if(release){
         
-        pathsToTest.push(global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion());
+        pathsToTest.push(releaseModule.getReleasePath());
     }
     
-    if(global.setupTest.Ts.enabled){
+    if(global.setup.test.ts.enabled){
         
         testTypeScript(pathsToTest);
     }
+    
+    console.success('test done');
 };
