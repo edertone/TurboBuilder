@@ -16,9 +16,34 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 
 /**
- * Execute the typescript tests
+ * Initiate an http server instance using the project target folder as the root.
+ * If a server is already using the currently configured port, the new instance will not start.
+ * This is useful cause we will be able to leave the created http server instance open all the time
+ * while we perform different test executions
  */
-let testTypeScript = function (destPath) {
+let launchHttpServer = function () {
+    
+    // Initialize an http server as an independent terminal instance, with the dest folder as the http root
+    // and with the cache disabled. It will silently fail if a server is already listening the configured port
+    let httpServerCmd = global.installationPaths.httpServerBin;
+    
+    httpServerCmd += ' "' + global.runtimePaths.target + '"';
+    httpServerCmd += ' -c-1';
+    httpServerCmd += ' -p ' + global.setupTest.Ts.httpServerPort;
+    
+    spawn(httpServerCmd, [], {shell: true, stdio: 'ignore', detached: true}).unref();    
+   
+    console.success('started http-server');
+}
+
+
+/**
+ * Execute the typescript tests
+ * 
+ * @param relativeBuildPaths A list with paths relative to project target folder,
+ *        where tests folder and files will be created and executed
+ */
+let testTypeScript = function (relativeBuildPaths) {
     
     console.log("\nlaunching ts tests");
     
@@ -27,81 +52,89 @@ let testTypeScript = function (destPath) {
         console.error('<Build><Ts enabled="true"> is mandatory on ' + global.fileNames.setup + ' to run typescript tests');
     }
     
-    //Define folders
     let sep = fm.dirSep();
-    let destTestsPath = destPath + sep + 'test';
     let srcTestsPath = global.runtimePaths.test + sep + 'ts';
     
-    fm.createDirectory(destTestsPath, true);
+    launchHttpServer();
     
-    // Initialize an http server as an independent terminal instance, with the dest folder as the http root
-    spawn(global.installationPaths.httpServerBin + ' "' + destTestsPath + '" -c-1', [],
-            {shell: true, stdio: 'ignore', detached: true}).unref();
-    
-    console.success('started http-server');
-    
-    // Generate all the files to launch the tests
-    for (let targetObject of global.setupBuild.Ts.CompilerTarget) {
+    for (let relativeBuildPath of relativeBuildPaths) {
         
-        let target = targetObject.target;
-        let testsTarget = destTestsPath + sep + target;
+        let destPath = global.runtimePaths.target + sep + relativeBuildPath;
+        let destTestsPath = destPath + sep + 'test';
         
-        // Create current target folder
-        if(!fm.createDirectory(testsTarget, true)){
-            
-            console.error('Could not create ' + testsTarget);
-        }
+        fm.createDirectory(destTestsPath, true);
         
-        // Merge all tests code into tests target
-        fm.mergeFiles(fm.findDirectoryItems(srcTestsPath, /.*\.js$/i, 'absolute', 'files'),
-                testsTarget + sep + 'tests.js', "\n\n");
-
-        // Copy all test resources
-        fm.createDirectory(testsTarget + sep + 'resources');
-        fm.copyDirectory(srcTestsPath + sep + 'resources', testsTarget + sep + 'resources');
-        
-        // Merge all src dist code into tests target
-        fm.mergeFiles(fm.findDirectoryItems(destPath + sep + 'dist' + sep + target, /.*\.js$/i, 'absolute', 'files'),
-                testsTarget + sep + 'build.js', "\n\n");
-
-        // Copy qunit library
-        if(!fm.copyDirectory(global.installationPaths.testResources + sep + 'libs' + sep + 'qunit', testsTarget, false)){
+        // Generate all the files to launch the tests
+        for (let jsTargetObject of global.setupBuild.Ts.CompilerTarget) {
             
-            console.error('Could not copy qunit library');
-        }
-    
-        // Generate index.html if not exists
-        if(fm.isFile(srcTestsPath + sep + 'index.html')){
+            let jsTarget = jsTargetObject.target;
+            let testsTarget = destTestsPath + sep + jsTarget;
             
-            // TODO - copy index.html to target
-            
-        }else{
-            
-            let htmlIndexCode = '<!DOCTYPE html>';            
-            htmlIndexCode += '<html>';
-            htmlIndexCode += '<head>';
-            htmlIndexCode += '<meta charset="utf-8">';
-            htmlIndexCode += '<meta name="viewport" content="width=device-width">';
-            htmlIndexCode += '<title>Tests results</title>';
-            htmlIndexCode += '<link rel="stylesheet" href="qunit-2.6.0.css">';
-            htmlIndexCode += '</head>';
-            htmlIndexCode += '<body>';
-            htmlIndexCode += '<div id="qunit"></div>';
-            htmlIndexCode += '<div id="qunit-fixture"></div>';
-            htmlIndexCode += '<script src="qunit-2.6.0.js"></script>';
-            htmlIndexCode += '<script src="build.js"></script>';
-            htmlIndexCode += '<script src="tests.js"></script>';
-            htmlIndexCode += '</body>';
-            htmlIndexCode += '</html>';
-            
-            if(!fm.createFile(testsTarget + sep + 'index.html', htmlIndexCode)){
+            // Create current jsTarget folder
+            if(!fm.createDirectory(testsTarget, true)){
                 
-                console.error('Could not create ' + testsTarget + sep + 'index.html');
+                console.error('Could not create ' + testsTarget);
+            }
+            
+            // Merge all tests code into tests target
+            fm.mergeFiles(fm.findDirectoryItems(srcTestsPath, /.*\.js$/i, 'absolute', 'files'),
+                    testsTarget + sep + 'tests.js', "\n\n");
+    
+            // Copy all test resources
+            fm.createDirectory(testsTarget + sep + 'resources');
+            fm.copyDirectory(srcTestsPath + sep + 'resources', testsTarget + sep + 'resources');
+            
+            // Merge all src dist code into tests target
+            fm.mergeFiles(fm.findDirectoryItems(destPath + sep + 'dist' + sep + jsTarget, /.*\.js$/i, 'absolute', 'files'),
+                    testsTarget + sep + 'build.js', "\n\n");
+    
+            // Copy qunit library
+            if(!fm.copyDirectory(global.installationPaths.testResources + sep + 'libs' + sep + 'qunit', testsTarget, false)){
+                
+                console.error('Could not copy qunit library');
+            }
+        
+            // Generate index.html if not exists
+            if(fm.isFile(srcTestsPath + sep + 'index.html')){
+                
+                // TODO - copy index.html to target
+                
+            }else{
+                
+                let htmlIndexCode = '<!DOCTYPE html>';            
+                htmlIndexCode += '<html>';
+                htmlIndexCode += '<head>';
+                htmlIndexCode += '<meta charset="utf-8">';
+                htmlIndexCode += '<meta name="viewport" content="width=device-width">';
+                htmlIndexCode += '<title>Tests results</title>';
+                htmlIndexCode += '<link rel="stylesheet" href="qunit-2.6.0.css">';
+                htmlIndexCode += '</head>';
+                htmlIndexCode += '<body>';
+                htmlIndexCode += '<div id="qunit"></div>';
+                htmlIndexCode += '<div id="qunit-fixture"></div>';
+                htmlIndexCode += '<script src="qunit-2.6.0.js"></script>';
+                htmlIndexCode += '<script src="build.js"></script>';
+                htmlIndexCode += '<script src="tests.js"></script>';
+                htmlIndexCode += '</body>';
+                htmlIndexCode += '</html>';
+                
+                if(!fm.saveFile(testsTarget + sep + 'index.html', htmlIndexCode)){
+                    
+                    console.error('Could not create ' + testsTarget + sep + 'index.html');
+                }
+            }
+            
+            // Run tests on all configured browsers
+            for (let browser of global.setupTest.Ts.browsers) {
+            
+                let httpServerUrl = 'http://localhost:' + global.setupTest.Ts.httpServerPort + '/';
+                
+                httpServerUrl += relativeBuildPath + '/test/' + jsTarget;
+                
+                // opn is a node module that opens resources in a cross os manner
+                opn(httpServerUrl, {wait: false, app: [browser]});
             }
         }
-        
-        // Run tests on all configured browsers
-        opn('http://localhost:8080/' + target, {wait: false, app: ['chrome']});
     }
     
     console.success('done');
@@ -111,10 +144,23 @@ let testTypeScript = function (destPath) {
 /**
  * Execute the test process
  */
-exports.execute = function () {
+exports.execute = function (build, release) {
+    
+    // Check which build paths must be tested
+    let pathsToTest = [];
+    
+    if(build){
+        
+        pathsToTest.push(global.runtimePaths.projectName);
+    }
+    
+    if(release){
+        
+        pathsToTest.push(global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion());
+    }
     
     if(global.setupTest.Ts.enabled){
         
-        testTypeScript([global.runtimePaths.targetProjectName]);
+        testTypeScript(pathsToTest);
     }
 };

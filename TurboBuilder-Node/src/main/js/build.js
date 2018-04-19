@@ -14,8 +14,10 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 let buildPath = global.runtimePaths.targetProjectName;
 
 
-//We will delete the unpacked src files when application exits, may it be due to a 
-//success or an error
+/**
+ * We will delete the unpacked src files when application exits, may it be due to a
+ * success or an error
+ */
 process.on('exit', () => {
 
     if(!global.setupBuild.keepUnpackedSrcFiles){
@@ -30,7 +32,7 @@ process.on('exit', () => {
  */
 exports.getCurrentVersion = function () {
     
-    return 'MAJOR' + "." + 'MINOR' + '.' + 'PATCH'
+    return global.setupMetaData.version;
 }
 
 
@@ -73,7 +75,7 @@ exports.buildTypeScript = function (destPath) {
     
     // Create a default tsconfig file if there's no specific one
     if (!fm.isFile(tsConfig) &&
-        !fm.createFile(tsConfig, '{"compilerOptions":{"target": "es5"}}')) {
+        !fm.saveFile(tsConfig, '{"compilerOptions":{"target": "es5"}}')) {
         
         console.error('Could not create ' + tsConfig);
     }
@@ -125,7 +127,7 @@ exports.buildTypeScript = function (destPath) {
         
         if(global.setupBuild.Ts.compilerSourceMap){
             
-            fm.createFile(tmpFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
+            fm.saveFile(tmpFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
             
             webPackExecution += ' --config "' + tmpFolder + sep + 'webpack.config.js"';     
         }

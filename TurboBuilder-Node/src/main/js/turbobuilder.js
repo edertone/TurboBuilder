@@ -89,7 +89,7 @@ if (program.test){
         console.error('--test must be used at the same time as -b --build or -r --release');
     }
     
-    testModule.execute();
+    testModule.execute(program.build, program.release);
 }
 
 if (program.publish){

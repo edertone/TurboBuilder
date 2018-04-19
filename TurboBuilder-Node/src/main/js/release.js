@@ -18,8 +18,10 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 let releasePath = global.runtimePaths.target + fm.dirSep() + global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion();    
 
 
-//We will delete the unpacked src files when application exits, may it be due to a 
-//success or an error
+/**
+ * We will delete the unpacked src files when application exits, may it be due to a
+ * success or an error
+ */
 process.on('exit', () => {
  
     if(!global.setupBuild.keepUnpackedSrcFiles){
@@ -30,7 +32,7 @@ process.on('exit', () => {
 
 
 /**
- * Minifies all the js files that exist on the provided path
+ * Minifies all the js files (overwrites) that exist on the provided path
  */
 let minifyJs = function (destPath) {
     
@@ -51,7 +53,7 @@ let minifyJs = function (destPath) {
         }
         
         fm.deleteFile(jsFile);        
-        fm.createFile(jsFile, result.code); 
+        fm.saveFile(jsFile, result.code); 
     }
     
     console.success("minify Js ok");
@@ -153,7 +155,7 @@ let createGitChangeLog = function (destPath) {
     }
     
     // Create the changelog file
-    fm.createFile(destPath + fm.dirSep() + 'Changelog.txt', changeLogContents);
+    fm.saveFile(destPath + fm.dirSep() + 'Changelog.txt', changeLogContents);
     
     console.success("changelog ok");
 }

@@ -89,7 +89,7 @@ let createProjectStructure = function () {
     }
     
     // Create todo file
-    if(!fm.createFile(global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo,
+    if(!fm.saveFile(global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo,
        'Write all your pending tasks here')){
         
         console.error('Failed creating: ' + global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo);        
