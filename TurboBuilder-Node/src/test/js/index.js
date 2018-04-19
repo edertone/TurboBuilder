@@ -18,6 +18,7 @@ require('./test-version');
 require('./test-help');
 require('./test-generate');
 require('./test-build');
+require('./test-test');
 
 
 // Reaching here means all tests succeeded

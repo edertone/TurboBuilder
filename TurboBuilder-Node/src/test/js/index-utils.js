@@ -10,6 +10,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+require('./../../main/js/globals');
 const { FilesManager } = require('turbocommons-ts');
 const { execSync } = require('child_process');
 const console = require('./../../main/js/console');
@@ -76,6 +77,27 @@ exports.switchToDirInsideTemp = function (dirName) {
     process.chdir(workDir);
     
     return workDir;
+};
+
+
+/**
+ * Read the setup file on the specified folder and return it as a json object
+ */
+exports.readSetupFile = function (path) {
+  
+    return JSON.parse(fm.readFile(path + fm.dirSep() + global.fileNames.setup));
+};
+
+
+/**
+ * Save the provided object to the setup file as a json string
+ */
+exports.saveToSetupFile = function (path, object) {
+  
+    if(!fm.saveFile(path + fm.dirSep() + global.fileNames.setup, JSON.stringify(object))){
+        
+        console.error("Could not save " + path + fm.dirSep() + global.fileNames.setup);
+    }
 };
 
 
