@@ -26,7 +26,7 @@ const cleanModule = require('./clean');
  */
 program
     .alias('tb')
-    .version(require(global.installationPaths.root + '/package.json').version, '-v, --version')
+    .version(setupModule.getVersionNumbers(), '-v, --version')
     .option('-g, --generate', 'Create a full project structure on the current directory')
     .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder')

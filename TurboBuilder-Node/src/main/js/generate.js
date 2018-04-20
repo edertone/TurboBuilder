@@ -82,7 +82,7 @@ let createProjectStructure = function () {
     console.success('Created all folders ok');
     
     // Create readme file
-    if(!fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + global.fileNames.readme,
+    if(!fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + 'project-template' + fm.dirSep() + global.fileNames.readme,
                     global.runtimePaths.root + fm.dirSep() + global.fileNames.readme)){
         
         console.error('Failed creating: ' + global.runtimePaths.root + fm.dirSep() + global.fileNames.readme);

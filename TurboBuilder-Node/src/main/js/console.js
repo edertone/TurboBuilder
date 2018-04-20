@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * this module contains utilities for the console output of the application
+ * this module contains utilities for application console output
  */
 
 

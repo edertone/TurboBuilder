@@ -18,6 +18,22 @@ let isGitAvailable = false;
 
 
 /**
+ * Get the turbobuilder cmd tool and project versions ready to print to console
+ */
+exports.getVersionNumbers = function () {
+
+    let result = "\nturbobuilder: " + require(global.installationPaths.root + '/package.json').version;
+    
+    if (fm.isFile(global.runtimePaths.setupFile)) {
+    
+        result += "\n\n" + global.runtimePaths.projectName + ': ' + this.getCurrentSemVer();
+    }
+    
+    return result;
+}
+
+
+/**
  * Check if the git cmd executable is available or not no the system
  */
 exports.checkGitAvailable = function () {
