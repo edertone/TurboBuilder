@@ -10,11 +10,15 @@ const { FilesManager } = require('turbocommons-ts');
 const { execSync } = require('child_process');
 const console = require('./console');
 const validateModule = require('./validate');
+const setupModule = require('./setup');
 const buildModule = require('./build');
 const UglifyJS = require("uglify-es");
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+
+
+let releaseRelativePath = '';
 
 
 /**
@@ -26,17 +30,30 @@ process.on('exit', () => {
     if(global.setup !== null &&
             !global.setup.build.keepUnpackedSrcFiles){
         
-        buildModule.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getReleasePath());
+        buildModule.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath());
     }
 });
 
 
 /**
- * Gets the path relative to project target where current release version is generated
+ * Gets the path relative to project target where current release version will be generated
  */
-exports.getReleasePath = function () {
+exports.getReleaseRelativePath = function () {
     
-    return global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion();    
+    if(releaseRelativePath === ''){
+        
+        let i = 0;
+        
+        do{
+
+            i++;
+            
+            releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + ' +' + i;
+
+        }while(fm.isDirectory(global.runtimePaths.target + fm.dirSep() + releaseRelativePath));
+    }
+
+    return releaseRelativePath; 
 }
 
 
@@ -106,21 +123,10 @@ let generateCodeDocumentation = function (destPath) {
  */
 let createGitChangeLog = function (destPath) {
     
-    // Test that git is available on OS shell
-    if(global.setup.build.ts.enabled){
-        
-        try{
-            
-            execSync('git --version', {stdio : 'pipe'});
-            
-        }catch(e){
-
-            console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
-        }
-    }
+    setupModule.checkGitAvailable();
     
     // Define the changelog text
-    let changeLogContents = global.runtimePaths.projectName + '-' + buildModule.getCurrentVersion() + ' CHANGELOG ---------------------------------------------';
+    let changeLogContents = global.runtimePaths.projectName + ' DEV CHANGELOG ---------------------------------------------';
     
     // Get the GIT tags sorted by date ascending
     let gitTagsList = execSync('git tag --sort version:refname', {stdio : 'pipe'}).toString();
@@ -177,14 +183,9 @@ exports.execute = function () {
     
     console.log("\nrelease start");
     
-    let releasePath = global.runtimePaths.target + fm.dirSep() + this.getReleasePath();
+    let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
     
-    // TODO
-    // Read the build number from file, increase it and save it.
-    // We will increase it even if the build fails, to prevent overlapping files from different builds.
-    // (Note that this file will be auto generated if it does not exist)
-    
-    buildModule.copyMainFiles(releasePath);
+    buildModule.copyMainFiles(releaseFullPath);
     
     if(global.setup.validate.runBeforeBuild){
         
@@ -193,23 +194,23 @@ exports.execute = function () {
     
     if(global.setup.build.ts.enabled){
     
-        buildModule.buildTypeScript(releasePath);
+        buildModule.buildTypeScript(releaseFullPath);
     }
     
     if(global.setup.release.optimizeJs){
         
-        minifyJs(releasePath);
+        minifyJs(releaseFullPath);
     }
     
     if(global.setup.release.generateCodeDocumentation){
         
-        generateCodeDocumentation(releasePath);
+        generateCodeDocumentation(releaseFullPath);
     }
     
     if(global.setup.release.gitChangeLog){
         
-        createGitChangeLog(releasePath);
+        createGitChangeLog(releaseFullPath);
     }
     
-    console.success('release ok (' + global.runtimePaths.projectName + "-" + buildModule.getCurrentVersion() + ')');
+    console.success('release ok (' + this.getReleaseRelativePath() + ')');
 };

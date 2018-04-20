@@ -28,7 +28,7 @@ program
     .alias('tb')
     .version(require(global.installationPaths.root + '/package.json').version, '-v, --version')
     .option('-g, --generate', 'Create a full project structure on the current directory')
-    .option('-l, --validate', 'Perform project validation as configured in ' + global.fileNames.setup)
+    .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder')
     .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
@@ -38,7 +38,7 @@ program
 
 // If none of the options have been passed, we will show the help
 if(!program.generate &&
-   !program.validate &&
+   !program.lint &&
    !program.clean &&
    !program.build &&
    !program.test &&
@@ -60,7 +60,7 @@ if (program.generate){
 setupModule.init();
 
 // Perform the validation as defined on xml setup 
-if (program.validate){
+if (program.lint){
  
     validateModule.execute();
 }

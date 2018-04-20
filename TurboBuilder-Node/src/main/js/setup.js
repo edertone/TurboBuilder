@@ -14,6 +14,50 @@ const { StringUtils } = require('turbocommons-ts');
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
+let isGitAvailable = false;
+
+
+/**
+ * Check if the git cmd executable is available or not no the system
+ */
+exports.checkGitAvailable = function () {
+
+    if(!isGitAvailable){
+        
+        try{
+            
+            execSync('git --version', {stdio : 'pipe'});
+            
+            isGitAvailable = true;
+            
+        }catch(e){
+
+            console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
+        }
+    }
+}
+
+
+/**
+ * Calculate the most recent project semantic version value (major.minor.patch) depending on git tags or other parameters
+ */
+exports.getCurrentSemVer = function () {
+    
+    this.checkGitAvailable();
+    
+    try{
+        
+        let execResult = execSync('git describe --abbrev=0 --tags', {stdio : 'pipe'});
+        
+        return StringUtils.trim(execResult.toString());
+        
+    }catch(e){
+
+        return '0.0.0';
+    }    
+}
+
+
 /**
  * Read the xml setup file and store all the data to a global variable
  */
@@ -29,28 +73,9 @@ let loadSetupFromDisk = function () {
 
 
 /**
- * Get the latest tag if defined on GIT and not specified on TurboBuilder.xml
- */
-let getLatestGitTag = function () {
-    
-    try{
-        
-        let execResult = execSync('git describe --abbrev=0 --tags', {stdio : 'pipe'});
-        
-        return StringUtils.trim(execResult.toString());
-        
-    }catch(e){
-
-        return '0';
-    }    
-}
-
-
-/**
  * Initialize the global variables and setup structure from the project xml
  */
 exports.init = function () {
 
     loadSetupFromDisk();
-    getLatestGitTag();
 }

@@ -159,12 +159,12 @@ exports.execute = function (build, release) {
     
     if(build){
         
-        pathsToTest.push(buildModule.getBuildPath());
+        pathsToTest.push(buildModule.getBuildRelativePath());
     }
     
     if(release){
         
-        pathsToTest.push(releaseModule.getReleasePath());
+        pathsToTest.push(releaseModule.getReleaseRelativePath());
     }
     
     if(global.setup.test.ts.enabled){

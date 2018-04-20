@@ -7,6 +7,7 @@
 
 const { FilesManager } = require('turbocommons-ts');
 const console = require('./console');
+const setupModule = require('./setup');
 const validateModule = require('./validate');
 
 
@@ -22,29 +23,17 @@ process.on('exit', () => {
     if(global.setup !== null &&
             !global.setup.build.keepUnpackedSrcFiles){
         
-        this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getBuildPath());
+        this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath());
     }
 });
 
 
 /**
- * Gets the path where current build version is generated
- */
-/**
  * Gets the path relative to project target where current build version is generated
  */
-exports.getBuildPath = function () {
+exports.getBuildRelativePath = function () {
     
     return global.runtimePaths.projectName;    
-}
-
-
-/**
- * Get a string with the current project version
- */
-exports.getCurrentVersion = function () {
-    
-    return global.setup.metadata.version;
 }
 
 
@@ -159,14 +148,11 @@ exports.removeUnpackedSrcFiles = function (destPath) {
 
     let destMain = destPath + fm.dirSep() + 'main';
     
-    // Delete the files from the non production folder
+    // Delete the files
     if(fm.isDirectory(destMain) && !fm.deleteDirectory(destMain)){
         
         console.error('Could not delete unpacked src files from ' + destMain);
     }
-    
-    // TODO - delete unpacked files from
-    // <delete dir="${targetFolderPath}/${projectBaseName}-${Build.versionNumber}.${build.number}/main" failonerror="false" />
 }
 
 
@@ -177,7 +163,7 @@ exports.execute = function () {
 
     console.log("\nbuild start");
     
-    // TODO - if no builder is enabled launch error
+    // If no builder is enabled launch error
     if(!global.setup.build.php.enabled &&
        !global.setup.build.js.enabled &&
        !global.setup.build.java.enabled &&
@@ -187,18 +173,13 @@ exports.execute = function () {
     }
     
     
-    let buildPath = global.runtimePaths.target + fm.dirSep() + this.getBuildPath();
-    
-    // TODO
-    // Read the build number from file, increase it and save it.
-    // We will increase it even if the build fails, to prevent overlapping files from different builds.
-    // (Note that this file will be auto generated if it does not exist)
+    let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
     
     // Delete all files inside the target/projectName folder
-    fm.deleteDirectory(buildPath);
+    fm.deleteDirectory(buildFullPath);
     
     // Copy all the src main files to the target dev build folder
-    this.copyMainFiles(buildPath);
+    this.copyMainFiles(buildFullPath);
     
     if(global.setup.validate.runBeforeBuild){
         
@@ -207,7 +188,7 @@ exports.execute = function () {
     
     if(global.setup.build.ts.enabled){
     
-        this.buildTypeScript(buildPath);
+        this.buildTypeScript(buildFullPath);
     }
     
     console.success('build ok');

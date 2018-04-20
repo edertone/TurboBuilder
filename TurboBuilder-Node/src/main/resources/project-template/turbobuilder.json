@@ -1,7 +1,7 @@
 {
 	"metadata": {
-		"projectName": "write project name here",
-		"version": "0.0.0"
+		"name": "write project name here",
+		"description": "write some project description here"
 	},
 	
 	"validate": {
