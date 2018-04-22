@@ -47,14 +47,13 @@
 	        "compilerStrict": true,
 	        "compilerSourceMap": false,
 	        "compilerTargets": [
-	            {"target": "ES5", "mergedFileName": "TurboCommons-ES5", "globalVar": "org_turbocommons"},
-	            {"target": "ES6", "mergedFileName": "TurboCommons-ES6", "globalVar": "org_turbocommons"}
+	            {"target": "ES5", "mergedFileName": "PackedJsFileName-ES5", "globalVar": "global_lib_var"},
+	            {"target": "ES6", "mergedFileName": "PackedJsFileName-ES5", "globalVar": "global_lib_var"}
 	        ]
 	    }
     },
     
     "release": {
-	    "increaseSemVerPatch": true,
 	    "gitChangeLog": true,
 	    "gitChangeLogCount": 5,
 	    "optimizeCss": true,
@@ -75,7 +74,7 @@
 	    "ts": {
 	        "enabled": false,
 	        "httpServerPort": "8185",
-	        "browsers": ["chrome", "firefox", "iexplore"],
+	        "browsers": {"chrome": false, "firefox": false, "iexplore": false},
 	        "testingLibrary": "qunit"
 	    }
     }

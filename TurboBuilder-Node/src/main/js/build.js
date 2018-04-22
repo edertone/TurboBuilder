@@ -61,6 +61,8 @@ exports.copyMainFiles = function (destPath) {
     fm.copyDirectory(global.runtimePaths.main, destMain);
     
     // TODO - Replace the string @@package-build-version@@ on all the files with the real build version number
+    
+    console.success('copy main files ok');
 }
 
 

@@ -126,14 +126,17 @@ let testTypeScript = function (relativeBuildPaths) {
             }
             
             // Run tests on all configured browsers
-            for (let browser of global.setup.test.ts.browsers) {
+            for (let browserName of Object.keys(global.setup.test.ts.browsers)) {
             
-                let httpServerUrl = 'http://localhost:' + global.setup.test.ts.httpServerPort + '/';
-                
-                httpServerUrl += relativeBuildPath + '/test/' + jsTarget;
-                
-                // opn is a node module that opens resources in a cross os manner
-                opn(httpServerUrl, {wait: false, app: [browser]});
+                if(global.setup.test.ts.browsers[browserName]){
+                    
+                    let httpServerUrl = 'http://localhost:' + global.setup.test.ts.httpServerPort + '/';
+                    
+                    httpServerUrl += relativeBuildPath + '/test/' + jsTarget;
+                    
+                    // opn is a node module that opens resources in a cross os manner
+                    opn(httpServerUrl, {wait: false, app: [browserName]});
+                }
             }
         }
     }
