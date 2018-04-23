@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager } = require('turbocommons-ts');
+const { FilesManager, StringUtils } = require('turbocommons-ts');
 const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
@@ -83,62 +83,49 @@ exports.buildTypeScript = function (destPath) {
         console.error('Could not create ' + tsConfig);
     }
     
-    // Generate the Typescript compatible dist version
-    let tsExecution = global.installationPaths.typeScriptBin;
+    for (let target of global.setup.build.ts.targets) {
+    
+        let isMergedFile = target.hasOwnProperty('mergedFile') && !StringUtils.isEmpty(target.mergedFile);
         
-    tsExecution += global.setup.build.ts.compilerStrict ? ' --strict' : '';
-    tsExecution += global.setup.build.ts.compilerDeclarationFile ? ' --declaration' : '';
-    tsExecution += global.setup.build.ts.compilerSourceMap ? ' --sourceMap' : '';
-    
-    tsExecution += ' --alwaysStrict';             
-    tsExecution += ' --target ES6';
-    tsExecution += ' --outDir "' + destDist + sep + 'TS"';
-    tsExecution += ' --module commonjs';
-    tsExecution += ' --rootDir "' + destMain + sep + 'ts"';      
-    tsExecution += ' --project "' + destMain + sep + 'ts"';     
-    
-    console.exec(tsExecution, 'ts compiled ok');
-    
-    // Generate the javascript single file versions
-    tsExecution = global.installationPaths.typeScriptBin;
-    let targets = global.setup.build.ts.compilerTargets;
-    
-    for(var i=0; i < targets.length; i++){
+        let compiledFolder = destDist + sep + target.folder + (isMergedFile ? sep + 'tmp' : '');
+
+        let tsExecution = global.installationPaths.typeScriptBin;
         
-        let tmpFolder = destDist + sep + targets[i].target + sep + 'tmp';
-        let mergedFileName = (targets[i].mergedFileName == '' ? global.runtimePaths.projectName : targets[i].mergedFileName) + '.js';
-        
-        // Compile the typescript project with the current JS target into a temp folder
-        tsExecution += global.setup.build.ts.compilerStrict ? ' --strict' : '';
-        tsExecution += global.setup.build.ts.compilerDeclarationFile ? ' --declaration' : '';
-        tsExecution += global.setup.build.ts.compilerSourceMap ? ' --sourceMap' : '';
+        tsExecution += global.setup.build.ts.strict ? ' --strict' : '';
+        tsExecution += global.setup.build.ts.declaration ? ' --declaration' : '';
+        tsExecution += global.setup.build.ts.sourceMap ? ' --sourceMap' : '';
 
         tsExecution += ' --alwaysStrict';             
-        tsExecution += ' --target ' + targets[i].target;
-        tsExecution += ' --outDir "' + tmpFolder + '"';
+        tsExecution += ' --target ' + target.jsTarget;
+        tsExecution += ' --outDir "' + compiledFolder + '"';
         tsExecution += ' --module commonjs';
         tsExecution += ' --rootDir "' + destMain + sep + 'ts"';      
         tsExecution += ' --project "' + destMain + sep + 'ts"';                          
         console.exec(tsExecution);
 
-        // Generate via webpack the merged JS file for the current target       
-        let webPackExecution = global.installationPaths.webPackBin;
-        
-        webPackExecution += ' "' + tmpFolder + sep + 'index.js"';
-        webPackExecution += ' "' + destDist + sep + targets[i].target + sep + mergedFileName + '"';
-        webPackExecution += ' --output-library ' + targets[i].globalVar;                            
-        
-        if(global.setup.build.ts.compilerSourceMap){
+        // Check if the target requires a merged JS file or not
+        if(isMergedFile){
             
-            fm.saveFile(tmpFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
+            let mergedFileName = target.mergedFile + '.js';
             
-            webPackExecution += ' --config "' + tmpFolder + sep + 'webpack.config.js"';     
+            // Generate via webpack the merged JS file for the current target       
+            let webPackExecution = global.installationPaths.webPackBin;
+             
+            webPackExecution += ' "' + compiledFolder + sep + 'index.js"';
+            webPackExecution += ' "' + destDist + sep + target.folder + sep + mergedFileName + '"';
+            webPackExecution += ' --output-library ' + target.globalVar;                            
+            
+            if(global.setup.build.ts.sourceMap){
+                
+                fm.saveFile(compiledFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
+                
+                webPackExecution += ' --config "' + compiledFolder + sep + 'webpack.config.js"';     
+            }
+
+            console.exec(webPackExecution, 'Webpack ' + target.target + ' ok');
+            
+            fm.deleteDirectory(compiledFolder);   
         }
-
-        console.exec(webPackExecution, 'Webpack ' + targets[i].target + ' ok');
-
-        // Delete temp folder
-        fm.deleteDirectory(tmpFolder);
     }
 }
 

@@ -43,12 +43,13 @@
 	    
 	    "ts" : {
 	        "enabled": false,
-	        "compilerDeclarationFile": true,
-	        "compilerStrict": true,
-	        "compilerSourceMap": false,
-	        "compilerTargets": [
-	            {"target": "ES5", "mergedFileName": "PackedJsFileName-ES5", "globalVar": "global_lib_var"},
-	            {"target": "ES6", "mergedFileName": "PackedJsFileName-ES5", "globalVar": "global_lib_var"}
+	        "declaration": true,
+	        "strict": true,
+	        "sourceMap": true,
+	        "targets": [
+	            {"folder": "ts", "jsTarget": "ES5"},
+	            {"folder": "es5", "jsTarget": "ES5", "mergedFile": "PackedJsFileName-ES5", "globalVar": "global_lib_var"},
+	            {"folder": "es6", "jsTarget": "ES6", "mergedFile": "PackedJsFileName-ES6", "globalVar": "global_lib_var"}
 	        ]
 	    }
     },
@@ -74,6 +75,7 @@
 	    "ts": {
 	        "enabled": false,
 	        "httpServerPort": "8185",
+	        "targets": ["ts", "es5", "es6"],
 	        "browsers": {"chrome": false, "firefox": false, "iexplore": false},
 	        "testingLibrary": "qunit"
 	    }

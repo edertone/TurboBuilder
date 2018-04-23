@@ -66,76 +66,79 @@ let testTypeScript = function (relativeBuildPaths) {
         fm.createDirectory(destTestsPath, true);
         
         // Generate all the files to launch the tests
-        for (let jsTargetObject of global.setup.build.ts.compilerTargets) {
+        for (let tsTargetObject of global.setup.build.ts.targets) {
             
-            let jsTarget = jsTargetObject.target;
-            let testsTarget = destTestsPath + sep + jsTarget;
-            
-            // Create current jsTarget folder
-            if(!fm.createDirectory(testsTarget, true)){
+            if(global.setup.test.ts.targets.indexOf(tsTargetObject.folder) >= 0){
                 
-                console.error('Could not create ' + testsTarget);
-            }
-            
-            // Merge all tests code into tests target
-            fm.mergeFiles(fm.findDirectoryItems(srcTestsPath, /.*\.js$/i, 'absolute', 'files'),
-                    testsTarget + sep + 'tests.js', "\n\n");
-    
-            // Copy all test resources
-            fm.createDirectory(testsTarget + sep + 'resources');
-            fm.copyDirectory(srcTestsPath + sep + 'resources', testsTarget + sep + 'resources');
-            
-            // Merge all src dist code into tests target
-            fm.mergeFiles(fm.findDirectoryItems(destPath + sep + 'dist' + sep + jsTarget, /.*\.js$/i, 'absolute', 'files'),
-                    testsTarget + sep + 'build.js', "\n\n");
-    
-            // Copy qunit library
-            if(!fm.copyDirectory(global.installationPaths.testResources + sep + 'libs' + sep + 'qunit', testsTarget, false)){
+                let jsTarget = tsTargetObject.jsTarget;
+                let testsTarget = destTestsPath + sep + tsTargetObject.folder;
                 
-                console.error('Could not copy qunit library');
-            }
-        
-            // Generate index.html if not exists
-            if(fm.isFile(srcTestsPath + sep + 'index.html')){
-                
-                // TODO - copy index.html to target
-                
-            }else{
-                
-                let htmlIndexCode = '<!DOCTYPE html>';            
-                htmlIndexCode += '<html>';
-                htmlIndexCode += '<head>';
-                htmlIndexCode += '<meta charset="utf-8">';
-                htmlIndexCode += '<meta name="viewport" content="width=device-width">';
-                htmlIndexCode += '<title>Tests results</title>';
-                htmlIndexCode += '<link rel="stylesheet" href="qunit-2.6.0.css">';
-                htmlIndexCode += '</head>';
-                htmlIndexCode += '<body>';
-                htmlIndexCode += '<div id="qunit"></div>';
-                htmlIndexCode += '<div id="qunit-fixture"></div>';
-                htmlIndexCode += '<script src="qunit-2.6.0.js"></script>';
-                htmlIndexCode += '<script src="build.js"></script>';
-                htmlIndexCode += '<script src="tests.js"></script>';
-                htmlIndexCode += '</body>';
-                htmlIndexCode += '</html>';
-                
-                if(!fm.saveFile(testsTarget + sep + 'index.html', htmlIndexCode)){
+                // Create current jsTarget folder
+                if(!fm.createDirectory(testsTarget, true)){
                     
-                    console.error('Could not create ' + testsTarget + sep + 'index.html');
+                    console.error('Could not create ' + testsTarget);
                 }
-            }
+                
+                // Merge all tests code into tests target
+                fm.mergeFiles(fm.findDirectoryItems(srcTestsPath, /.*\.js$/i, 'absolute', 'files'),
+                        testsTarget + sep + 'tests.js', "\n\n");
+        
+                // Copy all test resources
+                fm.createDirectory(testsTarget + sep + 'resources');
+                fm.copyDirectory(srcTestsPath + sep + 'resources', testsTarget + sep + 'resources');
+                
+                // Merge all src dist code into tests target
+                fm.mergeFiles(fm.findDirectoryItems(destPath + sep + 'dist' + sep + tsTargetObject.folder, /.*\.js$/i, 'absolute', 'files'),
+                        testsTarget + sep + 'build.js', "\n\n");
+        
+                // Copy qunit library
+                if(!fm.copyDirectory(global.installationPaths.testResources + sep + 'libs' + sep + 'qunit', testsTarget, false)){
+                    
+                    console.error('Could not copy qunit library');
+                }
             
-            // Run tests on all configured browsers
-            for (let browserName of Object.keys(global.setup.test.ts.browsers)) {
-            
-                if(global.setup.test.ts.browsers[browserName]){
+                // Generate index.html if not exists
+                if(fm.isFile(srcTestsPath + sep + 'index.html')){
                     
-                    let httpServerUrl = 'http://localhost:' + global.setup.test.ts.httpServerPort + '/';
+                    // TODO - copy index.html to target
                     
-                    httpServerUrl += relativeBuildPath + '/test/' + jsTarget;
+                }else{
                     
-                    // opn is a node module that opens resources in a cross os manner
-                    opn(httpServerUrl, {wait: false, app: [browserName]});
+                    let htmlIndexCode = '<!DOCTYPE html>';            
+                    htmlIndexCode += '<html>';
+                    htmlIndexCode += '<head>';
+                    htmlIndexCode += '<meta charset="utf-8">';
+                    htmlIndexCode += '<meta name="viewport" content="width=device-width">';
+                    htmlIndexCode += '<title>Tests results</title>';
+                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.6.0.css">';
+                    htmlIndexCode += '</head>';
+                    htmlIndexCode += '<body>';
+                    htmlIndexCode += '<div id="qunit"></div>';
+                    htmlIndexCode += '<div id="qunit-fixture"></div>';
+                    htmlIndexCode += '<script src="qunit-2.6.0.js"></script>';
+                    htmlIndexCode += '<script src="build.js"></script>';
+                    htmlIndexCode += '<script src="tests.js"></script>';
+                    htmlIndexCode += '</body>';
+                    htmlIndexCode += '</html>';
+                    
+                    if(!fm.saveFile(testsTarget + sep + 'index.html', htmlIndexCode)){
+                        
+                        console.error('Could not create ' + testsTarget + sep + 'index.html');
+                    }
+                }
+                
+                // Run tests on all configured browsers
+                for (let browserName of Object.keys(global.setup.test.ts.browsers)) {
+                    
+                    if(global.setup.test.ts.browsers[browserName]){
+                        
+                        let httpServerUrl = 'http://localhost:' + global.setup.test.ts.httpServerPort + '/';
+                        
+                        httpServerUrl += relativeBuildPath + '/test/' + tsTargetObject.folder;
+                        
+                        // opn is a node module that opens resources in a cross os manner
+                        opn(httpServerUrl, {wait: false, app: [browserName]});
+                    }
                 }
             }
         }
