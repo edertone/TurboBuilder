@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager } = require('turbocommons-ts');
+const { FilesManager, ObjectUtils } = require('turbocommons-ts');
 const console = require('./console.js');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
@@ -84,7 +84,35 @@ let loadSetupFromDisk = function () {
         console.error(global.fileNames.setup + ' setup file not found');
     }
     
-    global.setup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-template' + fm.dirSep() + global.fileNames.setup;
+    
+    // Load the template setup
+    global.setup = JSON.parse(fm.readFile(templateSetupPath));
+    
+    // Merge the project setup into the template one
+    mergeSetup(global.setup, JSON.parse(fm.readFile(global.runtimePaths.setupFile)));
+};
+
+
+/**
+ * Merge the project custom setup with the template default one
+ */
+let mergeSetup = function (templateSetup, projectSetup) {
+    
+    for (let key of ObjectUtils.getKeys(templateSetup)){
+        
+        if(projectSetup.hasOwnProperty(key)){
+            
+            if(ObjectUtils.isObject(templateSetup[key])){
+                
+                mergeSetup(templateSetup[key], projectSetup[key]);
+            
+            }else{
+                
+                templateSetup[key] = projectSetup[key];
+            }
+        }
+    }
 };
 
 
