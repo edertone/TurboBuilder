@@ -19,7 +19,21 @@
 	        "javaStructure": true,
 	        "cssStructure": true,
 	        "checkGitIgnore": true
-	    }
+	    },
+	    "copyrightHeaders": [
+	    	{
+	    		"enabled": false,
+	    		"path": "path/to/some/CoyprightHeaderFile.txt",
+	    		"appliesTo": "src",
+	    		"filterRegexp": "*.ts"
+	    	},
+	    	{
+	    		"enabled": false,
+	    		"path": "path/to/some/CoyprightHeaderFile.txt",
+	    		"appliesTo": "src",
+	    		"filterRegexp": "*.js"
+	    	}
+	    ]
     },
     
     "build": {

@@ -35,7 +35,7 @@ utils.test("test-build", "When --build argument is passed on empty folder, error
 
 utils.test("test-build", "When -b argument is passed after generating a project structure, build fails with nothing to build", function(){
     
-    utils.assertExecContains('-g', "Generated project structure ok", "Failed -g argument");
+    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
     utils.assertExecFails('-b', 'Nothing to build. Please enable ', 'build should have failed when nothing is enabled on setup build');
 });
 
@@ -68,7 +68,7 @@ utils.test("test-build", "When -b argument is passed after generating a project 
     
     // TODO - implement
     // TODO - set global.setupBuild.Ts.enabled to true
-    //    utils.assertExecContains('-g', "Generated project structure ok", "Failed -g argument");
+    //    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
     //    utils.assertExecFails('-b', 'build ok', 'no files to build');
     //    utils.assertIsFolder(workDir + '/target');
     //    utils.assertIsFolder(workDir + '/target/test-build');

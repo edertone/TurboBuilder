@@ -11,7 +11,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 require('./../../main/js/globals');
-const { FilesManager } = require('turbocommons-ts');
+const { FilesManager, ArrayUtils } = require('turbocommons-ts');
 const { execSync } = require('child_process');
 const console = require('./../../main/js/console');
 
@@ -111,6 +111,18 @@ exports.exec = function (options) {
 
 
 /**
+ * Verify that a file can be saved
+ */
+exports.assertSaveFile = function (path, data) {
+    
+    if(!fm.saveFile(path, data)){
+    
+        console.error('Could not save file: ' + path);
+    }
+};
+
+
+/**
  * Verify that the specified folder exists
  */
 exports.assertIsFolder = function (path) {
@@ -156,16 +168,54 @@ exports.assertFolderDelete = function (path) {
 /**
  * Verify that executing a project cmd execution contains the expected results
  */
-exports.assertExecContains = function (options, expected, errorMessage) {
+exports.assertExecContains = function (options, errorMessage, expected = null, notExpected = null) {
 
     try{
         
         let execResult = execSync(pathToExecutable + ' ' + options, {stdio : 'pipe'});
 
-        if(execResult.toString().indexOf(expected) < 0){
+        if(expected !== null){
+            
+            if(ArrayUtils.isArray(expected)){
+                
+                for (let ex of expected) {
+                    
+                    if(execResult.toString().indexOf(ex) < 0){
 
-            console.error(errorMessage + "\n" + execResult.toString());
+                        console.error(errorMessage + "\nexpected:" + ex + "\n" + execResult.toString());
+                    }
+                }
+                
+            }else{
+            
+                if(execResult.toString().indexOf(expected) < 0){
+
+                    console.error(errorMessage + "\nexpected:" + expected + "\n" + execResult.toString());
+                }
+            }
         }
+        
+        if(notExpected !== null){
+            
+            if(ArrayUtils.isArray(notExpected)){
+                
+                for (let ex of notExpected) {
+                    
+                    if(execResult.toString().indexOf(ex) >= 0){
+
+                        console.error(errorMessage + "\nNOT expected:" + ex + "\n" + execResult.toString());
+                    }
+                }
+                
+            }else{
+            
+                if(execResult.toString().indexOf(notExpected) >= 0){
+
+                    console.error(errorMessage + "\nNOT expected:" + notExpected + "\n" + execResult.toString());
+                }
+            }
+        }
+        
         
     }catch(e){
         

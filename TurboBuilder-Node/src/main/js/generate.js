@@ -49,22 +49,14 @@ let createSetup = function () {
  */
 let createProjectStructure = function () {
     
-    // Create src folder
-    if(!fm.createDirectory(global.runtimePaths.src)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.src);
-    }
+    // Create js, ts, php, java folders
+    if(!fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'js', true) ||
+       !fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'ts', true) ||
+       !fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'php', true) ||
+       !fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'java', true) ||
+       !fm.createDirectory(global.runtimePaths.mainResources, true)){
     
-    // Create main folder
-    if(!fm.createDirectory(global.runtimePaths.main)){
-    
-        console.error('Failed creating: ' + global.runtimePaths.main);
-    }
-    
-    // Create main resources folder
-    if(!fm.createDirectory(global.runtimePaths.mainResources)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.mainResources);
+        console.error('Failed creating js, ts, php, java, resources folders inside: ' + global.runtimePaths.main);
     }
     
     // Create test folder

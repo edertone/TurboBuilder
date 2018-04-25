@@ -17,6 +17,7 @@ const utils = require('./index-utils');
 require('./test-version');
 require('./test-help');
 require('./test-generate');
+require('./test-validate');
 require('./test-build');
 require('./test-test');
 

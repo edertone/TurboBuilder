@@ -20,13 +20,13 @@ utils.test("test-generate", "Create and switch to the generate folder", function
 
 utils.test("test-generate", "When -g argument is passed, application files are created", function(){
     
-    utils.assertExecContains('-g', "Generated project structure ok", "Failed -g argument");
+    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
 });
 
  
 utils.test("test-generate", "When validation is called, it succeeds", function(){
     
-    utils.assertExecContains('-l', "validate ok", "Failed validation");
+    utils.assertExecContains('-l', "Failed validation", "validate ok");
 });
 
 
@@ -39,13 +39,13 @@ utils.test("test-generate", "When -g argument is passed again, an error happens"
 utils.test("test-generate", "When -generate argument is passed, application files are created", function(){
     
     utils.assertFolderEmpty(utils.switchToDirInsideTemp('test-generate-2'));
-    utils.assertExecContains('--generate', "Generated project structure ok", "Failed -generate argument");
+    utils.assertExecContains('--generate', "Failed -generate argument", "Generated project structure ok");
 });
 
 
 utils.test("test-generate", "When validation is called, it succeeds", function(){
     
-    utils.assertExecContains('-l', "validate ok", "Failed validation");
+    utils.assertExecContains('-l', "Failed validation", "validate ok");
 });
 
 
