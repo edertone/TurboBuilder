@@ -87,7 +87,7 @@ exports.error = function (message, quit = true) {
  * Show a multiple list of errors to the user
  * If quit parameter is true, the application will also exit with error code 1 after all errors are output
  */
-exports.errors = function (messages, quit = false) {
+exports.errors = function (messages, quit = true) {
     
     if(messages.length > 0){
 

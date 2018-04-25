@@ -53,16 +53,50 @@ utils.test("test-validate", "Validation is not executed before build by default 
 
 
 utils.test("test-validate", "modify project config to verify copyright headers, add some files with correct headers and launch validation", function(){
-//  TODO  
-//    utils.saveToSetupFile(workDir, {validate: {runBeforeBuild: true}});
-//    
-//    utils.assertExecContains('-l', "Failed validation", "validate ok");
+
+    let setup = {
+        build: {
+            ts: {
+                enabled: true
+            }
+        },
+        validate: {
+            runBeforeBuild: false,
+            copyrightHeaders: [
+                {
+                    "enabled": true,
+                    "path": "extras/copyrightHeaders/TsFiles-Header.txt",
+                    "appliesTo": "src",
+                    "includes": ["ts"],
+                    "excludes": ["file3"]
+                }
+            ]
+        }
+    };
+    
+    utils.saveToSetupFile(workDir, setup);
+    
+    // Create the copyright header template
+    utils.assertCreateFolder(workDir + '/extras/copyrightHeaders');
+    utils.assertSaveFile(workDir + '/extras/copyrightHeaders/TsFiles-Header.txt', "/* this header is correct */\n");
+    
+    // Add some files with the right header
+    utils.assertSaveFile(workDir + '/src/main/ts/index.ts', "/* this header is correct */\n\n\nand some more text");
+    utils.assertSaveFile(workDir + '/src/main/ts/file1.ts', "/* this header is correct */\n\n\nmore text here");
+    utils.assertSaveFile(workDir + '/src/main/ts/file2.ts', "/* this header is correct */\n\n\neven more text");
+    utils.assertSaveFile(workDir + '/src/main/ts/file3.ts', "/* this header is not correct */\n\n\neven more text");
+    
+    // Test that headers are correctly validated
+    utils.assertExecContains('-l', "Failed validation", "validate ok");
 });
 
 
 utils.test("test-validate", "modify project config to verify copyright headers, add some files with INCORRECT headers and launch validation", function(){
-//  TODO  
-//    utils.saveToSetupFile(workDir, {validate: {runBeforeBuild: true}});
-//    
-//    utils.assertExecContains('-l', "Failed validation", "validate ok");
+    
+    // Add a file with bad header
+    utils.assertCreateFolder(workDir + '/src/main/ts/somefolder');
+    utils.assertSaveFile(workDir + '/src/main/ts/somefolder/file4.ts', "/* this heade1r is correct */\n\n\neven more text");
+        
+    // Test that headers are correctly validated
+    utils.assertExecFails('-l', "file4.ts", "validate should have failed");
 });

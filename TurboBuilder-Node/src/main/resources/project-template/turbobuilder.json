@@ -25,13 +25,15 @@
 	    		"enabled": false,
 	    		"path": "path/to/some/CoyprightHeaderFile.txt",
 	    		"appliesTo": "src",
-	    		"filterRegexp": "*.ts"
+	    		"includes": ["js", "ts", "some-filename-pattern"],
+	    		"excludes": ["some-filename-pattern"]
 	    	},
 	    	{
 	    		"enabled": false,
 	    		"path": "path/to/some/CoyprightHeaderFile.txt",
 	    		"appliesTo": "src",
-	    		"filterRegexp": "*.js"
+	    		"includes": ["js", "ts", "some-filename-pattern"],
+	    		"excludes": ["some-filename-pattern"]
 	    	}
 	    ]
     },

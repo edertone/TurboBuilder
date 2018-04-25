@@ -123,6 +123,18 @@ exports.assertSaveFile = function (path, data) {
 
 
 /**
+ * Verify that a folder can be created
+ */
+exports.assertCreateFolder = function (path) {
+
+    if(!fm.createDirectory(path)){
+    
+        console.error('Could not create folder: ' + path);
+    }
+};
+
+
+/**
  * Verify that the specified folder exists
  */
 exports.assertIsFolder = function (path) {
@@ -219,7 +231,7 @@ exports.assertExecContains = function (options, errorMessage, expected = null, n
         
     }catch(e){
         
-        console.error(errorMessage + "\n" + e.stdout);
+        console.error(errorMessage + "\n" + e.stdout + e.toString());
     }    
 };
 

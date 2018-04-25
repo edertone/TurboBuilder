@@ -5,10 +5,13 @@
  */
 
 
-const { StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { StringUtils, ObjectUtils, FilesManager } = require('turbocommons-ts');
 const path = require('path');
 var fs = require('fs');
 const console = require('./console.js');
+
+
+let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 /**
@@ -83,11 +86,52 @@ let validateProjectStructure = function () {
 
 
 /**
+ * Validates the copyright headers
+ */
+let validateCopyrightHeaders = function () {
+    
+    for (let validator of global.setup.validate.copyrightHeaders) {
+        
+        if(validator.enabled){
+            
+            let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
+            
+            let regex = new RegExp('^.*(' + validator.includes.join('|') + ')$', 'i');
+            
+            let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, regex, 'absolute', 'files');
+            
+            for (let fileToValidate of filesToValidate){
+                
+                let found = false;
+                
+                for(let excluded of validator.excludes){
+                   
+                    if(fileToValidate.indexOf(excluded) >= 0){
+                        
+                        found = true;
+                    }
+                }
+                
+                if(!found && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+                    
+                    errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
+                }
+            }
+        }
+    }
+}
+
+
+/**
  * Perform all the validation tasks
  */
 exports.execute = function () {
     
+    console.log("\nvalidate start");
+    
     validateProjectStructure();
+    
+    validateCopyrightHeaders();
      
     console.errors(errors);
     
