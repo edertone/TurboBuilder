@@ -16,6 +16,8 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 let isGitAvailable = false;
 
+let isPhpAvailable = false;
+
 
 /**
  * Get the turbobuilder cmd tool and project versions ready to print to console
@@ -34,7 +36,7 @@ exports.getVersionNumbers = function () {
 
 
 /**
- * Check if the git cmd executable is available or not no the system
+ * Check if the git cmd executable is available or not on the system
  */
 exports.checkGitAvailable = function () {
 
@@ -49,6 +51,27 @@ exports.checkGitAvailable = function () {
         }catch(e){
 
             console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
+        }
+    }
+}
+
+
+/**
+ * Check if the php cmd executable is available or not on the system
+ */
+exports.checkPhpAvailable = function () {
+
+    if(!isPhpAvailable){
+        
+        try{
+            
+            execSync('php -v', {stdio : 'pipe'});
+            
+            isPhpAvailable = true;
+            
+        }catch(e){
+
+            console.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
         }
     }
 }

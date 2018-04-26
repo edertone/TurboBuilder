@@ -67,6 +67,51 @@ exports.copyMainFiles = function (destPath) {
 
 
 /**
+ * Execute the php build process to the specified dest folder
+ */
+exports.buildPhp = function (destPath) {
+    
+    let sep = fm.dirSep();
+    let destMain = destPath + sep + 'main';
+    let destDist = destPath + sep + 'dist';
+    
+    setupModule.checkPhpAvailable();
+    
+    // Autoloader.php must exist on src/main/php/ for the phar to be correctly generated
+    let autoLoaderPath = global.runtimePaths.main + sep + 'php' + sep + 'AutoLoader.php';
+    
+    if(!fm.isFile(autoLoaderPath)){
+        
+        console.error(autoLoaderPath + " not found.\nThis is required to create a phar that loads classes automatically");
+    }
+    
+    // Define the contents for the stub file that will be autoexecuted when the phar file is included
+    let pharName = global.runtimePaths.projectName + '.phar';
+    
+    let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/AutoLoader.php\\'; __HALT_COMPILER(); ?>";
+    
+    // Create the dist folder if not exists
+    if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
+        
+        console.error('Could not create ' + destDist);
+    }
+    
+    // Create the phar using the current project name
+    let phpExecCommand = 'php -d display_errors -r';
+    
+    phpExecCommand += '"';
+    phpExecCommand += " $p = new Phar('" + destDist + sep + pharName + "', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '" + pharName + "');";
+    phpExecCommand += " $p->startBuffering();";
+    phpExecCommand += " $p->setStub('" + phpStubFile + "');";
+    phpExecCommand += " $p->buildFromDirectory('" + destMain + "');";
+    phpExecCommand += " $p->compressFiles(Phar::GZ); $p->stopBuffering();";
+    phpExecCommand += '"';
+    
+    console.exec(phpExecCommand);
+}
+
+
+/**
  * Execute the typescript build process to the specified dest folder
  */
 exports.buildTypeScript = function (destPath) {
@@ -172,7 +217,12 @@ exports.execute = function () {
     
     if(global.setup.validate.runBeforeBuild){
         
-        validateModule.execute();
+        validateModule.execute(false);
+    }
+    
+    if(global.setup.build.php.enabled){
+        
+        this.buildPhp(buildFullPath);
     }
     
     if(global.setup.build.ts.enabled){

@@ -125,9 +125,12 @@ let validateCopyrightHeaders = function () {
 /**
  * Perform all the validation tasks
  */
-exports.execute = function () {
+exports.execute = function (verbose = true) {
     
-    console.log("\nvalidate start");
+    if(verbose){
+    
+        console.log("\nvalidate start");
+    }
     
     validateProjectStructure();
     
