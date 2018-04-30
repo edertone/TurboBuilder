@@ -98,6 +98,28 @@ exports.getCurrentSemVer = function () {
 
 
 /**
+ * Count the number of commits since the most recent git tag
+ */
+exports.countCommitsSinceLatestTag = function () {
+    
+    this.checkGitAvailable();
+    
+    try{
+        
+        let execResult = execSync('git describe --abbrev=0 --tags', {stdio : 'pipe'});
+        
+        execResult = execSync('git rev-list ' + StringUtils.trim(execResult.toString()) + '.. --count', {stdio : 'pipe'});
+        
+        return StringUtils.trim(execResult.toString());
+        
+    }catch(e){
+
+        return '0';
+    }    
+}
+
+
+/**
  * Read the xml setup file and store all the data to a global variable
  */
 let loadSetupFromDisk = function () {

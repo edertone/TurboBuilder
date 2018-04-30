@@ -167,7 +167,7 @@ exports.buildTypeScript = function (destPath) {
                 webPackExecution += ' --config "' + compiledFolder + sep + 'webpack.config.js"';     
             }
 
-            console.exec(webPackExecution, 'Webpack ' + target.target + ' ok');
+            console.exec(webPackExecution, 'Webpack ' + target.jsTarget + ' ok');
             
             fm.deleteDirectory(compiledFolder);   
         }

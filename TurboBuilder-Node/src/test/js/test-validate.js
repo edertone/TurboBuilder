@@ -40,7 +40,7 @@ utils.test("test-validate", "Validation is executed before build by default when
     
     utils.assertSaveFile(workDir + '/src/main/ts/index.ts', '');
     
-    utils.assertExecContains('-b', "Failed validation", ["validate ok", "build ok"]);
+    utils.assertExecContains('-b', "Failed validation", ["validate ok", "Webpack ES5 ok", "build ok"]);
 });
 
 

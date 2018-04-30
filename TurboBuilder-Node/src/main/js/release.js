@@ -42,7 +42,7 @@ exports.getReleaseRelativePath = function () {
     
     if(releaseRelativePath === ''){
         
-        let i = 0;
+        let i = setupModule.countCommitsSinceLatestTag();
         
         do{
 
