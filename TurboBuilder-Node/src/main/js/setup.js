@@ -28,7 +28,7 @@ exports.getVersionNumbers = function () {
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
     
-        result += "\n\n" + global.runtimePaths.projectName + ': ' + this.getCurrentSemVer();
+        result += "\n\n" + global.runtimePaths.projectName + ': ' + this.getCurrentSemVer() + ' +' + this.countCommitsSinceLatestTag();
     }
     
     return result;
