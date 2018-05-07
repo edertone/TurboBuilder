@@ -39,6 +39,65 @@ let launchHttpServer = function () {
 
 
 /**
+ * Execute the Php tests
+ * 
+ * @param relativeBuildPaths A list with paths relative to project target folder,
+ *        where tests folder and files will be created and executed
+ */
+let testPhp = function (relativeBuildPaths) {
+
+    console.success("launching php tests");
+    
+    if(!global.setup.build.php.enabled){
+        
+        console.error('<Build><Php enabled="true"> is mandatory on ' + global.fileNames.setup + ' to run php tests');
+    }
+    
+    let sep = fm.dirSep();
+    let srcTestsPath = global.runtimePaths.test + sep + 'php';
+    
+    for (let relativeBuildPath of relativeBuildPaths) {
+    
+        let destPath = global.runtimePaths.target + sep + relativeBuildPath;
+        let destTestsPath = destPath + sep + 'test' + sep + 'php';
+        let coverageReportPath = destPath + sep + 'coverage' + sep + 'php';
+        
+        fm.createDirectory(destTestsPath, true);
+        
+        // Copy all tests source code
+        fm.copyDirectory(srcTestsPath, destTestsPath);
+        
+        // Launch unit tests via php executable
+        let phpExecCommand = 'php';
+        
+        phpExecCommand += ' "' + global.installationPaths.mainResources + sep + 'tools' + sep + 'phpunit-6.2.3.phar"';
+        
+        if(global.setup.test.php.coverageReport){
+            
+            phpExecCommand += ' --coverage-html "' + coverageReportPath + '"';                           
+        }
+        
+        phpExecCommand += ' --configuration "' + destTestsPath + sep + 'PhpUnitSetup.xml"';     
+        phpExecCommand += ' "' + destPath + '/"';
+        
+        let testsResult = console.exec(phpExecCommand, '', true);
+                    
+        // Open the coverage report if necessary
+        if(global.setup.test.php.coverageReport &&
+                global.setup.test.php.coverageReportOpenAfterTests){
+        
+            opn(coverageReportPath + sep + 'index.html');
+        }  
+        
+        if(!testsResult){
+    
+            console.error('There are PHP unit test failures');
+        }   
+    }
+}
+
+
+/**
  * Execute the typescript tests
  * 
  * @param relativeBuildPaths A list with paths relative to project target folder,
@@ -46,7 +105,7 @@ let launchHttpServer = function () {
  */
 let testTypeScript = function (relativeBuildPaths) {
     
-    console.success("\nlaunching ts tests");
+    console.success("launching ts tests");
     
     if(!global.setup.build.ts.enabled){
         
@@ -171,6 +230,11 @@ exports.execute = function (build, release) {
     if(release){
         
         pathsToTest.push(releaseModule.getReleaseRelativePath());
+    }
+    
+    if(global.setup.test.php.enabled){
+        
+        testPhp(pathsToTest);
     }
     
     if(global.setup.test.ts.enabled){

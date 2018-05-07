@@ -46,10 +46,10 @@ exports.getReleaseRelativePath = function () {
         
         do{
 
-            i++;
-            
             releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + ' +' + i;
 
+            i++;
+            
         }while(fm.isDirectory(global.runtimePaths.target + fm.dirSep() + releaseRelativePath));
     }
 
@@ -185,11 +185,14 @@ exports.execute = function () {
     
     let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
     
+    // Delete all files inside the release path folder
+    fm.deleteDirectory(releaseFullPath);
+    
     buildModule.copyMainFiles(releaseFullPath);
     
     if(global.setup.validate.runBeforeBuild){
         
-        validateModule.execute();
+        validateModule.execute(false);
     }
     
     if(global.setup.build.ts.enabled){

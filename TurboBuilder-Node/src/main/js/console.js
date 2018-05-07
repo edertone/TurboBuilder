@@ -109,34 +109,55 @@ exports.errors = function (messages, quit = true) {
  * 
  * @param shellCommand The command to execute
  * @param successMessage Message to show when command finishes ok in case the command output is not defined
+ * @param liveOutput Set it to true to show the exec stdout in real time to the console
  */
-exports.exec = function (shellCommand, successMessage = '') {
+exports.exec = function (shellCommand, successMessage = '', liveOutput = false) {
     
-    try{
+    if(liveOutput){
         
-        let result = execSync(shellCommand, {stdio : 'pipe'}).toString();
-        
-        if(successMessage !== ''){
+        try{
             
-            this.success(successMessage);
+            execSync(shellCommand, {stdio:[0,1,2]});
             
-        }else{
-            
-            if(!StringUtils.isEmpty(result)){
-            
-                this.success(result);
+            if(successMessage !== ''){
+                
+                this.success(successMessage); 
             }
+            
+            return true;
+            
+        }catch(e){
+
+            return false;
         }
         
-    }catch(e){
+    }else{
+    
+        try{
+            
+            let result = execSync(shellCommand, {stdio : 'pipe'}).toString();
+            
+            if(successMessage !== ''){
+                
+                this.success(successMessage);
+                
+            }else if(!StringUtils.isEmpty(result)){
+                
+                this.success(result);
+            }
+            
+            return true;
+            
+        }catch(e){
 
-        if(StringUtils.isEmpty(e.stdout.toString())){
-            
-            this.error('Unknown error executing ' + shellCommand);
-            
-        }else{
-         
-            this.error(e.stdout.toString());
-        }        
+            if(StringUtils.isEmpty(e.stdout.toString())){
+                
+                this.error('Unknown error executing ' + shellCommand);
+                
+            }else{
+             
+                this.error(e.stdout.toString());
+            }        
+        }
     }
 }

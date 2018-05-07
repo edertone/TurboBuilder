@@ -99,7 +99,7 @@ exports.buildPhp = function (destPath) {
     // Create the phar using the current project name
     let phpExecCommand = 'php -d display_errors -r';
     
-    phpExecCommand += '"';
+    phpExecCommand += ' "';
     phpExecCommand += " $p = new Phar('" + destDist + sep + pharName + "', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '" + pharName + "');";
     phpExecCommand += " $p->startBuffering();";
     phpExecCommand += " $p->setStub('" + phpStubFile + "');";

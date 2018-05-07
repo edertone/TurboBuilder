@@ -83,7 +83,9 @@
     
     "test": {
 	    "php": {
-	        "enabled": false
+	        "enabled": false,
+	        "coverageReport": true,
+	        "coverageReportOpenAfterTests": true
 	    },	    
 	    "js": {
 	        "enabled": false
