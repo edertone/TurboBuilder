@@ -111,6 +111,18 @@ exports.exec = function (options) {
 
 
 /**
+ * Verify that the specified folder exists
+ */
+exports.assertIsFile = function (path) {
+
+    if(!fm.isFile(path)){
+    
+        console.error('File does not exist: ' + path);
+    }
+};
+
+
+/**
  * Verify that a file can be saved
  */
 exports.assertSaveFile = function (path, data) {
