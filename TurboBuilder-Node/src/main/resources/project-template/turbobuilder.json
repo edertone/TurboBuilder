@@ -21,7 +21,7 @@
 	        "checkGitIgnore": true
 	    },
 	    "phpNamespaces" : {
-	        "enabled": true,
+	        "enabled": false,
 	        "mandatory": true,
 	        "mustContain": ["some-php-namespace-string-here-$1-$2"],
 	        "excludes": ["some-filename-pattern"]
