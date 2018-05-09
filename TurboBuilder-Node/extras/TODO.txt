@@ -1,2 +1,5 @@
 - upgrade phpunit to 7
 - upgrade to webpack 4
+
+- Implement unit tests: print TODO file to console feature both for test-build and test-release
+- Implement unit tests: php namespaces validation functionality 

@@ -102,22 +102,99 @@ let validateCopyrightHeaders = function () {
             
             for (let fileToValidate of filesToValidate){
                 
-                let found = false;
+                let fileIsExcluded = false;
                 
                 for(let excluded of validator.excludes){
                    
                     if(fileToValidate.indexOf(excluded) >= 0){
                         
-                        found = true;
+                        fileIsExcluded = true;
                     }
                 }
                 
-                if(!found && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+                if(!fileIsExcluded && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
                     
                     errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
                 }
             }
         }
+    }
+}
+
+
+/**
+ * Validates the Name spaces
+ */
+let validateNamespaces = function () {
+    
+    // Auxiliary function to perform namespace validations
+    function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
+        
+        if(mustContainList.length > 0){
+            
+            let fileRelativePath = fileAbsolutePath.split('src' + fm.dirSep())[1];
+            let pathToReplace = StringUtils.replace(fileRelativePath, fm.dirSep() + StringUtils.getPathElement(fileRelativePath), '');
+            
+            for (let mustContain of mustContainList){
+                
+                // Replace the wildcards on the mustContain
+                mustContain = mustContain.replace('$path', pathToReplace);
+                
+                for(var i = 0; i < StringUtils.countPathElements(fileAbsolutePath); i++){
+                    
+                    mustContain = mustContain.replace('$' + String(i), StringUtils.getPathElement(fileAbsolutePath, i));
+                }
+                
+                if(namespaceToCheck.indexOf(mustContain) < 0){
+                    
+                    return mustContain;
+                }
+            }
+        }
+            
+        return '';
+    }
+    
+    if(global.setup.validate.phpNamespaces.enabled){
+        
+        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'php', /.*\.php$/i, 'absolute', 'files');
+        
+        for (let fileToValidate of filesToValidate){
+            
+            let fileIsExcluded = false;
+            
+            for(let excluded of global.setup.validate.phpNamespaces.excludes){
+               
+                if(fileToValidate.indexOf(excluded) >= 0){
+                    
+                    fileIsExcluded = true;
+                }
+            }
+            
+            if(!fileIsExcluded){
+                
+                var fileContents = fm.readFile(fileToValidate);
+                
+                if(fileContents.indexOf("namespace") >= 0){
+    
+                    var namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
+                    
+                    var validateNamespace = validate(namespace, fileToValidate, global.setup.validate.phpNamespaces.mustContain);
+                    
+                    if(validateNamespace !== ''){
+                    
+                        errors.push('Namespace error: "' + namespace + '" Must contain "' + validateNamespace + '" on file:\n' + fileToValidate);
+                    }   
+                    
+                }else{
+                    
+                    if(global.setup.validate.phpNamespaces.mandatory){
+                    
+                        errors.push("File does not contain a namespace declaration: " + fileToValidate);
+                    }           
+                }
+            }
+        }       
     }
 }
 
@@ -136,6 +213,8 @@ exports.execute = function (verbose = true) {
     
     validateCopyrightHeaders();
      
+    validateNamespaces();
+    
     console.errors(errors);
     
     // Reaching here means validation was successful

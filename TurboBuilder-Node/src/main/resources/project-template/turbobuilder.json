@@ -20,6 +20,12 @@
 	        "cssStructure": true,
 	        "checkGitIgnore": true
 	    },
+	    "phpNamespaces" : {
+	        "enabled": true,
+	        "mandatory": true,
+	        "mustContain": ["some-php-namespace-string-here-$1-$2"],
+	        "excludes": ["some-filename-pattern"]
+	    },
 	    "copyrightHeaders": [
 	    	{
 	    		"enabled": false,
