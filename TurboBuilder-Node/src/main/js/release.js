@@ -44,13 +44,7 @@ exports.getReleaseRelativePath = function () {
         
         let i = setupModule.countCommitsSinceLatestTag();
         
-        do{
-
-            releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + ' +' + i;
-
-            i++;
-            
-        }while(fm.isDirectory(global.runtimePaths.target + fm.dirSep() + releaseRelativePath));
+        releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + ' +' + i;
     }
 
     return releaseRelativePath; 
@@ -82,7 +76,10 @@ let minifyJs = function (destPath) {
         fm.saveFile(jsFile, result.code); 
     }
     
-    console.success("minify Js ok");
+    if(jsFiles.length > 0){
+        
+        console.success("minify Js ok");
+    }
 }
 
 
@@ -94,6 +91,27 @@ let generateCodeDocumentation = function (destPath) {
     let sep = fm.dirSep();
     let destMain = destPath + sep + 'main';
     let docsPath = destPath + sep + 'docs';
+    
+    // Generate php doc if php build is enabled
+    if(global.setup.build.php.enabled){
+        
+        if(!fm.createDirectory(docsPath + sep + 'php', true)){
+            
+            console.error('Could not create docs folder ' + docsPath + sep + 'php');
+        }
+        
+        let phpDocExec = 'php';
+        
+        phpDocExec += ' "' + global.installationPaths.mainResources + sep + 'tools' + sep + 'phpDocumentor.phar"';
+        phpDocExec += ' --template="responsive-twig"';
+        phpDocExec += ' --visibility="public"';
+        phpDocExec += ' --title="' + global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + '"';
+        phpDocExec += ' -i "' + destMain + '/php/libs,AutoLoader.php"';
+        phpDocExec += ' -d "' + destMain + sep + 'php"';
+        phpDocExec += ' -t "' + docsPath + sep + 'php"';
+        
+        console.exec(phpDocExec, 'php doc ok');
+    }
     
     // Generate ts doc if ts build is enabled
     if(global.setup.build.ts.enabled){
@@ -195,6 +213,11 @@ exports.execute = function () {
         validateModule.execute(false);
     }
     
+    if(global.setup.build.php.enabled){
+        
+        buildModule.buildPhp(releaseFullPath);
+    }
+    
     if(global.setup.build.ts.enabled){
     
         buildModule.buildTypeScript(releaseFullPath);
@@ -213,6 +236,11 @@ exports.execute = function () {
     if(global.setup.release.gitChangeLog){
         
         createGitChangeLog(releaseFullPath);
+    }
+    
+    if(global.setup.release.printTodoFile){
+        
+        console.printTodoFile();
     }
     
     console.success('release ok (' + this.getReleaseRelativePath() + ')');

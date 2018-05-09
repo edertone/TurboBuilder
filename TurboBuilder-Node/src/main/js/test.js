@@ -46,8 +46,6 @@ let launchHttpServer = function () {
  */
 let testPhp = function (relativeBuildPaths) {
 
-    console.success("launching php tests");
-    
     if(!global.setup.build.php.enabled){
         
         console.error('<Build><Php enabled="true"> is mandatory on ' + global.fileNames.setup + ' to run php tests');
@@ -67,12 +65,17 @@ let testPhp = function (relativeBuildPaths) {
         // Copy all tests source code
         fm.copyDirectory(srcTestsPath, destTestsPath);
         
+        console.success("launching php tests at:\n");
+        console.success(destTestsPath + "\n");
+        
         // Launch unit tests via php executable
         let phpExecCommand = 'php';
         
         phpExecCommand += ' "' + global.installationPaths.mainResources + sep + 'tools' + sep + 'phpunit-6.2.3.phar"';
         
         if(global.setup.test.php.coverageReport){
+            
+            console.warning("Warning: Enabling Php coverage report in unit tests is many times slower");
             
             phpExecCommand += ' --coverage-html "' + coverageReportPath + '"';                           
         }
@@ -86,7 +89,8 @@ let testPhp = function (relativeBuildPaths) {
         if(global.setup.test.php.coverageReport &&
                 global.setup.test.php.coverageReportOpenAfterTests){
         
-            opn(coverageReportPath + sep + 'index.html');
+            // opn is a node module that opens resources in a cross os manner
+            opn(coverageReportPath + sep + 'index.html', {wait: false});
         }  
         
         if(!testsResult){

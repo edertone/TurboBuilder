@@ -74,7 +74,7 @@ if (program.clean){
 // Perform the build as defined on xml setup
 if (program.build){
     
-    buildModule.execute();
+    buildModule.execute(program.release);
 }
 
 if (program.release){

@@ -86,5 +86,5 @@ utils.test("test-build", "When -b argument is passed after generating a project 
     
     utils.assertExecContains('-b', 'failed -b argument', 'build ok');
     
-    utils.assertIsFile(testDir + '/target/test-build-1/dist/test-build-1.phar');  
+    utils.assertIsFile(testDir + '/target/test-build-1/dist/test-build-1-0.0.0.phar');  
 });

@@ -86,7 +86,7 @@ exports.buildPhp = function (destPath) {
     }
     
     // Define the contents for the stub file that will be autoexecuted when the phar file is included
-    let pharName = global.runtimePaths.projectName + '.phar';
+    let pharName = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + '.phar';
     
     let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/AutoLoader.php\\'; __HALT_COMPILER(); ?>";
     
@@ -193,7 +193,7 @@ exports.removeUnpackedSrcFiles = function (destPath) {
 /**
  * Execute the build process
  */
-exports.execute = function () {
+exports.execute = function (isReleaseAlsoExecuted = false) {
 
     console.log("\nbuild start");
     
@@ -228,6 +228,11 @@ exports.execute = function () {
     if(global.setup.build.ts.enabled){
     
         this.buildTypeScript(buildFullPath);
+    }
+    
+    if(!isReleaseAlsoExecuted && global.setup.build.printTodoFile){
+        
+        console.printTodoFile();
     }
     
     console.success('build ok');

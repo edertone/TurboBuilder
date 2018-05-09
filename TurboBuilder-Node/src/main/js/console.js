@@ -5,8 +5,11 @@
  */
 
 
-const { StringUtils } = require('turbocommons-ts');
+const { FilesManager, StringUtils } = require('turbocommons-ts');
 const { execSync } = require('child_process');
+
+
+let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 /**
@@ -105,6 +108,25 @@ exports.errors = function (messages, quit = true) {
 
 
 /**
+ * Show the contents of the Todo file if any
+ */
+exports.printTodoFile = function () {
+
+    if(fm.isFile(global.runtimePaths.todoFile)){
+        
+        let todoContents = fm.readFile(global.runtimePaths.todoFile);
+        
+        if(!StringUtils.isEmpty(todoContents)){
+        
+            this.warning("\nPENDING TASKS inside : " + global.fileNames.todo + "\n");
+                    
+            this.warning(todoContents + "\n");
+        }
+    }
+}
+
+
+/**
  * Execute the specified cmd command and show the result on the console
  * 
  * @param shellCommand The command to execute
@@ -156,7 +178,7 @@ exports.exec = function (shellCommand, successMessage = '', liveOutput = false) 
                 
             }else{
              
-                this.error(e.stdout.toString());
+                this.error(e.stdout.toString() + '\n' + e.toString());
             }        
         }
     }
