@@ -146,6 +146,14 @@ let mergeSetup = function (templateSetup, projectSetup) {
     
     for (let key of ObjectUtils.getKeys(templateSetup)){
         
+        // Build project types are deleted from the default template, cause there can only be one
+        // defined
+        if(setupBuildTypes.indexOf(key) >= 0 &&
+                !projectSetup.hasOwnProperty(key)){
+            
+            delete templateSetup[key];
+        }
+        
         if(projectSetup.hasOwnProperty(key)){
             
             if(ObjectUtils.isObject(templateSetup[key])){

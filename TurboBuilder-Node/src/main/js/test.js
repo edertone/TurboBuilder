@@ -46,9 +46,9 @@ let launchHttpServer = function () {
  */
 let testPhp = function (relativeBuildPaths) {
 
-    if(!global.setup.build.php.enabled){
+    if(!global.setup.build.lib_php){
         
-        console.error('<Build><Php enabled="true"> is mandatory on ' + global.fileNames.setup + ' to run php tests');
+        console.error('build.lib_php is mandatory on ' + global.fileNames.setup + ' to run php tests');
     }
     
     let sep = fm.dirSep();
@@ -111,9 +111,9 @@ let testTypeScript = function (relativeBuildPaths) {
     
     console.success("launching ts tests");
     
-    if(!global.setup.build.ts.enabled){
+    if(!global.setup.build.lib_ts){
         
-        console.error('<Build><Ts enabled="true"> is mandatory on ' + global.fileNames.setup + ' to run typescript tests');
+        console.error('build.lib_ts is mandatory on ' + global.fileNames.setup + ' to run typescript tests');
     }
     
     let sep = fm.dirSep();
@@ -129,7 +129,7 @@ let testTypeScript = function (relativeBuildPaths) {
         fm.createDirectory(destTestsPath, true);
         
         // Generate all the files to launch the tests
-        for (let tsTargetObject of global.setup.build.ts.targets) {
+        for (let tsTargetObject of global.setup.build.lib_ts.targets) {
             
             if(global.setup.test.ts.targets.indexOf(tsTargetObject.folder) >= 0){
                 

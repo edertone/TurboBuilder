@@ -93,7 +93,7 @@ let generateCodeDocumentation = function (destPath) {
     let docsPath = destPath + sep + 'docs';
     
     // Generate php doc if php build is enabled
-    if(global.setup.build.php.enabled){
+    if(global.setup.build.lib_php){
         
         if(!fm.createDirectory(docsPath + sep + 'php', true)){
             
@@ -114,7 +114,7 @@ let generateCodeDocumentation = function (destPath) {
     }
     
     // Generate ts doc if ts build is enabled
-    if(global.setup.build.ts.enabled){
+    if(global.setup.build.lib_ts){
         
         if(!fm.createDirectory(docsPath + sep + 'ts', true)){
            
@@ -213,12 +213,12 @@ exports.execute = function () {
         validateModule.execute(false);
     }
     
-    if(global.setup.build.php.enabled){
+    if(global.setup.build.lib_php){
         
         buildModule.buildPhp(releaseFullPath);
     }
     
-    if(global.setup.build.ts.enabled){
+    if(global.setup.build.lib_ts){
     
         buildModule.buildTypeScript(releaseFullPath);
     }
@@ -236,11 +236,6 @@ exports.execute = function () {
     if(global.setup.release.gitChangeLog){
         
         createGitChangeLog(releaseFullPath);
-    }
-    
-    if(global.setup.release.printTodoFile){
-        
-        console.printTodoFile();
     }
     
     console.success('release ok (' + this.getReleaseRelativePath() + ')');

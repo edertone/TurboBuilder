@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager, StringUtils } = require('turbocommons-ts');
+const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
 const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
@@ -128,7 +128,7 @@ exports.buildTypeScript = function (destPath) {
         console.error('Could not create ' + tsConfig);
     }
     
-    for (let target of global.setup.build.ts.targets) {
+    for (let target of global.setup.build.lib_ts.targets) {
     
         let isMergedFile = target.hasOwnProperty('mergedFile') && !StringUtils.isEmpty(target.mergedFile);
         
@@ -136,9 +136,9 @@ exports.buildTypeScript = function (destPath) {
 
         let tsExecution = global.installationPaths.typeScriptBin;
         
-        tsExecution += global.setup.build.ts.strict ? ' --strict' : '';
-        tsExecution += global.setup.build.ts.declaration ? ' --declaration' : '';
-        tsExecution += global.setup.build.ts.sourceMap ? ' --sourceMap' : '';
+        tsExecution += global.setup.build.lib_ts.strict ? ' --strict' : '';
+        tsExecution += global.setup.build.lib_ts.declaration ? ' --declaration' : '';
+        tsExecution += global.setup.build.lib_ts.sourceMap ? ' --sourceMap' : '';
 
         tsExecution += ' --alwaysStrict';             
         tsExecution += ' --target ' + target.jsTarget;
@@ -160,7 +160,7 @@ exports.buildTypeScript = function (destPath) {
             webPackExecution += ' "' + destDist + sep + target.folder + sep + mergedFileName + '"';
             webPackExecution += ' --output-library ' + target.globalVar;                            
             
-            if(global.setup.build.ts.sourceMap){
+            if(global.setup.build.lib_ts.sourceMap){
                 
                 fm.saveFile(compiledFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
                 
@@ -193,19 +193,34 @@ exports.removeUnpackedSrcFiles = function (destPath) {
 /**
  * Execute the build process
  */
-exports.execute = function (isReleaseAlsoExecuted = false) {
+exports.execute = function () {
 
-    console.log("\nbuild start");
+    // Find how many build types have been specified
+    let buildKeys = ObjectUtils.getKeys(global.setup.build);
+    let buildTypeFound = '';
+    let buildTypesFound = 0;
     
-    // If no builder is enabled launch error
-    if(!global.setup.build.php.enabled &&
-       !global.setup.build.js.enabled &&
-       !global.setup.build.java.enabled &&
-       !global.setup.build.ts.enabled){
+    for (let type of setupBuildTypes) {
         
-        console.error("Nothing to build. Please enable php, js, java or ts under build section in " + global.fileNames.setup);
+        if(buildKeys.indexOf(type) >= 0){
+            
+            buildTypeFound = type;
+            buildTypesFound ++;
+        }
     }
     
+    // If no builder is enabled launch error
+    if(buildTypesFound === 0){
+         
+        console.error("Nothing to build. Please enable any of [" + setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
+    }
+    
+    if(buildTypesFound !== 1){
+        
+        console.error("Please specify only one of the following on build setup: " + setupBuildTypes.join(","));
+    }
+    
+    console.log("\nbuild start: " + buildTypeFound);
     
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
     
@@ -220,19 +235,14 @@ exports.execute = function (isReleaseAlsoExecuted = false) {
         validateModule.execute(false);
     }
     
-    if(global.setup.build.php.enabled){
+    if(global.setup.build.lib_php){
         
         this.buildPhp(buildFullPath);
     }
     
-    if(global.setup.build.ts.enabled){
+    if(global.setup.build.lib_ts){
     
         this.buildTypeScript(buildFullPath);
-    }
-    
-    if(!isReleaseAlsoExecuted && global.setup.build.printTodoFile){
-        
-        console.printTodoFile();
     }
     
     console.success('build ok');

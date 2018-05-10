@@ -33,25 +33,44 @@ utils.test("test-build", "When --build argument is passed on empty folder, error
 });
 
 
-utils.test("test-build", "When -b argument is passed after generating a project structure, build fails with nothing to build", function(){
+utils.test("test-build", "When -b argument is passed after generating a project structure, build fails with no build type specified", function(){
     
     utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
-    utils.assertExecFails('-b', 'Nothing to build. Please enable ', 'build should have failed when nothing is enabled on setup build');
+    utils.assertExecFails('-b', 'Please specify only one of the following on build setup', 'build should have failed when nothing is enabled on setup build');
 });
 
 
-utils.test("test-build", "When --build argument is passed after generating a project structure, build fails with nothing to build", function(){
+utils.test("test-build", "When --build argument is passed after generating a project structure, build fails with no build type specified", function(){
     
-    utils.assertExecFails('--build', 'Nothing to build. Please enable ', 'build should have failed when nothing is enabled on setup build');
+    utils.assertExecFails('--build', 'Please specify only one of the following on build setup', 'build should have failed when nothing is enabled on setup build');
+});
+
+
+utils.test("test-build", "When -b argument is passed with empty setup build structure, build fails", function(){
+    
+    let setup = utils.readSetupFile(workDir);
+    setup.build = {};
+    utils.saveToSetupFile(workDir, setup);
+    
+    utils.assertExecFails('--build', 'Nothing to build. Please enable any of', 'build should have failed');
+});
+
+
+utils.test("test-build", "When -b --build argument is passed after defining multiple project types, build fails", function(){
+    
+    let setup = utils.readSetupFile(workDir);
+    setup.build = {lib_ts: {}, lib_php: {}};
+    utils.saveToSetupFile(workDir, setup);
+    
+    utils.assertExecFails('-b', 'Please specify only one of the following on build setup', 'build should have failed when nothing is enabled on setup build');
+    utils.assertExecFails('--build', 'Please specify only one of the following on build setup', 'build should have failed when nothing is enabled on setup build');
 });
 
 
 utils.test("test-build", "When -b --build arguments are passed after enabling ts build with no ts files, build fails with no files to build", function(){
     
     let setup = utils.readSetupFile(workDir);
-    
-    setup.build.ts.enabled = true;
-    
+    setup.build = {lib_ts: {}};
     utils.saveToSetupFile(workDir, setup);
     
     utils.assertExecFails('-b', 'no files to build', 'build should have failed when no files to build');
@@ -78,7 +97,7 @@ utils.test("test-build", "When -b argument is passed after generating a project 
     
     let setup = utils.readSetupFile(testDir);
     
-    setup.build.php.enabled = true;
+    setup.build = {lib_php: {}};
     
     utils.saveToSetupFile(testDir, setup);
     

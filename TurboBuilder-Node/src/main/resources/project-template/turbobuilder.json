@@ -49,23 +49,18 @@
 	    "keepUnpackedSrcFiles" : false,
 	    "printTodoFile" : false,
 	    
-	    "php" : {
-	    	"enabled": false,
+	    "website_php" : {
+	    },
+	    
+	    "lib_php" : {
 	    	"createPhar": false
 	    },
 	    
-	    "js" : {
-	    	"enabled": false,
-	    	"createMergedJs": false
-	    },
-	    
-	    "java" : {
-	    	"enabled": false,
+	    "lib_java" : {
 	    	"createJar": false
 	    },
 	    
-	    "ts" : {
-	        "enabled": false,
+	    "lib_ts" : {
 	        "declaration": true,
 	        "strict": true,
 	        "sourceMap": true,

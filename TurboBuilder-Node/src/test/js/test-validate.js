@@ -30,13 +30,13 @@ utils.test("test-validate", "Generate new project and launch validation", functi
 
 utils.test("test-validate", "Validation is executed before build by default and fails with default config", function(){
     
-    utils.assertExecFails('-b', "Nothing to build.", "Build should have failed with default setup values");
+    utils.assertExecFails('-b', "Please specify only one of the following on build setup", "Build should have failed with default setup values");
 });
 
 
 utils.test("test-validate", "Validation is executed before build by default when build works as expected", function(){
     
-    utils.saveToSetupFile(workDir, {build: {ts: {enabled: true}}});
+    utils.saveToSetupFile(workDir, {build: {lib_ts: {}}});
     
     utils.assertSaveFile(workDir + '/src/main/ts/index.ts', '');
     
@@ -46,7 +46,7 @@ utils.test("test-validate", "Validation is executed before build by default when
 
 utils.test("test-validate", "Validation is not executed before build by default when disabled in config", function(){
     
-    utils.saveToSetupFile(workDir, {build: {ts: {enabled: true}}, validate: {runBeforeBuild: false}});
+    utils.saveToSetupFile(workDir, {build: {lib_ts: {}}, validate: {runBeforeBuild: false}});
     
     utils.assertExecContains('-b', "Failed validation", ["build ok"], ["validate ok"]);
 });

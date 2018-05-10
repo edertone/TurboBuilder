@@ -17,6 +17,12 @@ global.setup = null;
 
 
 /**
+ * Defines the list of possible project build setup types
+ */
+global.setupBuildTypes = ["website_php", "lib_php", "lib_java", "lib_ts"];
+
+
+/**
  * All the relevant project folder names
  */
 global.folderNames = {

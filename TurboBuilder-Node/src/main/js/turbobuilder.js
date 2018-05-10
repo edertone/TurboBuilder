@@ -74,7 +74,7 @@ if (program.clean){
 // Perform the build as defined on xml setup
 if (program.build){
     
-    buildModule.execute(program.release);
+    buildModule.execute();
 }
 
 if (program.release){
@@ -96,4 +96,10 @@ if (program.publish){
     
     // TODO - Implement this feature on a sepparate js file
     console.success('publish');
+}
+
+if((global.setup.release.printTodoFile && program.release) ||
+        (global.setup.build.printTodoFile && program.build)){
+    
+    console.printTodoFile();
 }
