@@ -1,7 +1,8 @@
 {
 	"metadata": {
 		"name": "write project name here",
-		"description": "write some project description here"
+		"description": "write some project description here",
+		"builderVersion": ""
 	},
 	
 	"validate": {
@@ -10,7 +11,7 @@
 	        "enabled": true,
 	        "forceExtrasFolder": true,
 	        "forceReadmeFile": true,
-	        "forceTODOFile": true,
+	        "forceTodoFolder": true,
 	        "resourcesStructure": true,
 	        "phpStructure": true,
 	        "jsStructure": true,
@@ -47,7 +48,7 @@
     "build": {
     
 	    "keepUnpackedSrcFiles" : false,
-	    "printTodoFile" : false,
+	    "printTodoFiles" : false,
 	    
 	    "website_php" : {
 	    },
@@ -73,7 +74,7 @@
     },
     
     "release": {
-	    "printTodoFile" : true,
+	    "printTodoFiles" : true,
 	    "gitChangeLog": true,
 	    "gitChangeLogCount": 5,
 	    "optimizeCss": true,
@@ -100,5 +101,8 @@
 	        "browsers": {"chrome": false, "firefox": false, "iexplore": false},
 	        "testingLibrary": "qunit"
 	    }
+    },    
+    
+    "sync": {
     }
 }

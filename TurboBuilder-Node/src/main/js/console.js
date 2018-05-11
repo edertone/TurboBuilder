@@ -7,6 +7,7 @@
 
 const { FilesManager, StringUtils } = require('turbocommons-ts');
 const { execSync } = require('child_process');
+const setupModule = require('./setup');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -108,21 +109,42 @@ exports.errors = function (messages, quit = true) {
 
 
 /**
- * Show the contents of the Todo file if any
+ * Show the contents of each one of the specified folder files in an organized and readable way
  */
-exports.printTodoFile = function () {
+exports.printFolderContents = function (path, headlineText) {
 
-    if(fm.isFile(global.runtimePaths.todoFile)){
+    if(fm.isDirectory(path)){
         
-        let todoContents = fm.readFile(global.runtimePaths.todoFile);
-        
-        if(!StringUtils.isEmpty(todoContents)){
-        
-            this.warning("\nPENDING TASKS inside : " + global.fileNames.todo + "\n");
-                    
-            this.warning(todoContents + "\n");
+        let folderList = fm.getDirectoryList(global.runtimePaths.todoFolder);
+
+        for(let item of folderList){
+            
+            let todoContents = fm.readFile(global.runtimePaths.todoFolder + fm.dirSep() + item);
+            
+            if(!StringUtils.isEmpty(todoContents)){
+            
+                this.warning("\n" + headlineText + item + "\n");
+                        
+                this.warning(todoContents + "\n");
+            }
         }
     }
+}
+
+
+/**
+ * Get information about all the application related versions
+ */
+exports.printVersionInfo = function () {
+
+    let result = "\nturbobuilder: " + setupModule.getBuilderVersion();
+    
+    if (fm.isFile(global.runtimePaths.setupFile)) {
+    
+        result += "\n\n" + global.runtimePaths.projectName + ': ' + setupModule.getProjectRepoSemVer() + ' +' + setupModule.countCommitsSinceLatestTag();
+    }
+    
+    return result;
 }
 
 

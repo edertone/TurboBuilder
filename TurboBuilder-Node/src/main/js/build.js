@@ -86,7 +86,7 @@ exports.buildPhp = function (destPath) {
     }
     
     // Define the contents for the stub file that will be autoexecuted when the phar file is included
-    let pharName = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + '.phar';
+    let pharName = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '.phar';
     
     let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/AutoLoader.php\\'; __HALT_COMPILER(); ?>";
     

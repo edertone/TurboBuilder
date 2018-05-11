@@ -26,7 +26,7 @@ const cleanModule = require('./clean');
  */
 program
     .alias('tb')
-    .version(setupModule.getVersionNumbers(), '-v, --version')
+    .version(console.printVersionInfo(), '-v, --version')
     .option('-g, --generate', 'Create a full project structure on the current directory')
     .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder')
@@ -98,8 +98,9 @@ if (program.publish){
     console.success('publish');
 }
 
-if((global.setup.release.printTodoFile && program.release) ||
-        (global.setup.build.printTodoFile && program.build)){
+// Print the todo folder contents on console if necessary
+if((global.setup.release.printTodoFiles && program.release) ||
+        (global.setup.build.printTodoFiles && program.build)){
     
-    console.printTodoFile();
+    console.printFolderContents(global.runtimePaths.todoFolder, 'TODO file : ');
 }

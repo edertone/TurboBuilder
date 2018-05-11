@@ -10,6 +10,7 @@
 
 require('./../../main/js/globals');
 const utils = require('./index-utils');
+const setupModule = require('./../../main/js/setup');
 
 
 utils.test("test-generate", "Create and switch to the generate folder", function(){
@@ -28,7 +29,6 @@ utils.test("test-generate", "When validation is called, it succeeds", function()
     
     utils.assertExecContains('-l', "Failed validation", "validate ok");
 });
-
 
 utils.test("test-generate", "When -g argument is passed again, an error happens", function(){
     
@@ -68,4 +68,23 @@ utils.test("test-generate", "When --generate is called on a non empty folder, er
     utils.assertFolderEmpty(utils.switchToDirInsideTemp('test-generate-4'));
     // TODO - create some raw folder to the test-generate-4 folder 
     // utils.assertExecFails('--generate', 'Current folder is not empty! :' + global.runtimePaths.root, "--generate Must fail on a non empty folder");
+});
+
+utils.test("test-generate", "When generated setup builderVersion value is modified, error happens", function(){
+    
+    let testDir = utils.switchToDirInsideTemp('test-generate-5');
+    
+    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    
+    let setup = utils.readSetupFile(testDir);
+    
+    setup.metadata.builderVersion = '';
+    utils.saveToSetupFile(testDir, setup);
+    
+    utils.assertExecFails('-l', 'metadata.builderVersion not specified on', "Failed empty builderversion");
+    
+    setup.metadata.builderVersion = setupModule.getBuilderVersion() + '.9';
+    utils.saveToSetupFile(testDir, setup);
+    
+    utils.assertExecContains('-l', "Failed empty builderversion", 'Warning: Current turbobuilder version');
 });

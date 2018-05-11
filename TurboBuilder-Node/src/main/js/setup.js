@@ -9,6 +9,7 @@ const { FilesManager, ObjectUtils } = require('turbocommons-ts');
 const console = require('./console.js');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
+const validateModule = require('./validate');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -17,22 +18,6 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 let isGitAvailable = false;
 
 let isPhpAvailable = false;
-
-
-/**
- * Get the turbobuilder cmd tool and project versions ready to print to console
- */
-exports.getVersionNumbers = function () {
-
-    let result = "\nturbobuilder: " + require(global.installationPaths.root + '/package.json').version;
-    
-    if (fm.isFile(global.runtimePaths.setupFile)) {
-    
-        result += "\n\n" + global.runtimePaths.projectName + ': ' + this.getCurrentSemVer() + ' +' + this.countCommitsSinceLatestTag();
-    }
-    
-    return result;
-}
 
 
 /**
@@ -78,9 +63,18 @@ exports.checkPhpAvailable = function () {
 
 
 /**
+ * Calculate the turbo builder cmd current version
+ */
+exports.getBuilderVersion = function () {
+    
+    return StringUtils.trim(require(global.installationPaths.root + '/package.json').version);
+}
+
+
+/**
  * Calculate the most recent project semantic version value (major.minor.patch) depending on git tags or other parameters
  */
-exports.getCurrentSemVer = function () {
+exports.getProjectRepoSemVer = function () {
     
     this.checkGitAvailable();
     
@@ -173,6 +167,8 @@ let mergeSetup = function (templateSetup, projectSetup) {
  * Initialize the global variables and setup structure from the project xml
  */
 exports.init = function () {
-
+    
     loadSetupFromDisk();
+
+    validateModule.validateBuilderVersion();
 }

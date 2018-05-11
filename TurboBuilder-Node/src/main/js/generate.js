@@ -5,9 +5,10 @@
  */
 
 
-const { FilesManager } = require('turbocommons-ts');
+const { FilesManager, StringUtils } = require('turbocommons-ts');
 const console = require('./console');
 const validateModule = require('./validate');
+const setupModule = require('./setup');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -34,8 +35,13 @@ let createSetup = function () {
         
         console.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
+    
+    // Read the setup file, replace the expected builder version with the current one and save it
+    let setupContents = fm.readFile(templateSetupPath);
+    
+    setupContents = StringUtils.replace(setupContents, '"builderVersion": ""', '"builderVersion": "' + setupModule.getBuilderVersion() + '"');
         
-    if(!fm.copyFile(templateSetupPath, global.runtimePaths.setupFile)){
+    if(!fm.saveFile(global.runtimePaths.setupFile, setupContents)){
         
         console.error('Error creating ' + global.fileNames.setup + ' file');
     }
@@ -81,10 +87,15 @@ let createProjectStructure = function () {
     }
     
     // Create todo file
-    if(!fm.saveFile(global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo,
+    if(!fm.createDirectory(global.runtimePaths.todoFolder)){
+        
+        console.error('Failed creating: ' + global.runtimePaths.todoFolder);
+    }
+    
+    if(!fm.saveFile(global.runtimePaths.todoFolder + fm.dirSep() + global.fileNames.todo,
        'Write all your pending tasks here')){
         
-        console.error('Failed creating: ' + global.runtimePaths.extras + fm.dirSep() + global.fileNames.todo);        
+        console.error('Failed creating: ' + global.runtimePaths.todoFolder + fm.dirSep() + global.fileNames.todo);        
     }
     
     console.success('Created all files ok');

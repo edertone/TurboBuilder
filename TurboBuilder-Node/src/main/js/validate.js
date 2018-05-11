@@ -8,6 +8,7 @@
 const { StringUtils, ObjectUtils, FilesManager } = require('turbocommons-ts');
 const path = require('path');
 var fs = require('fs');
+const setupModule = require('./setup');
 const console = require('./console.js');
 
 
@@ -24,6 +25,25 @@ let warnings = [];
  * Array that will contain all the errors detected by this script and will be displayed at the end
  */
 let errors = [];
+
+
+/**
+ * Check the current builder version and the one specified on setup json and if they are different, launch a warning
+ */
+exports.validateBuilderVersion = function () {
+    
+    let expectedVersion = StringUtils.trim(global.setup.metadata.builderVersion);
+    
+    if(StringUtils.isEmpty(expectedVersion)){
+        
+        console.error("metadata.builderVersion not specified on " + global.fileNames.setup);
+    }
+    
+    if(expectedVersion !== setupModule.getBuilderVersion()){
+    
+        console.warning("Warning: Current turbobuilder version (" + setupModule.getBuilderVersion() + ") does not match expected (" + expectedVersion + ")");
+    }
+}
 
 
 /**

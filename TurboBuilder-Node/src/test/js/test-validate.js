@@ -9,6 +9,7 @@
 
 
 require('./../../main/js/globals');
+const setupModule = require('./../../main/js/setup');
 const utils = require('./index-utils');
 
 
@@ -36,7 +37,7 @@ utils.test("test-validate", "Validation is executed before build by default and 
 
 utils.test("test-validate", "Validation is executed before build by default when build works as expected", function(){
     
-    utils.saveToSetupFile(workDir, {build: {lib_ts: {}}});
+    utils.saveToSetupFile(workDir, {metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}});
     
     utils.assertSaveFile(workDir + '/src/main/ts/index.ts', '');
     
@@ -46,7 +47,7 @@ utils.test("test-validate", "Validation is executed before build by default when
 
 utils.test("test-validate", "Validation is not executed before build by default when disabled in config", function(){
     
-    utils.saveToSetupFile(workDir, {build: {lib_ts: {}}, validate: {runBeforeBuild: false}});
+    utils.saveToSetupFile(workDir, {metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}, validate: {runBeforeBuild: false}});
     
     utils.assertExecContains('-b', "Failed validation", ["build ok"], ["validate ok"]);
 });
@@ -55,6 +56,9 @@ utils.test("test-validate", "Validation is not executed before build by default 
 utils.test("test-validate", "modify project config to verify copyright headers, add some files with correct headers and launch validation", function(){
 
     let setup = {
+        metadata: {
+            builderVersion: setupModule.getBuilderVersion()
+        }, 
         build: {
             ts: {
                 enabled: true

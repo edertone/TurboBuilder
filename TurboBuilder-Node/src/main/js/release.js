@@ -44,7 +44,7 @@ exports.getReleaseRelativePath = function () {
         
         let i = setupModule.countCommitsSinceLatestTag();
         
-        releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + ' +' + i;
+        releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + ' +' + i;
     }
 
     return releaseRelativePath; 
@@ -105,7 +105,7 @@ let generateCodeDocumentation = function (destPath) {
         phpDocExec += ' "' + global.installationPaths.mainResources + sep + 'tools' + sep + 'phpDocumentor.phar"';
         phpDocExec += ' --template="responsive-twig"';
         phpDocExec += ' --visibility="public"';
-        phpDocExec += ' --title="' + global.runtimePaths.projectName + "-" + setupModule.getCurrentSemVer() + '"';
+        phpDocExec += ' --title="' + global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '"';
         phpDocExec += ' -i "' + destMain + '/php/libs,AutoLoader.php"';
         phpDocExec += ' -d "' + destMain + sep + 'php"';
         phpDocExec += ' -t "' + docsPath + sep + 'php"';
