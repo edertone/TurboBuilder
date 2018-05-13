@@ -6,10 +6,6 @@ This file contains a list with all the dependencies that are used by this projec
 
 Used to provide command line functionalities to the app: receiving args, options, generating help...
 
-## turbocommons-ts
-
-General purpose JS library
-
 ## http-server
 
 A basic web server used to launch unit tests or any other html resources
@@ -17,6 +13,10 @@ A basic web server used to launch unit tests or any other html resources
 ## opn
 
 A platform independent url/file launcher
+
+## turbocommons-ts
+
+General purpose JS library
 
 ## typedoc
 

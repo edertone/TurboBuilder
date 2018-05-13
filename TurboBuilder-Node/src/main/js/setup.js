@@ -15,6 +15,8 @@ const validateModule = require('./validate');
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
+let isWinSCPAvailable = false;
+
 let isGitAvailable = false;
 
 let isPhpAvailable = false;
@@ -28,6 +30,27 @@ exports.init = function () {
     loadSetupFromDisk();
 
     validateModule.validateBuilderVersion();
+}
+
+
+/**
+ * Check if the WinSCP cmd executable is available or not on the system
+ */
+exports.checkWinSCPAvailable = function () {
+
+    if(!isWinSCPAvailable){
+        
+        try{
+            
+            execSync('winscp /help', {stdio : 'pipe'});
+            
+            isWinSCPAvailable = true;
+            
+        }catch(e){
+
+            console.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable) to perform sync operations');
+        }
+    }
 }
 
 
