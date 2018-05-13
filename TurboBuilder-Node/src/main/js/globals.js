@@ -35,8 +35,7 @@ global.folderNames = {
  */
 global.fileNames = {
     setup: 'turbobuilder.json',
-    readme: 'README.md',
-    todo: 'TODO.txt'
+    readme: 'README.md'
 };
 
 /**

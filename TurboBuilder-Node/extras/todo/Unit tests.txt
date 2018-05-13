@@ -1,3 +1,2 @@
-- Implement unit tests: Check that different versions on turbobuilder and json setup launch a warning
 - Implement unit tests: print TODO file to console feature both for test-build and test-release
 - Implement unit tests: php namespaces validation functionality 

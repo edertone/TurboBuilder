@@ -55,11 +55,13 @@ let createSetup = function () {
  */
 let createProjectStructure = function () {
     
+    let sep = fm.dirSep();
+    
     // Create js, ts, php, java folders
-    if(!fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'js', true) ||
-       !fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'ts', true) ||
-       !fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'php', true) ||
-       !fm.createDirectory(global.runtimePaths.main + fm.dirSep() + 'java', true) ||
+    if(!fm.createDirectory(global.runtimePaths.main + sep + 'js', true) ||
+       !fm.createDirectory(global.runtimePaths.main + sep + 'ts', true) ||
+       !fm.createDirectory(global.runtimePaths.main + sep + 'php', true) ||
+       !fm.createDirectory(global.runtimePaths.main + sep + 'java', true) ||
        !fm.createDirectory(global.runtimePaths.mainResources, true)){
     
         console.error('Failed creating js, ts, php, java, resources folders inside: ' + global.runtimePaths.main);
@@ -71,8 +73,9 @@ let createProjectStructure = function () {
         console.error('Failed creating: ' + global.runtimePaths.test);
     }
     
-    // Create extras folder
-    if(!fm.createDirectory(global.runtimePaths.extras)){
+    // Copy the extras folder from template
+    if(!fm.createDirectory(global.runtimePaths.extras) ||
+       !fm.copyDirectory(global.installationPaths.mainResources + sep + 'project-template' + sep + 'extras', global.runtimePaths.extras)){
         
         console.error('Failed creating: ' + global.runtimePaths.extras);
     }
@@ -80,22 +83,10 @@ let createProjectStructure = function () {
     console.success('Created all folders ok');
     
     // Create readme file
-    if(!fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + 'project-template' + fm.dirSep() + global.fileNames.readme,
-                    global.runtimePaths.root + fm.dirSep() + global.fileNames.readme)){
+    if(!fm.copyFile(global.installationPaths.mainResources + sep + 'project-template' + sep + global.fileNames.readme,
+                    global.runtimePaths.root + sep + global.fileNames.readme)){
         
-        console.error('Failed creating: ' + global.runtimePaths.root + fm.dirSep() + global.fileNames.readme);
-    }
-    
-    // Create todo file
-    if(!fm.createDirectory(global.runtimePaths.todoFolder)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.todoFolder);
-    }
-    
-    if(!fm.saveFile(global.runtimePaths.todoFolder + fm.dirSep() + global.fileNames.todo,
-       'Write all your pending tasks here')){
-        
-        console.error('Failed creating: ' + global.runtimePaths.todoFolder + fm.dirSep() + global.fileNames.todo);        
+        console.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.readme);
     }
     
     console.success('Created all files ok');

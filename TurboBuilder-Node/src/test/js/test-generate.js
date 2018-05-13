@@ -13,15 +13,21 @@ const utils = require('./index-utils');
 const setupModule = require('./../../main/js/setup');
 
 
+let workDir = utils.switchToDirInsideTemp('test-generate');
+
+
 utils.test("test-generate", "Create and switch to the generate folder", function(){
 
-    utils.assertFolderEmpty(utils.switchToDirInsideTemp('test-generate'));
+    utils.assertFolderEmpty(workDir);
 });
 
 
 utils.test("test-generate", "When -g argument is passed, application files are created", function(){
     
     utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    
+    utils.assertIsFile(workDir + '/extras/todo/Features.txt');
+    utils.assertIsFile(workDir + '/extras/todo/Unit tests.txt');
 });
 
  

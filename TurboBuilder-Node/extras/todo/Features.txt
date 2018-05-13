@@ -1,0 +1,3 @@
+- Save all the turbobuilder CLI application console output into a txt file on target when executing release 
+- upgrade phpunit to 7
+- upgrade to webpack 4

@@ -1,2 +1,0 @@
-- upgrade phpunit to 7
-- upgrade to webpack 4
