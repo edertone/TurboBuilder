@@ -107,7 +107,7 @@
     	{
     		"type": "FTP",
     		"excludes": ["some-filename-pattern"],
-    		"localRoot": "dev",
+    		"localRoot": "build",
     		"localPath": "dist",
     		"remotePath": "/somepath",
     		"host": "www.someserver.com",

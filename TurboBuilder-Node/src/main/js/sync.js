@@ -18,6 +18,11 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 exports.execute = function () {
     
+    if(!global.setup.sync){
+       
+        console.error("No sync setup defined on " + global.fileNames.setup);
+    }
+    
     setupModule.checkWinSCPAvailable();
     
     console.log("\nsync start");
@@ -32,6 +37,11 @@ exports.execute = function () {
             if(syncSetup.localRoot === 'build'){
                 
                 localPath = global.runtimePaths.targetDevRoot + fm.dirSep() + syncSetup.localPath;
+            }
+            
+            if(!fm.isDirectory(localPath)){
+                
+                console.error('Folder does not exist: ' + localPath);
             }
             
             winscpExec += ' "open ftp://' + syncSetup.user + ':' + syncSetup.psw + '@' + syncSetup.host + '/"';

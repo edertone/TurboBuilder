@@ -174,10 +174,18 @@ let mergeSetup = function (templateSetup, projectSetup) {
     
     for (let key of ObjectUtils.getKeys(templateSetup)){
         
+        // Sync setup on tempalte is just informative, so if not specified on project
+        // setup, it will be removed
+        if(key === 'sync' &&
+           !projectSetup.hasOwnProperty(key)){
+            
+            delete templateSetup[key];
+        }
+        
         // Build project types are deleted from the default template, cause there can only be one
         // defined
-        if(setupBuildTypes.indexOf(key) >= 0 &&
-                !projectSetup.hasOwnProperty(key)){
+        if(global.setupBuildTypes.indexOf(key) >= 0 &&
+           !projectSetup.hasOwnProperty(key)){
             
             delete templateSetup[key];
         }

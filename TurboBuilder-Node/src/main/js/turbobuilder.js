@@ -34,7 +34,7 @@ program
     .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
     .option('-r, --release', 'Generate the project production ready version as configured in ' + global.fileNames.setup)
-    .option('-s, --sync', 'Mirror the specified folder to a remote location as configured in ' + global.fileNames.setup)
+    .option('-s, --sync', 'Mirror project folders to a remote location as configured in ' + global.fileNames.setup)
     .parse(process.argv);
 
 // If none of the options have been passed, we will show the help
