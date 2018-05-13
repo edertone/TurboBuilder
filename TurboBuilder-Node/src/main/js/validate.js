@@ -28,6 +28,29 @@ let errors = [];
 
 
 /**
+ * Perform all the validation tasks
+ */
+exports.execute = function (verbose = true) {
+    
+    if(verbose){
+    
+        console.log("\nvalidate start");
+    }
+    
+    validateProjectStructure();
+    
+    validateCopyrightHeaders();
+     
+    validateNamespaces();
+    
+    console.errors(errors);
+    
+    // Reaching here means validation was successful
+    console.success("validate ok");
+}
+
+
+/**
  * Check the current builder version and the one specified on setup json and if they are different, launch a warning
  */
 exports.validateBuilderVersion = function () {
@@ -216,27 +239,4 @@ let validateNamespaces = function () {
             }
         }       
     }
-}
-
-
-/**
- * Perform all the validation tasks
- */
-exports.execute = function (verbose = true) {
-    
-    if(verbose){
-    
-        console.log("\nvalidate start");
-    }
-    
-    validateProjectStructure();
-    
-    validateCopyrightHeaders();
-     
-    validateNamespaces();
-    
-    console.errors(errors);
-    
-    // Reaching here means validation was successful
-    console.success("validate ok");
 }

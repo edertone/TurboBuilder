@@ -18,6 +18,7 @@ const buildModule = require('./build');
 const releaseModule = require('./release');
 const testModule = require('./test');
 const cleanModule = require('./clean');
+const syncModule = require('./sync');
 
 
 /**
@@ -33,7 +34,7 @@ program
     .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
     .option('-r, --release', 'Generate the project production ready version as configured in ' + global.fileNames.setup)
-    .option('-p, --publish', 'Copy or sync the project generated files to the locations configured in ' + global.fileNames.setup)
+    .option('-s, --sync', 'Mirror the specified folder to a remote location as configured in ' + global.fileNames.setup)
     .parse(process.argv);
 
 // If none of the options have been passed, we will show the help
@@ -43,7 +44,7 @@ if(!program.generate &&
    !program.build &&
    !program.test &&
    !program.release &&
-   !program.publish){
+   !program.sync){
     
     program.help();
     process.exit(0);
@@ -92,10 +93,9 @@ if (program.test){
     testModule.execute(program.build, program.release);
 }
 
-if (program.publish){
+if (program.sync){
     
-    // TODO - Implement this feature on a sepparate js file
-    console.success('publish');
+    syncModule.execute();
 }
 
 // Print the todo folder contents on console if necessary

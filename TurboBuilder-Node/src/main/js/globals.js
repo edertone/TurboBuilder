@@ -74,5 +74,5 @@ global.runtimePaths = {
     test: path.resolve('./src/test'),
     mainResources: path.resolve('./src/main/resources'),
     target: path.resolve('./' + global.folderNames.target),
-    targetProjectName: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./')))
+    targetDevRoot: path.resolve('./' + global.folderNames.target + '/' + StringUtils.getPathElement(path.resolve('./')))
 };

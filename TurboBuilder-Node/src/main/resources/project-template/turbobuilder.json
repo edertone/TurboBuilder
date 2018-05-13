@@ -106,10 +106,11 @@
     "sync": [
     	{
     		"type": "FTP",
-    		"source": "build/dist",
     		"excludes": ["some-filename-pattern"],
-    		"destPath": "/somepath",
-    		"server": "www.someserver.com",
+    		"localRoot": "dev",
+    		"localPath": "dist",
+    		"remotePath": "/somepath",
+    		"host": "www.someserver.com",
     		"user": "serverUser",
     		"psw": "serverpsw"
     	}

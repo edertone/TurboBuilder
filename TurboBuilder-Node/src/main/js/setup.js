@@ -21,6 +21,17 @@ let isPhpAvailable = false;
 
 
 /**
+ * Initialize the global variables and setup structure from the project xml
+ */
+exports.init = function () {
+    
+    loadSetupFromDisk();
+
+    validateModule.validateBuilderVersion();
+}
+
+
+/**
  * Check if the git cmd executable is available or not on the system
  */
 exports.checkGitAvailable = function () {
@@ -161,14 +172,3 @@ let mergeSetup = function (templateSetup, projectSetup) {
         }
     }
 };
-
-
-/**
- * Initialize the global variables and setup structure from the project xml
- */
-exports.init = function () {
-    
-    loadSetupFromDisk();
-
-    validateModule.validateBuilderVersion();
-}

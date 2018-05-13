@@ -29,6 +29,65 @@ process.on('exit', () => {
 
 
 /**
+ * Execute the build process
+ */
+exports.execute = function () {
+
+    // Find how many build types have been specified
+    let buildKeys = ObjectUtils.getKeys(global.setup.build);
+    let buildTypeFound = '';
+    let buildTypesFound = 0;
+    
+    for (let type of setupBuildTypes) {
+        
+        if(buildKeys.indexOf(type) >= 0){
+            
+            buildTypeFound = type;
+            buildTypesFound ++;
+        }
+    }
+    
+    // If no builder is enabled launch error
+    if(buildTypesFound === 0){
+         
+        console.error("Nothing to build. Please enable any of [" + setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
+    }
+    
+    if(buildTypesFound !== 1){
+        
+        console.error("Please specify only one of the following on build setup: " + setupBuildTypes.join(","));
+    }
+    
+    console.log("\nbuild start: " + buildTypeFound);
+    
+    let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
+    
+    // Delete all files inside the target/projectName folder
+    fm.deleteDirectory(buildFullPath);
+    
+    // Copy all the src main files to the target dev build folder
+    this.copyMainFiles(buildFullPath);
+    
+    if(global.setup.validate.runBeforeBuild){
+        
+        validateModule.execute(false);
+    }
+    
+    if(global.setup.build.lib_php){
+        
+        this.buildPhp(buildFullPath);
+    }
+    
+    if(global.setup.build.lib_ts){
+    
+        this.buildTypeScript(buildFullPath);
+    }
+    
+    console.success('build ok');
+};
+
+
+/**
  * Gets the path relative to project target where current build version is generated
  */
 exports.getBuildRelativePath = function () {
@@ -56,7 +115,7 @@ exports.copyMainFiles = function (destPath) {
     // Ignore all the following files: thumbs.db .svn .git
     // TODO let filesToCopy = fm.findDirectoryItems(global.runtimePaths.main, /^(?!.*(thumbs\.db|\.svn|\.git)$)/i, 'absolute', 'files');
     
-    // TODO fm.copyFiles(filesToCopy, global.runtimePaths.targetProjectName + fm.dirSep() + 'main');
+    // TODO fm.copyFiles(filesToCopy, global.runtimePaths.targetDevRoot + fm.dirSep() + 'main');
     
     fm.copyDirectory(global.runtimePaths.main, destMain);
     
@@ -188,62 +247,3 @@ exports.removeUnpackedSrcFiles = function (destPath) {
         console.error('Could not delete unpacked src files from ' + destMain);
     }
 }
-
-
-/**
- * Execute the build process
- */
-exports.execute = function () {
-
-    // Find how many build types have been specified
-    let buildKeys = ObjectUtils.getKeys(global.setup.build);
-    let buildTypeFound = '';
-    let buildTypesFound = 0;
-    
-    for (let type of setupBuildTypes) {
-        
-        if(buildKeys.indexOf(type) >= 0){
-            
-            buildTypeFound = type;
-            buildTypesFound ++;
-        }
-    }
-    
-    // If no builder is enabled launch error
-    if(buildTypesFound === 0){
-         
-        console.error("Nothing to build. Please enable any of [" + setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
-    }
-    
-    if(buildTypesFound !== 1){
-        
-        console.error("Please specify only one of the following on build setup: " + setupBuildTypes.join(","));
-    }
-    
-    console.log("\nbuild start: " + buildTypeFound);
-    
-    let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
-    
-    // Delete all files inside the target/projectName folder
-    fm.deleteDirectory(buildFullPath);
-    
-    // Copy all the src main files to the target dev build folder
-    this.copyMainFiles(buildFullPath);
-    
-    if(global.setup.validate.runBeforeBuild){
-        
-        validateModule.execute(false);
-    }
-    
-    if(global.setup.build.lib_php){
-        
-        this.buildPhp(buildFullPath);
-    }
-    
-    if(global.setup.build.lib_ts){
-    
-        this.buildTypeScript(buildFullPath);
-    }
-    
-    console.success('build ok');
-};

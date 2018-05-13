@@ -17,6 +17,47 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 
 /**
+ * Execute the test process
+ */
+exports.execute = function (build, release) {
+    
+    console.log("\ntest start");
+    
+    if(!global.setup.test.php.enabled &&
+       !global.setup.test.js.enabled &&
+       !global.setup.test.ts.enabled){
+        
+        console.error("Nothing to test. Please enable php, js or ts under test section in " + global.fileNames.setup);
+    }
+    
+    // Check which build paths must be tested
+    let pathsToTest = [];
+    
+    if(build){
+        
+        pathsToTest.push(buildModule.getBuildRelativePath());
+    }
+    
+    if(release){
+        
+        pathsToTest.push(releaseModule.getReleaseRelativePath());
+    }
+    
+    if(global.setup.test.php.enabled){
+        
+        testPhp(pathsToTest);
+    }
+    
+    if(global.setup.test.ts.enabled){
+        
+        testTypeScript(pathsToTest);
+    }
+    
+    console.success('test done');
+};
+
+
+/**
  * Initiate an http server instance using the project target folder as the root.
  * If a server is already using the currently configured port, the new instance will not start.
  * This is useful cause we will be able to leave the created http server instance open all the time
@@ -207,44 +248,3 @@ let testTypeScript = function (relativeBuildPaths) {
         }
     }
 }
-
-
-/**
- * Execute the test process
- */
-exports.execute = function (build, release) {
-    
-    console.log("\ntest start");
-    
-    if(!global.setup.test.php.enabled &&
-       !global.setup.test.js.enabled &&
-       !global.setup.test.ts.enabled){
-        
-        console.error("Nothing to test. Please enable php, js or ts under test section in " + global.fileNames.setup);
-    }
-    
-    // Check which build paths must be tested
-    let pathsToTest = [];
-    
-    if(build){
-        
-        pathsToTest.push(buildModule.getBuildRelativePath());
-    }
-    
-    if(release){
-        
-        pathsToTest.push(releaseModule.getReleaseRelativePath());
-    }
-    
-    if(global.setup.test.php.enabled){
-        
-        testPhp(pathsToTest);
-    }
-    
-    if(global.setup.test.ts.enabled){
-        
-        testTypeScript(pathsToTest);
-    }
-    
-    console.success('test done');
-};

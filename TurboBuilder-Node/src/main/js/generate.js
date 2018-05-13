@@ -15,6 +15,21 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 
 /**
+ * Execute the build process
+ */
+exports.execute = function () {
+
+    console.log("\generate start");
+    
+    createSetup();  
+    
+    createProjectStructure();
+    
+    console.success('Generated project structure ok');
+};
+
+
+/**
  * Create a default setup file on the current folder
  */
 let createSetup = function () {
@@ -91,19 +106,3 @@ let createProjectStructure = function () {
     
     console.success('Created all files ok');
 }
-
-
-/**
- * Execute the build process
- */
-exports.execute = function () {
-
-    console.log("\generate start");
-    
-    createSetup();  
-    
-    createProjectStructure();
-    
-    console.success('Generated project structure ok');
-};
-

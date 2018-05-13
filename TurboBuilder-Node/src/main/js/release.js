@@ -36,6 +36,54 @@ process.on('exit', () => {
 
 
 /**
+ * Execute the release process
+ */
+exports.execute = function () {
+    
+    console.log("\nrelease start");
+    
+    let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
+    
+    // Delete all files inside the release path folder
+    fm.deleteDirectory(releaseFullPath);
+    
+    buildModule.copyMainFiles(releaseFullPath);
+    
+    if(global.setup.validate.runBeforeBuild){
+        
+        validateModule.execute(false);
+    }
+    
+    if(global.setup.build.lib_php){
+        
+        buildModule.buildPhp(releaseFullPath);
+    }
+    
+    if(global.setup.build.lib_ts){
+    
+        buildModule.buildTypeScript(releaseFullPath);
+    }
+    
+    if(global.setup.release.optimizeJs){
+        
+        minifyJs(releaseFullPath);
+    }
+    
+    if(global.setup.release.generateCodeDocumentation){
+        
+        generateCodeDocumentation(releaseFullPath);
+    }
+    
+    if(global.setup.release.gitChangeLog){
+        
+        createGitChangeLog(releaseFullPath);
+    }
+    
+    console.success('release ok (' + this.getReleaseRelativePath() + ')');
+};
+
+
+/**
  * Gets the path relative to project target where current release version will be generated
  */
 exports.getReleaseRelativePath = function () {
@@ -192,51 +240,3 @@ let createGitChangeLog = function (destPath) {
     
     console.success("changelog ok");
 }
-
-
-/**
- * Execute the release process
- */
-exports.execute = function () {
-    
-    console.log("\nrelease start");
-    
-    let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
-    
-    // Delete all files inside the release path folder
-    fm.deleteDirectory(releaseFullPath);
-    
-    buildModule.copyMainFiles(releaseFullPath);
-    
-    if(global.setup.validate.runBeforeBuild){
-        
-        validateModule.execute(false);
-    }
-    
-    if(global.setup.build.lib_php){
-        
-        buildModule.buildPhp(releaseFullPath);
-    }
-    
-    if(global.setup.build.lib_ts){
-    
-        buildModule.buildTypeScript(releaseFullPath);
-    }
-    
-    if(global.setup.release.optimizeJs){
-        
-        minifyJs(releaseFullPath);
-    }
-    
-    if(global.setup.release.generateCodeDocumentation){
-        
-        generateCodeDocumentation(releaseFullPath);
-    }
-    
-    if(global.setup.release.gitChangeLog){
-        
-        createGitChangeLog(releaseFullPath);
-    }
-    
-    console.success('release ok (' + this.getReleaseRelativePath() + ')');
-};
