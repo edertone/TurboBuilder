@@ -150,7 +150,7 @@ let generateCodeDocumentation = function (destPath) {
         
         let phpDocExec = 'php';
         
-        phpDocExec += ' "' + global.installationPaths.mainResources + sep + 'tools' + sep + 'phpDocumentor.phar"';
+        phpDocExec += ' "' + global.installationPaths.mainResources + sep + 'libs' + sep + 'phpDocumentor.phar"';
         phpDocExec += ' --template="responsive-twig"';
         phpDocExec += ' --visibility="public"';
         phpDocExec += ' --title="' + global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '"';

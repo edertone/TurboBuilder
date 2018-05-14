@@ -153,7 +153,7 @@ let replaceDependenciesIntoTemplate = function () {
         
         let phpunitParentFolder = StringUtils.replace(phpunitDummy, StringUtils.getPathElement(phpunitDummy), '');
         
-        fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + 'tools' + fm.dirSep() + 'phpunit-6.2.3.phar', phpunitParentFolder + fm.dirSep() + 'phpunit-6.2.3.phar');
+        fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + 'libs' + fm.dirSep() + 'phpunit-6.2.3.phar', phpunitParentFolder + fm.dirSep() + 'phpunit-6.2.3.phar');
         
         fm.deleteFile(phpunitDummy);
     }

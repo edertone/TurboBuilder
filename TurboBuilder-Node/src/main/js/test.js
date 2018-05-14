@@ -112,7 +112,7 @@ let testPhp = function (relativeBuildPaths) {
         // Launch unit tests via php executable
         let phpExecCommand = 'php';
         
-        phpExecCommand += ' "' + global.installationPaths.mainResources + sep + 'tools' + sep + 'phpunit-6.2.3.phar"';
+        phpExecCommand += ' "' + global.installationPaths.mainResources + sep + 'libs' + sep + 'phpunit-6.2.3.phar"';
         
         if(global.setup.test.php.coverageReport){
             
