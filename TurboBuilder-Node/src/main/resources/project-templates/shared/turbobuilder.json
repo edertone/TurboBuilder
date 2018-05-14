@@ -13,12 +13,6 @@
 	        "forceReadmeFile": true,
 	        "forceTodoFolder": true,
 	        "resourcesStructure": true,
-	        "phpStructure": true,
-	        "jsStructure": true,
-	        "tsStructure": true,
-	        "tsConfigFile": true,
-	        "javaStructure": true,
-	        "cssStructure": true,
 	        "checkGitIgnore": true
 	    },
 	    "phpNamespaces" : {

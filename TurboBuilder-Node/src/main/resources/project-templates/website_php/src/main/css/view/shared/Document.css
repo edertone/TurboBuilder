@@ -1,0 +1,61 @@
+/* FONTS (You can look at http://everythingfonts.com/ http://www.fontsquirrel.com/tools/webfont-generator for fonts conversion) */
+@font-face {
+    font-family: 'TODO';
+    src: url('../../../resources/shared/fonts/TODO.eot');
+    src: url('../../../resources/shared/fonts/TODO.eot') format('embedded-opentype'),
+         url('../../../resources/shared/fonts/TODO.woff') format('woff'),
+         url('../../../resources/shared/fonts/TODO.ttf') format('truetype'),
+         url('../../../resources/shared/fonts/TODO.svg#TODO') format('svg');
+}
+
+/* Global styles */
+body{
+
+}
+
+/* It is useful to reset all the most common margins and paddings by default */
+p, a, h1, h2, h3, li, span, input, textarea, fieldset{
+	margin: 0px;
+	padding: 0px;
+}
+
+/* A better looking default horizontal rule */
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/* The main div that is used to place the site parts inside */
+.mainContainer{
+	position: relative;
+	width: 90%;
+	max-width: 1500px;
+	margin-left: auto;
+	margin-right: auto;
+	overflow: hidden;
+}
+
+/* Style definition for the main site titles */
+h1{
+	
+}
+
+/* Style definition for the main site subtitles */
+h2{
+	
+}
+
+/* Style definiton for the site main texts */
+p{
+	
+}
+
+
+/* Styles for screens smaller than 850px in width */
+@media (max-width: 850px){
+	
+}
