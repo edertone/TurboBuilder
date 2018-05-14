@@ -44,7 +44,7 @@
 	    "keepUnpackedSrcFiles" : false,
 	    "printTodoFiles" : false,
 	    
-	    "website_php" : {
+	    "site_php" : {
 	    },
 	    
 	    "lib_php" : {

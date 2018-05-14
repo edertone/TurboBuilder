@@ -134,5 +134,27 @@ let createProjectStructure = function (type) {
         console.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.gitignore);
     }
     
+    replaceDependenciesIntoTemplate();
+    
     console.success('Generated ' + type + ' structure');
+}
+
+
+/**
+ * Replaces all the template dummy files (called *.dependency) with the real library ones.
+ * Doing it this way we keep all the big files on a single location
+ */
+let replaceDependenciesIntoTemplate = function () {
+    
+    // Overwrite all phpunit dummy phars with the real one
+    let phpunitDummys = fm.findDirectoryItems(global.runtimePaths.root, /^phpunit.*\.dependency$/, 'absolute');
+    
+    for(let phpunitDummy of phpunitDummys){
+        
+        let phpunitParentFolder = StringUtils.replace(phpunitDummy, StringUtils.getPathElement(phpunitDummy), '');
+        
+        fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + 'tools' + fm.dirSep() + 'phpunit-6.2.3.phar', phpunitParentFolder + fm.dirSep() + 'phpunit-6.2.3.phar');
+        
+        fm.deleteFile(phpunitDummy);
+    }
 }

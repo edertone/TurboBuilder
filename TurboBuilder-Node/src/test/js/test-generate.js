@@ -63,7 +63,7 @@ utils.test("test-generate", "When validation is called, it succeeds", function()
 
 utils.test("test-generate", "When -generate argument is passed again, an error happens", function(){
     
-    utils.assertExecFails('--generate website_php', 'File ' + global.fileNames.setup + ' already exists', "Failed verifying generate already happened");
+    utils.assertExecFails('--generate site_php', 'File ' + global.fileNames.setup + ' already exists', "Failed verifying generate already happened");
 });
 
 
