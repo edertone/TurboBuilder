@@ -55,7 +55,7 @@ exports.execute = function () {
     
     if(buildTypesFound !== 1){
         
-        console.error("Please specify only one of the following on build setup: " + setupBuildTypes.join(","));
+        console.error("Please specify only one of the following on build setup: " + global.setupBuildTypes.join(","));
     }
     
     console.log("\nbuild start: " + buildTypeFound);
