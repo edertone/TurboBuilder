@@ -9,11 +9,13 @@
 
 
 require('./../../main/js/globals');
+const { FilesManager } = require('turbocommons-ts');
 const setupModule = require('./../../main/js/setup');
 const utils = require('./index-utils');
 
 
 let workDir = utils.switchToDirInsideTemp('test-validate');
+let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 utils.test("test-validate", "Create and switch to the tests folder", function(){
@@ -24,7 +26,7 @@ utils.test("test-validate", "Create and switch to the tests folder", function(){
 
 utils.test("test-validate", "Generate new project and launch validation", function(){
     
-    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    utils.assertExecContains('-g lib_ts', "Failed -g argument", "Generated project structure ok");
     utils.assertExecContains('-l', "Failed validation", "validate ok");
 });
 
@@ -69,7 +71,7 @@ utils.test("test-validate", "modify project config to verify copyright headers, 
             copyrightHeaders: [
                 {
                     "enabled": true,
-                    "path": "extras/copyrightHeaders/TsFiles-Header.txt",
+                    "path": "extras/copyright headers/TsFiles-Header.txt",
                     "appliesTo": "src",
                     "includes": ["ts"],
                     "excludes": ["file3"]
@@ -81,8 +83,16 @@ utils.test("test-validate", "modify project config to verify copyright headers, 
     utils.saveToSetupFile(workDir, setup);
     
     // Create the copyright header template
-    utils.assertCreateFolder(workDir + '/extras/copyrightHeaders');
-    utils.assertSaveFile(workDir + '/extras/copyrightHeaders/TsFiles-Header.txt', "/* this header is correct */\n");
+    utils.assertCreateFolder(workDir + '/extras/copyright headers');
+    utils.assertSaveFile(workDir + '/extras/copyright headers/TsFiles-Header.txt', "/* this header is correct */\n");
+    
+    // Add the correct header to all existing ts files on the generated project structure
+    let tsFiles = fm.findDirectoryItems(workDir, /.*\.ts$/i, 'absolute');
+    
+    for(let tsFile of tsFiles){
+        
+        utils.assertSaveFile(tsFile, "/* this header is correct */\n\n\nand some more text");
+    }
     
     // Add some files with the right header
     utils.assertSaveFile(workDir + '/src/main/ts/index.ts', "/* this header is correct */\n\n\nand some more text");

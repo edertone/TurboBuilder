@@ -9,10 +9,12 @@
 
 
 require('./../../main/js/globals');
+const { FilesManager } = require('turbocommons-ts');
 const utils = require('./index-utils');
 
 
 let workDir = utils.switchToDirInsideTemp('test-build');
+let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 utils.test("test-build", "Create and switch to the tests folder", function(){
@@ -35,7 +37,7 @@ utils.test("test-build", "When --build argument is passed on empty folder, error
 
 utils.test("test-build", "When -b argument is passed after generating a project structure, build fails with no build type specified", function(){
     
-    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    utils.assertExecContains('-g lib_ts', "Failed -g argument", "Generated project structure ok");
     utils.assertExecFails('-b', 'Please specify only one of the following on build setup', 'build should have failed when nothing is enabled on setup build');
 });
 
@@ -73,6 +75,9 @@ utils.test("test-build", "When -b --build arguments are passed after enabling ts
     setup.build = {lib_ts: {}};
     utils.saveToSetupFile(workDir, setup);
     
+    // Delete the src ts folder
+    fm.deleteDirectory(workDir + fm.dirSep() + 'src' + fm.dirSep() + 'main' + fm.dirSep() + 'ts', false);
+    
     utils.assertExecFails('-b', 'no files to build', 'build should have failed when no files to build');
     utils.assertExecFails('--build', 'no files to build', 'build should have failed when no files to build');
 });
@@ -93,7 +98,7 @@ utils.test("test-build", "When -b argument is passed after generating a project 
     
     let testDir = utils.switchToDirInsideTemp('test-build-1');
     
-    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    utils.assertExecContains('-g lib_php', "Failed -g argument", "Generated project structure ok");
     
     let setup = utils.readSetupFile(testDir);
     

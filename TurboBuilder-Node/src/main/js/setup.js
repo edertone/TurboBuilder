@@ -157,7 +157,7 @@ let loadSetupFromDisk = function () {
         console.error(global.fileNames.setup + ' setup file not found');
     }
     
-    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-template' + fm.dirSep() + global.fileNames.setup;
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
     
     // Load the template setup
     global.setup = JSON.parse(fm.readFile(templateSetupPath));

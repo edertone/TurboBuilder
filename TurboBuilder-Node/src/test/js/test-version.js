@@ -33,7 +33,7 @@ utils.test("test-version", "When --version argument is passed, application versi
 
 utils.test("test-version", "When -v argument is passed after creating an empty project, application version is shown", function(){
     
-    utils.exec('-g');
+    utils.exec('-g lib_php');
     utils.assertExecContains('-v', "Failed showing help with -v", setupModule.getBuilderVersion());
 });
 

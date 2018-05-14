@@ -28,7 +28,7 @@ const syncModule = require('./sync');
 program
     .alias('tb')
     .version(console.printVersionInfo(), '-v, --version')
-    .option('-g, --generate', 'Create a full project structure on the current directory')
+    .option('-g, --generate <type>', 'Create a full project structure on the current directory. Allowed types: ' + global.setupBuildTypes.join(', '))
     .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder')
     .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
@@ -53,7 +53,7 @@ if(!program.generate &&
 // Generate the default project files if necessary
 if (program.generate){
     
-    generateModule.execute();
+    generateModule.execute(program.generate);
     process.exit(0);
 }
 

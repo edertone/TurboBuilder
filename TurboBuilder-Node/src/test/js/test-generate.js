@@ -22,9 +22,15 @@ utils.test("test-generate", "Create and switch to the generate folder", function
 });
 
 
+utils.test("test-generate", "When -g argument is passed without parameters, build fails", function(){
+    
+    utils.assertExecFails('-g rt', "invalid project type", "Generate without arguments should fail");
+});
+
+
 utils.test("test-generate", "When -g argument is passed, application files are created", function(){
     
-    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    utils.assertExecContains('-g lib_php', "Failed -g argument", "Generated project structure ok");
     
     utils.assertIsFile(workDir + '/extras/todo/Features.txt');
     utils.assertIsFile(workDir + '/extras/todo/Unit tests.txt');
@@ -38,14 +44,14 @@ utils.test("test-generate", "When validation is called, it succeeds", function()
 
 utils.test("test-generate", "When -g argument is passed again, an error happens", function(){
     
-    utils.assertExecFails('-g', 'File ' + global.fileNames.setup + ' already exists', "Failed verifying generate already happened");
+    utils.assertExecFails('-g lib_php', 'File ' + global.fileNames.setup + ' already exists', "Failed verifying generate already happened");
 });
 
 
 utils.test("test-generate", "When -generate argument is passed, application files are created", function(){
     
     utils.assertFolderEmpty(utils.switchToDirInsideTemp('test-generate-2'));
-    utils.assertExecContains('--generate', "Failed -generate argument", "Generated project structure ok");
+    utils.assertExecContains('--generate lib_php', "Failed -generate argument", "Generated project structure ok");
 });
 
 
@@ -57,7 +63,7 @@ utils.test("test-generate", "When validation is called, it succeeds", function()
 
 utils.test("test-generate", "When -generate argument is passed again, an error happens", function(){
     
-    utils.assertExecFails('--generate', 'File ' + global.fileNames.setup + ' already exists', "Failed verifying generate already happened");
+    utils.assertExecFails('--generate website_php', 'File ' + global.fileNames.setup + ' already exists', "Failed verifying generate already happened");
 });
 
 
@@ -80,7 +86,7 @@ utils.test("test-generate", "When generated setup builderVersion value is modifi
     
     let testDir = utils.switchToDirInsideTemp('test-generate-5');
     
-    utils.assertExecContains('-g', "Failed -g argument", "Generated project structure ok");
+    utils.assertExecContains('-g lib_ts', "Failed -g argument", "Generated project structure ok");
     
     let setup = utils.readSetupFile(testDir);
     

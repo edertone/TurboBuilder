@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager, StringUtils } = require('turbocommons-ts');
+const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
 const console = require('./console');
 const validateModule = require('./validate');
 const setupModule = require('./setup');
@@ -15,26 +15,33 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 
 /**
- * Execute the build process
+ * Execute the generate process
  */
-exports.execute = function () {
+exports.execute = function (type) {
 
-    console.log("\generate start");
+    validate(type);
     
-    createSetup();  
+    console.log("\ngenerate " + type + " start");
     
-    createProjectStructure();
+    createProjectStructure(type);
+    
+    createSetupFile(type);
     
     console.success('Generated project structure ok');
 };
 
 
 /**
- * Create a default setup file on the current folder
+ * Check if project structure can be created
  */
-let createSetup = function () {
+let validate = function (type) {
+
+    if(global.setupBuildTypes.indexOf(type) < 0){
+        
+        console.error("invalid project type");
+    }
     
-    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-template' + fm.dirSep() + global.fileNames.setup;
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
         
@@ -50,13 +57,43 @@ let createSetup = function () {
         
         console.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
+}
+
+
+/**
+ * Customize the default setup file to the project type
+ */
+let createSetupFile = function (type) {
     
-    // Read the setup file, replace the expected builder version with the current one and save it
-    let setupContents = fm.readFile(templateSetupPath);
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
     
-    setupContents = StringUtils.replace(setupContents, '"builderVersion": ""', '"builderVersion": "' + setupModule.getBuilderVersion() + '"');
+    // Read the default template setup file
+    let setupContents = JSON.parse(fm.readFile(templateSetupPath));
+    
+    // Replace the expected builder version with the current one and save it
+    setupContents.metadata.builderVersion = setupModule.getBuilderVersion();
+    
+    // Customize the setup data to the project type
+    if(type === 'lib_php'){
         
-    if(!fm.saveFile(global.runtimePaths.setupFile, setupContents)){
+        for (let key of ObjectUtils.getKeys(setupContents.build)) {
+            
+            if(key !== type){
+                
+                delete setupContents.build[key]; 
+            }
+        }
+        
+        for (let key of ObjectUtils.getKeys(setupContents.test)) {
+            
+            if(key !== 'php'){
+                
+                delete setupContents.test[key]; 
+            }
+        }
+    }
+    
+    if(!fm.saveFile(global.runtimePaths.setupFile, JSON.stringify(setupContents, null, 4))){
         
         console.error('Error creating ' + global.fileNames.setup + ' file');
     }
@@ -68,41 +105,34 @@ let createSetup = function () {
 /**
  * Generate the project folders and files on the current runtime directory
  */
-let createProjectStructure = function () {
+let createProjectStructure = function (type) {
     
     let sep = fm.dirSep();
+    let templatesFolder = global.installationPaths.mainResources + sep + 'project-templates';
     
-    // Create js, ts, php, java folders
-    if(!fm.createDirectory(global.runtimePaths.main + sep + 'js', true) ||
-       !fm.createDirectory(global.runtimePaths.main + sep + 'ts', true) ||
-       !fm.createDirectory(global.runtimePaths.main + sep + 'php', true) ||
-       !fm.createDirectory(global.runtimePaths.main + sep + 'java', true) ||
-       !fm.createDirectory(global.runtimePaths.mainResources, true)){
+    // Copy the project type specific files
+    fm.copyDirectory(templatesFolder + sep + type, global.runtimePaths.root);
     
-        console.error('Failed creating js, ts, php, java, resources folders inside: ' + global.runtimePaths.main);
-    }
-    
-    // Create test folder
-    if(!fm.createDirectory(global.runtimePaths.test)){
-        
-        console.error('Failed creating: ' + global.runtimePaths.test);
-    }
-    
-    // Copy the extras folder from template
+    // Copy the extras folder
     if(!fm.createDirectory(global.runtimePaths.extras) ||
-       !fm.copyDirectory(global.installationPaths.mainResources + sep + 'project-template' + sep + 'extras', global.runtimePaths.extras)){
-        
+       !fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras)){
+    
         console.error('Failed creating: ' + global.runtimePaths.extras);
     }
     
-    console.success('Created all folders ok');
-    
     // Create readme file
-    if(!fm.copyFile(global.installationPaths.mainResources + sep + 'project-template' + sep + global.fileNames.readme,
-                    global.runtimePaths.root + sep + global.fileNames.readme)){
+    if(!fm.copyFile(templatesFolder + sep + 'shared' + sep + global.fileNames.readme,
+       global.runtimePaths.root + sep + global.fileNames.readme)){
         
         console.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.readme);
     }
     
-    console.success('Created all files ok');
+    // Copy the gitignore file
+    if(!fm.copyFile(templatesFolder + sep + 'shared' + sep + 'gitignore.txt',
+        global.runtimePaths.root + sep + global.fileNames.gitignore)){
+         
+        console.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.gitignore);
+    }
+    
+    console.success('Generated ' + type + ' structure');
 }

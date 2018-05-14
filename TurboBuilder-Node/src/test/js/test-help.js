@@ -37,7 +37,7 @@ utils.test("test-help", "When launched without args on the empty tests folder, h
 
 utils.test("test-help", "When -h argument is passed after creating an empty project, application version is shown", function(){
     
-    utils.exec('-g');
+    utils.exec('-g lib_php');
     utils.assertExecContains('-h', "Failed showing help", "Usage: turbobuilder|tb [options]");
 });
 
