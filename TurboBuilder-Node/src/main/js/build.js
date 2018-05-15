@@ -134,7 +134,32 @@ exports.copyMainFiles = function (destPath) {
  */
 exports.buildSitePhp = function (destPath) {
     
-    // TODO
+    let sep = fm.dirSep();
+    let destMain = destPath + sep + 'main';
+    let destDist = destPath + sep + 'dist';
+    let destSite = destDist + sep + 'site';
+    
+    // Create the dist folder if not exists
+    if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
+        
+        console.error('Could not create ' + destDist);
+    }
+    
+    // Create the site folder
+    if(!fm.createDirectory(destSite)){
+        
+        console.error('Could not create ' + destSite);
+    }
+    
+    fm.copyDirectory(destMain, destSite);
+    
+    // Move htaccess file from site to dist
+    fm.copyFile(destSite + sep + '.htaccess', destDist + sep + '.htaccess');
+    fm.deleteFile(destSite + sep + '.htaccess');
+    
+    // Create global css and js files
+    fm.saveFile(destSite + sep + 'global.css', this.mergeFilesFromFolder(destSite, 'css', true));
+    fm.saveFile(destSite + sep + 'global.js', this.mergeFilesFromFolder(destSite, 'js', true));   
 }
 
 
@@ -244,6 +269,31 @@ exports.buildLibTs = function (destPath) {
             fm.deleteDirectory(compiledFolder);   
         }
     }
+}
+
+
+/**
+ * Join all the files from the specified folder and get a string with the result
+ */
+exports.mergeFilesFromFolder = function (path, extension, deleteFiles = false) {
+    
+    let regex = new RegExp('.*\.' + extension + '$', 'i');
+    
+    let files = fm.findDirectoryItems(path, regex, 'absolute', 'files');
+    
+    let result = '';
+        
+    for (let file of files) {
+        
+        result += fm.readFile(file) + "\n\n";
+    }
+    
+    if(deleteFiles){
+        
+        fm.deleteFiles(files);
+    }
+    
+    return result;
 }
 
 

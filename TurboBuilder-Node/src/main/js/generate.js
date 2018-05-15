@@ -141,20 +141,37 @@ let createProjectStructure = function (type) {
 
 
 /**
- * Replaces all the template dummy files (called *.dependency) with the real library ones.
+ * Replaces all the template dummy files (called *.tbdependency) with the real library ones.
  * Doing it this way we keep all the big files on a single location
  */
 let replaceDependenciesIntoTemplate = function () {
     
-    // Overwrite all phpunit dummy phars with the real one
-    let phpunitDummys = fm.findDirectoryItems(global.runtimePaths.root, /^phpunit.*\.dependency$/, 'absolute');
+    let sep = fm.dirSep();
+    let libsPath = global.installationPaths.mainResources + sep + 'libs';
+
+    let tbdependencies = fm.findDirectoryItems(global.runtimePaths.root, /^.*\.tbdependency$/, 'absolute');
     
-    for(let phpunitDummy of phpunitDummys){
+    for(let tbdependency of tbdependencies){
         
-        let phpunitParentFolder = StringUtils.replace(phpunitDummy, StringUtils.getPathElement(phpunitDummy), '');
+        let depFile = StringUtils.getPathElement(tbdependency);
+        let depParent = StringUtils.replace(tbdependency, StringUtils.getPathElement(tbdependency), '');
         
-        fm.copyFile(global.installationPaths.mainResources + fm.dirSep() + 'libs' + fm.dirSep() + 'phpunit-6.2.3.phar', phpunitParentFolder + fm.dirSep() + 'phpunit-6.2.3.phar');
         
-        fm.deleteFile(phpunitDummy);
+        if(depFile === 'normalize.tbdependency'){
+            
+            fm.copyFile(libsPath + sep + 'normalize.css', depParent + sep + 'normalize.css');
+        }
+        
+        if(depFile === 'jquery.tbdependency'){
+            
+            fm.copyFile(libsPath + sep + 'jquery.js', depParent + sep + 'jquery.js');
+        }
+        
+        if(depFile === 'phpunit.tbdependency'){
+            
+            fm.copyFile(libsPath + sep + 'phpunit-6.2.3.phar', depParent + sep + 'phpunit-6.2.3.phar');
+        }
+
+        fm.deleteFile(tbdependency);
     }
 }

@@ -99,6 +99,8 @@ let validateProjectStructure = function () {
         return;
     }
     
+    // Todo - get project structure from template and check it on runtime folder
+    
     // Check that all the project mandatory folders and files exist
 //    for (let key of ObjectUtils.getKeys(global.runtimePaths)) {
 //        
