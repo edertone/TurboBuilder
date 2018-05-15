@@ -1,4 +1,0 @@
-User-agent: * 
-Disallow: /_dev/
-Disallow: /server/
-Allow: /
