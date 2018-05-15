@@ -56,12 +56,12 @@ exports.execute = function () {
     
     if(global.setup.build.lib_php){
         
-        buildModule.buildPhp(releaseFullPath);
+        buildModule.buildLibPhp(releaseFullPath);
     }
     
     if(global.setup.build.lib_ts){
     
-        buildModule.buildTypeScript(releaseFullPath);
+        buildModule.buildLibTs(releaseFullPath);
     }
     
     if(global.setup.release.optimizeJs){

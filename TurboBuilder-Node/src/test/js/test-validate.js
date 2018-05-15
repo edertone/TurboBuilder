@@ -31,12 +31,6 @@ utils.test("test-validate", "Generate new project and launch validation", functi
 });
 
 
-utils.test("test-validate", "Validation is executed before build by default and fails with default config", function(){
-    
-    utils.assertExecFails('-b', "Please specify only one of the following on build setup", "Build should have failed with default setup values");
-});
-
-
 utils.test("test-validate", "Validation is executed before build by default when build works as expected", function(){
     
     utils.saveToSetupFile(workDir, {metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}});

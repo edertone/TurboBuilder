@@ -111,6 +111,18 @@ exports.exec = function (options) {
 
 
 /**
+ * Verify that the condition is true
+ */
+exports.assertTrue = function (value) {
+
+    if(!value){
+    
+        console.error('Assert true failed: ' + value);
+    }
+};
+
+
+/**
  * Verify that the specified folder exists
  */
 exports.assertIsFile = function (path) {

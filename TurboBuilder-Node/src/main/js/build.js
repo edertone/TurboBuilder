@@ -47,10 +47,10 @@ exports.execute = function () {
         }
     }
     
-    // If no builder is enabled launch error
+    // If no build type is enabled launch error
     if(buildTypesFound === 0){
          
-        console.error("Nothing to build. Please enable any of [" + setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
+        console.error("Nothing to build. Please enable any of [" + global.setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
     }
     
     if(buildTypesFound !== 1){
@@ -73,14 +73,20 @@ exports.execute = function () {
         validateModule.execute(false);
     }
     
+    // Perform custom build depending on project type
+    if(global.setup.build.site_php){
+        
+        this.buildSitePhp(buildFullPath);
+    }
+    
     if(global.setup.build.lib_php){
         
-        this.buildPhp(buildFullPath);
+        this.buildLibPhp(buildFullPath);
     }
     
     if(global.setup.build.lib_ts){
     
-        this.buildTypeScript(buildFullPath);
+        this.buildLibTs(buildFullPath);
     }
     
     console.success('build ok');
@@ -112,10 +118,8 @@ exports.copyMainFiles = function (destPath) {
     // Copy the main folder to the target
     fm.createDirectory(destMain, true);
     
-    // Ignore all the following files: thumbs.db .svn .git
-    // TODO let filesToCopy = fm.findDirectoryItems(global.runtimePaths.main, /^(?!.*(thumbs\.db|\.svn|\.git)$)/i, 'absolute', 'files');
-    
-    // TODO fm.copyFiles(filesToCopy, global.runtimePaths.targetDevRoot + fm.dirSep() + 'main');
+    // Delete all the following files: thumbs.db .svn .git
+    // TODO let filesToDelete = fm.findDirectoryItems(global.runtimePaths.main, /^(?!.*(thumbs\.db|\.svn|\.git)$)/i, 'absolute', 'files');
     
     fm.copyDirectory(global.runtimePaths.main, destMain);
     
@@ -126,9 +130,18 @@ exports.copyMainFiles = function (destPath) {
 
 
 /**
- * Execute the php build process to the specified dest folder
+ * Execute the site_php build process to the specified dest folder
  */
-exports.buildPhp = function (destPath) {
+exports.buildSitePhp = function (destPath) {
+    
+    // TODO
+}
+
+
+/**
+ * Execute the lib_php build process to the specified dest folder
+ */
+exports.buildLibPhp = function (destPath) {
     
     let sep = fm.dirSep();
     let destMain = destPath + sep + 'main';
@@ -171,9 +184,9 @@ exports.buildPhp = function (destPath) {
 
 
 /**
- * Execute the typescript build process to the specified dest folder
+ * Execute the lib_ts build process to the specified dest folder
  */
-exports.buildTypeScript = function (destPath) {
+exports.buildLibTs = function (destPath) {
     
     let sep = fm.dirSep();
     let destMain = destPath + sep + 'main';

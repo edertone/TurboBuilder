@@ -74,15 +74,15 @@ let createSetupFile = function (type) {
     setupContents.metadata.builderVersion = setupModule.getBuilderVersion();
     
     // Customize the setup data to the project type
-    if(type === 'lib_php'){
+    for (let key of ObjectUtils.getKeys(setupContents.build)) {
         
-        for (let key of ObjectUtils.getKeys(setupContents.build)) {
+        if(key !== type){
             
-            if(key !== type){
-                
-                delete setupContents.build[key]; 
-            }
+            delete setupContents.build[key]; 
         }
+    }
+    
+    if(type === 'site_php' || type === 'lib_php'){
         
         for (let key of ObjectUtils.getKeys(setupContents.test)) {
             
