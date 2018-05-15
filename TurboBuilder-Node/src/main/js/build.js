@@ -159,7 +159,10 @@ exports.buildSitePhp = function (destPath) {
     
     // Create global css and js files
     fm.saveFile(destSite + sep + 'global.css', this.mergeFilesFromFolder(destSite, 'css', true));
-    fm.saveFile(destSite + sep + 'global.js', this.mergeFilesFromFolder(destSite, 'js', true));   
+    fm.saveFile(destSite + sep + 'global.js', this.mergeFilesFromFolder(destSite, 'js', true));
+    
+    // Create view css and js files
+    // TODO
 }
 
 
