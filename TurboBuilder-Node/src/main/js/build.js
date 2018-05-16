@@ -158,6 +158,12 @@ exports.buildSitePhp = function (destPath) {
     fm.deleteFile(destSite + sep + '.htaccess');
     
     // Create global css and js files
+    
+    // -- Warning - sort is important, normalize must be first
+    // 1 - merge libs
+    
+    // 2 - merge components
+    
     fm.saveFile(destSite + sep + 'global.css', this.mergeFilesFromFolder(destSite, 'css', true));
     fm.saveFile(destSite + sep + 'global.js', this.mergeFilesFromFolder(destSite, 'js', true));
     

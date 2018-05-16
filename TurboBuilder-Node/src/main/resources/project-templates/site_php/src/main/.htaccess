@@ -1,59 +1,33 @@
 RewriteEngine on
 
-# Redirect 404 errors to the error page
-ErrorDocument 404 /Error404.php
+# Redirect non https to https
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Redirect the www version to NO www
-RewriteCond %{HTTPS} !=on
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
 # Prevent resources hotlinking (Bandwith stealing by using them on another websites)
-RewriteCond %{HTTP_REFERER} !^$
-RewriteCond %{HTTP_REFERER} ^https?://(www\.)?([^/]+)/.*$ [NC]
-RewriteCond %2#%{HTTP_HOST} !^(.+)#(www\.)?\1$ [NC]
-RewriteRule \.(js|bmp|gif|jpe?g|png)$ - [F,L,NC]
+#RewriteCond %{HTTP_REFERER} !^$
+#RewriteCond %{HTTP_REFERER} ^https?://(www\.)?([^/]+)/.*$ [NC]
+#RewriteCond %2#%{HTTP_HOST} !^(.+)#(www\.)?\1$ [NC]
+#RewriteRule \.(js|bmp|gif|jpe?g|png)$ - [F,L,NC]
 
-# Show a forbidden error for all the folders and files that cannot be directly accessed via http
-RewriteRule ^(.*)Setup(.*)\.xml$ - [F,L,NC]
-RewriteRule ^_release(.*) - [F,L,NC]
-RewriteRule ^php(.*) - [F,L,NC]
+# Redirect all root file urls (that do not have a slash and have a dot) to the site folder
+RewriteRule ^([^/]*)\.(.*)$ site/$1.$2 [L]
 
-# Storage will only allow the custom and jsCode folders to be accessed. all the others, will be forbidden
-RewriteCond %{THE_REQUEST} !^(.*)custom(.*) [NC]
-RewriteCond %{THE_REQUEST} !^(.*)cache/jsCode(.*) [NC]
-RewriteRule ^storage/ - [F,L,NC]
+# Redirect all urls to the index entry point
+RewriteCond %{REQUEST_URI} !site/ [NC]
+RewriteCond %{REQUEST_URI} !resources/ [NC]
+RewriteCond %{REQUEST_URI} !storage [NC]
+RewriteRule ^(.*)$ site/index.php?q=$1 [L]
 
-# Redirect versioned files to the real ones.This prevents browsers from caching resources that have changed with a new build
-# TODO - adaptar a la nova versio de turbo
-# RewriteCond %{REQUEST_URI} !-build-@build.number@\.(jpg|png|gif|svg)$
-# RewriteRule ^(.*)-build-(.*).(jpg|png|gif|svg)$ /$1-build-@build.number@.$3 [R=301,L]
-# RewriteRule ^(.*)-build-(@build.number@).(js|css|jpg|png|gif|svg)$ $1.$3 [L]
+# Redirect resources to the resources folder
+RewriteRule ^resources/(.*)$ site/resources/$1 [L]
 
-# Redirect javascript folder to itself, to avoid it to be detected as a locale (luckily, there is no locale code called js)
-RewriteRule ^js/(.*)$ js/$1 [L]
-
-# Redirect picture paths to the respective GetPicture service.
-# TODO: aixo segurament sobra
-# RewriteRule ^picture/(.*).jpg$ server/php/http/pictures/GetPicture.php?p=$1 [L]
-# RewriteRule ^picture/(.*).png$ server/php/http/pictures/GetPicture.php?p=$1 [L]
-
-# Redirect a url in the form: "xx/view/param1/../paramN" to: "index.php?l=xx&p=param1/../paramN"
-RewriteRule ^(..)/(.*)$ index.php/?l=$1&p=$2 [L]
-
-
-
-# PENDENTS PER REVISAR ------
-
-# TODO: més info: http://stackoverflow.com/questions/117931/apache-mod-rewrite-one-rule-for-any-number-of-possibilities/119306#119306
-# RewriteRule ^http/(.*)$ index.php/?l=$1&p=$2 [L]
-
-# TODO:
-# RewriteRule ^server/http/(.*)$ index.php/?l=$1&p=$2 [L]
- 
-# Reaching here means url does not match any of our patterns. We will try to put an ending slash, and redirect. 
-# TODO: aixo pot no ser necessari ja
-# RewriteRule ^(..)/(.*)([^/])$ http://%{HTTP_HOST}%{REQUEST_URI}/ [L,R=301]
+# Redirect 404 errors to the error page
+ErrorDocument 404 /site/error-404.php
 
 
 # CUSTOM RULES - HERE
