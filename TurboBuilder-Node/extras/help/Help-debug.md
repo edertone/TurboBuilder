@@ -13,7 +13,7 @@ To debug the application itself:
 
 Application will be paused at the very first line of code
 
-### Launch chrome
+### 2 Launch chrome
 
 Open the browser, and natigate to:
 
@@ -21,4 +21,4 @@ chrome://inspect
 
 Click the "Open dedicated DevTools for Node" link
 
-### Start debuggin
+### 3 Start debuggin
