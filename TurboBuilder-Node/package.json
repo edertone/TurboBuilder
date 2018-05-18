@@ -7,8 +7,8 @@
     "src/test"
   ],
   "scripts": {
-    "test": "node src/test/js/index.js",
-    "test-debug": "node --inspect-brk src/test/js/index.js"
+    "test": "node node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json",
+    "test-debug": "node --inspect-brk node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json"
   },
   "bin": {
     "tb": "./src/main/js/turbobuilder.js",
@@ -26,7 +26,9 @@
     "typedoc": "0.11.1",
     "typescript": "2.7.2",
     "uglify-es": "3.3.9",
-    "webpack": "3.10.0"
+    "webpack": "3.10.0",
+    "jasmine": "3.1.0",
+    "selenium-webdriver": "4.0.0-alpha.1"
   },
   "keywords": [
     "project",
