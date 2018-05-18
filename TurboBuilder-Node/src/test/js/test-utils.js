@@ -46,7 +46,7 @@ exports.switchToExecutionDir = function () {
  */
 exports.createAndSwitchToTempFolder = function (dirName) {
   
-    let tmp = this.fm.createTempDirectory(dirName, true);
+    let tmp = this.fm.createTempDirectory(dirName);
         
     process.chdir(tmp);
     

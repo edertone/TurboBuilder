@@ -83,6 +83,11 @@ if (program.release){
     releaseModule.execute();
 }
 
+if (program.sync){
+    
+    syncModule.execute();
+}
+
 if (program.test){
     
     if (!program.build && !program.release){
@@ -91,11 +96,6 @@ if (program.test){
     }
     
     testModule.execute(program.build, program.release);
-}
-
-if (program.sync){
-    
-    syncModule.execute();
 }
 
 // Print the todo folder contents on console if necessary
