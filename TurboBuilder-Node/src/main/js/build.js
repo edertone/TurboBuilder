@@ -108,7 +108,8 @@ exports.getBuildRelativePath = function () {
 exports.copyMainFiles = function (destPath) {
     
     // If source file is empty, alert the user
-    if(fm.findDirectoryItems(global.runtimePaths.main, /.*/i, 'relative', 'files').length === 0){
+    if(!fm.isDirectory(global.runtimePaths.main) ||
+       fm.findDirectoryItems(global.runtimePaths.main, /.*/i, 'relative', 'files').length === 0){
         
         console.error('no files to build');
     }
