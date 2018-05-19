@@ -1,18 +1,2 @@
 - Implement unit tests: print TODO file to console feature both for test-build and test-release
-- Implement unit tests: php namespaces validation functionality 
-- Try to implement some unit tests related to the sync feature
-- Implement tests for the site_php htaccess file:
-		http://localhost mut redirect to https://localhost
-		https://localhost - Must direct to the home page
-		https://localhost/resources/.. - Must direct to the resources folder
-		https://localhost/global.css - must show the css global file
-		https://localhost/global.js - must show the jss global file
-		https://localhost/robots.txt - must show the file
-		https://localhost/somenonexistingfile.txt - must show 404 error
-		https://localhost/app must redirect to index
-		https://localhost/app/ must redirect to index
-		https://localhost/storage/ must redirect to the storage folder
-		https://localhost/storage must redirect to the storage folder
-		...
-		
-	Test that site works also inside a subfolder of the web server: https://localhost/somefolder/global.js
+- Implement unit tests: php namespaces validation functionality
