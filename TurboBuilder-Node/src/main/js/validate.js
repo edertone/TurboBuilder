@@ -136,31 +136,28 @@ let validateProjectStructure = function () {
 let validateCopyrightHeaders = function () {
     
     for (let validator of global.setup.validate.copyrightHeaders) {
+    
+        let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
         
-        if(validator.enabled){
+        let regex = new RegExp('^.*(' + validator.includes.join('|') + ')$', 'i');
+        
+        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, regex, 'absolute', 'files');
+        
+        for (let fileToValidate of filesToValidate){
             
-            let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
+            let fileIsExcluded = false;
             
-            let regex = new RegExp('^.*(' + validator.includes.join('|') + ')$', 'i');
-            
-            let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, regex, 'absolute', 'files');
-            
-            for (let fileToValidate of filesToValidate){
-                
-                let fileIsExcluded = false;
-                
-                for(let excluded of validator.excludes){
-                   
-                    if(fileToValidate.indexOf(excluded) >= 0){
-                        
-                        fileIsExcluded = true;
-                    }
-                }
-                
-                if(!fileIsExcluded && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+            for(let excluded of validator.excludes){
+               
+                if(fileToValidate.indexOf(excluded) >= 0){
                     
-                    errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
+                    fileIsExcluded = true;
                 }
+            }
+            
+            if(!fileIsExcluded && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+                
+                errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
             }
         }
     }

@@ -24,8 +24,15 @@ exports.execute = function (type) {
     console.log("\ngenerate " + type + " start");
     
     createProjectStructure(type);
+   
+    // Generate a custom project setup and save it to file
+    if(!fm.saveFile(global.runtimePaths.setupFile,
+            JSON.stringify(setupModule.customizeSetupTemplateToProjectType(type), null, 4))){
+        
+        console.error('Error creating ' + global.fileNames.setup + ' file');
+    }
     
-    createSetupFile(type);
+    console.success('Created ' + global.fileNames.setup + ' file');
     
     console.success('Generated project structure ok');
 };
@@ -57,48 +64,6 @@ let validate = function (type) {
         
         console.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
-}
-
-
-/**
- * Customize the default setup file to the project type
- */
-let createSetupFile = function (type) {
-    
-    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
-    
-    // Read the default template setup file
-    let setupContents = JSON.parse(fm.readFile(templateSetupPath));
-    
-    // Replace the expected builder version with the current one and save it
-    setupContents.metadata.builderVersion = setupModule.getBuilderVersion();
-    
-    // Customize the setup data to the project type
-    for (let key of ObjectUtils.getKeys(setupContents.build)) {
-        
-        if(key !== type){
-            
-            delete setupContents.build[key]; 
-        }
-    }
-    
-    if(type === 'site_php' || type === 'lib_php'){
-        
-        for (let key of ObjectUtils.getKeys(setupContents.test)) {
-            
-            if(key !== 'php'){
-                
-                delete setupContents.test[key]; 
-            }
-        }
-    }
-    
-    if(!fm.saveFile(global.runtimePaths.setupFile, JSON.stringify(setupContents, null, 4))){
-        
-        console.error('Error creating ' + global.fileNames.setup + ' file');
-    }
-    
-    console.success('Created ' + global.fileNames.setup + ' file');    
 }
 
 

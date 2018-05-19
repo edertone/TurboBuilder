@@ -23,14 +23,6 @@
 	    },
 	    "copyrightHeaders": [
 	    	{
-	    		"enabled": false,
-	    		"path": "path/to/some/CoyprightHeaderFile.txt",
-	    		"appliesTo": "src",
-	    		"includes": ["js", "ts", "some-filename-pattern"],
-	    		"excludes": ["some-filename-pattern"]
-	    	},
-	    	{
-	    		"enabled": false,
 	    		"path": "path/to/some/CoyprightHeaderFile.txt",
 	    		"appliesTo": "src",
 	    		"includes": ["js", "ts", "some-filename-pattern"],
@@ -52,7 +44,7 @@
 	    },
 	    
 	    "lib_java" : {
-	    	"createJar": false
+	    	"createJar": true
 	    },
 	    
 	    "lib_ts" : {
@@ -78,25 +70,7 @@
 	    "optimizePictures": true,
 	    "generateCodeDocumentation": true
     },
-    
-    "test": {
-	    "php": {
-	        "enabled": false,
-	        "coverageReport": true,
-	        "coverageReportOpenAfterTests": true
-	    },	    
-	    "js": {
-	        "enabled": false
-	    },	    
-	    "ts": {
-	        "enabled": false,
-	        "httpServerPort": "8185",
-	        "targets": ["ts", "es5", "es6"],
-	        "browsers": {"chrome": false, "firefox": false, "iexplore": false},
-	        "testingLibrary": "qunit"
-	    }
-    },    
-    
+        
     "sync": [
     	{
     		"type": "FTP",
@@ -108,5 +82,29 @@
     		"user": "serverUser",
     		"psw": "serverpsw"
     	}
+    ],
+    
+    "test": [
+		{
+	    	"type": "phpUnit",
+	        "coverageReport": true,
+	        "coverageReportOpenAfterTests": true
+	    },	    
+	    {
+	    	"type": "jasmine",
+	        "coverageReport": true,
+	        "coverageReportOpenAfterTests": true
+	    },
+	    {
+	    	"type": "qunit",
+	        "httpServerPort": "8185",
+	        "targets": ["ts", "es5", "es6"],
+	        "browsers": {"chrome": false, "firefox": false, "iexplore": false},
+	        "testingLibrary": "qunit"
+	    },	    
+	    {
+	    	"type": "site_php",
+	        "TODO": "TODO"
+	    }
     ]
 }

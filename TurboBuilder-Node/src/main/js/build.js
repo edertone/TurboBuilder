@@ -32,33 +32,8 @@ process.on('exit', () => {
  * Execute the build process
  */
 exports.execute = function () {
-
-    // Find how many build types have been specified
-    let buildKeys = ObjectUtils.getKeys(global.setup.build);
-    let buildTypeFound = '';
-    let buildTypesFound = 0;
     
-    for (let type of setupBuildTypes) {
-        
-        if(buildKeys.indexOf(type) >= 0){
-            
-            buildTypeFound = type;
-            buildTypesFound ++;
-        }
-    }
-    
-    // If no build type is enabled launch error
-    if(buildTypesFound === 0){
-         
-        console.error("Nothing to build. Please enable any of [" + global.setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
-    }
-    
-    if(buildTypesFound !== 1){
-        
-        console.error("Please specify only one of the following on build setup: " + global.setupBuildTypes.join(","));
-    }
-    
-    console.log("\nbuild start: " + buildTypeFound);
+    console.log("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
     

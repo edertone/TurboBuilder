@@ -27,7 +27,7 @@ let isPhpAvailable = false;
  */
 exports.init = function () {
     
-    loadSetupFromDisk();
+    this.loadSetupFromDisk();
 
     validateModule.validateBuilderVersion();
 }
@@ -148,22 +148,54 @@ exports.countCommitsSinceLatestTag = function () {
 
 
 /**
- * Read the xml setup file and store all the data to a global variable
+ * Read the json setup file from the current project and store all the data to a global variable
  */
-let loadSetupFromDisk = function () {
+exports.loadSetupFromDisk = function () {
 
     if (!fm.isFile(global.runtimePaths.setupFile)) {
     
         console.error(global.fileNames.setup + ' setup file not found');
     }
     
-    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
+    let projectSetup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
     
     // Load the template setup
-    global.setup = JSON.parse(fm.readFile(templateSetupPath));
+    global.setup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(projectSetup));
     
     // Merge the project setup into the template one
-    mergeSetup(global.setup, JSON.parse(fm.readFile(global.runtimePaths.setupFile)));
+    mergeSetup(global.setup, projectSetup);
+};
+
+
+/**
+ * Detect the project type that is specified on the provided setup object
+ */
+exports.detectProjectTypeFromSetup = function (setup) {
+
+    let projectType = '';
+    let projectTypesCount = 0;
+    
+    for (let key of ObjectUtils.getKeys(setup.build)) {
+        
+        if(global.setupBuildTypes.indexOf(key) >= 0){
+            
+            projectType = key;
+            projectTypesCount ++;
+        }
+    }
+    
+    if(projectType === ''){
+        
+        console.error("No valid project type specified. Please enable any of [" + 
+            global.setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
+    }
+    
+    if(projectTypesCount !== 1){
+        
+        console.error("Please specify only one of the following on build setup: " + global.setupBuildTypes.join(","));
+    }
+    
+    return projectType;
 };
 
 
@@ -174,12 +206,11 @@ let mergeSetup = function (templateSetup, projectSetup) {
     
     for (let key of ObjectUtils.getKeys(templateSetup)){
         
-        // Sync setup on tempalte is just informative, so if not specified on project
-        // setup, it will be removed
+        // Clear the sync setup on the template if nothing is specified on the project setup file
         if(key === 'sync' &&
            !projectSetup.hasOwnProperty(key)){
             
-            delete templateSetup[key];
+            templateSetup[key] = [];
         }
         
         // Build project types are deleted from the default template, cause there can only be one
@@ -203,3 +234,60 @@ let mergeSetup = function (templateSetup, projectSetup) {
         }
     }
 };
+
+
+/**
+ * Generate a turbobuilder json setup file based on the specified project type
+ */
+exports.customizeSetupTemplateToProjectType = function (type) {
+    
+    // Read the default template setup file
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
+    
+    let setupContents = JSON.parse(fm.readFile(templateSetupPath));
+    
+    // Customize the metadata section
+    setupContents.metadata.builderVersion = this.getBuilderVersion();
+    
+    // Customize the validate section
+    setupContents.validate.copyrightHeaders = [];
+    
+    // Customize the build section
+    for (let key of ObjectUtils.getKeys(setupContents.build)) {
+        
+        if(key !== type){
+            
+            delete setupContents.build[key]; 
+        }
+    }
+    
+    // Customize the release section
+    if(type !== 'site_php' && type === 'lib_php'){
+        
+        delete setupContents.release['optimizePhp']; 
+    }
+    
+    // Customize the sync section
+    setupContents.sync = [];
+    
+    // Customize the test section
+    let testArray = [];
+    
+    for (let testItem of setupContents.test) {
+        
+        if((type === 'site_php' || type === 'lib_php') &&
+                testItem.type === 'phpUnit'){
+
+            testArray.push(testItem);
+        }
+        
+        if(type === 'lib_ts' && testItem.type === 'jasmine'){
+
+            testArray.push(testItem);
+        }
+    }
+    
+    setupContents.test = testArray;
+    
+    return setupContents;        
+}

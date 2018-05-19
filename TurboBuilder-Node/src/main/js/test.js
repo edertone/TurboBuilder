@@ -23,11 +23,9 @@ exports.execute = function (build, release) {
     
     console.log("\ntest start");
     
-    if(!global.setup.test.php.enabled &&
-       !global.setup.test.js.enabled &&
-       !global.setup.test.ts.enabled){
+    if(!ArrayUtils.isArray(global.setup.test) || global.setup.test.length < 0){
         
-        console.error("Nothing to test. Please enable php, js or ts under test section in " + global.fileNames.setup);
+        console.error("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
     }
     
     // Check which build paths must be tested
