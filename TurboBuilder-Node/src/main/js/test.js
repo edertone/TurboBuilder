@@ -258,12 +258,3 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
         }
     }
 }
-
-
-/**
- * TODO
- */
-let executeSitePhpTests = function (testSetup, relativeBuildPaths) {
-    
-    
-}

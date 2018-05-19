@@ -99,18 +99,14 @@
 	    },	    
 	    {
 	    	"type": "jasmine",
-	    	"testsRoot": "src/test/php"
+	    	"testsRoot": "src/test/js"
 	    },
 	    {
 	    	"type": "qunit",
-	    	"testsRoot": "src/test/ts",
+	    	"testsRoot": "src/test/js",
 	        "httpServerPort": "8185",
 	        "targets": ["ts", "es5", "es6"],
 	        "browsers": {"chrome": false, "firefox": false, "iexplore": false}
-	    },	    
-	    {
-	    	"type": "site_php",
-	        "host": "localhost"
 	    }
     ]
 }

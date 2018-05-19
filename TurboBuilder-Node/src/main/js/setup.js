@@ -199,25 +199,33 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     }
     
     // Customize the sync section
-    setupContents.sync = [];
+    let syncArray = [];
+    
+    for (let syncItem of setupContents.sync) {
+        
+        if(type === 'site_php' && syncItem.type === 'fileSystem'){
+
+            syncItem.excludes = [];
+            syncItem.destPath = 'C:\\xampp\\htdocs\\site_php-test-root';
+            
+            syncArray.push(syncItem);
+        }
+    }
+    
+    setupContents.sync = syncArray;
     
     // Customize the test section
     let testArray = [];
     
     for (let testItem of setupContents.test) {
         
-        if((type === 'site_php' || type === 'lib_php') &&
-                testItem.type === 'phpUnit'){
+        if(type === 'lib_php' && testItem.type === 'phpUnit'){
 
             testArray.push(testItem);
         }
         
-        if(type === 'site_php' && testItem.type === 'site_php'){
-
-            testArray.push(testItem);
-        }
-        
-        if(type === 'lib_ts' && testItem.type === 'jasmine'){
+        if((type === 'site_php' || type === 'lib_ts') &&
+                testItem.type === 'jasmine'){
 
             testArray.push(testItem);
         }

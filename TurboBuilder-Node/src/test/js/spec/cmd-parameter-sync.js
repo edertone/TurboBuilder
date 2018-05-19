@@ -53,8 +53,8 @@ describe('cmd-parameter-sync', function() {
 
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
-        expect(utils.exec('-s')).toContain('No sync setup defined on');
-        expect(utils.exec('--sync')).toContain('No sync setup defined on');
+        expect(utils.exec('-s')).toContain('Source path does not exist:');
+        expect(utils.exec('--sync')).toContain('Source path does not exist:');
     });
     
     it('should sync to another folder when fileSystem sync is enabled', function() {
