@@ -42,4 +42,18 @@ describe('cmd-parameter-test', function() {
         expect(utils.exec('-t')).toContain('--test must be used at the same time as -b --build or -r --release');
         expect(utils.exec('--test')).toContain('--test must be used at the same time as -b --build or -r --release');
     });
+    
+    
+    it('should fail when no tests are defined on setup', function() {
+
+        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+ 
+        setup.test = [];
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-bt')).toContain('Nothing to test. Please setup some tests on test section');
+    });
 });

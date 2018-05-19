@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager } = require('turbocommons-ts');
+const { FilesManager, ArrayUtils } = require('turbocommons-ts');
 const { spawn } = require('child_process');
 const console = require('./console');
 const buildModule = require('./build');
@@ -23,7 +23,7 @@ exports.execute = function (build, release) {
     
     console.log("\ntest start");
     
-    if(!ArrayUtils.isArray(global.setup.test) || global.setup.test.length < 0){
+    if(!ArrayUtils.isArray(global.setup.test) || global.setup.test.length <= 0){
         
         console.error("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
     }
@@ -41,14 +41,17 @@ exports.execute = function (build, release) {
         pathsToTest.push(releaseModule.getReleaseRelativePath());
     }
     
-    if(global.setup.test.php.enabled){
+    for (let testSetup of global.setup.test) {
         
-        testPhp(pathsToTest);
-    }
-    
-    if(global.setup.test.ts.enabled){
+        if(testSetup.type === 'phpUnit'){
+            
+            executePhpUnitTests(testSetup, pathsToTest);
+        }
         
-        testTypeScript(pathsToTest);
+        if(testSetup.type === 'qunit'){
+            
+            executeQUnitTests(testSetup, pathsToTest);
+        }
     }
     
     console.success('test done');
@@ -61,15 +64,15 @@ exports.execute = function (build, release) {
  * This is useful cause we will be able to leave the created http server instance open all the time
  * while we perform different test executions
  */
-let launchHttpServer = function () {
+let launchHttpServer = function (root, port) {
     
     // Initialize an http server as an independent terminal instance, with the dest folder as the http root
     // and with the cache disabled. It will silently fail if a server is already listening the configured port
     let httpServerCmd = global.installationPaths.httpServerBin;
     
-    httpServerCmd += ' "' + global.runtimePaths.target + '"';
+    httpServerCmd += ' "' + root + '"';
     httpServerCmd += ' -c-1';
-    httpServerCmd += ' -p ' + global.setup.test.ts.httpServerPort;
+    httpServerCmd += ' -p ' + port;
     
     spawn(httpServerCmd, [], {shell: true, stdio: 'ignore', detached: true}).unref();    
    
@@ -78,12 +81,13 @@ let launchHttpServer = function () {
 
 
 /**
- * Execute the Php tests
+ * Execute the PhpUnit tests
  * 
+ * @param testSetup An object with the test setup
  * @param relativeBuildPaths A list with paths relative to project target folder,
  *        where tests folder and files will be created and executed
  */
-let testPhp = function (relativeBuildPaths) {
+let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
 
     if(!global.setup.build.lib_php){
         
@@ -91,7 +95,6 @@ let testPhp = function (relativeBuildPaths) {
     }
     
     let sep = fm.dirSep();
-    let srcTestsPath = global.runtimePaths.test + sep + 'php';
     
     for (let relativeBuildPath of relativeBuildPaths) {
     
@@ -102,9 +105,9 @@ let testPhp = function (relativeBuildPaths) {
         fm.createDirectory(destTestsPath, true);
         
         // Copy all tests source code
-        fm.copyDirectory(srcTestsPath, destTestsPath);
+        fm.copyDirectory(global.runtimePaths.root + sep + testSetup.testsRoot, destTestsPath);
         
-        console.success("launching php tests at:\n");
+        console.success("launching phpunit tests at:\n");
         console.success(destTestsPath + "\n");
         
         // Launch unit tests via php executable
@@ -112,7 +115,7 @@ let testPhp = function (relativeBuildPaths) {
         
         phpExecCommand += ' "' + global.installationPaths.mainResources + sep + 'libs' + sep + 'phpunit-6.2.3.phar"';
         
-        if(global.setup.test.php.coverageReport){
+        if(testSetup.coverageReport){
             
             console.warning("Warning: Enabling Php coverage report in unit tests is many times slower");
             
@@ -125,8 +128,7 @@ let testPhp = function (relativeBuildPaths) {
         let testsResult = console.exec(phpExecCommand, '', true);
                     
         // Open the coverage report if necessary
-        if(global.setup.test.php.coverageReport &&
-                global.setup.test.php.coverageReportOpenAfterTests){
+        if(testSetup.coverageReport && testSetup.coverageReportOpenAfterTests){
         
             // opn is a node module that opens resources in a cross os manner
             opn(coverageReportPath + sep + 'index.html', {wait: false});
@@ -141,14 +143,15 @@ let testPhp = function (relativeBuildPaths) {
 
 
 /**
- * Execute the typescript tests
+ * Execute the QUNIT tests
  * 
+ * @param testSetup An object with the test setup
  * @param relativeBuildPaths A list with paths relative to project target folder,
  *        where tests folder and files will be created and executed
  */
-let testTypeScript = function (relativeBuildPaths) {
+let executeQUnitTests = function (testSetup, relativeBuildPaths) {
     
-    console.success("launching ts tests");
+    console.success("launching qunit tests");
     
     if(!global.setup.build.lib_ts){
         
@@ -156,9 +159,9 @@ let testTypeScript = function (relativeBuildPaths) {
     }
     
     let sep = fm.dirSep();
-    let srcTestsPath = global.runtimePaths.test + sep + 'ts';
+    let srcTestsPath = global.runtimePaths.root + sep + testSetup.testsRoot;
     
-    launchHttpServer();
+    launchHttpServer(global.runtimePaths.target, testSetup.httpServerPort);
     
     for (let relativeBuildPath of relativeBuildPaths) {
         
@@ -170,7 +173,7 @@ let testTypeScript = function (relativeBuildPaths) {
         // Generate all the files to launch the tests
         for (let tsTargetObject of global.setup.build.lib_ts.targets) {
             
-            if(global.setup.test.ts.targets.indexOf(tsTargetObject.folder) >= 0){
+            if(testSetup.targets.indexOf(tsTargetObject.folder) >= 0){
                 
                 let jsTarget = tsTargetObject.jsTarget;
                 let testsTarget = destTestsPath + sep + tsTargetObject.folder;
@@ -230,11 +233,11 @@ let testTypeScript = function (relativeBuildPaths) {
                 }
                 
                 // Run tests on all configured browsers
-                for (let browserName of Object.keys(global.setup.test.ts.browsers)) {
+                for (let browserName of Object.keys(testSetup.browsers)) {
                     
-                    if(global.setup.test.ts.browsers[browserName]){
+                    if(testSetup.browsers[browserName]){
                         
-                        let httpServerUrl = 'http://localhost:' + global.setup.test.ts.httpServerPort + '/';
+                        let httpServerUrl = 'http://localhost:' + testSetup.httpServerPort + '/';
                         
                         httpServerUrl += relativeBuildPath + '/test/' + tsTargetObject.folder;
                         

@@ -87,6 +87,7 @@
     "test": [
 		{
 	    	"type": "phpUnit",
+	    	"testsRoot": "src/test/php",
 	        "coverageReport": true,
 	        "coverageReportOpenAfterTests": true
 	    },	    
@@ -97,10 +98,10 @@
 	    },
 	    {
 	    	"type": "qunit",
+	    	"testsRoot": "src/test/ts",
 	        "httpServerPort": "8185",
 	        "targets": ["ts", "es5", "es6"],
-	        "browsers": {"chrome": false, "firefox": false, "iexplore": false},
-	        "testingLibrary": "qunit"
+	        "browsers": {"chrome": false, "firefox": false, "iexplore": false}
 	    },	    
 	    {
 	    	"type": "site_php",
