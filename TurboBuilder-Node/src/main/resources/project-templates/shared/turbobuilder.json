@@ -99,7 +99,7 @@
 	    },	    
 	    {
 	    	"type": "jasmine",
-	    	"testsRoot": "src/test/js"
+	    	"jasmineConfig": "src/test/js/jasmine.json"
 	    },
 	    {
 	    	"type": "qunit",

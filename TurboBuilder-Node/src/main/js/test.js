@@ -48,6 +48,11 @@ exports.execute = function (build, release) {
             executePhpUnitTests(testSetup, pathsToTest);
         }
         
+        if(testSetup.type === 'jasmine'){
+            
+            executeJasmineTests(testSetup, pathsToTest);
+        }
+        
         if(testSetup.type === 'qunit'){
             
             executeQUnitTests(testSetup, pathsToTest);
@@ -143,11 +148,23 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
 
 
 /**
- * TODO
+ * Execute the jasmine tests
+ * 
+ * @param testSetup An object with the test setup
+ * @param relativeBuildPaths A list with paths relative to project target folder,
+ *        where tests folder and files will be created and executed
  */
 let executeJasmineTests = function (testSetup, relativeBuildPaths) {
     
+    console.success("launching jasmine tests");
+
+    let jasmineExecCommand = global.installationPaths.jasmineBin + ' --config=' + testSetup.jasmineConfig;
     
+    
+    if(!console.exec(jasmineExecCommand, '', true)){
+        
+        console.error('There are jasmine unit test failures');
+    } 
 }
 
 
@@ -160,12 +177,12 @@ let executeJasmineTests = function (testSetup, relativeBuildPaths) {
  */
 let executeQUnitTests = function (testSetup, relativeBuildPaths) {
     
-    console.success("launching qunit tests");
-    
     if(!global.setup.build.lib_ts){
         
-        console.error('build.lib_ts is mandatory on ' + global.fileNames.setup + ' to run typescript tests');
+        console.error('build.lib_ts is mandatory on ' + global.fileNames.setup + ' to run qunit tests');
     }
+    
+    console.success("launching qunit tests");
     
     let sep = fm.dirSep();
     let srcTestsPath = global.runtimePaths.root + sep + testSetup.testsRoot;
