@@ -136,6 +136,11 @@ let replaceDependenciesIntoTemplate = function () {
             
             fm.copyFile(libsPath + sep + 'phpunit-6.2.3.phar', depParent + sep + 'phpunit-6.2.3.phar');
         }
+        
+        if(depFile === 'turbocommons.tbdependency'){
+            
+            fm.copyFile(libsPath + sep + 'TurboCommons-Php-0.6.0.phar', depParent + sep + 'TurboCommons-Php-0.6.0.phar');
+        }
 
         fm.deleteFile(tbdependency);
     }
