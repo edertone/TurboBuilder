@@ -10,89 +10,20 @@ const console = require('./console.js');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
 const validateModule = require('./validate');
+const buildModule = require('./build');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
-let isWinSCPAvailable = false;
-
-let isGitAvailable = false;
-
-let isPhpAvailable = false;
-
-
 /**
- * Initialize the global variables and setup structure from the project xml
+ * Initialize the setup structure from the project json
  */
 exports.init = function () {
     
     this.loadSetupFromDisk();
 
     validateModule.validateBuilderVersion();
-}
-
-
-/**
- * Check if the WinSCP cmd executable is available or not on the system
- */
-exports.checkWinSCPAvailable = function () {
-
-    if(!isWinSCPAvailable){
-        
-        try{
-            
-            execSync('winscp /help', {stdio : 'pipe'});
-            
-            isWinSCPAvailable = true;
-            
-        }catch(e){
-
-            console.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable) to perform sync operations');
-        }
-    }
-}
-
-
-/**
- * Check if the git cmd executable is available or not on the system
- */
-exports.checkGitAvailable = function () {
-
-    if(!isGitAvailable){
-        
-        try{
-            
-            execSync('git --version', {stdio : 'pipe'});
-            
-            isGitAvailable = true;
-            
-        }catch(e){
-
-            console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
-        }
-    }
-}
-
-
-/**
- * Check if the php cmd executable is available or not on the system
- */
-exports.checkPhpAvailable = function () {
-
-    if(!isPhpAvailable){
-        
-        try{
-            
-            execSync('php -v', {stdio : 'pipe'});
-            
-            isPhpAvailable = true;
-            
-        }catch(e){
-
-            console.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
-        }
-    }
 }
 
 
@@ -110,7 +41,7 @@ exports.getBuilderVersion = function () {
  */
 exports.getProjectRepoSemVer = function () {
     
-    this.checkGitAvailable();
+    buildModule.checkGitAvailable();
     
     try{
         
@@ -130,7 +61,7 @@ exports.getProjectRepoSemVer = function () {
  */
 exports.countCommitsSinceLatestTag = function () {
     
-    this.checkGitAvailable();
+    buildModule.checkGitAvailable();
     
     try{
         

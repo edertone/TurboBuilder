@@ -93,8 +93,7 @@
 	    },	    
 	    {
 	    	"type": "jasmine",
-	        "coverageReport": true,
-	        "coverageReportOpenAfterTests": true
+	    	"testsRoot": "src/test/php"
 	    },
 	    {
 	    	"type": "qunit",

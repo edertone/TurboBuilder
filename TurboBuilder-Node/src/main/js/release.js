@@ -189,7 +189,7 @@ let generateCodeDocumentation = function (destPath) {
  */
 let createGitChangeLog = function (destPath) {
     
-    setupModule.checkGitAvailable();
+    buildModule.checkGitAvailable();
     
     // Define the changelog text
     let changeLogContents = global.runtimePaths.projectName + ' DEV CHANGELOG ---------------------------------------------';

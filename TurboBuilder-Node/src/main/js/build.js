@@ -6,6 +6,7 @@
 
 
 const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { execSync } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
@@ -157,7 +158,7 @@ exports.buildLibPhp = function (destPath) {
     let destMain = destPath + sep + 'main';
     let destDist = destPath + sep + 'dist';
     
-    setupModule.checkPhpAvailable();
+    this.checkPhpAvailable();
     
     // Autoloader.php must exist on src/main/php/ for the phar to be correctly generated
     let autoLoaderPath = global.runtimePaths.main + sep + 'php' + sep + 'AutoLoader.php';
@@ -293,5 +294,77 @@ exports.removeUnpackedSrcFiles = function (destPath) {
     if(fm.isDirectory(destMain) && !fm.deleteDirectory(destMain)){
         
         console.error('Could not delete unpacked src files from ' + destMain);
+    }
+}
+
+
+let isWinSCPAvailable = false;
+
+
+/**
+ * Check if the WinSCP cmd executable is available or not on the system
+ */
+exports.checkWinSCPAvailable = function () {
+
+    if(!isWinSCPAvailable){
+        
+        try{
+            
+            execSync('winscp /help', {stdio : 'pipe'});
+            
+            isWinSCPAvailable = true;
+            
+        }catch(e){
+
+            console.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable) to perform sync operations');
+        }
+    }
+}
+
+
+let isGitAvailable = false;
+
+
+/**
+ * Check if the git cmd executable is available or not on the system
+ */
+exports.checkGitAvailable = function () {
+
+    if(!isGitAvailable){
+        
+        try{
+            
+            execSync('git --version', {stdio : 'pipe'});
+            
+            isGitAvailable = true;
+            
+        }catch(e){
+
+            console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
+        }
+    }
+}
+
+
+let isPhpAvailable = false;
+
+
+/**
+ * Check if the php cmd executable is available or not on the system
+ */
+exports.checkPhpAvailable = function () {
+
+    if(!isPhpAvailable){
+        
+        try{
+            
+            execSync('php -v', {stdio : 'pipe'});
+            
+            isPhpAvailable = true;
+            
+        }catch(e){
+
+            console.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
+        }
     }
 }

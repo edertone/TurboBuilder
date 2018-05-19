@@ -6,7 +6,7 @@
 
 
 const console = require('./console.js');
-const setupModule = require('./setup');
+const buildModule = require('./setup');
 const { FilesManager } = require('turbocommons-ts');
 
 
@@ -23,7 +23,7 @@ exports.execute = function () {
         console.error("No sync setup defined on " + global.fileNames.setup);
     }
     
-    setupModule.checkWinSCPAvailable();
+    buildModule.checkWinSCPAvailable();
     
     console.log("\nsync start");
     
