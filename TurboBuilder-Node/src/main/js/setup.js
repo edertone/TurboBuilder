@@ -212,6 +212,11 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             testArray.push(testItem);
         }
         
+        if(type === 'site_php' && testItem.type === 'site_php'){
+
+            testArray.push(testItem);
+        }
+        
         if(type === 'lib_ts' && testItem.type === 'jasmine'){
 
             testArray.push(testItem);

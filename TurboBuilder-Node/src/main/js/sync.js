@@ -7,7 +7,7 @@
 
 const console = require('./console.js');
 const buildModule = require('./setup');
-const { FilesManager } = require('turbocommons-ts');
+const { StringUtils, FilesManager } = require('turbocommons-ts');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -18,39 +18,97 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 exports.execute = function () {
     
-    if(!global.setup.sync){
+    if(!global.setup.sync || global.setup.sync.length <= 0){
        
         console.error("No sync setup defined on " + global.fileNames.setup);
     }
-    
-    buildModule.checkWinSCPAvailable();
     
     console.log("\nsync start");
     
     for (let syncSetup of global.setup.sync) {
         
-        if(syncSetup.type === "FTP"){
+        if(syncSetup.type === "fileSystem"){
             
-            let localPath = '';
-            let winscpExec = 'winscp /command';
+            syncFileSystem(syncSetup);
+        }
+
+        if(syncSetup.type === "ftp"){
             
-            if(syncSetup.localRoot === 'build'){
-                
-                localPath = global.runtimePaths.targetDevRoot + fm.dirSep() + syncSetup.localPath;
-            }
-            
-            if(!fm.isDirectory(localPath)){
-                
-                console.error('Folder does not exist: ' + localPath);
-            }
-            
-            winscpExec += ' "open ftp://' + syncSetup.user + ':' + syncSetup.psw + '@' + syncSetup.host + '/"';
-            winscpExec += ' "synchronize remote -delete ""' + localPath + '"" ' + syncSetup.remotePath + '"';
-            winscpExec += ' "exit"';
-            
-            console.exec(winscpExec, '', true);
+            syncFtp(syncSetup);
         }
     }
+}
+
+
+/**
+ * Execute the project sync via file system
+ */
+let calculateSourcePath = function (syncSetup) {
     
-    console.success('sync ok');
+    let result = global.runtimePaths.root + fm.dirSep() + syncSetup.sourcePath;
+    
+    return StringUtils.replace(result, ['$dev', '$prod'], [global.runtimePaths.projectName, 'TODO']);
+}
+
+
+/**
+ * Execute the project sync via file system
+ */
+let syncFileSystem = function (syncSetup) {
+    
+    let sourcePath = calculateSourcePath(syncSetup);
+    
+    if(!fm.isDirectory(sourcePath)){
+        
+        console.error('Source path does not exist: ' + sourcePath);
+    }
+    
+    if(!fm.isDirectory(syncSetup.destPath)){
+        
+        console.error('Destination path does not exist: ' + syncSetup.destPath);
+    }
+    
+    // TODO - apply excludes option
+    
+    if(syncSetup.deleteDestPathContents &&
+       !fm.deleteDirectory(syncSetup.destPath, false)){
+        
+        console.error('Could not delete destination: ' + syncSetup.destPath);
+    }
+    
+    if(!fm.isDirectoryEmpty(syncSetup.destPath)){
+        
+        console.error('Destination path is not empty: ' + syncSetup.destPath);
+    }
+    
+    fm.copyDirectory(sourcePath, syncSetup.destPath);
+    
+    console.success('fileSystem sync ok to: ' + syncSetup.destPath);
+}
+
+
+/**
+ * Execute the project sync via ftp
+ */
+let syncFtp = function (syncSetup) {
+    
+    buildModule.checkWinSCPAvailable();
+    
+    let winscpExec = 'winscp /command';
+    let sourcePath = calculateSourcePath(syncSetup);
+    
+    if(!fm.isDirectory(sourcePath)){
+        
+        console.error('Folder does not exist: ' + sourcePath);
+    }
+    
+    // TODO - apply excludes option
+    
+    winscpExec += ' "open ftp://' + syncSetup.user + ':' + syncSetup.psw + '@' + syncSetup.host + '/"';
+    winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + syncSetup.remotePath + '"';
+    winscpExec += ' "exit"';
+    
+    console.exec(winscpExec, '', true);
+
+    console.success('ftp sync ok');
 }

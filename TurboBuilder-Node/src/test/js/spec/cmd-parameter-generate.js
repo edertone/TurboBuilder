@@ -97,7 +97,7 @@ describe('cmd-parameter-generate', function() {
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.sync.length).toBe(0);
-        expect(setup.test.length).toBe(1);
+        expect(setup.test.length).toBe(2);
         expect(setup.test[0].type).toBe("phpUnit");
     });
     

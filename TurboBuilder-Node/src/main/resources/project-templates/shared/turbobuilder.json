@@ -73,10 +73,16 @@
         
     "sync": [
     	{
-    		"type": "FTP",
-    		"excludes": ["some-filename-pattern"],
-    		"localRoot": "build",
-    		"localPath": "dist",
+    		"type": "fileSystem",
+    		"excludes": ["some-filename-string"],
+    		"sourcePath": "target/$dev/dist/",
+    		"destPath": "X:\\somepath-to-copy-files-to",
+    		"deleteDestPathContents": true
+    	},
+    	{
+    		"type": "ftp",
+    		"excludes": ["some-filename-string"],
+    		"sourcePath": "target/$prod/dist/",
     		"remotePath": "/somepath",
     		"host": "www.someserver.com",
     		"user": "serverUser",
@@ -104,7 +110,7 @@
 	    },	    
 	    {
 	    	"type": "site_php",
-	        "TODO": "TODO"
+	        "host": "localhost"
 	    }
     ]
 }
