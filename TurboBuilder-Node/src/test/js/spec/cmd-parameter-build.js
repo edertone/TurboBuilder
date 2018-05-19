@@ -45,8 +45,8 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-b')).toContain('Nothing to build. Please enable any of');
-        expect(utils.exec('--build')).toContain('Nothing to build. Please enable any of');
+        expect(utils.exec('-b')).toContain('No valid project type specified');
+        expect(utils.exec('--build')).toContain('No valid project type specified');
     });
     
     

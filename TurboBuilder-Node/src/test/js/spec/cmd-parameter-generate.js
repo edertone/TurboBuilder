@@ -48,6 +48,15 @@ describe('cmd-parameter-generate', function() {
         expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
         expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/php')).toBe(true);
+        
+        let setup = utils.readSetupFile();        
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.sync.length).toBe(0);
+        expect(setup.test.length).toBe(1);
+        expect(setup.test[0].type).toBe("phpUnit");
     });
     
     
@@ -60,6 +69,15 @@ describe('cmd-parameter-generate', function() {
         expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
         expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/ts')).toBe(true);
+        
+        let setup = utils.readSetupFile();
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.sync.length).toBe(0);
+        expect(setup.test.length).toBe(1);
+        expect(setup.test[0].type).toBe("jasmine");
     });
     
     
@@ -72,6 +90,15 @@ describe('cmd-parameter-generate', function() {
         expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
         expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
+        
+        let setup = utils.readSetupFile();
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.sync.length).toBe(0);
+        expect(setup.test.length).toBe(1);
+        expect(setup.test[0].type).toBe("phpUnit");
     });
     
     

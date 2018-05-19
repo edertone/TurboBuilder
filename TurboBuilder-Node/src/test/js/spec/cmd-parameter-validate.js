@@ -135,7 +135,7 @@ describe('cmd-parameter-validate', function() {
                     builderVersion: setupModule.getBuilderVersion()
                 }, 
                 build: {
-                    ts: {
+                    lib_ts: {
                         enabled: true
                     }
                 },
@@ -143,7 +143,6 @@ describe('cmd-parameter-validate', function() {
                     runBeforeBuild: false,
                     copyrightHeaders: [
                         {
-                            "enabled": true,
                             "path": "extras/copyright headers/TsFiles-Header.txt",
                             "appliesTo": "src",
                             "includes": ["ts"],
