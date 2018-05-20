@@ -26,5 +26,15 @@ exports.execute = function () {
         console.error('could not delete ' + global.runtimePaths.target);
     }
     
+    // Delete all synced files from filesystem
+    for (let syncSetup of global.setup.sync) {
+        
+        if(syncSetup.type === "fileSystem" &&
+           !fm.deleteDirectory(syncSetup.destPath, false)){
+            
+            console.error("could not delete contents of " + syncSetup.destPath);
+        }
+    }
+
     console.success("clean ok");
 }

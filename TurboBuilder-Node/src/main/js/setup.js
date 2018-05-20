@@ -206,7 +206,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         if(type === 'site_php' && syncItem.type === 'fileSystem'){
 
             syncItem.excludes = [];
-            syncItem.destPath = 'C:\\xampp\\htdocs\\site_php-test-root';
+            syncItem.destPath = 'C:\\xampp\\htdocs';
             
             syncArray.push(syncItem);
         }
