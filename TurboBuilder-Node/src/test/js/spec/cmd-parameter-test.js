@@ -9,6 +9,7 @@
 
 
 const utils = require('../test-utils');
+const { execSync } = require('child_process');
 
 
 describe('cmd-parameter-test', function() {
@@ -55,5 +56,23 @@ describe('cmd-parameter-test', function() {
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-bt')).toContain('Nothing to test. Please setup some tests on test section');
+    });
+    
+    
+    it('should successfully run the jasmine tests on a generated site_php project', function() {
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
+        expect(npmInstallResult).toContain("added");
+        expect(npmInstallResult).toContain("packages in");
+        
+        let testsLaunchResult = utils.exec('-cbst');        
+        expect(testsLaunchResult).toContain("clean start");
+        expect(testsLaunchResult).toContain("build start");
+        expect(testsLaunchResult).toContain("sync start");
+        expect(testsLaunchResult).toContain("test start");
+        expect(testsLaunchResult).toContain("0 failures");
+        expect(testsLaunchResult).not.toContain('There are jasmine unit test failures');
     });
 });
