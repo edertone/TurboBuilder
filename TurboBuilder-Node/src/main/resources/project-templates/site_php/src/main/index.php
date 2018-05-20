@@ -7,9 +7,9 @@
 
 require './autoloader.php';
 require 'libs/turbocommons-php/TurboCommons-Php-0.6.0.phar';
-// require 'libs/turbosite/TurboSite-0.0.1.phar';
+require 'libs/turbosite/TurboSite-Php-0.0.0.phar';
 
-use site\src\main\model\php\WebSite;
+use org\turbosite\src\main\php\model\WebSite;
 
 
 $ws = new WebSite();

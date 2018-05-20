@@ -160,8 +160,8 @@ exports.buildLibPhp = function (destPath) {
     
     this.checkPhpAvailable();
     
-    // Autoloader.php must exist on src/main/php/ for the phar to be correctly generated
-    let autoLoaderPath = global.runtimePaths.main + sep + 'php' + sep + 'AutoLoader.php';
+    // autoloader.php must exist on src/main/php/ for the phar to be correctly generated
+    let autoLoaderPath = global.runtimePaths.main + sep + 'php' + sep + 'autoLoader.php';
     
     if(!fm.isFile(autoLoaderPath)){
         
@@ -171,7 +171,7 @@ exports.buildLibPhp = function (destPath) {
     // Define the contents for the stub file that will be autoexecuted when the phar file is included
     let pharName = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '.phar';
     
-    let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/AutoLoader.php\\'; __HALT_COMPILER(); ?>";
+    let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/autoloader.php\\'; __HALT_COMPILER(); ?>";
     
     // Create the dist folder if not exists
     if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){

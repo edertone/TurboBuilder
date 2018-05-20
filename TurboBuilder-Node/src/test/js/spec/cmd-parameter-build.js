@@ -105,7 +105,7 @@ describe('cmd-parameter-build', function() {
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         
-        expect(utils.fm.saveFile('./src/main/php/AutoLoader.php', '<?php ?>')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
   

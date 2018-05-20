@@ -154,7 +154,7 @@ let generateCodeDocumentation = function (destPath) {
         phpDocExec += ' --template="responsive-twig"';
         phpDocExec += ' --visibility="public"';
         phpDocExec += ' --title="' + global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '"';
-        phpDocExec += ' -i "' + destMain + '/php/libs,AutoLoader.php"';
+        phpDocExec += ' -i "' + destMain + '/php/libs,autoloader.php"';
         phpDocExec += ' -d "' + destMain + sep + 'php"';
         phpDocExec += ' -t "' + docsPath + sep + 'php"';
         

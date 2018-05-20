@@ -74,5 +74,7 @@ describe('cmd-parameter-test', function() {
         expect(testsLaunchResult).toContain("test start");
         expect(testsLaunchResult).toContain("0 failures");
         expect(testsLaunchResult).not.toContain('There are jasmine unit test failures');
+        
+        expect(utils.exec('-c')).toContain("clean ok");
     });
 });
