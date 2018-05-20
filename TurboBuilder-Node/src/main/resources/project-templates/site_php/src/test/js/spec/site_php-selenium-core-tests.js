@@ -13,13 +13,21 @@
 
 
 const webdriver = require('selenium-webdriver');
+const { StringUtils, FilesManager } = require('turbocommons-ts');
+
+
+let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 describe('site_php-selenium-core-tests', function() {
 
     beforeAll(function() {
         
-        this.hostUrl = 'localhost';
+        this.siteSetup = JSON.parse(fm.readFile('src/main/turbosite.json'));
+        
+        this.host = 'localhost';
+        
+        this.homeURI = '/' + this.siteSetup.locales[0].split('_')[0] + '/' + this.siteSetup.homeView;
         
         this.driver = new webdriver.Builder().forBrowser('chrome').build();
     });
@@ -31,24 +39,60 @@ describe('site_php-selenium-core-tests', function() {
     });
 
     
-    it('should redirect http to https', function(done) {
+    it('should redirect http://host to https://host/locale/homeview/', function(done) {
         
-        this.driver.get('http://' + this.hostUrl).then(() => {
+        this.driver.get('http://' + this.host).then(() => {
             
             this.driver.getCurrentUrl().then((url) => {
-                expect(url).toContain('https://' + this.hostUrl);
+                expect(url).toBe('https://' + this.host + this.homeURI + '/');
                 done();
             });
         });
     });
     
     
-    it('should redirect www to non www', function(done) {
+    it('should redirect http://www.host to https://host/locale/homeview/', function(done) {
         
-        this.driver.get('http://www.' + this.hostUrl).then(() => {
+        this.driver.get('http://www.' + this.host).then(() => {
             
             this.driver.getCurrentUrl().then((url) => {
-                expect(url).toContain('https://' + this.hostUrl);
+                expect(url).toBe('https://' + this.host + this.homeURI + '/');
+                done();
+            });
+        });
+    });  
+
+    
+    it('should redirect http://host/locale/homeview/ to https://host/locale/homeview/', function(done) {
+        
+        this.driver.get('http://' + this.host + this.homeURI + '/').then(() => {
+            
+            this.driver.getCurrentUrl().then((url) => {
+                expect(url).toBe('https://' + this.host + this.homeURI + '/');
+                done();
+            });
+        });
+    });
+    
+    
+    it('should redirect https://www.host/locale/homeview/ to https://host/locale/homeview/', function(done) {
+        
+        this.driver.get('https://www.' + this.host + this.homeURI + '/').then(() => {
+            
+            this.driver.getCurrentUrl().then((url) => {
+                expect(url).toBe('https://' + this.host + this.homeURI + '/');
+                done();
+            });
+        });
+    });
+    
+    
+    it('should redirect https://www.host/locale/homeview to https://host/locale/homeview/', function(done) {
+        
+        this.driver.get('https://www.' + this.host + this.homeURI).then(() => {
+            
+            this.driver.getCurrentUrl().then((url) => {
+                expect(url).toBe('https://' + this.host + this.homeURI + '/');
                 done();
             });
         });
@@ -57,7 +101,7 @@ describe('site_php-selenium-core-tests', function() {
     
     it('should open robots.txt root file', function(done) {
         
-        this.driver.get('https://' + this.hostUrl + '/robots.txt').then(() => {
+        this.driver.get('https://' + this.host + '/robots.txt').then(() => {
             
             this.driver.getPageSource().then((source) => {
                 expect(source).toContain('User-agent:');
@@ -67,9 +111,33 @@ describe('site_php-selenium-core-tests', function() {
     });
     
     
+//    it('should open global.css root file', function(done) {
+//        
+//        this.driver.get('https://' + this.host + '/global.css').then(() => {
+//            
+//            this.driver.getPageSource().then((source) => {
+//                expect(StringUtils.isEmpty(source)).toBe(false);
+//                done();
+//            });
+//        });
+//    });
+//    
+//    
+//    it('should open global.js root file', function(done) {
+//        
+//        this.driver.get('https://' + this.host + '/global.js').then(() => {
+//            
+//            this.driver.getPageSource().then((source) => {
+//                expect(StringUtils.isEmpty(source)).toBe(false);
+//                done();
+//            });
+//        });
+//    });
+    
+    
     it('should show 404 for non existing root file', function(done) {
         
-        this.driver.get('https://' + this.hostUrl + '/somenonexistingfile.txt').then(() => {
+        this.driver.get('https://' + this.host + '/somenonexistingfile.txt').then(() => {
             
             this.driver.getTitle().then((title) => {                
                 expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404') >= 0)
@@ -82,7 +150,7 @@ describe('site_php-selenium-core-tests', function() {
     
     it('should show 404 for non existing resources file', function(done) {
         
-        this.driver.get('https://' + this.hostUrl + '/resources/somenonexistingfile.txt').then(() => {
+        this.driver.get('https://' + this.host + '/resources/somenonexistingfile.txt').then(() => {
             
             this.driver.getTitle().then((title) => {
                 expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404') >= 0)
@@ -95,7 +163,7 @@ describe('site_php-selenium-core-tests', function() {
     
     it('should show contents of a resources static file', function(done) {
         
-        this.driver.get('https://' + this.hostUrl + '/resources/fonts/TODO').then(() => {
+        this.driver.get('https://' + this.host + '/resources/fonts/TODO').then(() => {
             
             this.driver.getPageSource().then((source) => {
                 expect(source).toContain('Place project fonts here');

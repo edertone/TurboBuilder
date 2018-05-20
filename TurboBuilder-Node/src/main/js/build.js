@@ -116,13 +116,12 @@ exports.buildSitePhp = function (destPath) {
     let destDist = destPath + sep + 'dist';
     let destSite = destDist + sep + 'site';
     
-    // Create the dist folder if not exists
+    // Create the dist and site folders if not exists
     if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
         
         console.error('Could not create ' + destDist);
     }
     
-    // Create the site folder
     if(!fm.createDirectory(destSite)){
         
         console.error('Could not create ' + destSite);
@@ -131,8 +130,15 @@ exports.buildSitePhp = function (destPath) {
     fm.copyDirectory(destMain, destSite);
     
     // Move htaccess file from site to dist
-    fm.copyFile(destSite + sep + '.htaccess', destDist + sep + '.htaccess');
-    fm.deleteFile(destSite + sep + '.htaccess');
+    fm.copyFile(destSite + sep + 'htaccess.txt', destDist + sep + '.htaccess');
+    fm.deleteFile(destSite + sep + 'htaccess.txt');
+    
+    // Generate a random hash to avoid browser caches
+    let turboSiteSetup = JSON.parse(fm.readFile(destSite + sep + 'turbosite.json'));
+    
+    turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
+    
+    fm.saveFile(destSite + sep + 'turbosite.json', JSON.stringify(turboSiteSetup, null, 4));
     
     // Create global css and js files
     
@@ -141,8 +147,8 @@ exports.buildSitePhp = function (destPath) {
     
     // 2 - merge components
     
-    fm.saveFile(destSite + sep + 'global.css', this.mergeFilesFromFolder(destSite, 'css', true));
-    fm.saveFile(destSite + sep + 'global.js', this.mergeFilesFromFolder(destSite, 'js', true));
+    fm.saveFile(destSite + sep + 'global-' + turboSiteSetup.cacheHash +'.css', this.mergeFilesFromFolder(destSite, 'css', true));
+    fm.saveFile(destSite + sep + 'global-' + turboSiteSetup.cacheHash +'.js', this.mergeFilesFromFolder(destSite, 'js', true));
     
     // Create view css and js files
     // TODO

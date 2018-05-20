@@ -4,7 +4,7 @@
 // Register the autoload method that will locate and automatically load the classes
 spl_autoload_register(function($className){
 
-    if(strpos($className, 'site\\src\\') === 0 && !class_exists($className)){
+    if(strpos($className, 'tbsite\\src\\') === 0 && !class_exists($className)){
 
         // Replace all slashes to the correct OS directory separator
     	$classPath = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $className));

@@ -1,8 +1,7 @@
 <?php
 
-
 /**
- * Site entry point that will load the right module depending on the current url
+ * Site entry point that generates the site document based on the current url
  */
 
 require './autoloader.php';
@@ -11,10 +10,7 @@ require 'libs/turbosite/TurboSite-Php-0.0.0.phar';
 
 use org\turbosite\src\main\php\model\WebSite;
 
-
 $ws = new WebSite();
-
-$ws->locales = ['ca_ES', 'es_ES'];
 
 $ws->construct();
 
