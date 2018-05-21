@@ -1,5 +1,12 @@
 RewriteEngine on
 
+# Redirect 404 errors to the error page
+ErrorDocument 404 /site/error-404.php
+
+# remove trailing slash for all urls
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
 # Redirect non https to https
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
@@ -20,8 +27,10 @@ RewriteRule ^(.*)$ site/index.php?q=$1 [L]
 # Redirect resources to the resources folder
 RewriteRule ^resources/(.*)$ site/resources/$1 [L]
 
-# Redirect 404 errors to the error page
-ErrorDocument 404 /site/error-404.php
+# any php file that is not index will throw a 404 error
+RewriteCond %{REQUEST_URI} !site/index.php [NC]
+RewriteCond %{REQUEST_URI} !/site/error-404.php [NC]
+RewriteRule ^(.*)\.php$ - [L,R=404]
 
 
 # CUSTOM RULES - HERE

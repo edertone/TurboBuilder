@@ -3,14 +3,15 @@
 
 ### via command line
 
-Launch the following command at the root of the project:
+Launch any of the following commands at the root of the project (both do exactly the same):
 	npm test
+	node node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json
 	
-	
-### OS Environment setup
+## OS Environment setup
 
-Chrome driver must be available on OS to run selenium tests. Download and help available here:
-	https://sites.google.com/a/chromium.org/chromedriver/
+### Chrome driver must be available on OS to run selenium tests. Download and help available here:
+
+https://sites.google.com/a/chromium.org/chromedriver/
 
 To avoid losing the executable, copy it inside program files / chromedriver
 

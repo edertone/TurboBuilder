@@ -1,0 +1,62 @@
+[
+	{
+		"url": "http://$host",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://$host/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://$host/parameter",
+		"to": "https://$host/parameter"
+	},
+	{
+		"url": "http://$host/parameter/",
+		"to": "https://$host/parameter"
+	},
+	{
+		"url": "https://$host",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "https://$host/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "https://$host/parameter",
+		"to": "https://$host/parameter"
+	},
+	{
+		"url": "https://$host/parameter/",
+		"to": "https://$host/parameter"
+	},
+	{
+		"url": "http://www.$host",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://www.$host/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://$host/$locale/$homeView",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://$host/$locale/$homeView/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "https://www.$host/$locale/$homeView/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "https://www.$host/$locale/$homeView",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://$host/index.php",
+		"to": "https://$host/$locale/$homeView"
+	}
+]

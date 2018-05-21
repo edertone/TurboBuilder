@@ -1,0 +1,22 @@
+[
+	{
+		"url": "http://$host/robots.txt",
+		"title": null,
+		"source": "User-agent:"
+	},
+	{
+		"url": "http://$host/global-$cacheHash.css",
+		"title": null,
+		"source": "font-size"
+	},
+	{
+		"url": "http://$host/global-$cacheHash.js",
+		"title": null,
+		"source": "\"use strict\""
+	},
+	{
+		"url": "https://$host/resources/fonts/TODO",
+		"title": null,
+		"source": "Place project fonts here"
+	}
+]

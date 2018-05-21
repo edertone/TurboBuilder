@@ -23,6 +23,8 @@ describe('site_php-selenium-core-tests', function() {
 
     beforeAll(function() {
         
+        // TODO - this is not a solution
+        // this.siteSetup = JSON.parse(fm.readFile('C:/xampp/htdocs/site/turbosite.json'));
         this.siteSetup = JSON.parse(fm.readFile('src/main/turbosite.json'));
         
         this.host = 'localhost';
@@ -37,155 +39,121 @@ describe('site_php-selenium-core-tests', function() {
 
         this.driver.quit(); 
     });
+    
+    
+    it('should show 404 errors as defined in expected-404-errors.json', function(done) {
+        
+        let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-404-errors.json'));
+        
+        // Load all the urls on the json file and perform a request for each one.
+        let recursiveCaller = (urls, done) => {
+            
+            if(urls.length <= 0){
+                
+                done();
+            }
+            
+            let url = StringUtils.replace(urls.pop(), '$host', this.host);
+            
+            this.driver.get(url).then(() => {
+                
+                this.driver.getTitle().then((title) => {
+                    
+                    expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
+                        .toBe(true, url + ' should throw 404 error');
+                    
+                    recursiveCaller(urls, done);
+                });
+            });
+        }
+        
+        recursiveCaller(list, done);
+    });
+    
+    
+    it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
+        
+        let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-301-redirects.json'));
+        
+        // Load all the urls on the json file and perform a request for each one.
+        let recursiveCaller = (urls, done) => {
+            
+            if(urls.length <= 0){
+                
+                done();
+            }
+            
+            let entry = urls.pop();
+            entry.url = StringUtils.replace(entry.url,
+                    ['$host', '$locale', '$homeView'],
+                    [this.host, 'en', this.siteSetup.homeView]);
+            
+            entry.to = StringUtils.replace(entry.to,
+                    ['$host', '$locale', '$homeView'],
+                    [this.host, 'en', this.siteSetup.homeView]);
+            
+            this.driver.get(entry.url).then(() => {
+                      
+                this.driver.getCurrentUrl().then((url) => {
+                    
+                    expect(url).toBe(entry.to, 'Coming from url: ' + entry.url);
+                    
+                    recursiveCaller(urls, done);
+                });
+            });
+        }
+        
+        recursiveCaller(list, done);
+    });
 
     
-    it('should redirect http://host to https://host/locale/homeview/', function(done) {
+    it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
-        this.driver.get('http://' + this.host).then(() => {
-            
-            this.driver.getCurrentUrl().then((url) => {
-                expect(url).toBe('https://' + this.host + this.homeURI + '/');
-                done();
-            });
-        });
-    });
-    
-    
-    it('should redirect http://www.host to https://host/locale/homeview/', function(done) {
+        let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-200-ok.json'));
         
-        this.driver.get('http://www.' + this.host).then(() => {
+        // Load all the urls on the json file and perform a request for each one.
+        let recursiveCaller = (urls, done) => {
             
-            this.driver.getCurrentUrl().then((url) => {
-                expect(url).toBe('https://' + this.host + this.homeURI + '/');
+            if(urls.length <= 0){
+                
                 done();
+            }
+            
+            let entry = urls.pop();
+            entry.url = StringUtils.replace(entry.url,
+                    ['$host', '$cacheHash'],
+                    [this.host, this.siteSetup.cacheHash]);
+            
+            this.driver.get(entry.url).then(() => {
+                
+                this.driver.getTitle().then((title) => {
+                
+                    if(entry.title !== null){
+                        
+                        expect(title).toContain(entry.title);
+                    }
+                    
+                    this.driver.getPageSource().then((source) => {
+                        
+                        if(entry.source !== null){
+                            
+                            expect(source).toContain(entry.source);
+                        }
+                        
+                        recursiveCaller(urls, done);
+                    });
+                });
             });
-        });
-    });  
-
-    
-    it('should redirect http://host/locale/homeview/ to https://host/locale/homeview/', function(done) {
+        }
         
-        this.driver.get('http://' + this.host + this.homeURI + '/').then(() => {
-            
-            this.driver.getCurrentUrl().then((url) => {
-                expect(url).toBe('https://' + this.host + this.homeURI + '/');
-                done();
-            });
-        });
-    });
-    
-    
-    it('should redirect https://www.host/locale/homeview/ to https://host/locale/homeview/', function(done) {
-        
-        this.driver.get('https://www.' + this.host + this.homeURI + '/').then(() => {
-            
-            this.driver.getCurrentUrl().then((url) => {
-                expect(url).toBe('https://' + this.host + this.homeURI + '/');
-                done();
-            });
-        });
-    });
-    
-    
-    it('should redirect https://www.host/locale/homeview to https://host/locale/homeview/', function(done) {
-        
-        this.driver.get('https://www.' + this.host + this.homeURI).then(() => {
-            
-            this.driver.getCurrentUrl().then((url) => {
-                expect(url).toBe('https://' + this.host + this.homeURI + '/');
-                done();
-            });
-        });
-    });
-    
-    
-    it('should open robots.txt root file', function(done) {
-        
-        this.driver.get('https://' + this.host + '/robots.txt').then(() => {
-            
-            this.driver.getPageSource().then((source) => {
-                expect(source).toContain('User-agent:');
-                done();
-            });
-        });
-    });
-    
-    
-//    it('should open global.css root file', function(done) {
-//        
-//        this.driver.get('https://' + this.host + '/global.css').then(() => {
-//            
-//            this.driver.getPageSource().then((source) => {
-//                expect(StringUtils.isEmpty(source)).toBe(false);
-//                done();
-//            });
-//        });
-//    });
-//    
-//    
-//    it('should open global.js root file', function(done) {
-//        
-//        this.driver.get('https://' + this.host + '/global.js').then(() => {
-//            
-//            this.driver.getPageSource().then((source) => {
-//                expect(StringUtils.isEmpty(source)).toBe(false);
-//                done();
-//            });
-//        });
-//    });
-    
-    
-    it('should show 404 for non existing root file', function(done) {
-        
-        this.driver.get('https://' + this.host + '/somenonexistingfile.txt').then(() => {
-            
-            this.driver.getTitle().then((title) => {                
-                expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404') >= 0)
-                    .toBe(true);
-                done();
-            });
-        });
-    });
-    
-    
-    it('should show 404 for non existing resources file', function(done) {
-        
-        this.driver.get('https://' + this.host + '/resources/somenonexistingfile.txt').then(() => {
-            
-            this.driver.getTitle().then((title) => {
-                expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404') >= 0)
-                    .toBe(true);
-                done();
-            });
-        });
-    });
-    
-    
-    it('should show contents of a resources static file', function(done) {
-        
-        this.driver.get('https://' + this.host + '/resources/fonts/TODO').then(() => {
-            
-            this.driver.getPageSource().then((source) => {
-                expect(source).toContain('Place project fonts here');
-                done();
-            });
-        });
+        recursiveCaller(list, done);
     });
 });
 
-
-//    https://localhost - Must direct to the home page
-//    X https://localhost/resources/.. - Must direct to the resources folder
-//    https://localhost/global.css - must show the css global file
-//    https://localhost/global.js - must show the jss global file
-//    X https://localhost/robots.txt - must show the file
-//    X https://localhost/somenonexistingfile.txt - must show 404 error
 //    https://localhost/app must redirect to index
 //    https://localhost/app/ must redirect to index
 //    https://localhost/storage/ must redirect to the storage folder
 //    https://localhost/storage must redirect to the storage folder
-//    https://localhost/site/index.php must fail with 404
-//    https://localhost/site/http/service.php must fail with 404
 //    ...
 //    
 //Test that site works also inside a subfolder of the web server: https://localhost/somefolder/global.js
