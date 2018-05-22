@@ -1,4 +1,3 @@
-User-agent: * 
-Disallow: /_dev/
-Disallow: /server/
-Allow: /
+# Allow crawling of all content
+User-agent: *
+Disallow:
