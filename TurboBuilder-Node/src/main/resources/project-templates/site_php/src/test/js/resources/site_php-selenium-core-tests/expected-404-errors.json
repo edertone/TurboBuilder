@@ -10,5 +10,7 @@
     "https://$host/resources/somenonexistingfile.txt",
     "https://$host/site/http/service.php",
     "https://$host/http/service.php",
-    "https://$host/http/service.php?q=somequery"
+    "https://$host/http/service.php?q=somequery",
+    "https://$host/global.css",
+    "https://$host/global-.css"
 ]

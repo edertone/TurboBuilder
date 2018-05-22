@@ -206,7 +206,10 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         if(type === 'site_php' && syncItem.type === 'fileSystem'){
 
             syncItem.excludes = [];
-            syncItem.destPath = 'C:\\xampp\\htdocs';
+            
+            // We expect the following symlink to point to the
+            // local webserver http docs root
+            syncItem.destPath = 'C:/turbosite-webserver-symlink';
             
             syncArray.push(syncItem);
         }

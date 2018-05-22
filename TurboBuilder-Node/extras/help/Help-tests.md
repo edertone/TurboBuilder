@@ -20,3 +20,12 @@ via standard windows cmd
 
 test it by opening a cmd and typing chromedriver. It should show its version and other info
 
+### Create a symlink from C:/turbosite-webserver-symlink to your local http webserver web root folder
+
+Launch the following command:
+
+mklink /J C:\turbosite-webserver-symlink C:\xampp\htdocs
+
+To create a hard symlink to the xampp webserver htdocs folder for example
+
+Make sure the web server is running while launching tests!

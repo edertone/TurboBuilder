@@ -23,13 +23,16 @@ describe('site_php-selenium-core-tests', function() {
 
     beforeAll(function() {
         
-        // TODO - this is not a solution
-        // this.siteSetup = JSON.parse(fm.readFile('C:/xampp/htdocs/site/turbosite.json'));
-        this.siteSetup = JSON.parse(fm.readFile('src/main/turbosite.json'));
+        this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+        
+        // TODO - this is not a solution cause we won't be able to access it in a remote location!
+        this.siteSetup = JSON.parse(fm.readFile('C:/turbosite-webserver-symlink/site/turbosite.json'));
+        //this.siteSetup = JSON.parse(fm.readFile('src/main/turbosite.json'));
         
         this.host = 'localhost';
         
-        this.homeURI = '/' + this.siteSetup.locales[0].split('_')[0] + '/' + this.siteSetup.homeView;
+        this.defaultLocale = this.siteSetup.locales[0].split('_')[0];
         
         this.driver = new webdriver.Builder().forBrowser('chrome').build();
     });
@@ -37,6 +40,8 @@ describe('site_php-selenium-core-tests', function() {
     
     afterAll(function() {
 
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
+        
         this.driver.quit(); 
     });
     
@@ -86,11 +91,11 @@ describe('site_php-selenium-core-tests', function() {
             let entry = urls.pop();
             entry.url = StringUtils.replace(entry.url,
                     ['$host', '$locale', '$homeView'],
-                    [this.host, 'en', this.siteSetup.homeView]);
+                    [this.host, this.defaultLocale, this.siteSetup.homeView]);
             
             entry.to = StringUtils.replace(entry.to,
                     ['$host', '$locale', '$homeView'],
-                    [this.host, 'en', this.siteSetup.homeView]);
+                    [this.host, this.defaultLocale, this.siteSetup.homeView]);
             
             this.driver.get(entry.url).then(() => {
                       
@@ -128,6 +133,9 @@ describe('site_php-selenium-core-tests', function() {
                 
                 this.driver.getTitle().then((title) => {
                 
+                    expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
+                        .not.toBe(true, entry.url + ' should not throw 404 error');
+                    
                     if(entry.title !== null){
                         
                         expect(title).toContain(entry.title);
