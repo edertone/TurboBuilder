@@ -3,7 +3,6 @@
     "https://$host/somenonexistingfile.css",
     "https://$host/somenonexistingfile.txt",
     "https://$host/site/file.php",
-    "https://$host/site/index.php",
     "https://$host/site/autoloader.php",
     "https://$host/site/error-404.php",
     "https://$host/site/view/views/home/home.php",

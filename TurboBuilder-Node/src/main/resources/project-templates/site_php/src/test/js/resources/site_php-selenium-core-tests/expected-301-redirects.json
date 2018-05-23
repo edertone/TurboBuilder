@@ -8,6 +8,10 @@
 		"to": "https://$host/$locale/$homeView"
 	},
 	{
+		"url": "HTTP://$host/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
 		"url": "http://$host/parameter",
 		"to": "https://$host/parameter"
 	},
@@ -24,6 +28,10 @@
 		"to": "https://$host/$locale/$homeView"
 	},
 	{
+		"url": "HTTPS://$host/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
 		"url": "https://$host/parameter",
 		"to": "https://$host/parameter"
 	},
@@ -37,6 +45,14 @@
 	},
 	{
 		"url": "http://www.$host/",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://WWW.$host",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://Www.$host/",
 		"to": "https://$host/$locale/$homeView"
 	},
 	{
@@ -57,6 +73,14 @@
 	},
 	{
 		"url": "http://$host/index.php",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "http://$host/site/index.php",
+		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "https://$host/$locale/$homeView/somecrappytexts",
 		"to": "https://$host/$locale/$homeView"
 	}
 ]

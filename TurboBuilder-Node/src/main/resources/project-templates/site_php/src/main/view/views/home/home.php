@@ -1,19 +1,18 @@
 <?php
 
+use org\turbosite\src\main\php\model\WebSite;
 
-use com\edertone\turboProject\src\main\php\model\App;
+$ws = WebSite::getInstance();
 
-
-App::initializeView();
-// App::importCss('css/view/views/home/Home.css');
+$ws->constructView();
 
 ?>
 <!doctype html>
-<html lang="<?php echo App::getCurrentLanguage() ?>">
+<html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
 <?php
-	App::echoHeadHtml();
+//$ws->echoHeadHtml();
 ?>
 </head>
 

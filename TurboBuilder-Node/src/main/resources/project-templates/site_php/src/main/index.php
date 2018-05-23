@@ -10,6 +10,8 @@ require 'libs/turbosite/TurboSite-Php-0.0.0.phar';
 
 use org\turbosite\src\main\php\model\WebSite;
 
-$ws = new WebSite();
+$ws = WebSite::getInstance();
+
+$ws->construct();
 
 ?>

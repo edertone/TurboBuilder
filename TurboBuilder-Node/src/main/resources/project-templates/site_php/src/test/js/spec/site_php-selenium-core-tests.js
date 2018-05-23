@@ -26,13 +26,23 @@ describe('site_php-selenium-core-tests', function() {
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
+        this.host = 'localhost';
+        
         // TODO - this is not a solution cause we won't be able to access it in a remote location!
+        // Load the cachehash value from the home view!
         this.siteSetup = JSON.parse(fm.readFile('C:/turbosite-webserver-symlink/site/turbosite.json'));
         //this.siteSetup = JSON.parse(fm.readFile('src/main/turbosite.json'));
         
-        this.host = 'localhost';
-        
-        this.defaultLocale = this.siteSetup.locales[0].split('_')[0];
+        // Aux method to replace all the wildcards on a provided url
+        this.replaceWildCardsOnUrl = (url) => {
+            
+            return StringUtils.replace(url,
+                    ['$host', '$locale', '$homeView', '$cacheHash'],
+                    [this.host,
+                     this.siteSetup.locales[0].split('_')[0],
+                     this.siteSetup.homeView,
+                     this.siteSetup.cacheHash]);
+        }
         
         this.driver = new webdriver.Builder().forBrowser('chrome').build();
     });
@@ -58,7 +68,7 @@ describe('site_php-selenium-core-tests', function() {
                 done();
             }
             
-            let url = StringUtils.replace(urls.pop(), '$host', this.host);
+            let url = this.replaceWildCardsOnUrl(urls.pop());
             
             this.driver.get(url).then(() => {
                 
@@ -89,13 +99,8 @@ describe('site_php-selenium-core-tests', function() {
             }
             
             let entry = urls.pop();
-            entry.url = StringUtils.replace(entry.url,
-                    ['$host', '$locale', '$homeView'],
-                    [this.host, this.defaultLocale, this.siteSetup.homeView]);
-            
-            entry.to = StringUtils.replace(entry.to,
-                    ['$host', '$locale', '$homeView'],
-                    [this.host, this.defaultLocale, this.siteSetup.homeView]);
+            entry.url = this.replaceWildCardsOnUrl(entry.url);
+            entry.to = this.replaceWildCardsOnUrl(entry.to);
             
             this.driver.get(entry.url).then(() => {
                       
@@ -125,9 +130,7 @@ describe('site_php-selenium-core-tests', function() {
             }
             
             let entry = urls.pop();
-            entry.url = StringUtils.replace(entry.url,
-                    ['$host', '$cacheHash'],
-                    [this.host, this.siteSetup.cacheHash]);
+            entry.url = this.replaceWildCardsOnUrl(entry.url);
             
             this.driver.get(entry.url).then(() => {
                 
@@ -158,10 +161,30 @@ describe('site_php-selenium-core-tests', function() {
     });
 });
 
-//    https://localhost/app must redirect to index
-//    https://localhost/app/ must redirect to index
-//    https://localhost/storage/ must redirect to the storage folder
-//    https://localhost/storage must redirect to the storage folder
+
+/*
+    404 expected ??
+    "http://$host/robots.TXT",
+    "http://$host/robots.txT",
+    "http://$host/Robots.txt",
+    "http://$host/robOts.txt",
+    "http://$host/ROBOTS.txt",
+    "http://$host/ROBOTS.TXT",
+    "http://$host/global-$cacheHash.CSS",
+    "http://$host/global-$cacheHash.Css",
+    "http://$host/globAl-$cacheHash.css",
+    "http://$host/global-$cacheHash.JS",
+    "http://$host/global-$cacheHash.Js",
+    "http://$host/Global-$cacheHash.js"
+
+    https://localhost/app must load single parameter view
+    https://localhost/app/ must load single parameter view
+    https://localhost/storage/ must redirect to the storage folder
+    https://localhost/storage must redirect to the storage folder
+    
+    - que pasa amb les barres invertides \ en la url ??
+ */
+
 //    ...
 //    
 //Test that site works also inside a subfolder of the web server: https://localhost/somefolder/global.js
