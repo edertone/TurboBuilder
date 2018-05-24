@@ -118,7 +118,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         // Launch unit tests via php executable
         let phpExecCommand = 'php';
         
-        phpExecCommand += ' "' + global.installationPaths.mainResources + sep + 'libs' + sep + 'phpunit-6.2.3.phar"';
+        phpExecCommand += ' "' + global.installationPaths.testResources + sep + 'libs' + sep + 'phpunit-7.1.5.phar"';
         
         if(testSetup.coverageReport){
             
