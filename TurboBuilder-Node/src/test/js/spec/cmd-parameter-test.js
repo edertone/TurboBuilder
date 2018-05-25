@@ -76,5 +76,7 @@ describe('cmd-parameter-test', function() {
         expect(testsLaunchResult).not.toContain('There are jasmine unit test failures');
         
         expect(utils.exec('-c')).toContain("clean ok");
+        
+        // TODO - execute the same tests but targeting a webserver subfolder
     });
 });

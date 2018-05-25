@@ -13,7 +13,7 @@
 
 
 const webdriver = require('selenium-webdriver');
-const { StringUtils, FilesManager } = require('turbocommons-ts');
+const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -60,6 +60,10 @@ describe('site_php-selenium-core-tests', function() {
         
         let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-404-errors.json'));
         
+        // Fail if list has duplicate values
+        expect(ArrayUtils.hasDuplicateElements(list))
+            .toBe(false, 'duplicate urls: ' + ArrayUtils.getDuplicateElements(list).join(', '));
+        
         // Load all the urls on the json file and perform a request for each one.
         let recursiveCaller = (urls, done) => {
             
@@ -89,6 +93,10 @@ describe('site_php-selenium-core-tests', function() {
     it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
         
         let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-301-redirects.json'));
+        
+        // Fail if list has duplicate values
+        expect(ArrayUtils.hasDuplicateElements(list.map(l => l.url)))
+            .toBe(false, 'duplicate urls: ' + ArrayUtils.getDuplicateElements(list.map(l => l.url)).join(', '));
         
         // Load all the urls on the json file and perform a request for each one.
         let recursiveCaller = (urls, done) => {
@@ -120,6 +128,10 @@ describe('site_php-selenium-core-tests', function() {
     it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
         let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-200-ok.json'));
+        
+        // Fail if list has duplicate values
+        expect(ArrayUtils.hasDuplicateElements(list.map(l => l.url)))
+            .toBe(false, 'duplicate urls: ' + ArrayUtils.getDuplicateElements(list.map(l => l.url)).join(', '));
         
         // Load all the urls on the json file and perform a request for each one.
         let recursiveCaller = (urls, done) => {
@@ -183,6 +195,14 @@ describe('site_php-selenium-core-tests', function() {
     https://localhost/storage must redirect to the storage folder
     
     - que pasa amb les barres invertides \ en la url ??
+    
+    - Que passa amb els query params?? --> url?pram1=erertert , etc
+    
+    - que pasa amb views que no existeixen? es/nonexistingview/
+    
+    - que pasa amb un caracter ? alla on no toca? es/home?/
+    
+    - Que pasa amb més de un ? en la mateixa url? i dins de parametres? /xxx?xxx/
  */
 
 //    ...
