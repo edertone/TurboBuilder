@@ -44,7 +44,15 @@ describe('site_php-selenium-core-tests', function() {
                      this.siteSetup.cacheHash]);
         }
         
-        this.driver = new webdriver.Builder().forBrowser('chrome').build();
+        // Initialize the chrome driver with english language
+        let chromeCapabilities = webdriver.Capabilities.chrome();
+        
+        var chromeOptions = {
+            'args': ['--lang=en']
+        };
+        
+        chromeCapabilities.set('chromeOptions', chromeOptions);
+        this.driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
     });
 
     

@@ -32,6 +32,14 @@
 		"to": "https://$host/$locale/$homeView"
 	},
 	{
+		"url": "https://$host/en",
+		"to": "https://$host/en/$homeView"
+	},
+	{
+		"url": "https://$host/es",
+		"to": "https://$host/es/$homeView"
+	},
+	{
 		"url": "https://$host/parameter",
 		"to": "https://$host/parameter"
 	},
@@ -54,6 +62,14 @@
 	{
 		"url": "http://Www.$host/",
 		"to": "https://$host/$locale/$homeView"
+	},
+	{
+		"url": "https://www.$host/en",
+		"to": "https://$host/en/$homeView"
+	},
+	{
+		"url": "https://www.$host/es",
+		"to": "https://$host/es/$homeView"
 	},
 	{
 		"url": "http://$host/$locale/$homeView",

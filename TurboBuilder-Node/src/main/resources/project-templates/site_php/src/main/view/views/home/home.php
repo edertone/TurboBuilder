@@ -4,7 +4,7 @@ use org\turbosite\src\main\php\model\WebSite;
 
 $ws = WebSite::getInstance();
 
-$ws->constructView();
+$ws->initializeView();
 
 ?>
 <!doctype html>
@@ -12,8 +12,9 @@ $ws->constructView();
 
 <head>
 <?php
-//$ws->echoHeadHtml();
-?>
+    $ws->echoViewHeadHtml(
+    $ws->l('TITLE', 'home'),
+    $ws->l('DESCRIPTION', 'home')) ?>
 </head>
 
 <body>

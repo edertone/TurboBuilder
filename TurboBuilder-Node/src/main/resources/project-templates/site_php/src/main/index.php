@@ -5,13 +5,13 @@
  */
 
 require 'autoloader.php';
-require 'libs/turbocommons-php/TurboCommons-Php-0.6.0.phar';
+require 'libs/turbocommons-php/TurboCommons-Php-0.6.1.phar';
 require 'libs/turbosite/TurboSite-Php-0.0.0.phar';
 
 use org\turbosite\src\main\php\model\WebSite;
 
 $ws = WebSite::getInstance();
 
-$ws->construct();
+$ws->initialize(__FILE__);
 
 ?>

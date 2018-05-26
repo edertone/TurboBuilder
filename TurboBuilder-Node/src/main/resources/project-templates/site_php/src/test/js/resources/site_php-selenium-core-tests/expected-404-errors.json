@@ -1,4 +1,8 @@
 [
+	"https://$host/x",
+	"https://$host/XX",
+	"https://$host/xX",
+	"https://$host/xxx",
 	"https://$host/somenonexistingfile.js",
     "https://$host/somenonexistingfile.css",
     "https://$host/somenonexistingfile.txt",
@@ -11,5 +15,9 @@
     "https://$host/http/service.php",
     "https://$host/http/service.php?q=somequery",
     "https://$host/global.css",
-    "https://$host/global-.css"
+    "https://$host/global-.css",
+    "https://$host/en/nonexistingview",
+    "https://$host/zh/home",
+    "https://$host/fr",
+    "https://www.$host/fr"    
 ]

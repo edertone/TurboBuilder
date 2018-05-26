@@ -1,6 +1,16 @@
 {
 	"cacheHash": "",
+ 	
  	"homeView": "home",
+ 	
  	"singleParameterView": "singleParameterView",
-	"locales": ["en_US", "es_ES"]
+	
+	"locales": ["en_US", "es_ES"],
+	
+	"resourceBundles": [
+		{
+	    	"path": "resources/locales/$locale/$bundle.properties",
+	        "bundles": ["home"]
+		}
+	]
 }
