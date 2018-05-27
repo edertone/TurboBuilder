@@ -64,10 +64,7 @@ exports.execute = function () {
         buildModule.buildLibTs(releaseFullPath);
     }
     
-    if(global.setup.release.optimizeJs){
-        
-        minifyJs(releaseFullPath);
-    }
+    minifyJs(releaseFullPath);
     
     if(global.setup.release.generateCodeDocumentation){
         

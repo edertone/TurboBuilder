@@ -12,11 +12,12 @@
  */
 
 
+const path = require('path');
 const webdriver = require('selenium-webdriver');
 const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
 
 
-let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+let fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
 describe('site_php-selenium-core-tests', function() {
@@ -28,10 +29,9 @@ describe('site_php-selenium-core-tests', function() {
         
         this.host = 'localhost';
         
-        // TODO - this is not a solution cause we won't be able to access it in a remote location!
-        // Load the cachehash value from the home view!
-        this.siteSetup = JSON.parse(fm.readFile('C:/turbosite-webserver-symlink/site/turbosite.json'));
-        //this.siteSetup = JSON.parse(fm.readFile('src/main/turbosite.json'));
+        let projectName = StringUtils.getPathElement(path.resolve('./'));
+        
+        this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
         
         // Aux method to replace all the wildcards on a provided url
         this.replaceWildCardsOnUrl = (url) => {

@@ -63,10 +63,6 @@
 	    "printTodoFiles" : true,
 	    "gitChangeLog": true,
 	    "gitChangeLogCount": 5,
-	    "optimizeCss": true,
-	    "optimizeHtml": true,
-	    "optimizeJs": true,
-	    "optimizePhp": false,
 	    "optimizePictures": true,
 	    "generateCodeDocumentation": true
     },
