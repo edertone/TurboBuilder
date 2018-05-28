@@ -80,7 +80,7 @@ describe('site_php-selenium-core-tests', function() {
                 done();
             }
             
-            let url = this.replaceWildCardsOnUrl(urls.pop());
+            let url = this.replaceWildCardsOnUrl(urls.shift());
             
             this.driver.get(url).then(() => {
                 
@@ -114,7 +114,7 @@ describe('site_php-selenium-core-tests', function() {
                 done();
             }
             
-            let entry = urls.pop();
+            let entry = urls.shift();
             entry.url = this.replaceWildCardsOnUrl(entry.url);
             entry.to = this.replaceWildCardsOnUrl(entry.to);
             
@@ -149,7 +149,7 @@ describe('site_php-selenium-core-tests', function() {
                 done();
             }
             
-            let entry = urls.pop();
+            let entry = urls.shift();
             entry.url = this.replaceWildCardsOnUrl(entry.url);
             
             this.driver.get(entry.url).then(() => {
@@ -171,7 +171,12 @@ describe('site_php-selenium-core-tests', function() {
                             expect(source).toContain(entry.source);
                         }
                         
-                        recursiveCaller(urls, done);
+                        this.driver.getCurrentUrl().then((url) => {
+                            
+                            expect(url).toBe(entry.url, 'Coming from url: ' + entry.url);
+                            
+                            recursiveCaller(urls, done);
+                        });
                     });
                 });
             });
