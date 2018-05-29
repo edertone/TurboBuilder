@@ -5,6 +5,16 @@
 		"source": "User-agent:"
 	},
 	{
+		"url": "https://$host/robots.txt?p=1",
+		"title": null,
+		"source": "User-agent:"
+	},
+	{
+		"url": "https://$host/robots.txt?p=1&q=2",
+		"title": null,
+		"source": "User-agent:"
+	},
+	{
 		"url": "https://$host/global-$cacheHash.css",
 		"title": null,
 		"source": "font-size"
