@@ -1,5 +1,11 @@
 RewriteEngine on
 
+
+# CUSTOM BEFORE RULES START
+
+# CUSTOM BEFORE RULES END
+
+
 # Redirect 404 errors to the error page
 ErrorDocument 404 /site/error-404.php
 
@@ -33,4 +39,6 @@ RewriteCond %{REQUEST_URI} !/site/error-404.php [NC]
 RewriteRule ^(.*)\.php$ - [L,R=404]
 
 
-# CUSTOM RULES - HERE
+# CUSTOM AFTER RULES START
+
+# CUSTOM AFTER RULES END
