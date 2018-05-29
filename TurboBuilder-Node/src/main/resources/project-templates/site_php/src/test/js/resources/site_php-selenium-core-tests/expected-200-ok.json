@@ -1,16 +1,16 @@
 [
 	{
-		"url": "http://$host/robots.txt",
+		"url": "https://$host/robots.txt",
 		"title": null,
 		"source": "User-agent:"
 	},
 	{
-		"url": "http://$host/global-$cacheHash.css",
+		"url": "https://$host/global-$cacheHash.css",
 		"title": null,
 		"source": "font-size"
 	},
 	{
-		"url": "http://$host/global-$cacheHash.js",
+		"url": "https://$host/global-$cacheHash.js",
 		"title": null,
 		"source": "\"use strict\""
 	},
@@ -20,12 +20,12 @@
 		"source": "Place project fonts here"
 	},
 	{
-		"url": "https://$host/en/$homeView",
+		"url": "https://$host/en",
 		"title": "Home page",
 		"source": "not to exceed 500 characters"
 	},
 	{
-		"url": "https://$host/es/$homeView",
+		"url": "https://$host/es",
 		"title": "Página principal",
 		"source": "intentando no exceder 500 caracteres"
 	}

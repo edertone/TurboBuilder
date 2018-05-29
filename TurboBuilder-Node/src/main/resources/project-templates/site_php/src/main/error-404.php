@@ -56,7 +56,7 @@
     <h1>Page Not Found</h1>
     <p>Sorry, but the page you were trying to view does not exist.</p>
 	<br>
-	<p>Redirecting to home in <span id="time">6</span> secs ...</p>
+	<p>Redirecting to <?php echo $_SERVER['HTTP_HOST'] ?> in <span id="time">6</span> secs ...</p>
 
 	<script>
 		setTimeout(function(){document.getElementById('time').innerHTML="5"},1000);
