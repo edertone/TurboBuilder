@@ -38,5 +38,10 @@
 		"url": "https://$host/es",
 		"title": "Página principal",
 		"source": "intentando no exceder 500 caracteres"
+	},
+	{
+		"url": "https://$host/cache",
+		"title": "cache",
+		"source": "This is the single parameter view"
 	}
 ]

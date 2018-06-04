@@ -166,5 +166,13 @@
 	{
 		"url": "https://$host/$locale/$homeView?somecrap=1&morecrap=2",
 		"to": "https://$host/$locale"
+	},
+	{
+		"url": "http://www.$host/cache/",
+		"to": "https://$host/cache"
+	},
+	{
+		"url": "https://$host/cache?param=1",
+		"to": "https://$host/cache"
 	}
 ]

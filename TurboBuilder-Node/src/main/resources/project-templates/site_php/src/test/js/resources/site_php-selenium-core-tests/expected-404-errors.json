@@ -2,7 +2,7 @@
 	"https://$host/x",
 	"https://$host/XX",
 	"https://$host/xX",
-	"https://$host/xxx",
+	"https://$host/xx.x",
 	"https://$host/somenonexistingfile.js",
     "https://$host/somenonexistingfile.css",
     "https://$host/somenonexistingfile.txt",
@@ -22,13 +22,7 @@
     "https://$host/fr/home",
     "https://$host/fr/nonexisting",
     "https://www.$host/fr",
-    "https://$host/cache",
-    "https://$host/cache/",
     "https://$host/cache/readme.txt",
-    "https://www.$host/cache",
-    "https://www.$host/cache/",
     "https://www.$host/cache/readme.txt",
-    "https://$host/cache?param=1",
-    "https://$host/cache/?param=1",
     "https://$host/cache/readme.txt?param=1"
 ]
