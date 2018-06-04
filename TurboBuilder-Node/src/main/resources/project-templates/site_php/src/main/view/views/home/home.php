@@ -3,30 +3,33 @@
 use org\turbosite\src\main\php\model\WebSite;
 
 $ws = WebSite::getInstance();
+
 $ws->initializeView();
+
 $ws->loadBundles(['home']);
 
-?>
+$ws->loadComponents([
+    'view/components/header',
+    'view/components/footer']);
 
+$ws->metaTitle = $ws->getLoc('TITLE');
+$ws->metaDescription = $ws->getLoc('DESCRIPTION');
+
+?>
 <!doctype html>
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
-<?php
-    $ws->echoHeadHtml(
-    $ws->getLoc('TITLE', 'home'),
-    $ws->getLoc('DESCRIPTION', 'home')) ?>
+<?php $ws->echoHeadHtml() ?>
 </head>
 
 <body>
 
-	<?php $ws->require('view/components/header/header.php') ?>
+    <?php $ws->includeComponent('view/components/header/header') ?>
 
+    <!-- Place HTML BODY contents here -->
 
-	<!-- Place HTML BODY contents here -->
-
-
-	<?php $ws->require('view/components/footer/footer.php') ?>
+    <?php $ws->includeComponent('view/components/footer/footer') ?>
 
 </body>
 
