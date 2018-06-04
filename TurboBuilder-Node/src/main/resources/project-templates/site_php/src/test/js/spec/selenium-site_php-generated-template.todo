@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+'use strict';
+
+
+/**
+ * All those tests are check that a site_php project type works as expected.
+ * Any site_php project that is up to date must pass all of these tests.
+ * 
+ * No multi browser is necessary as we are only testing url behaviours, so we will use only
+ * the chromedriver for these tests. 
+ */
+
+
+const path = require('path');
+const webdriver = require('selenium-webdriver');
+const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
+
+
+let fm = new FilesManager(require('fs'), require('os'), path, process);
+
+
+describe('selenium-site_php-generated-template', function() {
+
+    beforeAll(function() {
+       
+    });
+
+    
+    afterAll(function() {
+
+        
+    });
+    
+    
+    it('should have the correct header on home view', function(done) {
+        
+    });
+    
+    
+    it('should have the correct footer on home view', function(done) {
+        
+       
+    });
+
+    
+    it('should have the correct code on global.css', function(done) {
+        
+        
+    });
+    
+    
+    it('should have the correct code on global.js', function(done) {
+        
+        
+    });
+});

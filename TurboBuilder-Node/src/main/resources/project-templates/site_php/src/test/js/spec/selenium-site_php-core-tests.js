@@ -20,7 +20,7 @@ const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
 let fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
-describe('site_php-selenium-core-tests', function() {
+describe('selenium-site_php-core-tests', function() {
 
     beforeAll(function() {
         
@@ -66,7 +66,7 @@ describe('site_php-selenium-core-tests', function() {
     
     it('should show 404 errors as defined in expected-404-errors.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-404-errors.json'));
+        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-404-errors.json'));
         
         // Fail if list has duplicate values
         expect(ArrayUtils.hasDuplicateElements(list))
@@ -100,7 +100,7 @@ describe('site_php-selenium-core-tests', function() {
     
     it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-301-redirects.json'));
+        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-301-redirects.json'));
         
         // Fail if list has duplicate values
         expect(ArrayUtils.hasDuplicateElements(list.map(l => l.url)))
@@ -135,7 +135,7 @@ describe('site_php-selenium-core-tests', function() {
     
     it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/site_php-selenium-core-tests/expected-200-ok.json'));
+        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-200-ok.json'));
         
         // Fail if list has duplicate values
         expect(ArrayUtils.hasDuplicateElements(list.map(l => l.url)))
@@ -168,7 +168,17 @@ describe('site_php-selenium-core-tests', function() {
                         
                         if(entry.source !== null){
                             
-                            expect(source).toContain(entry.source);
+                            if(ArrayUtils.isArray(entry.source)){
+                            
+                                for (let entrySourceElement of entry.source) {
+                                    
+                                    expect(source).toContain(entrySourceElement);
+                                }
+                                
+                            }else{
+                            
+                                expect(source).toContain(entry.source);
+                            }
                         }
                         
                         this.driver.getCurrentUrl().then((url) => {
@@ -189,6 +199,8 @@ describe('site_php-selenium-core-tests', function() {
 
 /*
 
+    test links between pages and custom texts
+
     404 expected ??
         "http://$host/robots.TXT",
         "http://$host/robots.txT",
@@ -196,12 +208,12 @@ describe('site_php-selenium-core-tests', function() {
         "http://$host/robOts.txt",
         "http://$host/ROBOTS.txt",
         "http://$host/ROBOTS.TXT",
-        "http://$host/global-$cacheHash.CSS",
-        "http://$host/global-$cacheHash.Css",
-        "http://$host/globAl-$cacheHash.css",
-        "http://$host/global-$cacheHash.JS",
-        "http://$host/global-$cacheHash.Js",
-        "http://$host/Global-$cacheHash.js"
+        "http://$host/glob-$cacheHash.CSS",
+        "http://$host/glob-$cacheHash.Css",
+        "http://$host/glob-$cacheHash.css",
+        "http://$host/glob-$cacheHash.JS",
+        "http://$host/glob-$cacheHash.Js",
+        "http://$host/Glob-$cacheHash.js"
 
     https://localhost/app must load single parameter view
     https://localhost/app/ must load single parameter view
