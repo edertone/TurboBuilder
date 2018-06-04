@@ -148,7 +148,28 @@ exports.buildSitePhp = function (destPath) {
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
             this.mergeFilesFromArray(turboSiteSetup.globalJs, destSite, true));
     
-    // 2 - merge components
+    // Generate all the components css and js merged files
+    let componentsbasePath = destSite + fm.dirSep() + 'view' + fm.dirSep() + 'components';
+    let componentsItems = fm.getDirectoryList(componentsbasePath);
+    
+    for (let componentItem of componentsItems) {
+        
+        if(fm.isDirectory(componentsbasePath + fm.dirSep() + componentItem)){
+            
+            // Merge all css files on the folder and generate the component css
+            let componentCssFiles = fm.findDirectoryItems(componentsbasePath + fm.dirSep() + componentItem, /.*\.css$/i, 'absolute', 'files');
+        
+            fm.saveFile(destSite + sep + 'comp-view-components-' + componentItem + '-' + turboSiteSetup.cacheHash +'.css',
+                    this.mergeFilesFromArray(componentCssFiles, '', true));
+            
+            // Merge all the js files on the folder and generate the component js
+            let componentJsFiles = fm.findDirectoryItems(componentsbasePath + fm.dirSep() + componentItem, /.*\.js$/i, 'absolute', 'files');
+            
+            fm.saveFile(destSite + sep + 'comp-view-components-' + componentItem + '-' + turboSiteSetup.cacheHash +'.js',
+                    this.mergeFilesFromArray(componentJsFiles, '', true));    
+        }
+        
+    }
       
     // Create view css and js files
     // TODO
@@ -270,17 +291,22 @@ exports.buildLibTs = function (destPath) {
 exports.mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
     
     let result = '';
+    
+    if(basePath !== ''){
         
+        basePath += fm.dirSep();
+    }
+    
     for (let file of array) {
         
-        result += fm.readFile(basePath + fm.dirSep() + file) + "\n\n";
+        result += fm.readFile(basePath + file) + "\n\n";
     }
     
     if(deleteFiles){
         
         for (let file of array) {
             
-            fm.deleteFile(basePath + fm.dirSep() + file);
+            fm.deleteFile(basePath + file);
         }
     }
     

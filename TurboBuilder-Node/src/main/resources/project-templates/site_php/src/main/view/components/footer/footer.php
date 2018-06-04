@@ -3,6 +3,7 @@
 use org\turbosite\src\main\php\model\WebSite;
 
 $ws = WebSite::getInstance();
+
 $ws->loadBundles(['footer']);
 
 ?>
