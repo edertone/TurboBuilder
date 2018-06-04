@@ -14,8 +14,9 @@
     "https://$host/site/http/service.php",
     "https://$host/http/service.php",
     "https://$host/http/service.php?q=somequery",
+    "https://$host/glob.css",
     "https://$host/global.css",
-    "https://$host/global-.css",
+    "https://$host/glob-.css",
     "https://$host/en/nonexistingview",
     "https://$host/zh/home",
     "https://$host/fr",
@@ -24,5 +25,6 @@
     "https://www.$host/fr",
     "https://$host/cache/readme.txt",
     "https://www.$host/cache/readme.txt",
-    "https://$host/cache/readme.txt?param=1"
+    "https://$host/cache/readme.txt?param=1",
+    "https://$host/resources/fonts/non-existing-font.ttf"
 ]
