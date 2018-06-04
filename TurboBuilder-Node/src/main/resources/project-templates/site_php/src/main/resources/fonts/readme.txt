@@ -1,0 +1,1 @@
+This folder contains all the project fonts in several formats, so all browsers can use them
