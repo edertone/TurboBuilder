@@ -4,6 +4,13 @@
  * Site entry point that generates the site document based on the current url
  */
 
+// TODO - cache implementation
+if(file_exists('cache/hash')){
+
+    require 'cache/hash-TODO';
+    die();
+}
+
 require 'autoloader.php';
 require 'libs/turbocommons-php/TurboCommons-Php-0.6.1.phar';
 require 'libs/turbosite/TurboSite-Php-0.0.0.phar';

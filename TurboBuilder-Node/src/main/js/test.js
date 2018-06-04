@@ -220,7 +220,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                 
                 // Merge all src dist code into tests target
                 fm.mergeFiles(fm.findDirectoryItems(destPath + sep + 'dist' + sep + tsTargetObject.folder, /.*\.js$/i, 'absolute', 'files'),
-                        testsTarget + sep + 'build.js', "\n\n");
+                        testsTarget + sep + 'source.js', "\n\n");
         
                 // Copy qunit library
                 if(!fm.copyDirectory(global.installationPaths.testResources + sep + 'libs' + sep + 'qunit', testsTarget, false)){
@@ -247,7 +247,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     htmlIndexCode += '<div id="qunit"></div>';
                     htmlIndexCode += '<div id="qunit-fixture"></div>';
                     htmlIndexCode += '<script src="qunit-2.6.0.js"></script>';
-                    htmlIndexCode += '<script src="build.js"></script>';
+                    htmlIndexCode += '<script src="source.js"></script>';
                     htmlIndexCode += '<script src="tests.js"></script>';
                     htmlIndexCode += '</body>';
                     htmlIndexCode += '</html>';

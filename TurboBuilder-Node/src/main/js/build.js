@@ -140,16 +140,16 @@ exports.buildSitePhp = function (destPath) {
     
     fm.saveFile(destSite + sep + 'turbosite.json', JSON.stringify(turboSiteSetup, null, 4));
     
-    // Create global css and js files
+    // Create global css file
+    fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
+            this.mergeFilesFromArray(turboSiteSetup.globalCss, destSite, true));
     
-    // -- Warning - sort is important, normalize must be first
-    // 1 - merge libs
+    // Create global Js file
+    fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
+            this.mergeFilesFromArray(turboSiteSetup.globalJs, destSite, true));
     
     // 2 - merge components
-    
-    fm.saveFile(destSite + sep + 'global-' + turboSiteSetup.cacheHash +'.css', this.mergeFilesFromFolder(destSite, 'css', true));
-    fm.saveFile(destSite + sep + 'global-' + turboSiteSetup.cacheHash +'.js', this.mergeFilesFromFolder(destSite, 'js', true));
-    
+      
     // Create view css and js files
     // TODO
 }
@@ -265,24 +265,23 @@ exports.buildLibTs = function (destPath) {
 
 
 /**
- * Join all the files from the specified folder and get a string with the result
+ * Join all the files from the specified array and get a string with the result
  */
-exports.mergeFilesFromFolder = function (path, extension, deleteFiles = false) {
-    
-    let regex = new RegExp('.*\.' + extension + '$', 'i');
-    
-    let files = fm.findDirectoryItems(path, regex, 'absolute', 'files');
+exports.mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
     
     let result = '';
         
-    for (let file of files) {
+    for (let file of array) {
         
-        result += fm.readFile(file) + "\n\n";
+        result += fm.readFile(basePath + fm.dirSep() + file) + "\n\n";
     }
     
     if(deleteFiles){
         
-        fm.deleteFiles(files);
+        for (let file of array) {
+            
+            fm.deleteFile(basePath + fm.dirSep() + file);
+        }
     }
     
     return result;
