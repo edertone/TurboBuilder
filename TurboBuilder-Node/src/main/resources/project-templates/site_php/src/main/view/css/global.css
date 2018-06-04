@@ -1,0 +1,12 @@
+/* This font face structure covers most of the possible browsers */
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url('resources/fonts/Roboto-Regular.woff2') format('woff2'),
+       url('resources/fonts/Roboto-Regular.woff') format('woff'),
+       url('resources/fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+
+body{
+    font-family: Roboto-Regular, sans-serif;
+}
