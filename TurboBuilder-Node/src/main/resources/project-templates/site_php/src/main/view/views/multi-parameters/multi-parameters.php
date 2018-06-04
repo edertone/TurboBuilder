@@ -11,10 +11,7 @@ $ws->initializeView();
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
-<?php
-    $ws->echoHeadHtml(
-    $ws->l('TITLE', 'home'),
-    $ws->l('DESCRIPTION', 'home')) ?>
+    <?php $ws->echoHeadHtml() ?>
 </head>
 
 <body>
