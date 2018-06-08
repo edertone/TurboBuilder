@@ -1,0 +1,25 @@
+@import "../../css/global-vars.scss";
+
+nav{
+    width: 100%;
+    min-height: 50px;
+    background-color: $color-bg-inverted-primary;
+    border-bottom: 2px solid $color-bg-inverted-secondary;
+}
+
+header{
+    width: 100%;
+    min-height: 380px;
+    background-color: $color-bg-inverted-tertiary;
+    border-bottom: 5px solid $color-bg-secondary;
+    display: flex;
+    justify-content: center;
+}
+
+header h1{
+    color: $color-text-inverted-secondary;
+    font-size: 60px;
+    font-weight: normal;
+    margin-top: 50px;
+    text-align: center;
+}

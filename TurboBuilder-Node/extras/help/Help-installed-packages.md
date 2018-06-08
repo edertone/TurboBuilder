@@ -10,9 +10,21 @@ Used to provide command line functionalities to the app: receiving args, options
 
 A basic web server used to launch unit tests or any other html resources
 
+## jasmine
+
+A javascript unit tests framework
+
+## node-sass
+
+A compiler to convert scss files to css
+
 ## opn
 
 A platform independent url/file launcher
+
+## selenium-webdriver
+
+The selenium library to execute browser tests
 
 ## turbocommons-ts
 

@@ -27,7 +27,13 @@ $ws->metaDescription = $ws->getLoc('DESCRIPTION');
 
     <?php $ws->includeComponent('view/components/header/header') ?>
 
-    <!-- Place HTML BODY contents here -->
+    <main>
+
+        <!-- Main content goes here -->
+        <section>
+        </section>
+
+    </main>
 
     <?php $ws->includeComponent('view/components/footer/footer') ?>
 

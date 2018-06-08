@@ -10,6 +10,7 @@ const { execSync } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
+const sass = require('node-sass');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -140,39 +141,36 @@ exports.buildSitePhp = function (destPath) {
     
     fm.saveFile(destSite + sep + 'turbosite.json', JSON.stringify(turboSiteSetup, null, 4));
     
+    // Process all sass scss files to css
+    let scssFiles = fm.findDirectoryItems(destSite, /^.*\.scss$/i, 'absolute', 'files');
+    
+    for (let scssFile of scssFiles) {
+
+        let scssCode = sass.renderSync({
+            file: scssFile
+          });
+        
+        fm.saveFile(StringUtils.replace(scssFile, '.scss', '.css'), scssCode.css);
+    }
+    
+    for (let scssFile of scssFiles) {
+    
+        fm.deleteFile(scssFile);
+    }
+    
     // Create global css file
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
-            this.mergeFilesFromArray(turboSiteSetup.globalCss, destSite, true));
+            mergeFilesFromArray(turboSiteSetup.globalCss, destSite, true));
     
     // Create global Js file
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
-            this.mergeFilesFromArray(turboSiteSetup.globalJs, destSite, true));
+            mergeFilesFromArray(turboSiteSetup.globalJs, destSite, true));
     
     // Generate all the components css and js merged files
-    let componentsbasePath = destSite + fm.dirSep() + 'view' + fm.dirSep() + 'components';
-    let componentsItems = fm.getDirectoryList(componentsbasePath);
+    mergeCssAndJsByFolder(destSite + sep + 'view' + sep + 'components', destSite, turboSiteSetup.cacheHash, 'comp-view-components-');
     
-    for (let componentItem of componentsItems) {
-        
-        if(fm.isDirectory(componentsbasePath + fm.dirSep() + componentItem)){
-            
-            // Merge all css files on the folder and generate the component css
-            let componentCssFiles = fm.findDirectoryItems(componentsbasePath + fm.dirSep() + componentItem, /.*\.css$/i, 'absolute', 'files');
-        
-            fm.saveFile(destSite + sep + 'comp-view-components-' + componentItem + '-' + turboSiteSetup.cacheHash +'.css',
-                    this.mergeFilesFromArray(componentCssFiles, '', true));
-            
-            // Merge all the js files on the folder and generate the component js
-            let componentJsFiles = fm.findDirectoryItems(componentsbasePath + fm.dirSep() + componentItem, /.*\.js$/i, 'absolute', 'files');
-            
-            fm.saveFile(destSite + sep + 'comp-view-components-' + componentItem + '-' + turboSiteSetup.cacheHash +'.js',
-                    this.mergeFilesFromArray(componentJsFiles, '', true));    
-        }
-        
-    }
-      
-    // Create view css and js files
-    // TODO
+    // Generate all the views css and js merged files
+    mergeCssAndJsByFolder(destSite + sep + 'view' + sep + 'views', destSite, turboSiteSetup.cacheHash, 'view-view-views-');
 }
 
 
@@ -288,7 +286,7 @@ exports.buildLibTs = function (destPath) {
 /**
  * Join all the files from the specified array and get a string with the result
  */
-exports.mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
+let mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
     
     let result = '';
     
@@ -299,7 +297,7 @@ exports.mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
     
     for (let file of array) {
         
-        result += fm.readFile(basePath + file) + "\n\n";
+        result += fm.readFile(basePath + StringUtils.replace(file, '.scss', '.css')) + "\n\n";
     }
     
     if(deleteFiles){
@@ -311,6 +309,40 @@ exports.mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
     }
     
     return result;
+}
+
+
+/**
+ * Join all the css and js files for each folder on the specified path and generate the global js and css files
+ */
+let mergeCssAndJsByFolder = function (basePath, destPath, cacheHash, prefix = "comp-view-components-") {
+    
+    let sep = fm.dirSep();
+    let items = fm.getDirectoryList(basePath);
+    
+    for (let item of items) {
+        
+        if(fm.isDirectory(basePath + fm.dirSep() + item)){
+            
+            // Merge all css files on the folder and generate the css
+            let cssFiles = fm.findDirectoryItems(basePath + fm.dirSep() + item, /^.*\.css$/i, 'absolute', 'files');
+            let cssContent = mergeFilesFromArray(cssFiles, '', true);
+            
+            if(!StringUtils.isEmpty(cssContent)){
+                
+                fm.saveFile(destPath + sep + prefix + item + '-' + cacheHash +'.css', cssContent);
+            }
+                        
+            // Merge all the js files on the folder and generate the component js
+            let jsFiles = fm.findDirectoryItems(basePath + fm.dirSep() + item, /.*\.js$/i, 'absolute', 'files');
+            let jsContent = mergeFilesFromArray(jsFiles, '', true);
+            
+            if(!StringUtils.isEmpty(jsContent)){
+                
+                fm.saveFile(destPath + sep + prefix + item + '-' + cacheHash +'.js', jsContent);    
+            }
+        }
+    }
 }
 
 

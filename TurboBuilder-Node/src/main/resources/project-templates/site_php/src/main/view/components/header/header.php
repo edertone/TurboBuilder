@@ -8,4 +8,13 @@ $ws->loadBundles(['header']);
 
 ?>
 
-<h1><?php $ws->echoLoc('TITLE') ?></h1>
+<nav class="topBar">
+
+</nav>
+
+<header class="header">
+
+    <h1><?php $ws->echoLoc('TITLE') ?></h1>
+
+</header>
+

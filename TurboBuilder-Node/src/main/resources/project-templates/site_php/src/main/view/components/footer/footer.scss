@@ -1,0 +1,17 @@
+@import "../../css/global-vars.scss";
+
+footer{
+    color: $color-text-primary;
+    background-color: $color-bg-tertiary;
+    border-top: 2px solid $color-bg-quaternary;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+
+footer p {
+    color: $color-text-secondary;
+}

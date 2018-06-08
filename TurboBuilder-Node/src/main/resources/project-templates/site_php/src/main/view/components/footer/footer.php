@@ -8,7 +8,11 @@ $ws->loadBundles(['footer']);
 
 ?>
 
-<h4><?php $ws->echoLoc('TITLE') ?></h4>
+<footer>
 
-<p><?php $ws->echoLoc('DOC_GENERATED_IN_N_SECS',
-        ['bundle' => 'footer', 'wildcards' => '$N', 'replace' => $ws->getRunningTime()]) ?></p>
+    <h4><?php $ws->echoLoc('TITLE') ?></h4>
+
+    <p><?php $ws->echoLoc('DOC_GENERATED_IN_N_SECS',
+            ['bundle' => 'footer', 'wildcards' => '$N', 'replace' => $ws->getRunningTime()]) ?></p>
+
+</footer>

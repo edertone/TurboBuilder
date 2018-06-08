@@ -16,7 +16,7 @@
 	
 	"globalCss": [
 		"libs/normalize/normalize.css",
-		"view/css/global.css"
+		"view/css/global-styles.scss"
 	],
 	
 	"globalJs": [
