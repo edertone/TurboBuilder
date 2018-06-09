@@ -26,5 +26,12 @@
     "https://$host/cache/readme.txt",
     "https://www.$host/cache/readme.txt",
     "https://$host/cache/readme.txt?param=1",
-    "https://$host/resources/fonts/non-existing-font.ttf"
+    "https://$host/resources/fonts/non-existing-font.ttf",
+    "https://$host/comp-view-components-heder-$cacheHash.css",
+    "https://$host/comp-view-component-footer-$cacheHash.css",
+    "https://$host/view-view-view-home-$cacheHash.css",
+    "https://$host/view/views/home/home.js",
+    "https://$host/view/views/home/home.php",
+    "https://$host/view/views/home/home.scss",
+    "https://$host/view/views/home/nonexistingfile"
 ]

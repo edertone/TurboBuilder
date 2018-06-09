@@ -32,12 +32,12 @@
 	{
 		"url": "https://$host/en",
 		"title": "Home page",
-		"source": ["not to exceed 500 characters", "This is the header", "This is the footer"]
+		"source": ["not to exceed 500 characters", "Home", "Single param", "This is the site main title", "This is the footer"]
 	},
 	{
 		"url": "https://$host/es",
 		"title": "Página principal",
-		"source": ["intentando no exceder 500 caracteres", "Este es el header", "Este es el footer"]
+		"source": ["intentando no exceder 500 caracteres", "Inicio", "Único param", "Este es el titulo principal de la web", "Este es el footer"]
 	},
 	{
 		"url": "https://$host/cache",
@@ -48,5 +48,25 @@
 		"url": "https://$host/someparameter",
 		"title": "someparameter",
 		"source": "This is the single parameter view"
+	},
+	{
+		"url": "https://$host/comp-view-components-main-menu-$cacheHash.css",
+		"title": null,
+		"source": ["nav section", "2px solid #0e0e0e"]
+	},
+	{
+		"url": "https://$host/comp-view-components-footer-$cacheHash.css",
+		"title": null,
+		"source": ["footer p", "2px solid #d3d4d4"]
+	},
+	{
+		"url": "https://$host/view-view-views-home-$cacheHash.css",
+		"title": null,
+		"source": "header img"
+	},
+	{
+		"url": "https://$host/view/views/home/home-logo.svg",
+		"title": null,
+		"source": "M7.47 21.49C4.2 19.93 1.86 16.76 1.5 13H0c.5"
 	}
 ]
