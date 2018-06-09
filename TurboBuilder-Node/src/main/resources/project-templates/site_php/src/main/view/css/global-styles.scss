@@ -3,6 +3,13 @@
 
 /* This font face structure covers most of the possible browsers */
 @font-face {
+  font-family: 'Roboto-Light';
+  src: url('resources/fonts/Roboto-Light.woff2') format('woff2'),
+       url('resources/fonts/Roboto-Light.woff') format('woff'),
+       url('resources/fonts/Roboto-Light.ttf') format('truetype');
+}
+
+@font-face {
   font-family: 'Roboto-Regular';
   src: url('resources/fonts/Roboto-Regular.woff2') format('woff2'),
        url('resources/fonts/Roboto-Regular.woff') format('woff'),
@@ -15,10 +22,16 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: $color-text-primary;
+    background-color: $color-bg-primary;
 }
 
 main{
     width: 100%;
     min-height: 500px;
-    background-color: $color-bg-primary;
+}
+
+section{
+   width: 100%;
+   max-width: 1400px;
 }

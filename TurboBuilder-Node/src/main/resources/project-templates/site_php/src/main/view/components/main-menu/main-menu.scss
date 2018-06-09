@@ -1,0 +1,38 @@
+@import "../../css/global-vars.scss";
+
+nav{
+    width: 100%;
+    min-height: 70px;
+    color: $color-text-inverted-primary;
+    background-color: $color-bg-inverted-primary;
+    border-bottom: 2px solid $color-bg-inverted-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav section{
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 3%;
+}
+
+nav section p{
+    position: absolute;
+    left: 3%;
+    font-size: 19px;
+    margin: 0px;
+}
+
+nav section a{
+    margin-left: 5%;
+    font-size: 19px;
+    color: $color-text-inverted-quaternary;
+    transition: 1s;
+}
+
+nav section a:hover{
+    color: $color-text-inverted-primary;
+    text-decoration: underline;
+}

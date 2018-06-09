@@ -9,11 +9,11 @@ $ws->initializeView();
 $ws->loadBundles(['home']);
 
 $ws->loadComponents([
-    'view/components/header',
+    'view/components/main-menu',
     'view/components/footer']);
 
-$ws->metaTitle = $ws->getLoc('TITLE');
-$ws->metaDescription = $ws->getLoc('DESCRIPTION');
+$ws->metaTitle = $ws->getLoc('META_TITLE');
+$ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 
 ?>
 <!doctype html>
@@ -25,7 +25,17 @@ $ws->metaDescription = $ws->getLoc('DESCRIPTION');
 
 <body>
 
-    <?php $ws->includeComponent('view/components/header/header') ?>
+    <?php $ws->includeComponent('view/components/main-menu/main-menu') ?>
+
+    <header>
+
+        <img alt="" src="view/views/home/home-logo.svg">
+
+        <h1><?php $ws->echoLoc('TITLE', 'home') ?></h1>
+
+        <h2><?php $ws->echoLoc('SUBTITLE') ?></h2>
+
+    </header>
 
     <main>
 
