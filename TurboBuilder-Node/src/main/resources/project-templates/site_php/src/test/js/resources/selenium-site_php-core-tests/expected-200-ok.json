@@ -17,7 +17,7 @@
 	{
 		"url": "https://$host/glob-$cacheHash.css",
 		"title": null,
-		"source": "font-size"
+		"source": ["font-size", "nav section", "2px solid #0e0e0e", "footer p", "2px solid #d3d4d4"]
 	},
 	{
 		"url": "https://$host/glob-$cacheHash.js",
@@ -32,12 +32,18 @@
 	{
 		"url": "https://$host/en",
 		"title": "Home page",
-		"source": ["not to exceed 500 characters", "Home", "Single param", "This is the site main title", "This is the footer"]
+		"source": ["not to exceed 500 characters",
+				   "Home", "Single param",
+				   "href=\"en\"", "href=\"some%20parameter\"", "href=\"en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "This is the site main title", "This is the footer"]
 	},
 	{
 		"url": "https://$host/es",
 		"title": "Página principal",
-		"source": ["intentando no exceder 500 caracteres", "Inicio", "Único param", "Este es el titulo principal de la web", "Este es el footer"]
+		"source": ["intentando no exceder 500 caracteres",
+				   "Inicio", "Único param",
+				   "href=\"es\"", "href=\"some%20parameter\"", "href=\"es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "Este es el titulo principal de la web", "Este es el footer"]
 	},
 	{
 		"url": "https://$host/cache",
@@ -48,16 +54,6 @@
 		"url": "https://$host/someparameter",
 		"title": "someparameter",
 		"source": "This is the single parameter view"
-	},
-	{
-		"url": "https://$host/comp-view-components-main-menu-$cacheHash.css",
-		"title": null,
-		"source": ["nav section", "2px solid #0e0e0e"]
-	},
-	{
-		"url": "https://$host/comp-view-components-footer-$cacheHash.css",
-		"title": null,
-		"source": ["footer p", "2px solid #d3d4d4"]
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",
