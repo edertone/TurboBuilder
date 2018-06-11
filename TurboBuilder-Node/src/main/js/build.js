@@ -304,7 +304,7 @@ let mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
         
         for (let file of array) {
             
-            fm.deleteFile(basePath + file);
+            fm.deleteFile(basePath + StringUtils.replace(file, '.scss', '.css'));
         }
     }
     
