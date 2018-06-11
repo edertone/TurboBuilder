@@ -12,6 +12,7 @@ nav{
 }
 
 nav section{
+    font-size: 19px;
     position: relative;
     display: flex;
     justify-content: flex-end;
@@ -21,18 +22,36 @@ nav section{
 nav section p{
     position: absolute;
     left: 3%;
-    font-size: 19px;
     margin: 0px;
 }
 
 nav section a{
+    text-decoration: none;
     margin-left: 5%;
-    font-size: 19px;
     color: $color-text-inverted-quaternary;
-    transition: 1s;
+    transition: color 1s;
 }
 
 nav section a:hover{
     color: $color-text-inverted-primary;
     text-decoration: underline;
+}
+
+
+
+@media (max-width: 850px){
+    
+    nav section{
+    
+        font-size: 16px;
+    }    
+}
+
+
+@media (max-width: 520px){
+    
+    nav section{
+    
+        font-size: 14px;
+    }
 }

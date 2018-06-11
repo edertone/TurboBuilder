@@ -12,7 +12,7 @@ if(file_exists('cache/hash')){
 }
 
 require 'autoloader.php';
-require 'libs/turbocommons-php/TurboCommons-Php-0.6.1.phar';
+require 'libs/turbocommons-php/TurboCommons-Php-0.6.2.phar';
 require 'libs/turbosite/TurboSite-Php-0.0.0.phar';
 
 use org\turbosite\src\main\php\model\WebSite;
