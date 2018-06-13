@@ -35,7 +35,9 @@
 		"source": ["not to exceed 500 characters",
 				   "Home", "Single param",
 				   "href=\"en\"", "href=\"some%20parameter\"", "href=\"en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-				   "This is the site main title", "Here goes a section title", "This is the footer"]
+				   "This is the site main title", "Here goes a section title", "This is the footer",
+				   "href=\"en\">english", "href=\"es\">spanish",
+				   "script src=\"glob-"]
 	},
 	{
 		"url": "https://$host/es",
@@ -43,7 +45,9 @@
 		"source": ["intentando no exceder 500 caracteres",
 				   "Inicio", "Único param",
 				   "href=\"es\"", "href=\"some%20parameter\"", "href=\"es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-				   "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer"]
+				   "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
+				   "href=\"en\">english", "href=\"es\">spanish",
+				   "script src=\"glob-"]
 	},
 	{
 		"url": "https://$host/cache",

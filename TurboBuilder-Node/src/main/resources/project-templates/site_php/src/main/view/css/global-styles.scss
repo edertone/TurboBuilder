@@ -71,3 +71,11 @@ hr{
     border: 0;
     border-top: 1px solid $color-text-tertiary;
 }
+
+a{
+    color: $color-link-primary;
+}
+
+a:hover{
+    color: $color-link-secondary;
+}
