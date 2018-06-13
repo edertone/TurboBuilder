@@ -32,6 +32,42 @@ main{
 }
 
 section{
-   width: 100%;
-   max-width: $site-max-width;
+    max-width: $site-max-width;
+    width: 96%;
+    padding-left: 2%;
+}
+
+h1{
+    font-family: Roboto-Light, sans-serif;
+    color: $color-text-primary;
+    font-size: 36px;
+    font-weight: lighter;
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+h4{
+    font-family: Roboto-Light, sans-serif;
+    color: $color-text-secondary;
+    font-size: 19px;
+    font-weight: lighter;
+    text-align: center;
+    max-width: 86%;
+    margin: auto;
+    line-height: 30px;
+}
+
+p{
+    font-family: Roboto-Light, sans-serif;
+    font-weight: normal;
+}
+
+hr{
+    max-width: 60%;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid $color-text-tertiary;
 }

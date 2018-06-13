@@ -39,8 +39,18 @@ $ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 
     <main>
 
-        <!-- Main content goes here -->
         <section>
+
+            <h1><?php $ws->echoLoc('SECTION_TITLE') ?></h1>
+
+            <h4><?php $ws->echoLoc('SECTION_CONTENT') ?></h4>
+
+            <hr>
+
+            <h1><?php $ws->echoLoc('SECTION_TITLE') ?></h1>
+
+            <h4><?php $ws->echoLoc('SECTION_CONTENT') ?></h4>
+
         </section>
 
     </main>
