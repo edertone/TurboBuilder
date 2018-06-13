@@ -43,8 +43,8 @@ h1{
     font-size: 36px;
     font-weight: lighter;
     text-align: center;
-    margin-top: 60px;
-    margin-bottom: 40px;
+    margin-top: 50px;
+    margin-bottom: 30px;
 }
 
 h4{
@@ -60,7 +60,9 @@ h4{
 
 p{
     font-family: Roboto-Light, sans-serif;
+    color: $color-text-secondary;
     font-weight: normal;
+    text-align: center;
 }
 
 hr{
