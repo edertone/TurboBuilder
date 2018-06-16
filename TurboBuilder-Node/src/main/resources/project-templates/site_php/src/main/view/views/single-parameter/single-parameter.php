@@ -4,7 +4,7 @@ use org\turbosite\src\main\php\model\WebSite;
 
 $ws = WebSite::getInstance();
 
-$ws->initializeSingleParameterView('en', ['some parameter', 'testparameter']);
+$ws->initializeSingleParameterView('en', ['test parameter 1', 'testparameter2']);
 
 $ws->metaTitle = $ws->getParam();
 $ws->metaDescription = $ws->getParam();

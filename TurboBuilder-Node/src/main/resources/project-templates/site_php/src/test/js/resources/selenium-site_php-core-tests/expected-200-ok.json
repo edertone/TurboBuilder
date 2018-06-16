@@ -35,7 +35,7 @@
 		"source": ["not to exceed 500 characters",
 				   "lang=\"en\"",
 				   "Home", "Single param",
-				   "href=\"en\"", "href=\"some%20parameter\"", "href=\"en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "href=\"en\"", "href=\"test%20parameter%201\"", "href=\"en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "This is the site main title", "Here goes a section title", "This is the footer",
 				   "href=\"en\">english", "href=\"es\">spanish",
 				   "script src=\"glob-"]
@@ -46,18 +46,28 @@
 		"source": ["intentando no exceder 500 caracteres",
 				   "lang=\"es\"",
 				   "Inicio", "Único param",
-				   "href=\"es\"", "href=\"some%20parameter\"", "href=\"es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "href=\"es\"", "href=\"test%20parameter%201\"", "href=\"es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
 				   "href=\"en\">english", "href=\"es\">spanish",
 				   "script src=\"glob-"]
 	},
 	{
-		"url": "https://$host/testparameter",
-		"title": "testparameter",
+		"url": "https://$host/test%20parameter%201",
+		"title": "test parameter 1",
 		"source": ["This is the single parameter view", "Menu title",
-			"You passed the following parameter value: testparameter",
+			"You passed the following parameter value: test parameter 1",
 		   	"lang=\"en\"",
-		   	"This is the footer"]
+		   	"This is the footer",
+		   	"href=\"test%20parameter%201\">english", "href=\"test%20parameter%201\">spanish"]
+	},
+	{
+		"url": "https://$host/testparameter2",
+		"title": "testparameter2",
+		"source": ["This is the single parameter view", "Menu title",
+			"You passed the following parameter value: testparameter2",
+		   	"lang=\"en\"",
+		   	"This is the footer",
+		   	"href=\"testparameter2\">english", "href=\"testparameter2\">spanish"]
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",

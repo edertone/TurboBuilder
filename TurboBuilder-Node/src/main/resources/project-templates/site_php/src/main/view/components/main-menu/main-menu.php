@@ -17,7 +17,7 @@ $ws->loadBundles(['main-menu']);
         <a href="<?php $ws->echoUrlToView($ws->getHomeView()) ?>">
             <?php $ws->echoLoc('HOME')?></a>
 
-        <a href="<?php $ws->echoUrlToView($ws->getSingleParameterView(), 'some parameter') ?>">
+        <a href="<?php $ws->echoUrlToView($ws->getSingleParameterView(), 'test parameter 1') ?>">
             <?php $ws->echoLoc('SINGLE_PARAM')?></a>
 
         <a href="<?php $ws->echoUrlToView('multi-parameters', ['parameter 1', 'parameter 2', 'parameter 3']) ?>">
