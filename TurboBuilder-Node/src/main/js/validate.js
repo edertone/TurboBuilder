@@ -43,6 +43,12 @@ exports.execute = function (verbose = true) {
      
     validateNamespaces();
     
+    // Validate site php if this is the project type
+    if(global.setup.build.site_php){
+        
+        validateSitePhp();
+    }
+    
     console.errors(errors);
     
     // Reaching here means validation was successful
@@ -237,5 +243,27 @@ let validateNamespaces = function () {
                 }
             }
         }       
+    }
+}
+
+
+/**
+ * Validates a site php project
+ */
+let validateSitePhp = function () {
+
+    // Validate css files
+    let cssFiles = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'view', /^.*\.(css|scss)$/i, 'absolute', 'files');
+    
+    for (let cssFile of cssFiles){
+        
+        let cssContents = fm.readFile(cssFile);
+        
+        // Check if css hardcoded colors are forbidden
+        if(global.setup.validate.sitePhp.cssHardcodedColors &&
+           /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
+                
+            errors.push("File contains hardcoded css color: " + cssFile);
+        }
     }
 }

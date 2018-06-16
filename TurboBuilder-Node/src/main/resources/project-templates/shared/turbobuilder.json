@@ -28,7 +28,10 @@
 	    		"includes": ["js", "ts", "some-filename-pattern"],
 	    		"excludes": ["some-filename-pattern"]
 	    	}
-	    ]
+	    ],
+	    "sitePhp" : {
+	        "cssHardcodedColors": true
+	    }
     },
     
     "build": {
