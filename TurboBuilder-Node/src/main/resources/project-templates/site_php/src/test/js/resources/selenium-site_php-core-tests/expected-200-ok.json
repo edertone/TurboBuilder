@@ -35,10 +35,10 @@
 		"source": ["not to exceed 500 characters",
 				   "lang=\"en\"",
 				   "Home", "Single param",
-				   "href=\"en\"", "href=\"test%20parameter%201\"", "href=\"en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "This is the site main title", "Here goes a section title", "This is the footer",
-				   "href=\"en\">english", "href=\"es\">spanish",
-				   "script src=\"glob-"]
+				   "href=\"/en\">english", "href=\"/es\">spanish",
+				   "script src=\"/glob-"]
 	},
 	{
 		"url": "https://$host/es",
@@ -46,10 +46,10 @@
 		"source": ["intentando no exceder 500 caracteres",
 				   "lang=\"es\"",
 				   "Inicio", "Único param",
-				   "href=\"es\"", "href=\"test%20parameter%201\"", "href=\"es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "href=\"/es\"", "href=\"/test%20parameter%201\"", "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
-				   "href=\"en\">english", "href=\"es\">spanish",
-				   "script src=\"glob-"]
+				   "href=\"/en\">english", "href=\"/es\">spanish",
+				   "script src=\"/glob-"]
 	},
 	{
 		"url": "https://$host/test%20parameter%201",
@@ -58,7 +58,8 @@
 			"You passed the following parameter value: test parameter 1",
 		   	"lang=\"en\"",
 		   	"This is the footer",
-		   	"href=\"test%20parameter%201\">english", "href=\"test%20parameter%201\">spanish"]
+		   	"href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+		   	"href=\"/test%20parameter%201\">english", "href=\"/test%20parameter%201\">spanish"]
 	},
 	{
 		"url": "https://$host/testparameter2",
@@ -67,7 +68,16 @@
 			"You passed the following parameter value: testparameter2",
 		   	"lang=\"en\"",
 		   	"This is the footer",
-		   	"href=\"testparameter2\">english", "href=\"testparameter2\">spanish"]
+		   	"href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+		   	"href=\"/testparameter2\">english", "href=\"/testparameter2\">spanish"]
+	},
+	{
+		"url": "https://$host/en/multi-parameters/parameter%201/parameter%202/parameter%203",
+		"title": "Multi parameters view",
+		"source": ["Place here the home page description trying not to exceed 500 characters",
+				   "href=\"/glob-", "href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+				   "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\">english</a>",
+				   "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\">spanish</a>"]
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",

@@ -161,7 +161,7 @@ describe('selenium-site_php-core-tests', function() {
                     
                     if(entry.title !== null){
                         
-                        expect(title).toContain(entry.title);
+                        expect(title).toContain(entry.title, 'Coming from url: ' + entry.url);
                     }
                     
                     this.driver.getPageSource().then((source) => {
@@ -172,12 +172,12 @@ describe('selenium-site_php-core-tests', function() {
                             
                                 for (let entrySourceElement of entry.source) {
                                     
-                                    expect(source).toContain(entrySourceElement);
+                                    expect(source).toContain(entrySourceElement, 'Coming from url: ' + entry.url);
                                 }
                                 
                             }else{
                             
-                                expect(source).toContain(entry.source);
+                                expect(source).toContain(entry.source, 'Coming from url: ' + entry.url);
                             }
                         }
                         
