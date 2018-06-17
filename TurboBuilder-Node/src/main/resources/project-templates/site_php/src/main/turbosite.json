@@ -9,7 +9,7 @@
 	
 	"resourceBundles": [
 		{
-	    	"path": "resources/locales/$locale/$bundle.properties",
+	    	"path": "resources/locales/$bundle/$bundle_$locale.properties",
 	        "bundles": []
 		}
 	],
