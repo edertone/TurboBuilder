@@ -144,7 +144,12 @@ let replaceDependenciesIntoTemplate = function () {
         
         if(depFile === 'turbocommons-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'TurboCommons-Php-0.6.1.phar', depParent + sep + 'TurboCommons-Php-0.6.1.phar');
+            fm.copyFile(libsPath + sep + 'TurboCommons-Php-0.6.2.phar', depParent + sep + 'TurboCommons-Php-0.6.2.phar');
+        }
+        
+        if(depFile === 'turbosite.tbdependency'){
+            
+            fm.copyFile(libsPath + sep + 'TurboSite-Php-0.0.0.phar', depParent + sep + 'TurboSite-Php-0.0.0.phar');
         }
 
         fm.deleteFile(tbdependency);
