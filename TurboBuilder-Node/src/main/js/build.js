@@ -403,7 +403,7 @@ exports.checkGitAvailable = function () {
             
         }catch(e){
 
-            console.error('Could not find Git cmd executable. Please install git on your system to create git changelogs');
+            console.error('Could not find Git cmd executable. Please install git on your system and make sure it is globally accessible via cmd');
         }
     }
 }
