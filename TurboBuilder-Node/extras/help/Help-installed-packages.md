@@ -45,3 +45,7 @@ Used to minify and compress js files
 ## webpack
 
 Used to merge and create web deployment packages
+
+## sharp
+
+A library to resize images
