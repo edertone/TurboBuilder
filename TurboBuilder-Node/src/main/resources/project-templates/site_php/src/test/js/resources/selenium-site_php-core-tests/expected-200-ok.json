@@ -38,7 +38,12 @@
 				   "href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "This is the site main title", "Here goes a section title", "This is the footer",
 				   "href=\"/en\">english", "href=\"/es\">spanish",
-				   "script src=\"/glob-"]
+				   "script src=\"/glob-",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196.png\""]
 	},
 	{
 		"url": "https://$host/es",
@@ -49,7 +54,12 @@
 				   "href=\"/es\"", "href=\"/test%20parameter%201\"", "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
 				   "href=\"/en\">english", "href=\"/es\">spanish",
-				   "script src=\"/glob-"]
+				   "script src=\"/glob-",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196.png\""]
 	},
 	{
 		"url": "https://$host/test%20parameter%201",
@@ -59,7 +69,12 @@
 		   	"lang=\"en\"",
 		   	"This is the footer",
 		   	"href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-		   	"href=\"/test%20parameter%201\">english", "href=\"/test%20parameter%201\">spanish"]
+		   	"href=\"/test%20parameter%201\">english", "href=\"/test%20parameter%201\">spanish",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196.png\""]
 	},
 	{
 		"url": "https://$host/testparameter2",
@@ -77,7 +92,12 @@
 		"source": ["Place here the home page description trying not to exceed 500 characters",
 				   "href=\"/glob-", "href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
 				   "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\">english</a>",
-				   "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\">spanish</a>"]
+				   "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\">spanish</a>",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128.png\"",
+				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196.png\""]
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",
@@ -88,5 +108,60 @@
 		"url": "https://$host/view/views/home/home-logo.svg",
 		"title": null,
 		"source": "M7.47 21.49C4.2 19.93 1.86 16.76 1.5 13H0c.5"
+	},
+	{
+		"url": "https://$host/resources/favicons/16x16.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/resources/favicons/32x32.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/resources/favicons/96x96.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/resources/favicons/128x128.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/resources/favicons/196x196.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/apple-touch-icon-57x57.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/apple-touch-icon-76x76.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/apple-touch-icon-114x114.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/apple-touch-icon-144x144.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/apple-touch-icon-152x152.png",
+		"title": null,
+		"source": null
+	},
+	{
+		"url": "https://$host/apple-touch-icon-180x180.png",
+		"title": null,
+		"source": null
 	}
 ]

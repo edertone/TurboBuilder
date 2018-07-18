@@ -37,5 +37,7 @@
     "https://$host/view/views/home/home.js",
     "https://$host/view/views/home/home.php",
     "https://$host/view/views/home/home.scss",
-    "https://$host/view/views/home/nonexistingfile"
+    "https://$host/view/views/home/nonexistingfile",
+    "https://$host/apple-touch-icon-1x1.png",
+    "https://$host/16x16.png"
 ]

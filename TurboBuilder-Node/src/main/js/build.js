@@ -11,6 +11,7 @@ const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const sass = require('node-sass');
+const sharp = require('sharp');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -158,6 +159,63 @@ exports.buildSitePhp = function (destPath) {
         fm.deleteFile(scssFile);
     }
     
+    // Generate all missing favicons
+    let destFaviconsPath = destSite + sep + 'resources' + sep + 'favicons';
+    let faviconFiles = fm.findDirectoryItems(destFaviconsPath, /^.*\.png$/i, 'name', 'files');
+    
+    // List of expected favicon files and sizes, sorted from biggest to smallest
+    let faviconExpectedFiles = [
+            {name: "196x196.png", w: 196, h: 196},
+            {name: "apple-touch-icon-180x180.png", w: 180, h: 180},
+            {name: "apple-touch-icon-precomposed.png", w: 152, h: 152},
+            {name: "apple-touch-icon.png", w: 152, h: 152},
+            {name: "apple-touch-icon-152x152.png", w: 152, h: 152},
+            {name: "apple-touch-icon-144x144.png", w: 144, h: 144},
+            {name: "128x128.png", w: 128, h: 128},
+            {name: "apple-touch-icon-114x114.png", w: 114, h: 114},
+            {name: "96x96.png", w: 96, h: 96},
+            {name: "apple-touch-icon-76x76.png", w: 76, h: 76},
+            {name: "apple-touch-icon-57x57.png", w: 57, h: 57},
+            {name: "32x32.png", w: 32, h: 32},
+            {name: "16x16.png", w: 16, h: 16},
+        ];
+    
+    // Find the biggest favicon that is provided on the project based on the list of expected ones
+    let biggestFound = '';
+    
+    for (let faviconExpectedFile of faviconExpectedFiles) {
+
+        if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
+            
+            biggestFound = faviconExpectedFile.name;
+        }
+    }
+    
+    if(biggestFound !== ''){
+            
+        for (let faviconExpectedFile of faviconExpectedFiles) {
+    
+            if(faviconFiles.indexOf(faviconExpectedFile.name) < 0){
+                
+                // Apple touch icons are placed at the root of the site cause they are autodetected by apple devices
+                if(faviconExpectedFile.name.indexOf("apple-touch-") === 0){
+                    
+                    // Use the amazing sharp lib to resize the image to the missing width and height
+                    sharp(destFaviconsPath + sep + biggestFound)
+                        .resize(faviconExpectedFile.w, faviconExpectedFile.h)
+                        .toFile(destSite + sep + faviconExpectedFile.name, function(err) {
+                        });
+                }else{
+                    
+                    sharp(destFaviconsPath + sep + biggestFound)
+                        .resize(faviconExpectedFile.w, faviconExpectedFile.h)
+                        .toFile(destFaviconsPath + sep + faviconExpectedFile.name, function(err) {
+                        });
+                }
+            }
+        }
+    }
+             
     // Create global css file
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
             mergeFilesFromArray(turboSiteSetup.globalCss, destSite, true));
