@@ -127,4 +127,24 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.exec('-b')).toContain('build ok');
     });
+    
+    
+    it('should show a warning when no favicons are defined', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.deleteFile('./src/main/resources/favicons/196x196.png')).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('Warning: No favicons specified');
+    });
+    
+    
+    it('should fail when a non expected favicon is found', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('Unexpected favicon name: 196x191.png');
+    });
 });
