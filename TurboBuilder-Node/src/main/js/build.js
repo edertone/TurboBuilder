@@ -180,6 +180,27 @@ exports.buildSitePhp = function (destPath) {
             {name: "16x16.png", w: 16, h: 16},
         ];
     
+    // Make sure all favicons on the resources folder match any of the expected ones
+    for (let faviconFile of faviconFiles) {
+        
+        let fileNameFound = false;
+        
+        for (let faviconExpectedFile of faviconExpectedFiles) {
+
+            if(faviconFile === faviconExpectedFile.name){
+                
+                fileNameFound = true;
+                
+                break;
+            }
+        }
+        
+        if(!fileNameFound){
+            
+            console.error('Unexpected favicon name: ' + faviconFile);
+        }
+    }
+    
     // Find the biggest favicon that is provided on the project based on the list of expected ones
     let biggestFound = '';
     
