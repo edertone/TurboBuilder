@@ -3,7 +3,7 @@ This folder contains the project favicons stored as png files.
 We can place all the different favicon versions by ourselves or only put the ones that we want. When the project is built,
 all missing favicons will be auto generated based on the biggest one we have placed here.
 
-Following list contains all the possible favicon files:
+Following list contains all the accepted favicon file names:
 
 	196x196.png
     apple-touch-icon-180x180.png

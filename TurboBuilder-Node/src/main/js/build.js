@@ -163,6 +163,12 @@ exports.buildSitePhp = function (destPath) {
     let destFaviconsPath = destSite + sep + 'resources' + sep + 'favicons';
     let faviconFiles = fm.findDirectoryItems(destFaviconsPath, /^.*\.png$/i, 'name', 'files');
     
+    // If no favicons are specified, launch a warning
+    if(faviconFiles.length <= 0){
+        
+        console.warning("Warning: No favicons specified");
+    }
+    
     // List of expected favicon files and sizes, sorted from biggest to smallest
     let faviconExpectedFiles = [
             {name: "196x196.png", w: 196, h: 196},
