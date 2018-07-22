@@ -30,7 +30,8 @@ exports.execute = function () {
     for (let syncSetup of global.setup.sync) {
         
         if(syncSetup.type === "fileSystem" &&
-           !fm.deleteDirectory(syncSetup.destPath, false)){
+                fm.isDirectory(syncSetup.destPath) &&
+                !fm.deleteDirectory(syncSetup.destPath, false)){
             
             console.error("could not delete contents of " + syncSetup.destPath);
         }

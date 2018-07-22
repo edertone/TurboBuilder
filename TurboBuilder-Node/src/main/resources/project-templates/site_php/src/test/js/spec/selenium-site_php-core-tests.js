@@ -27,10 +27,9 @@ describe('selenium-site_php-core-tests', function() {
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
-        this.host = 'localhost';
-        
         let projectName = StringUtils.getPathElement(path.resolve('./'));
         
+        this.testsSetup = JSON.parse(fm.readFile('src/test/js/setup.json'));        
         this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
         
         // Aux method to replace all the wildcards on a provided url
@@ -38,7 +37,7 @@ describe('selenium-site_php-core-tests', function() {
             
             return StringUtils.replace(url,
                     ['$host', '$locale', '$homeView', '$cacheHash'],
-                    [this.host,
+                    [this.testsSetup.host,
                      this.siteSetup.locales[0].split('_')[0],
                      this.siteSetup.homeView,
                      this.siteSetup.cacheHash]);
