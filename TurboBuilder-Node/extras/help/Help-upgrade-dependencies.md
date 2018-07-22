@@ -12,6 +12,9 @@ This project uses libraries and dependencies from a variety of sources. To make 
 	
 	src\test\resources\libs
 	correspond to their latests versions
+	
+- Update the library versions at the site_php index.php file:
+	src/main/resources/project-templates/site_php/src/main/index.php
 
 - Check generate.js file contents and update the library versions to match the new ones
 

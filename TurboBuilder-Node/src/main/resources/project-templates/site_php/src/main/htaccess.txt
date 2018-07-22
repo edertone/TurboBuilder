@@ -1,25 +1,7 @@
 RewriteEngine on
 
-
-# CUSTOM BEFORE RULES START
-
-# CUSTOM BEFORE RULES END
-
-
 # Redirect 404 errors to the error page
 ErrorDocument 404 /site/error-404.php
-
-# remove trailing slash for all urls
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-# Redirect non https to https
-RewriteCond %{HTTPS} !=on
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Redirect the www version to NO www
-RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
 # Redirect all root file urls (that do not have a slash and have a dot) to the site folder
 RewriteRule ^([^/]*)\.(.*)$ site/$1.$2 [L]
@@ -39,8 +21,3 @@ RewriteRule ^view/(.*)(svg|jpg|gif|png)$ site/view/$1$2 [L]
 RewriteCond %{REQUEST_URI} !site/index.php [NC]
 RewriteCond %{REQUEST_URI} !/site/error-404.php [NC]
 RewriteRule ^(.*)\.php$ - [L,R=404]
-
-
-# CUSTOM AFTER RULES START
-
-# CUSTOM AFTER RULES END
