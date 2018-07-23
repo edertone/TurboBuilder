@@ -3,6 +3,8 @@
  	
  	"homeView": "home",
  	
+ 	"baseURL": "",
+ 	
  	"singleParameterView": "single-parameter",
 	
 	"locales": ["en_US", "es_ES"],

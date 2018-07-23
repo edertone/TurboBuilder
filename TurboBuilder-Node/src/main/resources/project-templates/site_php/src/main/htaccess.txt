@@ -3,19 +3,14 @@ RewriteEngine on
 # Redirect 404 errors to the error page
 ErrorDocument 404 /site/error-404.php
 
-# Redirect all root file urls (that do not have a slash and have a dot) to the site folder
-RewriteRule ^([^/]*)\.(.*)$ site/$1.$2 [L]
+# Redirect all allowed static files to the site folder
+RewriteCond %{REQUEST_URI} !site/
+RewriteCond %{REQUEST_URI} !cache/
+RewriteRule ^(.*)\.(...|..)$ site/$1.$2 [L]
 
 # Redirect all executable urls to the index entry point
-RewriteCond %{REQUEST_URI} !site/
-RewriteCond %{REQUEST_URI} !resources/
-RewriteCond %{REQUEST_URI} !storage/
-RewriteCond %{REQUEST_URI} !view/.*(svg|jpg|gif|png)$
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ site/index.php?q=$1 [L]
-
-# Redirect static resources to the site folder
-RewriteRule ^resources/(.*)$ site/resources/$1 [L]
-RewriteRule ^view/(.*)(svg|jpg|gif|png)$ site/view/$1$2 [L]
 
 # any php file that is not index will throw a 404 error
 RewriteCond %{REQUEST_URI} !site/index.php [NC]
