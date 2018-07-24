@@ -26,5 +26,10 @@
 	"globalJs": [
 		"libs/jquery/jquery.js",
 		"libs/turbocommons-es5/turbocommons-es5.js"
-	]
+	],
+	
+	"testsSetup": {
+	
+		"host": "localhost"
+	}
 }
