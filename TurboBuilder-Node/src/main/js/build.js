@@ -136,7 +136,7 @@ exports.buildSitePhp = function (destPath) {
     fm.deleteFile(destSite + sep + 'htaccess.txt');
     
     // Generate a random hash to avoid browser caches
-    let turboSiteSetup = JSON.parse(fm.readFile(destSite + sep + 'turbosite.json'));
+    let turboSiteSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbosite.json'));
     
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
     
@@ -207,17 +207,34 @@ exports.buildSitePhp = function (destPath) {
         }
     }
     
+    // Aux method to add the cache hash to a file and rename it
+    let renameFileToAddHash = (filePath) => {
+        
+        let filePathWithHash = filePath.replace(StringUtils.getPathElement(filePath),
+                StringUtils.getPathElementWithoutExt(filePath) + '-' + turboSiteSetup.cacheHash + '.' + StringUtils.getPathExtension(filePath));
+        
+        if(!fm.renameFile(filePath, filePathWithHash)){
+            
+            console.error('Could not rename file with cache hash: ' + filePathWithHash);
+        }
+        
+        return StringUtils.getPathElement(filePathWithHash);
+    }
+    
     // Find the biggest favicon that is provided on the project based on the list of expected ones
     let biggestFound = '';
+    let biggestFoundWithHash = '';
     
     for (let faviconExpectedFile of faviconExpectedFiles) {
 
         if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
             
             biggestFound = faviconExpectedFile.name;
+            biggestFoundWithHash = renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
         }
     }
     
+    // Generate all missing favicon images with the sharp image processing library
     if(biggestFound !== ''){
             
         for (let faviconExpectedFile of faviconExpectedFiles) {
@@ -228,16 +245,37 @@ exports.buildSitePhp = function (destPath) {
                 if(faviconExpectedFile.name.indexOf("apple-touch-") === 0){
                     
                     // Use the amazing sharp lib to resize the image to the missing width and height
-                    sharp(destFaviconsPath + sep + biggestFound)
+                    sharp(destFaviconsPath + sep + biggestFoundWithHash)
                         .resize(faviconExpectedFile.w, faviconExpectedFile.h)
                         .toFile(destSite + sep + faviconExpectedFile.name, function(err) {
+                            
+                            if(err) {
+                                
+                                console.error('Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name + "\n" + err);
+                            }
                         });
                 }else{
                     
-                    sharp(destFaviconsPath + sep + biggestFound)
+                    // Add the hash to the expected favicon
+                    let faviconExpectedFileWithHash = StringUtils.getPathElementWithoutExt(faviconExpectedFile.name) + '-' + turboSiteSetup.cacheHash
+                        + '.' + StringUtils.getPathExtension(faviconExpectedFile.name);
+                    
+                    sharp(destFaviconsPath + sep + biggestFoundWithHash)
                         .resize(faviconExpectedFile.w, faviconExpectedFile.h)
-                        .toFile(destFaviconsPath + sep + faviconExpectedFile.name, function(err) {
+                        .toFile(destFaviconsPath + sep + faviconExpectedFileWithHash, function(err) {
+                            
+                            if(err) {
+                                
+                                console.error('Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name + "\n" + err);
+                            }
                         });
+                }
+            
+            }else{
+                
+                if(biggestFound !== faviconExpectedFile.name){
+                
+                    renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
                 }
             }
         }
