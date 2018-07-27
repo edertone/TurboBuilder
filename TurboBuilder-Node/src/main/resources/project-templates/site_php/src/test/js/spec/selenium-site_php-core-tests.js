@@ -32,7 +32,7 @@ describe('selenium-site_php-core-tests', function() {
         this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
         
         // Aux method to replace all the wildcards on a provided url
-        this.replaceWildCardsOnUrl = (url) => {
+        this.replaceWildCardsOnText = (url) => {
             
             return StringUtils.replace(url,
                     ['$host', '$locale', '$homeView', '$cacheHash'],
@@ -78,7 +78,7 @@ describe('selenium-site_php-core-tests', function() {
                 done();
             }
             
-            let url = this.replaceWildCardsOnUrl(urls.shift());
+            let url = this.replaceWildCardsOnText(urls.shift());
             
             this.driver.get(url).then(() => {
                 
@@ -113,8 +113,8 @@ describe('selenium-site_php-core-tests', function() {
             }
             
             let entry = urls.shift();
-            entry.url = this.replaceWildCardsOnUrl(entry.url);
-            entry.to = this.replaceWildCardsOnUrl(entry.to);
+            entry.url = this.replaceWildCardsOnText(entry.url);
+            entry.to = this.replaceWildCardsOnText(entry.to);
             
             this.driver.get(entry.url).then(() => {
                       
@@ -148,7 +148,7 @@ describe('selenium-site_php-core-tests', function() {
             }
             
             let entry = urls.shift();
-            entry.url = this.replaceWildCardsOnUrl(entry.url);
+            entry.url = this.replaceWildCardsOnText(entry.url);
             
             this.driver.get(entry.url).then(() => {
                 
@@ -158,6 +158,8 @@ describe('selenium-site_php-core-tests', function() {
                         .not.toBe(true, entry.url + ' should not throw 404 error');
                     
                     if(entry.title !== null){
+                        
+                        entry.title = this.replaceWildCardsOnText(entry.title);
                         
                         expect(title).toContain(entry.title, 'Coming from url: ' + entry.url);
                     }
@@ -170,11 +172,15 @@ describe('selenium-site_php-core-tests', function() {
                             
                                 for (let entrySourceElement of entry.source) {
                                     
+                                    entrySourceElement = this.replaceWildCardsOnText(entrySourceElement);
+                                    
                                     expect(source).toContain(entrySourceElement, 'Coming from url: ' + entry.url);
                                 }
                                 
                             }else{
                             
+                                entry.source = this.replaceWildCardsOnText(entry.source);
+                                
                                 expect(source).toContain(entry.source, 'Coming from url: ' + entry.url);
                             }
                         }
