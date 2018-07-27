@@ -39,5 +39,10 @@
     "https://$host/view/views/home/home.scss",
     "https://$host/view/views/home/nonexistingfile",
     "https://$host/apple-touch-icon-1x1.png",
-    "https://$host/16x16.png"
+    "https://$host/16x16.png",
+    "https://$host/resources/favicons/16x16.png",
+    "https://$host/resources/favicons/32x32.png",
+    "https://$host/resources/favicons/96x96.png",
+    "https://$host/resources/favicons/128x128.png",
+    "https://$host/resources/favicons/196x196.png"
 ]
