@@ -1,6 +1,6 @@
 REM This file contains a template to automate the process of building a generated site_php
 REM project, including required turbo dependencies and launching the respective tests.
-REM Modify it to fit your needs
+REM Modify it to fit your needs: replace --Desktop-- and --git-root-- by the real locations
  
 
 RD /S /Q "--Desktop--\site_php-dev"

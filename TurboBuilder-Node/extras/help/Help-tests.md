@@ -17,6 +17,14 @@ Create an external launch configuration:
 	- Arguments: "/c npm test"
 	- Disable Build before launch on build tab
 	
+	
+# How to launch only a subset of the project tests
+	
+Edit the file under: src/test/js/jasmine.json
+
+And modify the "spec_files" section to look only for the spec file or files you want. 
+
+	
 ## OS Environment setup
 
 ### Chrome driver must be available on OS to run selenium tests. Download and help available here:
