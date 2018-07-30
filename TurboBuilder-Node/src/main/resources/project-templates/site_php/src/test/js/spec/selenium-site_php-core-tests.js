@@ -35,22 +35,32 @@ describe('selenium-site_php-core-tests', function() {
         this.replaceWildCardsOnText = (url) => {
             
             return StringUtils.replace(url,
-                    ['$host', '$locale', '$homeView', '$cacheHash'],
+                    ['$host', '$locale', '$homeView', '$cacheHash', '$baseURL'],
                     [this.siteSetup.testsSetup.host,
                      this.siteSetup.locales[0].split('_')[0],
                      this.siteSetup.homeView,
-                     this.siteSetup.cacheHash]);
+                     this.siteSetup.cacheHash,
+                     this.siteSetup.baseURL === '' ? '' : '/' + this.siteSetup.baseURL]);
         }
         
         // Initialize the chrome driver with english language
         let chromeCapabilities = webdriver.Capabilities.chrome();
         
-        var chromeOptions = {
-            'args': ['--lang=en']
+        let chromeOptions = {
+            "args": ["--lang=en"]
         };
         
         chromeCapabilities.set('chromeOptions', chromeOptions);
-        this.driver = new webdriver.Builder().withCapabilities(chromeCapabilities).build();
+        
+        // Enable logs so the tests can read them
+        let loggingPrefs = new webdriver.logging.Preferences();
+        loggingPrefs.setLevel('browser', webdriver.logging.Level.ALL); 
+        loggingPrefs.setLevel('driver', webdriver.logging.Level.ALL); 
+        
+        this.driver = new webdriver.Builder()
+            .withCapabilities(chromeCapabilities)
+            .setLoggingPrefs(loggingPrefs)
+            .build();
     });
 
     
@@ -75,7 +85,7 @@ describe('selenium-site_php-core-tests', function() {
             
             if(urls.length <= 0){
                 
-                done();
+                return done();
             }
             
             let url = this.replaceWildCardsOnText(urls.shift());
@@ -109,7 +119,7 @@ describe('selenium-site_php-core-tests', function() {
             
             if(urls.length <= 0){
                 
-                done();
+                return done();
             }
             
             let entry = urls.shift();
@@ -144,7 +154,7 @@ describe('selenium-site_php-core-tests', function() {
             
             if(urls.length <= 0){
                 
-                done();
+                return done();
             }
             
             let entry = urls.shift();
@@ -152,44 +162,56 @@ describe('selenium-site_php-core-tests', function() {
             
             this.driver.get(entry.url).then(() => {
                 
-                this.driver.getTitle().then((title) => {
-                
-                    expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
-                        .not.toBe(true, entry.url + ' should not throw 404 error');
+                this.driver.manage().logs().get('browser').then((logs) => {
                     
-                    if(entry.title !== null){
+                    // If specified on the entry, check that there are no SEVERE error logs on the browser
+                    if(!entry.skipLogsTest){
                         
-                        entry.title = this.replaceWildCardsOnText(entry.title);
+                        for (let logEntry of logs) {
                         
-                        expect(title).toContain(entry.title, 'Coming from url: ' + entry.url);
+                            expect(logEntry.level.name).not.toBe('SEVERE', 'TESTED URL: ' + entry.url + ' BROWSER ERROR: ' + logEntry.message);
+                        }
                     }
                     
-                    this.driver.getPageSource().then((source) => {
+                    this.driver.getTitle().then((title) => {
+                    
+                        expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
+                            .not.toBe(true, entry.url + ' should not throw 404 error');
                         
-                        if(entry.source !== null){
+                        if(entry.title !== null){
                             
-                            if(ArrayUtils.isArray(entry.source)){
+                            entry.title = this.replaceWildCardsOnText(entry.title);
                             
-                                for (let entrySourceElement of entry.source) {
-                                    
-                                    entrySourceElement = this.replaceWildCardsOnText(entrySourceElement);
-                                    
-                                    expect(source).toContain(entrySourceElement, 'Coming from url: ' + entry.url);
-                                }
-                                
-                            }else{
-                            
-                                entry.source = this.replaceWildCardsOnText(entry.source);
-                                
-                                expect(source).toContain(entry.source, 'Coming from url: ' + entry.url);
-                            }
+                            expect(title).toContain(entry.title, 'Coming from url: ' + entry.url);
                         }
                         
-                        this.driver.getCurrentUrl().then((url) => {
+                        this.driver.getPageSource().then((source) => {
                             
-                            expect(url).toBe(entry.url, 'Coming from url: ' + entry.url);
+                            if(entry.source !== null){
+                                
+                                if(ArrayUtils.isArray(entry.source)){
+                                
+                                    for (let entrySourceElement of entry.source) {
+                                        
+                                        entrySourceElement = this.replaceWildCardsOnText(entrySourceElement);
+                                        
+                                        expect(source).toContain(entrySourceElement, 'Coming from url: ' + entry.url);
+                                    }
+                                    
+                                }else{
+                                
+                                    entry.source = this.replaceWildCardsOnText(entry.source);
+                                    
+                                    expect(source).toContain(entry.source, 'Coming from url: ' + entry.url);
+                                }
+                            }
                             
-                            recursiveCaller(urls, done);
+                            this.driver.getCurrentUrl().then((url) => {
+                                
+                                expect(url).toBe(entry.url, 'Coming from url: ' + entry.url);
+                                
+                                recursiveCaller(urls, done);
+                            });
                         });
                     });
                 });

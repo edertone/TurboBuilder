@@ -2,17 +2,20 @@
 	{
 		"url": "https://$host/robots.txt",
 		"title": null,
-		"source": "User-agent:"
+		"source": "User-agent:",
+		"skipLogsTest": true
 	},
 	{
 		"url": "https://$host/robots.txt?p=1",
 		"title": null,
-		"source": "User-agent:"
+		"source": "User-agent:",
+		"skipLogsTest": true
 	},
 	{
 		"url": "https://$host/robots.txt?p=1&q=2",
 		"title": null,
-		"source": "User-agent:"
+		"source": "User-agent:",
+		"skipLogsTest": true
 	},
 	{
 		"url": "https://$host/glob-$cacheHash.css",
@@ -33,71 +36,71 @@
 		"url": "https://$host/en",
 		"title": "Home page",
 		"source": ["not to exceed 500 characters",
-				   "lang=\"en\"",
-				   "Home", "Single param",
-				   "href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-				   "This is the site main title", "Here goes a section title", "This is the footer",
-				   "href=\"/en\">english", "href=\"/es\">spanish",
-				   "script src=\"/glob-",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196-$cacheHash.png\""]
+	   		"lang=\"en\"",
+	   		"Home", "Single param",
+		   	"href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+	  	 	"This is the site main title", "Here goes a section title", "This is the footer",
+		 	"href=\"$baseURL/en\">english", "href=\"$baseURL/es\">spanish",
+	  		"script src=\"$baseURL/glob-",
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
 	},
 	{
 		"url": "https://$host/es",
 		"title": "Página principal",
 		"source": ["intentando no exceder 500 caracteres",
-				   "lang=\"es\"",
-				   "Inicio", "Único param",
-				   "href=\"/es\"", "href=\"/test%20parameter%201\"", "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-				   "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
-				   "href=\"/en\">english", "href=\"/es\">spanish",
-				   "script src=\"/glob-",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196-$cacheHash.png\""]
+	   		"lang=\"es\"",
+		  	"Inicio", "Único param",
+		   	"href=\"$baseURL/es\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/es/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+		   	"Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
+		   	"href=\"$baseURL/en\">english", "href=\"$baseURL/es\">spanish",
+		   	"script src=\"$baseURL/glob-",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
 	},
 	{
 		"url": "https://$host/test%20parameter%201",
 		"title": "test parameter 1",
 		"source": ["This is the single parameter view", "Menu title",
-			"You passed the following parameter value: test parameter 1",
+	   		"You passed the following parameter value: test parameter 1",
 		   	"lang=\"en\"",
 		   	"This is the footer",
-		   	"href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-		   	"href=\"/test%20parameter%201\">english", "href=\"/test%20parameter%201\">spanish",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196-$cacheHash.png\""]
+		   	"href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+		   	"href=\"$baseURL/test%20parameter%201\">english", "href=\"$baseURL/test%20parameter%201\">spanish",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
 	},
 	{
 		"url": "https://$host/testparameter2",
 		"title": "testparameter2",
 		"source": ["This is the single parameter view", "Menu title",
-			"You passed the following parameter value: testparameter2",
-		   	"lang=\"en\"",
-		   	"This is the footer",
-		   	"href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-		   	"href=\"/testparameter2\">english", "href=\"/testparameter2\">spanish"]
+	  		"You passed the following parameter value: testparameter2",
+	   		"lang=\"en\"",
+	   		"This is the footer",
+	   		"href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+	   		"href=\"$baseURL/testparameter2\">english", "href=\"$baseURL/testparameter2\">spanish"]
 	},
 	{
 		"url": "https://$host/en/multi-parameters/parameter%201/parameter%202/parameter%203",
 		"title": "Multi parameters view",
 		"source": ["Place here the home page description trying not to exceed 500 characters",
-				   "href=\"/glob-", "href=\"/en\"", "href=\"/test%20parameter%201\"", "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-				   "href=\"/en/multi-parameters/parameter%201/parameter%202/parameter%203\">english</a>",
-				   "href=\"/es/multi-parameters/parameter%201/parameter%202/parameter%203\">spanish</a>",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/resources/favicons/16x16-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/resources/favicons/32x32-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"/resources/favicons/96x96-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"/resources/favicons/128x128-$cacheHash.png\"",
-				   "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"/resources/favicons/196x196-$cacheHash.png\""]
+	   		"href=\"$baseURL/glob-", "href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
+		   	"href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\">english</a>",
+		   	"href=\"$baseURL/es/multi-parameters/parameter%201/parameter%202/parameter%203\">spanish</a>",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",

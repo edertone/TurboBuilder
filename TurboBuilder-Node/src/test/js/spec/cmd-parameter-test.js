@@ -66,6 +66,7 @@ describe('cmd-parameter-test', function() {
         let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
         expect(npmInstallResult).toContain("added");
         expect(npmInstallResult).toContain("packages in");
+        expect(npmInstallResult).not.toContain("npm ERR");
         
         let testsLaunchResult = utils.exec('-cbst');        
         expect(testsLaunchResult).toContain("clean start");
@@ -73,10 +74,90 @@ describe('cmd-parameter-test', function() {
         expect(testsLaunchResult).toContain("sync start");
         expect(testsLaunchResult).toContain("test start");
         expect(testsLaunchResult).toContain("0 failures");
-        expect(testsLaunchResult).not.toContain('There are jasmine unit test failures');
+        expect(testsLaunchResult).not.toContain('jasmine unit test failures');
         
         expect(utils.exec('-c')).toContain("clean ok");
+    });
+    
+    
+    it('should successfully run the jasmine tests on a generated site_php project on a webserver subfolder', function() {
+
+        let sep = utils.fm.dirSep();
         
-        // TODO - execute the same tests but targeting a webserver subfolder
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        // Modify the project setup to sync the files to /subfolder
+        let setup = utils.readSetupFile();        
+        setup.sync[0].destPath = setup.sync[0].destPath + sep + 'subfolder';        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        // Modify the turbosite tests setup to point the host to /subfolder
+        let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        turboSiteSetup.baseURL = 'subfolder';
+        turboSiteSetup.testsSetup.host += '/subfolder';
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
+        
+        // Create the subfolder on server
+        if(!utils.fm.isDirectory(setup.sync[0].destPath)){
+            
+            expect(utils.fm.createDirectory(setup.sync[0].destPath)).toBe(true);
+        }
+        
+        let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
+        expect(npmInstallResult).toContain("added");
+        expect(npmInstallResult).toContain("packages in");
+        expect(npmInstallResult).not.toContain("npm ERR");
+        
+        // launch selenium tests on root localhost
+        let testsLaunchResult = utils.exec('-cbst');        
+        expect(testsLaunchResult).toContain("clean start");
+        expect(testsLaunchResult).toContain("build start");
+        expect(testsLaunchResult).toContain("sync start");
+        expect(testsLaunchResult).toContain("test start");
+        expect(testsLaunchResult).toContain("0 failures");
+        expect(testsLaunchResult).not.toContain('jasmine unit test failures');
+        
+        expect(utils.exec('-c')).toContain("clean ok");
+    });
+    
+    
+    it('should successfully run the jasmine tests on a generated site_php project on a webserver with 2 levels of subfolder depth', function() {
+
+        let sep = utils.fm.dirSep();
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        // Modify the project setup to sync the files to /subfolder1/subfolder2
+        let setup = utils.readSetupFile();        
+        setup.sync[0].destPath = setup.sync[0].destPath + sep + 'subfolder1' + sep + 'subfolder2';        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        // Modify the turbosite tests setup to point the host to /subfolder
+        let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        turboSiteSetup.baseURL = 'subfolder1/subfolder2';
+        turboSiteSetup.testsSetup.host += '/subfolder1/subfolder2';
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
+        
+        // Create the subfolders on server
+        if(!utils.fm.isDirectory(setup.sync[0].destPath)){
+            
+            expect(utils.fm.createDirectory(setup.sync[0].destPath, true)).toBe(true);
+        }
+        
+        let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
+        expect(npmInstallResult).toContain("added");
+        expect(npmInstallResult).toContain("packages in");
+        expect(npmInstallResult).not.toContain("npm ERR");
+        
+        // launch selenium tests on root localhost
+        let testsLaunchResult = utils.exec('-cbst');        
+        expect(testsLaunchResult).toContain("clean start");
+        expect(testsLaunchResult).toContain("build start");
+        expect(testsLaunchResult).toContain("sync start");
+        expect(testsLaunchResult).toContain("test start");
+        expect(testsLaunchResult).toContain("0 failures");
+        expect(testsLaunchResult).not.toContain('jasmine unit test failures');
+        
+        expect(utils.exec('-c')).toContain("clean ok");
     });
 });
