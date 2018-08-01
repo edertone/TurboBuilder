@@ -39,15 +39,19 @@ exports.getBuilderVersion = function () {
 /**
  * Calculate the most recent project semantic version value (major.minor.patch) depending on git tags or other parameters
  */
-exports.getProjectRepoSemVer = function () {
-    
+exports.getProjectRepoSemVer = function (includeGitCommits = false) {
+        
     buildModule.checkGitAvailable();
+
+    let commitsCount = this.countCommitsSinceLatestTag();
+    
+    let gitCommits = (includeGitCommits && commitsCount > 0) ? ' +' + commitsCount : '';
     
     try{
         
         let execResult = execSync('git describe --abbrev=0 --tags', {stdio : 'pipe'});
         
-        return StringUtils.trim(execResult.toString());
+        return StringUtils.trim(execResult.toString()) + gitCommits;
         
     }catch(e){
 

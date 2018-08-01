@@ -407,6 +407,31 @@ exports.buildLibTs = function (destPath) {
 
 
 /**
+ * Write the project semantic version number value inside all the merged js files created by build.
+ * This is useful to know which project version is stored on the generated js files.
+ */
+exports.markMergedJsWithVersion = function (destPath) {
+    
+    for (let target of global.setup.build.lib_ts.targets) {
+        
+        let isMergedFile = target.hasOwnProperty('mergedFile') && !StringUtils.isEmpty(target.mergedFile);
+        
+        if(isMergedFile){
+            
+            let sep = fm.dirSep();
+            let destDist = destPath + sep + 'dist';
+            
+            let mergedFileContent = fm.readFile(destDist + sep + target.folder + sep + target.mergedFile + '.js');
+            
+            mergedFileContent = "// " + setupModule.getProjectRepoSemVer(true) + "\n" + mergedFileContent;
+            
+            fm.saveFile(destDist + sep + target.folder + sep + target.mergedFile + '.js', mergedFileContent);
+        }
+    }
+}
+
+
+/**
  * Join all the files from the specified array and get a string with the result
  */
 let mergeFilesFromArray = function (array, basePath, deleteFiles = false) {

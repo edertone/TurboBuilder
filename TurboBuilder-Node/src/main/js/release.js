@@ -66,6 +66,13 @@ exports.execute = function () {
     
     minifyJs(releaseFullPath);
     
+    // After js files are minified, we will write the project version
+    // inside the merged js files of the lib_ts projects
+    if(global.setup.build.lib_ts){
+        
+        buildModule.markMergedJsWithVersion(releaseFullPath);
+    }
+    
     if(global.setup.release.generateCodeDocumentation){
         
         generateCodeDocumentation(releaseFullPath);
@@ -87,9 +94,7 @@ exports.getReleaseRelativePath = function () {
     
     if(releaseRelativePath === ''){
         
-        let i = setupModule.countCommitsSinceLatestTag();
-        
-        releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + ' +' + i;
+        releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer(true);
     }
 
     return releaseRelativePath; 
@@ -192,7 +197,18 @@ let createGitChangeLog = function (destPath) {
     let changeLogContents = global.runtimePaths.projectName + ' DEV CHANGELOG ---------------------------------------------';
     
     // Get the GIT tags sorted by date ascending
-    let gitTagsList = execSync('git tag --sort version:refname', {stdio : 'pipe'}).toString();
+    let gitTagsList = '';
+    
+    try{
+    
+        gitTagsList = execSync('git tag --sort version:refname', {stdio : 'pipe'}).toString();
+        
+    }catch(e){
+
+        console.warning("changelog failed. Not a git repository?");
+        
+        return;
+    }
     
     // Split the tags and generate the respective output for the latest global.setup.release.gitChangeLogCount num of versions
     gitTagsList = gitTagsList.split("\n").reverse();

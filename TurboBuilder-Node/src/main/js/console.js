@@ -141,7 +141,7 @@ exports.printVersionInfo = function () {
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
     
-        result += "\n\n" + global.runtimePaths.projectName + ': ' + setupModule.getProjectRepoSemVer() + ' +' + setupModule.countCommitsSinceLatestTag();
+        result += "\n\n" + global.runtimePaths.projectName + ': ' + setupModule.getProjectRepoSemVer(true);
     }
     
     return result;
