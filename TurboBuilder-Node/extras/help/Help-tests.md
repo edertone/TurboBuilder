@@ -18,7 +18,7 @@ Create an external launch configuration:
 	- Disable Build before launch on build tab
 	
 	
-# How to launch only a subset of the project tests
+## How to launch only a subset of the project tests
 	
 Edit the file under: src/test/js/jasmine.json
 
