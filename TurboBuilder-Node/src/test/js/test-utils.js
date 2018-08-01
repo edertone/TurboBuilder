@@ -59,9 +59,18 @@ exports.createAndSwitchToTempFolder = function (dirName) {
  */
 exports.exec = function (options) {
     
+    return this.execCmdCommand(this.pathToExecutable + ' ' + options);
+};
+
+
+/**
+ * Execute an arbitrary cmd command on the current active dir
+ */
+exports.execCmdCommand = function (cmdLine) {
+    
     try{
         
-        return execSync(this.pathToExecutable + ' ' + options, {stdio : 'pipe'}).toString();
+        return execSync(cmdLine, {stdio : 'pipe'}).toString();
         
     }catch(e){
         
@@ -72,7 +81,7 @@ exports.exec = function (options) {
         
         return e.stdout.toString();
     }  
-};
+}
 
 
 /**
