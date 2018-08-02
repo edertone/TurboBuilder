@@ -60,8 +60,10 @@ if (program.generate){
 // Initialize the builder setup and global variables
 setupModule.init();
 
-// Perform the validation as defined on xml setup 
-if (program.lint){
+// Perform the validation as defined on xml setup, except if it is defined
+// to be performed before build, cause it will be executed there
+if (program.lint && 
+    !(program.build && global.setup.validate.runBeforeBuild === true)){
  
     validateModule.execute();
 }
@@ -83,7 +85,8 @@ if (program.release){
     releaseModule.execute();
 }
 
-if (program.sync){
+if (program.sync && 
+    !(program.build && syncModule.isAnyRunAfterBuildEnabled())){
     
     syncModule.execute();
 }

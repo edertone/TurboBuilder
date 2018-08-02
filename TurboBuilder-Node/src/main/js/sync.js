@@ -16,27 +16,51 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 /**
  * Execute the sync process
  */
-exports.execute = function () {
+exports.execute = function (verbose = true) {
     
     if(!global.setup.sync || global.setup.sync.length <= 0){
        
         console.error("No sync setup defined on " + global.fileNames.setup);
     }
     
-    console.log("\nsync start");
+    if(verbose){
+        
+        console.log("\nsync start");
+    }
     
     for (let syncSetup of global.setup.sync) {
         
-        if(syncSetup.type === "fileSystem"){
-            
-            syncFileSystem(syncSetup);
-        }
-
-        if(syncSetup.type === "ftp"){
-            
-            syncFtp(syncSetup);
+        if(verbose || syncSetup.runAfterBuild === true){
+        
+            if(syncSetup.type === "fileSystem"){
+                
+                syncFileSystem(syncSetup);
+            }
+    
+            if(syncSetup.type === "ftp"){
+                
+                syncFtp(syncSetup);
+            }
         }
     }
+}
+
+
+/**
+ * True if there's any sync element on the global setup that has an enabled value for
+ * runAfterBuild
+ */
+exports.isAnyRunAfterBuildEnabled = function () {
+    
+    for (let syncSetupItem of global.setup.sync) {
+        
+        if(syncSetupItem.runAfterBuild){
+            
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 
@@ -83,7 +107,7 @@ let syncFileSystem = function (syncSetup) {
     
     fm.copyDirectory(sourcePath, syncSetup.destPath);
     
-    console.success('fileSystem sync ok to: ' + syncSetup.destPath);
+    console.success('sync ok to fs: ' + syncSetup.destPath);
 }
 
 
@@ -110,5 +134,5 @@ let syncFtp = function (syncSetup) {
     
     console.exec(winscpExec, '', true);
 
-    console.success('ftp sync ok');
+    console.success('sync ok to ftp: ' + syncSetup.host);
 }

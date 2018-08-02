@@ -10,6 +10,7 @@ const { execSync } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
+const syncModule = require('./sync');
 const sass = require('node-sass');
 const sharp = require('sharp');
 
@@ -65,6 +66,12 @@ exports.execute = function () {
     if(global.setup.build.lib_ts){
     
         this.buildLibTs(buildFullPath);
+    }
+    
+    // Check if any of the sync elements is configured to be executed after build
+    if(syncModule.isAnyRunAfterBuildEnabled()){
+        
+        syncModule.execute(false);
     }
     
     console.success('build ok');

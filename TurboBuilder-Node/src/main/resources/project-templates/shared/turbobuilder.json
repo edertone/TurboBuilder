@@ -72,6 +72,7 @@
         
     "sync": [
     	{
+    		"runAfterBuild": false,
     		"type": "fileSystem",
     		"excludes": ["some-filename-string"],
     		"sourcePath": "target/$dev/dist/",
@@ -79,6 +80,7 @@
     		"deleteDestPathContents": true
     	},
     	{
+    		"runAfterBuild": false,
     		"type": "ftp",
     		"excludes": ["some-filename-string"],
     		"sourcePath": "target/$prod/dist/",

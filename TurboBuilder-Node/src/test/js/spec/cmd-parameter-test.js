@@ -68,7 +68,6 @@ describe('cmd-parameter-test', function() {
         
         let testsLaunchResult = utils.exec('-bt');        
         expect(testsLaunchResult).toContain("build start: site_php");
-        expect(testsLaunchResult).toContain("sync ok to fs");
         expect(testsLaunchResult).toContain("test start");
         expect(testsLaunchResult).toContain("Error: turbocommons-ts module not found. Did you run npm install?");
         expect(testsLaunchResult).toContain('jasmine unit test failures');

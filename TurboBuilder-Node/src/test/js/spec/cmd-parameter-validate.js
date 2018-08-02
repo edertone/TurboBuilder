@@ -48,7 +48,9 @@ describe('cmd-parameter-validate', function() {
 
         expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        let buildResult = utils.exec('-l');
+        expect(buildResult).toContain("validate start");
+        expect(buildResult).toContain("validate ok");
     });
     
     
@@ -96,6 +98,27 @@ describe('cmd-parameter-validate', function() {
         
         expect(buildResult).toContain("validate ok");
         expect(buildResult).toContain("build ok");
+    });
+    
+    
+    it('should not validate two times if runBeforeBuild is enabled on a generated site_php project and -bl options are passed', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
+            .toBe(true);
+        
+        let buildResult = utils.exec('-bl');
+        
+        expect(buildResult).not.toContain("validate start");
+        expect(buildResult).toContain("validate ok");
+        expect(buildResult).toContain("build ok");
+        
+        let buildResult2 = utils.exec('-lb');
+        
+        expect(buildResult2).not.toContain("validate start");
+        expect(buildResult2).toContain("validate ok");
+        expect(buildResult2).toContain("build ok");
     });
     
     
