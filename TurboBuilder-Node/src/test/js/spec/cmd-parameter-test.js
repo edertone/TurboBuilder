@@ -59,6 +59,22 @@ describe('cmd-parameter-test', function() {
     });
     
     
+    it('should fail when a site_php is generated and no npm install is performed before build and test', function() {
+        
+        let testsGenerateResult = utils.exec('-g site_php');   
+        expect(testsGenerateResult).toContain("Generated site_php structure");
+        expect(testsGenerateResult).toContain("Created turbobuilder.json file");
+        expect(testsGenerateResult).toContain("Generated project structure ok");
+        
+        let testsLaunchResult = utils.exec('-bt');        
+        expect(testsLaunchResult).toContain("build start: site_php");
+        expect(testsLaunchResult).toContain("sync ok to fs");
+        expect(testsLaunchResult).toContain("test start");
+        expect(testsLaunchResult).toContain("Error: turbocommons-ts module not found. Did you run npm install?");
+        expect(testsLaunchResult).toContain('jasmine unit test failures');
+    });
+    
+    
     it('should successfully run the jasmine tests on a generated site_php project', function() {
 
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");

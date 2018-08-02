@@ -11,10 +11,11 @@
  * the chromedriver for these tests. 
  */
 
-
+const utils = require('../test-utils');
 const path = require('path');
-const webdriver = require('selenium-webdriver');
+const { execSync } = require('child_process');
 const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
+const webdriver = require('selenium-webdriver');
 
 
 let fm = new FilesManager(require('fs'), require('os'), path, process);
@@ -23,6 +24,8 @@ let fm = new FilesManager(require('fs'), require('os'), path, process);
 describe('selenium-site_php-core-tests', function() {
 
     beforeAll(function() {
+        
+        utils.checkChromeDriverAvailable();
         
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
