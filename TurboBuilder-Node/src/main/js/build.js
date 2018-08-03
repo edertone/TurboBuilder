@@ -256,11 +256,16 @@ exports.buildSitePhp = function (destPath) {
                         .resize(faviconExpectedFile.w, faviconExpectedFile.h)
                         .toFile(destSite + sep + faviconExpectedFile.name, function(err) {
                             
-                            if(err) {
+                            if(err || !fm.isFile(destSite + sep + faviconExpectedFile.name)) {
                                 
                                 console.error('Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name + "\n" + err);
                             }
                         });
+                    
+                    // Hard block till we are sure the file is created
+                    blockingSleepTill(() => {return fm.isFile(destSite + sep + faviconExpectedFile.name);}, 60000,
+                        'Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name);
+                                        
                 }else{
                     
                     // Add the hash to the expected favicon
@@ -271,11 +276,15 @@ exports.buildSitePhp = function (destPath) {
                         .resize(faviconExpectedFile.w, faviconExpectedFile.h)
                         .toFile(destFaviconsPath + sep + faviconExpectedFileWithHash, function(err) {
                             
-                            if(err) {
+                            if(err || !fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash)) {
                                 
                                 console.error('Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name + "\n" + err);
                             }
                         });
+                    
+                    // Hard block till we are sure the file is created
+                    blockingSleepTill(() => {return fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash);}, 60000,
+                        'Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name);
                 }
             
             }else{
@@ -585,4 +594,24 @@ exports.checkPhpAvailable = function () {
             console.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
         }
     }
+}
+
+
+/**
+ * This is a function that performs a hardblock of the current execution till the provided function returns a true value or
+ * the provided number of miliseconds is complete
+ */
+let blockingSleepTill = function (verificationFun, maxTimeMs, timeExceededErrorMessage) {
+
+    let currentTime = Date.now();
+    
+    while(Date.now() < currentTime + maxTimeMs){
+        
+        if(verificationFun()){
+        
+            return;
+        }
+    }
+    
+    console.error(timeExceededErrorMessage);
 }
