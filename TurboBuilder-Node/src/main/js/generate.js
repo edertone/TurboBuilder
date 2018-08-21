@@ -79,8 +79,9 @@ let createProjectStructure = function (type) {
     fm.copyDirectory(templatesFolder + sep + type, global.runtimePaths.root);
     
     // Copy the extras folder
-    if(!fm.createDirectory(global.runtimePaths.extras) ||
-       !fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras)){
+    fm.createDirectory(global.runtimePaths.extras);
+    
+    if(!fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras, false)){
     
         console.error('Failed creating: ' + global.runtimePaths.extras);
     }
