@@ -56,7 +56,7 @@
 	{
 		"url": "hTtps://$host",
 		"to": "https://$host/en",
-		"comment": "This url is used to test that language cookie is stored to es on the previous url"
+		"comment": "This url is used to test that language cookie is stored to en on the previous url"
 	},
 	{
 		"url": "https://$host/es/",
