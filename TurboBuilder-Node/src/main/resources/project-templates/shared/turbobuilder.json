@@ -84,7 +84,7 @@
     		"type": "ftp",
     		"excludes": ["some-filename-string"],
     		"sourcePath": "target/$prod/dist/",
-    		"remotePath": "/somepath",
+    		"remotePath": "/public_html/somepath",
     		"host": "www.someserver.com",
     		"user": "serverUser",
     		"psw": "serverpsw"

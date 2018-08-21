@@ -26,7 +26,7 @@ exports.execute = function () {
         console.error('could not delete ' + global.runtimePaths.target);
     }
     
-    // Delete all synced files from filesystem
+    // Delete all synced files
     for (let syncSetup of global.setup.sync) {
         
         if(syncSetup.type === "fileSystem" &&
@@ -35,6 +35,8 @@ exports.execute = function () {
             
             console.error("could not delete contents of " + syncSetup.destPath);
         }
+        
+        // TODO - delete ftp files also
     }
 
     console.success("clean ok");

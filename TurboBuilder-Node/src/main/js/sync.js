@@ -6,7 +6,7 @@
 
 
 const console = require('./console.js');
-const buildModule = require('./setup');
+const buildModule = require('./build');
 const { StringUtils, FilesManager } = require('turbocommons-ts');
 
 
@@ -132,7 +132,10 @@ let syncFtp = function (syncSetup) {
     winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + syncSetup.remotePath + '"';
     winscpExec += ' "exit"';
     
-    console.exec(winscpExec, '', true);
+    if(!console.exec(winscpExec, '', true)){
+        
+        console.error('Sync errors');
+    }
 
     console.success('sync ok to ftp: ' + syncSetup.host);
 }
