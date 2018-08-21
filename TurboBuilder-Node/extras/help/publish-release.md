@@ -15,10 +15,10 @@
 
 6 - Commit all changes to repo
 
-6 - Make sure the git tag is updated with the new project version we want to publish
+7 - Make sure the git tag is updated with the new project version we want to publish
 	(Either in git local and remote repos)
 
-7 - Open a command line inside project folder and run:
+8 - Open a command line inside project folder and run:
 	npm publish
 
-8 - Verify that new version appears for the package at www.npmjs.com/~edertone
+9 - Verify that new version appears for the package at www.npmjs.com/~edertone
