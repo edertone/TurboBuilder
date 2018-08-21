@@ -6,12 +6,14 @@
 2 - Launch all the project tests and make sure there are no failures
 	(See the related help file for docs on how to launch tests)
 
-3 - Update the version number on the package.json file and commit it.
+3 - Update the version number on the package.json file
 	Make sure we have increased the version number regarding the previously published one
 
 4 - Review package.json for any other desired change
 
 5 - Review project Readme.md to reflect new features or changes
+
+6 - Commit all changes to repo
 
 6 - Make sure the git tag is updated with the new project version we want to publish
 	(Either in git local and remote repos)
