@@ -1,113 +1,113 @@
 {
-	"metadata": {
-		"name": "write project name here",
-		"description": "write some project description here",
-		"builderVersion": ""
-	},
-	
-	"validate": {
-		"runBeforeBuild": true,
-		"projectStructure" : {
-	        "enabled": true,
-	        "forceExtrasFolder": true,
-	        "forceReadmeFile": true,
-	        "forceTodoFolder": true,
-	        "resourcesStructure": true,
-	        "checkGitIgnore": true
-	    },
-	    "phpNamespaces" : {
-	        "enabled": false,
-	        "mandatory": true,
-	        "mustContain": ["some-php-namespace-string-here-$1-$2"],
-	        "excludes": ["some-filename-pattern"]
-	    },
-	    "copyrightHeaders": [
-	    	{
-	    		"path": "path/to/some/CoyprightHeaderFile.txt",
-	    		"appliesTo": "src",
-	    		"includes": ["js", "ts", "some-filename-pattern"],
-	    		"excludes": ["some-filename-pattern"]
-	    	}
-	    ],
-	    "sitePhp" : {
-	        "cssHardcodedColors": true
-	    }
+    "metadata": {
+        "name": "write project name here",
+        "description": "write some project description here",
+        "builderVersion": ""
+    },
+    
+    "validate": {
+        "runBeforeBuild": true,
+        "projectStructure" : {
+            "enabled": true,
+            "forceExtrasFolder": true,
+            "forceReadmeFile": true,
+            "forceTodoFolder": true,
+            "resourcesStructure": true,
+            "checkGitIgnore": true
+        },
+        "phpNamespaces" : {
+            "enabled": false,
+            "mandatory": true,
+            "mustContain": ["some-php-namespace-string-here-$1-$2"],
+            "excludes": ["some-filename-pattern"]
+        },
+        "copyrightHeaders": [
+            {
+                "path": "path/to/some/CoyprightHeaderFile.txt",
+                "appliesTo": "src",
+                "includes": ["js", "ts", "some-filename-pattern"],
+                "excludes": ["some-filename-pattern"]
+            }
+        ],
+        "sitePhp" : {
+            "cssHardcodedColors": true
+        }
     },
     
     "build": {
     
-	    "keepUnpackedSrcFiles" : false,
-	    "printTodoFiles" : false,
-	    
-	    "site_php" : {
-	    },
-	    
-	    "lib_php" : {
-	    	"createPhar": true
-	    },
-	    
-	    "lib_java" : {
-	    	"createJar": true
-	    },
-	    
-	    "lib_ts" : {
-	        "declaration": true,
-	        "strict": true,
-	        "sourceMap": true,
-	        "targets": [
-	            {"folder": "ts", "jsTarget": "ES5"},
-	            {"folder": "es5", "jsTarget": "ES5", "mergedFile": "PackedJsFileName-ES5", "globalVar": "global_lib_var"},
-	            {"folder": "es6", "jsTarget": "ES6", "mergedFile": "PackedJsFileName-ES6", "globalVar": "global_lib_var"}
-	        ]
-	    }
+        "keepUnpackedSrcFiles" : false,
+        "printTodoFiles" : false,
+        
+        "site_php" : {
+        },
+        
+        "lib_php" : {
+            "createPhar": true
+        },
+        
+        "lib_java" : {
+            "createJar": true
+        },
+        
+        "lib_ts" : {
+            "declaration": true,
+            "strict": true,
+            "sourceMap": true,
+            "targets": [
+                {"folder": "ts", "jsTarget": "ES5"},
+                {"folder": "es5", "jsTarget": "ES5", "mergedFile": "PackedJsFileName-ES5", "globalVar": "global_lib_var"},
+                {"folder": "es6", "jsTarget": "ES6", "mergedFile": "PackedJsFileName-ES6", "globalVar": "global_lib_var"}
+            ]
+        }
     },
     
     "release": {
-	    "printTodoFiles" : true,
-	    "gitChangeLog": true,
-	    "gitChangeLogCount": 5,
-	    "optimizePictures": true,
-	    "generateCodeDocumentation": true
+        "printTodoFiles" : true,
+        "gitChangeLog": true,
+        "gitChangeLogCount": 5,
+        "optimizePictures": true,
+        "generateCodeDocumentation": true
     },
         
     "sync": [
-    	{
-    		"runAfterBuild": false,
-    		"type": "fileSystem",
-    		"excludes": ["some-filename-string"],
-    		"sourcePath": "target/$dev/dist/",
-    		"destPath": "X:\\somepath-to-copy-files-to",
-    		"deleteDestPathContents": true
-    	},
-    	{
-    		"runAfterBuild": false,
-    		"type": "ftp",
-    		"excludes": ["some-filename-string"],
-    		"sourcePath": "target/$prod/dist/",
-    		"remotePath": "/public_html/somepath",
-    		"host": "www.someserver.com",
-    		"user": "serverUser",
-    		"psw": "serverpsw"
-    	}
+        {
+            "runAfterBuild": false,
+            "type": "fileSystem",
+            "excludes": ["some-filename-string"],
+            "sourcePath": "target/$dev/dist/",
+            "destPath": "X:\\somepath-to-copy-files-to",
+            "deleteDestPathContents": true
+        },
+        {
+            "runAfterBuild": false,
+            "type": "ftp",
+            "excludes": ["some-filename-string"],
+            "sourcePath": "target/$prod/dist/",
+            "remotePath": "/public_html/somepath",
+            "host": "www.someserver.com",
+            "user": "serverUser",
+            "psw": "serverpsw"
+        }
     ],
     
     "test": [
-		{
-	    	"type": "phpUnit",
-	    	"testsRoot": "src/test/php",
-	        "coverageReport": true,
-	        "coverageReportOpenAfterTests": true
-	    },	    
-	    {
-	    	"type": "jasmine",
-	    	"jasmineConfig": "src/test/js/jasmine.json"
-	    },
-	    {
-	    	"type": "qunit",
-	    	"testsRoot": "src/test/js",
-	        "httpServerPort": "8185",
-	        "targets": ["ts", "es5", "es6"],
-	        "browsers": {"chrome": false, "firefox": false, "iexplore": false}
-	    }
+        {
+            "type": "phpUnit",
+            "testsRoot": "src/test/php",
+            "coverageReport": true,
+            "coverageReportOpenAfterTests": true
+        },        
+        {
+            "type": "jasmine",
+            "jasmineConfig": "src/test/js/jasmine.json"
+        },
+        {
+            "type": "qunit",
+            "testsRoot": "src/test/js",
+            "httpServerPort": "8185",
+            "targets": ["ts", "es5", "es6"],
+            "browsers": {"chrome": false, "firefox": false, "iexplore": false}
+        }
     ]
 }

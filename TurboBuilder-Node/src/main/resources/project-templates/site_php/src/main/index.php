@@ -13,11 +13,8 @@ if(file_exists('cache/hash')){
 
 // Check server version
 if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-    
-    // TODO - throw exception instead of echoing the error message, and make
-    // sure that it is captured by the error management
-    echo 'PHP 7.1.0 required but found '.PHP_VERSION;
-    die();
+
+    die('PHP 7.1.0 required but found '.PHP_VERSION);
 }
 
 require 'autoloader.php';

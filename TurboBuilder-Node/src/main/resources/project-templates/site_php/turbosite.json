@@ -1,35 +1,42 @@
 {
-	"cacheHash": "",
- 	
- 	"homeView": "home",
- 	
- 	"baseURL": "",
- 	
- 	"singleParameterView": "single-parameter",
-	
-	"locales": ["en_US", "es_ES"],
-	
-	"resourceBundles": [
-		{
-	    	"path": "resources/locales/$bundle/$bundle_$locale.properties",
-	        "bundles": []
-		}
-	],
-	
-	"globalCss": [
-		"libs/normalize/normalize.css",
-		"view/css/global-styles.scss",
-		"view/components/main-menu/main-menu.scss",
-		"view/components/footer/footer.scss"
-	],
-	
-	"globalJs": [
-		"libs/jquery/jquery.js",
-		"libs/turbocommons-es5/turbocommons-es5.js"
-	],
-	
-	"testsSetup": {
-	
-		"host": "localhost"
-	}
+    "cacheHash": "",
+    
+    "errorSetup": {
+        "exceptionsToBrowser": false,
+        "exceptionsToMail": "",
+        "warningsToBrowser": false,
+        "warningsToMail": ""
+    },
+    
+    "homeView": "home",
+     
+    "baseURL": "",
+     
+    "singleParameterView": "single-parameter",
+    
+    "locales": ["en_US", "es_ES"],
+    
+    "resourceBundles": [
+        {
+            "path": "resources/locales/$bundle/$bundle_$locale.properties",
+            "bundles": []
+        }
+    ],
+    
+    "globalCss": [
+        "libs/normalize/normalize.css",
+        "view/css/global-styles.scss",
+        "view/components/main-menu/main-menu.scss",
+        "view/components/footer/footer.scss"
+    ],
+    
+    "globalJs": [
+        "libs/jquery/jquery.js",
+        "libs/turbocommons-es5/turbocommons-es5.js"
+    ],
+    
+    "testsSetup": {
+    
+        "host": "localhost"
+    }
 }
