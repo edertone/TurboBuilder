@@ -3,34 +3,52 @@
 		"url": "https://$host/robots.txt",
 		"title": null,
 		"source": "User-agent:",
-		"skipLogsTest": true
+		"skipLogsTest": true,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/robots.txt?p=1",
 		"title": null,
 		"source": "User-agent:",
-		"skipLogsTest": true
+		"skipLogsTest": true,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/robots.txt?p=1&q=2",
 		"title": null,
 		"source": "User-agent:",
-		"skipLogsTest": true
+		"skipLogsTest": true,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/glob-$cacheHash.css",
 		"title": null,
-		"source": ["font-size", "nav section", "2px solid #0e0e0e", "footer p", "2px solid #d3d4d4"]
+		"source": ["font-size", "nav section", "2px solid #0e0e0e", "footer p", "2px solid #d3d4d4"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/glob-$cacheHash.js",
 		"title": null,
-		"source": "\"use strict\""
+		"source": "\"use strict\"",
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/resources/fonts/readme.txt",
 		"title": null,
-		"source": "This folder contains all the project fonts in several formats"
+		"source": "This folder contains all the project fonts in several formats",
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/en",
@@ -46,8 +64,12 @@
 		  	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		  	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		  	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		  	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
-	},
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""
+	  	],
+        "startWith": "<!DOCTYPE",
+        "endWith": "</html>",
+        "notContains": "<p><b>PHP Problem:"
+    },
 	{
 		"url": "https://$host/es",
 		"title": "Página principal",
@@ -62,7 +84,10 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
+        "startWith": "<!DOCTYPE",
+        "endWith": "</html>",
+        "notContains": "<p><b>PHP Problem:"
 	},
 	{
 		"url": "https://$host/test%20parameter%201",
@@ -77,7 +102,10 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
+        "startWith": "<!DOCTYPE",
+        "endWith": "</html>",
+        "notContains": "<p><b>PHP Problem:"
 	},
 	{
 		"url": "https://$host/testparameter2",
@@ -87,7 +115,10 @@
 	   		"lang=\"en\"",
 	   		"This is the footer",
 	   		"href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-	   		"href=\"$baseURL/testparameter2\">english", "href=\"$baseURL/testparameter2\">spanish"]
+	   		"href=\"$baseURL/testparameter2\">english", "href=\"$baseURL/testparameter2\">spanish"],
+        "startWith": "<!DOCTYPE",
+        "endWith": "</html>",
+        "notContains": "<p><b>PHP Problem:"
 	},
 	{
 		"url": "https://$host/en/multi-parameters/parameter%201/parameter%202/parameter%203",
@@ -100,71 +131,113 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""]
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
+        "startWith": "<!DOCTYPE",
+        "endWith": "</html>",
+        "notContains": "<p><b>PHP Problem:"
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",
 		"title": null,
-		"source": "header img"
+		"source": "header img",
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/view/views/home/home-logo.svg",
 		"title": null,
-		"source": "M7.47 21.49C4.2 19.93 1.86 16.76 1.5 13H0c.5"
+		"source": "M7.47 21.49C4.2 19.93 1.86 16.76 1.5 13H0c.5",
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/resources/favicons/16x16-$cacheHash.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/resources/favicons/32x32-$cacheHash.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/resources/favicons/96x96-$cacheHash.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/resources/favicons/128x128-$cacheHash.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/resources/favicons/196x196-$cacheHash.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/apple-touch-icon-57x57.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/apple-touch-icon-76x76.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/apple-touch-icon-114x114.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/apple-touch-icon-144x144.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/apple-touch-icon-152x152.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	},
 	{
 		"url": "https://$host/apple-touch-icon-180x180.png",
 		"title": null,
-		"source": null
+		"source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
 	}
 ]

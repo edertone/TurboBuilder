@@ -190,6 +190,23 @@ describe('selenium-site_php-core-tests', function() {
                         
                         this.driver.getPageSource().then((source) => {
                             
+                            if(entry.startWith !== null){
+                                
+                                expect(source.startsWith(entry.startWith))
+                                    .toBe(true, entry.url + ' expected to start with ' + entry.startWith + ' but started with ' + source.substr(0, 40));
+                            }
+                            
+                            if(entry.endWith !== null){
+                            
+                                expect(source.endsWith(entry.endWith))
+                                    .toBe(true, entry.url + ' expected to end with ' + entry.endWith + ' but ended with ' + source.substr(source.length - 40));
+                            }
+                            
+                            if(entry.notContains !== null){
+                                
+                                expect(source).not.toContain(entry.notContains);
+                            }
+                            
                             if(entry.source !== null){
                                 
                                 if(ArrayUtils.isArray(entry.source)){
