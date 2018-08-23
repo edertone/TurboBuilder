@@ -181,14 +181,12 @@
         },
         "build": {
             "type": "object",
-            "description": "The Build Schema",
-            "required": [
-                "keepUnpackedSrcFiles",
-                "printTodoFiles",
-                "site_php",
-                "lib_php",
-                "lib_java",
-                "lib_ts"
+            "description": "Defines the parameters for the build process",
+            "oneOf": [
+                {"required": ["site_php"]},
+                {"required": ["lib_php"]},
+                {"required": ["lib_java"]},
+                {"required": ["lib_ts"]}
             ],
             "properties": {
                 "keepUnpackedSrcFiles": {
@@ -360,32 +358,37 @@
             "type": "array",
             "description": "The Test Schema",
             "items": {
-                "type": "object",
-                "description": "The Items Schema",
-                "required": [
-                    "type",
-                    "testsRoot",
-                    "coverageReport",
-                    "coverageReportOpenAfterTests"
-                ],
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "description": "The Type Schema"
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": ["type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
+                        "properties": {
+                            "type": {"type": "string"},
+                            "testsRoot": {"type": "string"},
+                            "coverageReport": {"type": "boolean"},
+                            "coverageReportOpenAfterTests": {"type": "boolean"}
+                        }
                     },
-                    "testsRoot": {
-                        "type": "string",
-                        "description": "The Testsroot Schema"
+                    {
+                        "type": "object",
+                        "required": ["type", "jasmineConfig"],
+                        "properties": {
+                            "type": {"type": "string"},
+                            "jasmineConfig": {"type": "string"}
+                        }
                     },
-                    "coverageReport": {
-                        "type": "boolean",
-                        "description": "The Coveragereport Schema"
-                    },
-                    "coverageReportOpenAfterTests": {
-                        "type": "boolean",
-                        "description": "The Coveragereportopenaftertests Schema"
+                    {
+                        "type": "object",
+                        "required": ["type", "testsRoot", "httpServerPort", "targets", "browsers"],
+                        "properties": {
+                            "type": {"type": "string"},
+                            "testsRoot": {"type": "string"},
+                            "httpServerPort": {"type": "string"},
+                            "targets": {"type": "array"},
+                            "browsers": {"type": "object"}
+                        }
                     }
-                }
+                ]
             }
         }
     }
