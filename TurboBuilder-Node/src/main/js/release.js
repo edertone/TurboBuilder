@@ -64,7 +64,23 @@ exports.execute = function () {
         buildModule.buildLibTs(releaseFullPath);
     }
     
+    // TODO - posar a false els errors to browser sempre al fer release del site_php
+    if(global.setup.build.site_php){
+        
+        buildModule.buildSitePhp(releaseFullPath);
+    }
+    
     minifyJs(releaseFullPath);
+    
+    // TODO - minify css
+    
+    if(global.setup.release.optimizePictures){
+    
+        // TODO - minify images
+    }
+    
+    // TODO - minify htaccess
+    // TODO - what else?
     
     // After js files are minified, we will write the project version
     // inside the merged js files of the lib_ts projects
