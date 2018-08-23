@@ -10,6 +10,7 @@ const path = require('path');
 var fs = require('fs');
 const setupModule = require('./setup');
 const console = require('./console.js');
+let validate = require('jsonschema').validate;
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -36,6 +37,8 @@ exports.execute = function (verbose = true) {
     
         console.log("\nvalidate start");
     }
+    
+    validateJSONSchemas();
     
     validateProjectStructure();
     
@@ -91,6 +94,25 @@ let validateAllowedFolders = function (foldersToInspect, allowedContents){
                 errors.push(inspectedList[j] + " is not allowed inside " + foldersToInspect[i]);
             }                       
         }
+    }
+}
+
+
+/**
+ * Validates all the affected JSON Schemas
+ */
+let validateJSONSchemas = function () {
+    
+    let schemasPath = global.installationPaths.mainResources + fm.dirSep() + 'json-schema';
+    
+    //Validate the turbobuilder.json setup
+    let turboBuilderSchema = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + 'turbobuilder.schema.json'));
+    
+    let results = validate(global.setup, turboBuilderSchema);
+    
+    if(!results.valid){
+        
+        errors.push("Invalid JSON schema for " + global.fileNames.setup + ":\n" + results.errors[0]);
     }
 }
 

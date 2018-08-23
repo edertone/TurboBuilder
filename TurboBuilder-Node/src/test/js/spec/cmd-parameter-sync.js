@@ -80,6 +80,7 @@ describe('cmd-parameter-sync', function(){
         setup.sync = [{
             "runAfterBuild" : false,
             "type" : "fileSystem",
+            "excludes" : [],
             "sourcePath" : "target/$dev/dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
@@ -122,6 +123,7 @@ describe('cmd-parameter-sync', function(){
         setup.sync = [{
             "runAfterBuild" : true,
             "type" : "fileSystem",
+            "excludes" : [],
             "sourcePath" : "target/$dev/dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
@@ -147,6 +149,7 @@ describe('cmd-parameter-sync', function(){
         setup.sync = [{
             "runAfterBuild" : false,
             "type" : "fileSystem",
+            "excludes" : [],
             "sourcePath" : "target/$dev/dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
@@ -174,6 +177,7 @@ describe('cmd-parameter-sync', function(){
         setup.sync = [{
             "runAfterBuild" : true,
             "type" : "fileSystem",
+            "excludes" : [],
             "sourcePath" : "target/$dev/dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false

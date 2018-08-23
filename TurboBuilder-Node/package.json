@@ -30,7 +30,8 @@
     "typescript": "2.9.2",
     "uglify-es": "3.3.9",
     "webpack": "3.10.0",
-    "sharp": "0.20.5"
+    "sharp": "0.20.5",
+    "jsonschema": "1.2.4"
   },
   "keywords": [
     "project",
