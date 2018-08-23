@@ -1,0 +1,392 @@
+{
+    "$id": "http://example.com/root.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "turbobuilder.json schema",
+    "required": [
+        "metadata",
+        "validate",
+        "build",
+        "release",
+        "sync",
+        "test"
+    ],
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "description": "Contains information about the project",
+            "required": [
+                "name",
+                "description",
+                "builderVersion"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The project name"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The project description"
+                },
+                "builderVersion": {
+                    "type": "string",
+                    "description": "The turbo builder version that is used by this project"
+                }
+            }
+        },
+        "validate": {
+            "type": "object",
+            "description": "The Validate Schema",
+            "required": [
+                "runBeforeBuild",
+                "projectStructure",
+                "phpNamespaces",
+                "copyrightHeaders",
+                "sitePhp"
+            ],
+            "properties": {
+                "runBeforeBuild": {
+                    "type": "boolean",
+                    "description": "The Runbeforebuild Schema"
+                },
+                "projectStructure": {
+                    "type": "object",
+                    "description": "The Projectstructure Schema",
+                    "required": [
+                        "enabled",
+                        "forceExtrasFolder",
+                        "forceReadmeFile",
+                        "forceTodoFolder",
+                        "resourcesStructure",
+                        "checkGitIgnore"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "The Enabled Schema"
+                        },
+                        "forceExtrasFolder": {
+                            "type": "boolean",
+                            "description": "The Forceextrasfolder Schema"
+                        },
+                        "forceReadmeFile": {
+                            "type": "boolean",
+                            "description": "The Forcereadmefile Schema"
+                        },
+                        "forceTodoFolder": {
+                            "type": "boolean",
+                            "description": "The Forcetodofolder Schema"
+                        },
+                        "resourcesStructure": {
+                            "type": "boolean",
+                            "description": "The Resourcesstructure Schema"
+                        },
+                        "checkGitIgnore": {
+                            "type": "boolean",
+                            "description": "The Checkgitignore Schema"
+                        }
+                    }
+                },
+                "phpNamespaces": {
+                    "type": "object",
+                    "description": "The Phpnamespaces Schema",
+                    "required": [
+                        "enabled",
+                        "mandatory",
+                        "mustContain",
+                        "excludes"
+                    ],
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "The Enabled Schema"
+                        },
+                        "mandatory": {
+                            "type": "boolean",
+                            "description": "The Mandatory Schema"
+                        },
+                        "mustContain": {
+                            "type": "array",
+                            "description": "The Mustcontain Schema",
+                            "items": {
+                                "type": "string",
+                                "description": "The Items Schema"
+                            }
+                        },
+                        "excludes": {
+                            "type": "array",
+                            "description": "The Excludes Schema",
+                            "items": {
+                                "type": "string",
+                                "description": "The Items Schema"
+                            }
+                        }
+                    }
+                },
+                "copyrightHeaders": {
+                    "type": "array",
+                    "description": "The Copyrightheaders Schema",
+                    "items": {
+                        "type": "object",
+                        "description": "The Items Schema",
+                        "required": [
+                            "path",
+                            "appliesTo",
+                            "includes",
+                            "excludes"
+                        ],
+                        "properties": {
+                            "path": {
+                                "type": "string",
+                                "description": "The Path Schema"
+                            },
+                            "appliesTo": {
+                                "type": "string",
+                                "description": "The Appliesto Schema"
+                            },
+                            "includes": {
+                                "type": "array",
+                                "description": "The Includes Schema",
+                                "items": {
+                                    "type": "string",
+                                    "description": "The Items Schema"
+                                }
+                            },
+                            "excludes": {
+                                "type": "array",
+                                "description": "The Excludes Schema",
+                                "items": {
+                                    "type": "string",
+                                    "description": "The Items Schema"
+                                }
+                            }
+                        }
+                    }
+                },
+                "sitePhp": {
+                    "type": "object",
+                    "description": "The Sitephp Schema",
+                    "required": [
+                        "cssHardcodedColors"
+                    ],
+                    "properties": {
+                        "cssHardcodedColors": {
+                            "type": "boolean",
+                            "description": "The Csshardcodedcolors Schema"
+                        }
+                    }
+                }
+            }
+        },
+        "build": {
+            "type": "object",
+            "description": "The Build Schema",
+            "required": [
+                "keepUnpackedSrcFiles",
+                "printTodoFiles",
+                "site_php",
+                "lib_php",
+                "lib_java",
+                "lib_ts"
+            ],
+            "properties": {
+                "keepUnpackedSrcFiles": {
+                    "type": "boolean",
+                    "description": "The Keepunpackedsrcfiles Schema"
+                },
+                "printTodoFiles": {
+                    "type": "boolean",
+                    "description": "The Printtodofiles Schema"
+                },
+                "site_php": {
+                    "type": "object",
+                    "description": "The Site_php Schema"
+                },
+                "lib_php": {
+                    "type": "object",
+                    "description": "The Lib_php Schema",
+                    "required": [
+                        "createPhar"
+                    ],
+                    "properties": {
+                        "createPhar": {
+                            "type": "boolean",
+                            "description": "The Createphar Schema"
+                        }
+                    }
+                },
+                "lib_java": {
+                    "type": "object",
+                    "description": "The Lib_java Schema",
+                    "required": [
+                        "createJar"
+                    ],
+                    "properties": {
+                        "createJar": {
+                            "type": "boolean",
+                            "description": "The Createjar Schema"
+                        }
+                    }
+                },
+                "lib_ts": {
+                    "type": "object",
+                    "description": "The Lib_ts Schema",
+                    "required": [
+                        "declaration",
+                        "strict",
+                        "sourceMap",
+                        "targets"
+                    ],
+                    "properties": {
+                        "declaration": {
+                            "type": "boolean",
+                            "description": "The Declaration Schema"
+                        },
+                        "strict": {
+                            "type": "boolean",
+                            "description": "The Strict Schema"
+                        },
+                        "sourceMap": {
+                            "type": "boolean",
+                            "description": "The Sourcemap Schema"
+                        },
+                        "targets": {
+                            "type": "array",
+                            "description": "The Targets Schema",
+                            "items": {
+                                "type": "object",
+                                "description": "The Items Schema",
+                                "required": [
+                                    "folder",
+                                    "jsTarget"
+                                ],
+                                "properties": {
+                                    "folder": {
+                                        "type": "string",
+                                        "description": "The Folder Schema"
+                                    },
+                                    "jsTarget": {
+                                        "type": "string",
+                                        "description": "The Jstarget Schema"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "release": {
+            "type": "object",
+            "description": "The Release Schema",
+            "required": [
+                "printTodoFiles",
+                "gitChangeLog",
+                "gitChangeLogCount",
+                "optimizePictures",
+                "generateCodeDocumentation"
+            ],
+            "properties": {
+                "printTodoFiles": {
+                    "type": "boolean",
+                    "description": "The Printtodofiles Schema"
+                },
+                "gitChangeLog": {
+                    "type": "boolean",
+                    "description": "The Gitchangelog Schema"
+                },
+                "gitChangeLogCount": {
+                    "type": "integer",
+                    "description": "The Gitchangelogcount Schema"
+                },
+                "optimizePictures": {
+                    "type": "boolean",
+                    "description": "The Optimizepictures Schema"
+                },
+                "generateCodeDocumentation": {
+                    "type": "boolean",
+                    "description": "The Generatecodedocumentation Schema"
+                }
+            }
+        },
+        "sync": {
+            "type": "array",
+            "description": "The Sync Schema",
+            "items": {
+                "type": "object",
+                "description": "The Items Schema",
+                "required": [
+                    "runAfterBuild",
+                    "type",
+                    "excludes",
+                    "sourcePath",
+                    "destPath",
+                    "deleteDestPathContents"
+                ],
+                "properties": {
+                    "runAfterBuild": {
+                        "type": "boolean",
+                        "description": "The Runafterbuild Schema"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The Type Schema"
+                    },
+                    "excludes": {
+                        "type": "array",
+                        "description": "The Excludes Schema",
+                        "items": {
+                            "type": "string",
+                            "description": "The Items Schema"
+                        }
+                    },
+                    "sourcePath": {
+                        "type": "string",
+                        "description": "The Sourcepath Schema"
+                    },
+                    "destPath": {
+                        "type": "string",
+                        "description": "The Destpath Schema"
+                    },
+                    "deleteDestPathContents": {
+                        "type": "boolean",
+                        "description": "The Deletedestpathcontents Schema"
+                    }
+                }
+            }
+        },
+        "test": {
+            "type": "array",
+            "description": "The Test Schema",
+            "items": {
+                "type": "object",
+                "description": "The Items Schema",
+                "required": [
+                    "type",
+                    "testsRoot",
+                    "coverageReport",
+                    "coverageReportOpenAfterTests"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "The Type Schema"
+                    },
+                    "testsRoot": {
+                        "type": "string",
+                        "description": "The Testsroot Schema"
+                    },
+                    "coverageReport": {
+                        "type": "boolean",
+                        "description": "The Coveragereport Schema"
+                    },
+                    "coverageReportOpenAfterTests": {
+                        "type": "boolean",
+                        "description": "The Coveragereportopenaftertests Schema"
+                    }
+                }
+            }
+        }
+    }
+}
