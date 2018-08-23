@@ -35,6 +35,7 @@ global.folderNames = {
  */
 global.fileNames = {
     setup: 'turbobuilder.json',
+    turboSiteSetup: 'turbosite.json',
     gitignore: '.gitignore',
     readme: 'README.md'
 };

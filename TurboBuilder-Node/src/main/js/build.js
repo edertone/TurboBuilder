@@ -149,6 +149,13 @@ exports.buildSitePhp = function (destPath) {
     
     fm.saveFile(destSite + sep + 'turbosite.json', JSON.stringify(turboSiteSetup, null, 4));
     
+    // Launch a warning if errors or warnings are sent to browser
+    if(turboSiteSetup.errorSetup.exceptionsToBrowser ||turboSiteSetup.errorSetup.warningsToBrowser){
+        
+        console.warning("Warning exceptions or warnings are enabled to be shown on browser. " +
+        		"This is a security problem. Please disable them on " + global.fileNames.turboSiteSetup);
+    }
+    
     // Process all sass scss files to css
     let scssFiles = fm.findDirectoryItems(destSite, /^.*\.scss$/i, 'absolute', 'files');
     
