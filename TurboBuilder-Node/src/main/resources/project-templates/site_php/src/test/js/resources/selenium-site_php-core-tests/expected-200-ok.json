@@ -68,7 +68,7 @@
 	  	],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
-        "notContains": "<p><b>PHP Problem:"
+        "notContains": "turbosite-global-error-manager-problem"
     },
 	{
 		"url": "https://$host/es",
@@ -87,7 +87,7 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
-        "notContains": "<p><b>PHP Problem:"
+        "notContains": "turbosite-global-error-manager-problem"
 	},
 	{
 		"url": "https://$host/test%20parameter%201",
@@ -105,7 +105,7 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
-        "notContains": "<p><b>PHP Problem:"
+        "notContains": "turbosite-global-error-manager-problem"
 	},
 	{
 		"url": "https://$host/testparameter2",
@@ -118,7 +118,7 @@
 	   		"href=\"$baseURL/testparameter2\">english", "href=\"$baseURL/testparameter2\">spanish"],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
-        "notContains": "<p><b>PHP Problem:"
+        "notContains": "turbosite-global-error-manager-problem"
 	},
 	{
 		"url": "https://$host/en/multi-parameters/parameter%201/parameter%202/parameter%203",
@@ -134,7 +134,7 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
-        "notContains": "<p><b>PHP Problem:"
+        "notContains": "turbosite-global-error-manager-problem"
 	},
 	{
 		"url": "https://$host/view-view-views-home-$cacheHash.css",

@@ -204,7 +204,7 @@ describe('selenium-site_php-core-tests', function() {
                             
                             if(entry.notContains !== null){
                                 
-                                expect(source).not.toContain(entry.notContains);
+                                expect(source).not.toContain(entry.notContains, 'tested url: ' + entry.url);
                             }
                             
                             if(entry.source !== null){
