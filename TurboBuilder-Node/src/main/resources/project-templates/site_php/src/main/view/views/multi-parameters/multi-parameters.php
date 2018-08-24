@@ -1,8 +1,8 @@
 <?php
 
-use org\turbosite\src\main\php\model\WebSite;
+use org\turbosite\src\main\php\managers\WebSiteManager;
 
-$ws = WebSite::getInstance();
+$ws = WebSiteManager::getInstance();
 
 $ws->initializeView(3);
 
