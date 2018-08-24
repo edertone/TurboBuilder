@@ -31,7 +31,8 @@
     "uglify-es": "3.3.9",
     "webpack": "3.10.0",
     "sharp": "0.20.5",
-    "jsonschema": "1.2.4"
+    "jsonschema": "1.2.4",
+    "clean-css": "4.2.1"
   },
   "keywords": [
     "project",

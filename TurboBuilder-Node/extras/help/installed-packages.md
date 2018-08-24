@@ -42,6 +42,10 @@ Used to compile the typescript code
 
 Used to minify and compress js files
 
+## clean-css
+
+Used to minify and compress css files
+
 ## webpack
 
 Used to merge and create web deployment packages
@@ -49,3 +53,7 @@ Used to merge and create web deployment packages
 ## sharp
 
 A library to resize images
+
+## jsonschema
+
+A library to validate json files agains their respective json schemas

@@ -13,6 +13,7 @@ const validateModule = require('./validate');
 const setupModule = require('./setup');
 const buildModule = require('./build');
 const UglifyJS = require("uglify-es");
+var CleanCSS = require('clean-css');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -71,8 +72,7 @@ exports.execute = function () {
     }
     
     minifyJs(releaseFullPath);
-    
-    // TODO - minify css
+    minifyCss(releaseFullPath);
     
     if(global.setup.release.optimizePictures){
     
@@ -145,6 +145,44 @@ let minifyJs = function (destPath) {
     if(jsFiles.length > 0){
         
         console.success("minify Js ok");
+    }
+}
+
+
+/**
+ * Minifies all the css files (overwrites) that exist on the provided path
+ */
+let minifyCss = function (destPath) {
+    
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    let cssFiles = fm.findDirectoryItems(destDist, /.*\.css$/i, 'absolute', 'files');
+    
+    for (let cssFile of cssFiles) {
+        
+        let cssCode = fm.readFile(cssFile);
+        
+        var result = new CleanCSS({
+            level: {
+                1: {
+                  specialComments: 0
+                }
+              }
+            }).minify(cssCode);
+        
+        if(result.errors.length > 0){
+            
+            console.error('Minification failed: ' + cssFile + "\n\n" + result.error[0]);
+        }
+        
+        fm.deleteFile(cssFile);
+        fm.saveFile(cssFile, result.styles); 
+    }
+    
+    if(cssFiles.length > 0){
+        
+        console.success("minify Css ok");
     }
 }
 
