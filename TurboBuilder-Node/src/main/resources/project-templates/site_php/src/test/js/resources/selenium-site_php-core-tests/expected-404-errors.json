@@ -23,6 +23,7 @@
     "https://$host/fr/home",
     "https://$host/fr/nonexisting",
     "https://www.$host/fr",
+    "https://$host/wp",
     "https://$host/testparameter3",
     "https://$host/missingparameter",
     "https://$host/nonenabledparameter",
