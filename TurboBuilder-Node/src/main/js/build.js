@@ -143,7 +143,7 @@ exports.buildSitePhp = function (destPath) {
     fm.deleteFile(destSite + sep + 'htaccess.txt');
     
     // Generate a random hash to avoid browser caches
-    let turboSiteSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbosite.json'));
+    let turboSiteSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup));
     
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
     
