@@ -4,22 +4,17 @@
     "type": "object",
     "title": "turbobuilder.json schema",
     "required": [
-        "metadata",
-        "validate",
-        "build",
-        "release",
-        "sync",
-        "test"
+        "metadata"
     ],
+    "additionalProperties": false, 
     "properties": {
         "metadata": {
             "type": "object",
             "description": "Contains information about the project",
             "required": [
-                "name",
-                "description",
                 "builderVersion"
             ],
+            "additionalProperties": false, 
             "properties": {
                 "name": {
                     "type": "string",
@@ -38,13 +33,7 @@
         "validate": {
             "type": "object",
             "description": "The Validate Schema",
-            "required": [
-                "runBeforeBuild",
-                "projectStructure",
-                "phpNamespaces",
-                "copyrightHeaders",
-                "sitePhp"
-            ],
+            "additionalProperties": false,
             "properties": {
                 "runBeforeBuild": {
                     "type": "boolean",
@@ -61,6 +50,7 @@
                         "resourcesStructure",
                         "checkGitIgnore"
                     ],
+                    "additionalProperties": false, 
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -97,6 +87,7 @@
                         "mustContain",
                         "excludes"
                     ],
+                    "additionalProperties": false, 
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -136,6 +127,7 @@
                             "includes",
                             "excludes"
                         ],
+                        "additionalProperties": false, 
                         "properties": {
                             "path": {
                                 "type": "string",
@@ -170,6 +162,7 @@
                     "required": [
                         "cssHardcodedColors"
                     ],
+                    "additionalProperties": false, 
                     "properties": {
                         "cssHardcodedColors": {
                             "type": "boolean",
@@ -188,6 +181,7 @@
                 {"required": ["lib_java"]},
                 {"required": ["lib_ts"]}
             ],
+            "additionalProperties": false, 
             "properties": {
                 "keepUnpackedSrcFiles": {
                     "type": "boolean",
@@ -199,14 +193,14 @@
                 },
                 "site_php": {
                     "type": "object",
-                    "description": "The Site_php Schema"
+                    "additionalProperties": false,
+                    "description": "The Site_php Schema",
+                    "additionalProperties": false
                 },
                 "lib_php": {
                     "type": "object",
                     "description": "The Lib_php Schema",
-                    "required": [
-                        "createPhar"
-                    ],
+                    "additionalProperties": false, 
                     "properties": {
                         "createPhar": {
                             "type": "boolean",
@@ -217,9 +211,7 @@
                 "lib_java": {
                     "type": "object",
                     "description": "The Lib_java Schema",
-                    "required": [
-                        "createJar"
-                    ],
+                    "additionalProperties": false,
                     "properties": {
                         "createJar": {
                             "type": "boolean",
@@ -229,13 +221,8 @@
                 },
                 "lib_ts": {
                     "type": "object",
-                    "description": "The Lib_ts Schema",
-                    "required": [
-                        "declaration",
-                        "strict",
-                        "sourceMap",
-                        "targets"
-                    ],
+                    "description": "A typescript library project type",
+                    "additionalProperties": false,
                     "properties": {
                         "declaration": {
                             "type": "boolean",
@@ -259,14 +246,23 @@
                                     "folder",
                                     "jsTarget"
                                 ],
+                                "additionalProperties": false, 
                                 "properties": {
                                     "folder": {
                                         "type": "string",
-                                        "description": "The Folder Schema"
+                                        "description": "TODO"
                                     },
                                     "jsTarget": {
                                         "type": "string",
-                                        "description": "The Jstarget Schema"
+                                        "description": "TODO"
+                                    },
+                                    "mergedFile": {
+                                        "type": "string",
+                                        "description": "TODO"
+                                    },
+                                    "globalVar": {
+                                        "type": "string",
+                                        "description": "Defines the name of the global namespace variable that will be generated to contain the compiled library code. This can then be safely used along with other libraries without danger of collision cause all the classes and methods will be declared under this global variable"
                                     }
                                 }
                             }
@@ -285,6 +281,7 @@
                 "optimizePictures",
                 "generateCodeDocumentation"
             ],
+            "additionalProperties": false, 
             "properties": {
                 "printTodoFiles": {
                     "type": "boolean",
@@ -322,6 +319,7 @@
                     "destPath",
                     "deleteDestPathContents"
                 ],
+                "additionalProperties": false, 
                 "properties": {
                     "runAfterBuild": {
                         "type": "boolean",
@@ -362,6 +360,7 @@
                     {
                         "type": "object",
                         "required": ["type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
+                        "additionalProperties": false, 
                         "properties": {
                             "type": {"type": "string"},
                             "testsRoot": {"type": "string"},
@@ -372,6 +371,7 @@
                     {
                         "type": "object",
                         "required": ["type", "jasmineConfig"],
+                        "additionalProperties": false, 
                         "properties": {
                             "type": {"type": "string"},
                             "jasmineConfig": {"type": "string"}
@@ -380,6 +380,7 @@
                     {
                         "type": "object",
                         "required": ["type", "testsRoot", "httpServerPort", "targets", "browsers"],
+                        "additionalProperties": false, 
                         "properties": {
                             "type": {"type": "string"},
                             "testsRoot": {"type": "string"},

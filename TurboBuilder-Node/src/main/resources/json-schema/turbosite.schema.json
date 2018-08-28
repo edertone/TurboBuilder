@@ -16,6 +16,7 @@
         "globalJs",
         "testsSetup"
     ],
+    "additionalProperties": false, 
     "properties": {
         "cacheHash": {
             "type": "string",
@@ -30,6 +31,7 @@
                 "warningsToBrowser",
                 "warningsToMail"
             ],
+            "additionalProperties": false,
             "properties": {
                 "exceptionsToBrowser": {
                     "type": "boolean",
@@ -78,6 +80,7 @@
             "items": {
                 "type": "object",
                 "required": ["path", "bundles"],
+                "additionalProperties": false,
                 "properties": {
                     "path": {
                         "type": "string",
@@ -115,6 +118,7 @@
                     "url",
                     "fallback"
                 ],
+                "additionalProperties": false,
                 "properties": {
                     "url": {
                         "type": "string",
@@ -147,6 +151,7 @@
             "type": "object",
             "description": "Configuration for the tests execution",
             "required": ["host"],
+            "additionalProperties": false,
             "properties": {
                 "host": {
                     "type": "string",
