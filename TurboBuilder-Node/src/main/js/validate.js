@@ -38,7 +38,7 @@ exports.execute = function (verbose = true) {
         console.log("\nvalidate start");
     }
     
-    validateJSONSchemas();
+    validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.setup, 'turbobuilder.schema.json');
     
     validateProjectStructure();
     
@@ -101,18 +101,24 @@ let validateAllowedFolders = function (foldersToInspect, allowedContents){
 /**
  * Validates all the affected JSON Schemas
  */
-let validateJSONSchemas = function () {
+let validateJSONSchema = function (filePath, schemaFileName) {
     
     let schemasPath = global.installationPaths.mainResources + fm.dirSep() + 'json-schema';
     
-    //Validate the turbobuilder.json setup
-    let turboBuilderSchema = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + 'turbobuilder.schema.json'));
+    // Validate the received path
+    if(!fm.isFile(filePath)){
+        
+        console.error("Could not find " + StringUtils.getPathElement(filePath) + " at " + filePath);
+    }
     
-    let results = validate(global.setup, turboBuilderSchema);
+    let fileContent = JSON.parse(fm.readFile(filePath));
+    let schemaContent = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + schemaFileName));
+    
+    let results = validate(fileContent, schemaContent);
     
     if(!results.valid){
         
-        errors.push("Invalid JSON schema for " + global.fileNames.setup + ":\n" + results.errors[0]);
+        errors.push("Invalid JSON schema for " + StringUtils.getPathElement(filePath) + ":\n" + results.errors[0]);
     }
 }
 
@@ -274,6 +280,9 @@ let validateNamespaces = function () {
  */
 let validateSitePhp = function () {
 
+    // Validate the turbosite.json schema
+    validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
+    
     // Validate css files
     let cssFiles = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'view', /^.*\.(css|scss)$/i, 'absolute', 'files');
     
