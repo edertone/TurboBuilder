@@ -159,7 +159,6 @@ describe('cmd-parameter-validate', function() {
                 }, 
                 build: {
                     lib_ts: {
-                        enabled: true
                     }
                 },
                 validate: {
@@ -216,5 +215,97 @@ describe('cmd-parameter-validate', function() {
       
         // Test that headers are correctly validated
         expect(utils.exec('-l')).toContain("file4.ts");
+    });
+    
+    
+    it('should fail on a site_php project with a missing turbobuilder setup file', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.setup)).toBe(true);        
+        
+        expect(utils.exec('-l')).toContain(global.fileNames.setup + ' setup file not found');
+    });
+    
+    
+    it('should fail on a site_php project with a turbobuilder file with unexpected field', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        setup.unexpected = 'unexpected';
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('additionalProperty "unexpected" exists in instance when not allowed');
+    });
+
+    
+    it('should fail on a site_php project with a missing turbosite setup file', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup)).toBe(true);        
+        
+        expect(utils.exec('-l')).toContain("Could not find " + global.fileNames.turboSiteSetup + " at ");
+    });
+
+    
+    it('should fail on a site_php project with a turbosite file with missing homeView field', function() {
+            
+        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));       
+        expect(turboSiteSetup.homeView).toBe('home');        
+        delete turboSiteSetup.homeView;
+        
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('instance requires property "homeView"');
+    });
+    
+    
+    it('should fail on a site_php project with a turbosite file with missing locales field', function() {
+        
+        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
+        delete turboSiteSetup.locales;
+        
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('instance requires property "locales"');
+    });
+    
+    
+    it('should fail on a site_php project with a turbosite file with missing globalJs field', function() {
+        
+        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
+        delete turboSiteSetup.globalJs;
+        
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('instance requires property "globalJs"');
+    });
+
+
+    it('should fail on a site_php project with a turbosite file with unexpected field', function() {
+        
+        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));
+        turboSiteSetup.unexpectedValue = 'some value';
+        
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('additionalProperty "unexpectedValue" exists in instance when not allowed');
     });
 });
