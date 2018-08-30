@@ -22,4 +22,6 @@
 
 6- Overwrite all the libraries found at src/main/libs/ with the ones on tmpfolder
 
-7- Review any other files that may be worth comparing for update
+7- Review extras folder for outdated documentation
+
+8- Review any other files that may be worth comparing for update

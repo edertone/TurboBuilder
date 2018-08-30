@@ -1,6 +1,7 @@
 {
+
     "cacheHash": "",
-    
+	
     "errorSetup": {
         "exceptionsToBrowser": false,
         "exceptionsToMail": "",
@@ -30,8 +31,14 @@
         "view/components/footer/footer.scss"
     ],
     
+    "globalCDNS": [
+        {
+            "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+            "fallback": "libs/jquery/jquery.js"
+        }
+    ],
+    
     "globalJs": [
-        "libs/jquery/jquery.js",
         "libs/turbocommons-es5/turbocommons-es5.js"
     ],
     

@@ -91,4 +91,58 @@ describe('cmd-parameter-release', function() {
             
         expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
     });
+    
+    
+    it('should correctly generate release minifications for a site_php generated project', function() {
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+        let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
+        let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'site';
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+                
+        let launchResult = utils.exec('-cbr');
+        expect(launchResult).toContain("clean start");
+        expect(launchResult).toContain("clean ok");
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("release ok");
+        expect(launchResult).toContain("build start");
+        expect(launchResult).toContain("build ok");
+        
+        expect(utils.fm.isDirectory(buildRoot)).toBe(true);
+        expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
+        
+        let buildSetup = JSON.parse(utils.fm.readFile(buildRoot + sep + 'turbosite.json'));
+        let releaseSetup = JSON.parse(utils.fm.readFile(releaseRoot + sep + 'turbosite.json'));
+        
+        // Check that js files are smaller on release than on build
+        let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.js');
+        let jsReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'glob-' + releaseSetup.cacheHash + '.js');
+        
+        expect(jsBuildFileSize).toBeGreaterThan(0);
+        expect(jsReleaseFileSize).toBeGreaterThan(0);
+        expect(jsBuildFileSize).toBeGreaterThan(jsReleaseFileSize);
+    
+        // Check that css files are smaller on release than on build
+        let cssBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.css');
+        let cssReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'glob-' + releaseSetup.cacheHash + '.css');
+        
+        expect(cssBuildFileSize).toBeGreaterThan(0);
+        expect(cssReleaseFileSize).toBeGreaterThan(0);
+        expect(cssBuildFileSize).toBeGreaterThan(cssReleaseFileSize);
+    
+        // TODO Test that php files are smaller on release than on build
+        // TODO Test that htaccess file is smaller on release than on build
+
+        // Check that apple touch icon size is smaller on release compilation
+        let imgBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'apple-touch-icon.png');
+        let imgReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'apple-touch-icon.png');
+        
+        expect(imgBuildFileSize).toBeGreaterThan(0);
+        expect(imgReleaseFileSize).toBeGreaterThan(0);
+        expect(imgBuildFileSize).toBeGreaterThan(imgReleaseFileSize);
+        
+        // TODO We must also test that jpg files are reduced in size
+    });
 });

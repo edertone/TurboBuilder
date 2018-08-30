@@ -13,8 +13,10 @@ const validateModule = require('./validate');
 const setupModule = require('./setup');
 const buildModule = require('./build');
 const UglifyJS = require("uglify-es");
-var CleanCSS = require('clean-css');
-
+const CleanCSS = require('clean-css');
+const imagemin = require('imagemin');
+const imageminJpegtran = require('imagemin-jpegtran');
+const imageminPngquant = require('imagemin-pngquant');
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
@@ -65,7 +67,6 @@ exports.execute = function () {
         buildModule.buildLibTs(releaseFullPath);
     }
     
-    // TODO - posar a false els errors to browser sempre al fer release del site_php
     if(global.setup.build.site_php){
         
         buildModule.buildSitePhp(releaseFullPath);
@@ -76,11 +77,11 @@ exports.execute = function () {
     
     if(global.setup.release.optimizePictures){
     
-        // TODO - minify images
+        minifyImages(releaseFullPath);
     }
     
     // TODO - minify htaccess
-    // TODO - what else?
+    // TODO - minify php files
     
     // After js files are minified, we will write the project version
     // inside the merged js files of the lib_ts projects
@@ -184,6 +185,40 @@ let minifyCss = function (destPath) {
         
         console.success("minify Css ok");
     }
+}
+
+
+/**
+ * Minifies all the image files (overwrites) that exist on the provided path
+ */
+let minifyImages = function (destPath) {
+    
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    let imageFiles = fm.findDirectoryItems(destDist, /^.*\.(jpg|jpeg|png)$/i, 'absolute', 'files');
+    
+    for (let imageFile of imageFiles) {
+        
+        // Asynchronously overwrite all the project images with their optimized versions
+        imagemin([imageFile], StringUtils.getPath(imageFile), {
+            plugins: [
+                imageminJpegtran({
+                    progressive: true
+                }),
+                imageminPngquant({
+                    quality: '65-80',
+                    speed: 1, // The lowest speed of optimization with the highest quality
+                    floyd: 1 // Controls level of dithering (0 = none, 1 = full).
+                })
+            ]
+        });
+    }
+    
+    if(imageFiles.length > 0){
+        
+        console.success("minify Images ok");
+    }    
 }
 
 

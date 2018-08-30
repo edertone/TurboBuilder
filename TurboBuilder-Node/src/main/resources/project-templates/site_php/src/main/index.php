@@ -12,7 +12,7 @@ if(file_exists('cache/hash')){
 }
 
 require 'autoloader.php';
-require 'libs/turbocommons-php/TurboCommons-Php-0.7.2.phar';
+require 'libs/turbocommons-php/TurboCommons-Php-0.7.3.phar';
 require 'libs/turbosite/TurboSite-Php-0.2.0.phar';
 
 $ws = org\turbosite\src\main\php\managers\WebSiteManager::getInstance();
