@@ -3,9 +3,9 @@
     "cacheHash": "",
 	
     "errorSetup": {
-        "exceptionsToBrowser": true,
+        "exceptionsToBrowser": false,
         "exceptionsToMail": "",
-        "warningsToBrowser": true,
+        "warningsToBrowser": false,
         "warningsToMail": ""
     },
     

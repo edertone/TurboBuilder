@@ -52,6 +52,10 @@ describe('selenium-site_php-error-manager-feature.js', function() {
 
         this.turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));
         
+        this.turbobuilderSetupPath = this.turbobuilderSetup.sync[0].destPath + '/site/turbosite.json';
+        this.turbositeSetupString = fm.readFile(this.turbobuilderSetupPath);
+        this.turbositeSetup = JSON.parse(this.turbositeSetupString);
+        
         this.homeViewFilePath = this.turbobuilderSetup.sync[0].destPath + '/site/view/views/home/home.php';
         this.homeViewFileContents = fm.readFile(this.homeViewFilePath);
     });
@@ -59,6 +63,9 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     afterEach(function() {
 
+        // Restore the turbosite setup to the previous value
+        expect(fm.saveFile(this.turbobuilderSetupPath, this.turbositeSetupString)).toBe(true);
+        
         // Restore the home view php file contents to the value it has before test was run
         expect(fm.saveFile(this.homeViewFilePath, this.homeViewFileContents)).toBe(true);
     });
@@ -71,6 +78,9 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     
     it('should show errors on browser for a site_php project type when errors are enabled on setup', function(done) {
+        
+        this.turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
@@ -95,7 +105,10 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     });
     
     
-    it('should show warnings on browser for a site_php project type when errors are enabled on setup', function(done) {
+    it('should show warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
+        
+        this.turbositeSetup.errorSetup.warningsToBrowser = true;
+        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b;', 1))
@@ -120,7 +133,11 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     });
     
     
-    it('should show both errors and warnings on browser for a site_php project type when errors are enabled on setup', function(done) {
+    it('should show both errors and warnings on browser for a site_php project type when errors and warnings are enabled on setup', function(done) {
+        
+        this.turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        this.turbositeSetup.errorSetup.warningsToBrowser = true;
+        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b; nonexistantfunction();', 1))
@@ -151,7 +168,10 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     });
     
     
-    it('should show multiple warnings on browser for a site_php project type when errors are enabled on setup', function(done) {
+    it('should show multiple warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
+        
+        this.turbositeSetup.errorSetup.warningsToBrowser = true;
+        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b; $a=$c; $a=$d;', 1))
