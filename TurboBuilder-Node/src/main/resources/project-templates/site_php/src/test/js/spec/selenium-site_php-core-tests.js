@@ -16,9 +16,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
 const webdriver = require('selenium-webdriver');
-
-
-let fm = new FilesManager(require('fs'), require('os'), path, process);
+const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
 describe('selenium-site_php-core-tests', function() {
@@ -29,22 +27,6 @@ describe('selenium-site_php-core-tests', function() {
         
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
-        
-        let projectName = StringUtils.getPathElement(path.resolve('./'));
-        
-        this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
-        
-        // Aux method to replace all the wildcards on a provided url
-        this.replaceWildCardsOnText = (url) => {
-            
-            return StringUtils.replace(url,
-                    ['$host', '$locale', '$homeView', '$cacheHash', '$baseURL'],
-                    [this.siteSetup.testsSetup.host,
-                     this.siteSetup.locales[0].split('_')[0],
-                     this.siteSetup.homeView,
-                     this.siteSetup.cacheHash,
-                     this.siteSetup.baseURL === '' ? '' : '/' + this.siteSetup.baseURL]);
-        }
         
         // Initialize the chrome driver with english language
         let chromeCapabilities = webdriver.Capabilities.chrome();
@@ -91,7 +73,7 @@ describe('selenium-site_php-core-tests', function() {
                 return done();
             }
             
-            let url = this.replaceWildCardsOnText(urls.shift());
+            let url = utils.replaceWildCardsOnText(urls.shift());
             
             this.driver.get(url).then(() => {
                 
@@ -126,8 +108,8 @@ describe('selenium-site_php-core-tests', function() {
             }
             
             let entry = urls.shift();
-            entry.url = this.replaceWildCardsOnText(entry.url);
-            entry.to = this.replaceWildCardsOnText(entry.to);
+            entry.url = utils.replaceWildCardsOnText(entry.url);
+            entry.to = utils.replaceWildCardsOnText(entry.to);
             
             this.driver.get(entry.url).then(() => {
                       
@@ -161,7 +143,7 @@ describe('selenium-site_php-core-tests', function() {
             }
             
             let entry = urls.shift();
-            entry.url = this.replaceWildCardsOnText(entry.url);
+            entry.url = utils.replaceWildCardsOnText(entry.url);
             
             this.driver.get(entry.url).then(() => {
                 
@@ -183,7 +165,7 @@ describe('selenium-site_php-core-tests', function() {
                         
                         if(entry.title !== null){
                             
-                            entry.title = this.replaceWildCardsOnText(entry.title);
+                            entry.title = utils.replaceWildCardsOnText(entry.title);
                             
                             expect(title).toContain(entry.title, 'Coming from url: ' + entry.url);
                         }
@@ -213,14 +195,14 @@ describe('selenium-site_php-core-tests', function() {
                                 
                                     for (let entrySourceElement of entry.source) {
                                         
-                                        entrySourceElement = this.replaceWildCardsOnText(entrySourceElement);
+                                        entrySourceElement = utils.replaceWildCardsOnText(entrySourceElement);
                                         
                                         expect(source).toContain(entrySourceElement, 'Coming from url: ' + entry.url);
                                     }
                                     
                                 }else{
                                 
-                                    entry.source = this.replaceWildCardsOnText(entry.source);
+                                    entry.source = utils.replaceWildCardsOnText(entry.source);
                                     
                                     expect(source).toContain(entry.source, 'Coming from url: ' + entry.url);
                                 }
@@ -270,7 +252,3 @@ describe('selenium-site_php-core-tests', function() {
     
     - Que pasa amb més de un ? en la mateixa url? i dins de parametres? /xxx?xxx/
  */
-
-//    ...
-//    
-//Test that site works also inside a subfolder of the web server: https://localhost/somefolder/global.js

@@ -193,7 +193,6 @@
                 },
                 "site_php": {
                     "type": "object",
-                    "additionalProperties": false,
                     "description": "The Site_php Schema",
                     "additionalProperties": false
                 },

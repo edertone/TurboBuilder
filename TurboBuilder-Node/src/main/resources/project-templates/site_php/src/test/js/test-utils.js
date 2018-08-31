@@ -18,8 +18,10 @@ try {
     process.exit(1);
 }
 
+const path = require('path');
 const { execSync } = require('child_process');
-const { StringUtils } = require('turbocommons-ts');
+const { StringUtils, FilesManager } = require('turbocommons-ts');
+const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
 /**
@@ -66,4 +68,23 @@ exports.consoleErrorAndDie = function (msg) {
     
     console.log('\x1b[31m%s\x1b[0m', msg);
     process.exit(1);
+}
+
+
+/**
+ * Replaces all wildcards on a provided url with the turbosite setup values
+ */
+exports.replaceWildCardsOnText = function (text) {
+    
+    let projectName = StringUtils.getPathElement(path.resolve('./'));
+    
+    this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
+    
+    return StringUtils.replace(text,
+            ['$host', '$locale', '$homeView', '$cacheHash', '$baseURL'],
+            [this.siteSetup.testsSetup.host,
+             this.siteSetup.locales[0].split('_')[0],
+             this.siteSetup.homeView,
+             this.siteSetup.cacheHash,
+             this.siteSetup.baseURL === '' ? '' : '/' + this.siteSetup.baseURL]);
 }
