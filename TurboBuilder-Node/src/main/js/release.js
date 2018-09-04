@@ -74,14 +74,14 @@ exports.execute = function () {
     
     minifyJs(releaseFullPath);
     minifyCss(releaseFullPath);
+    minifyHtaccess(releaseFullPath);
+
+    minifyPhpFiles(releaseFullPath);
     
     if(global.setup.release.optimizePictures){
     
         minifyImages(releaseFullPath);
     }
-    
-    // TODO - minify htaccess
-    // TODO - minify php files
     
     // After js files are minified, we will write the project version
     // inside the merged js files of the lib_ts projects
@@ -119,7 +119,7 @@ exports.getReleaseRelativePath = function () {
 
 
 /**
- * Minifies all the js files (overwrites) that exist on the provided path
+ * Minifies (overwrites) all the js files that exist on the provided path
  */
 let minifyJs = function (destPath) {
     
@@ -151,7 +151,7 @@ let minifyJs = function (destPath) {
 
 
 /**
- * Minifies all the css files (overwrites) that exist on the provided path
+ * Minifies (overwrites) all the css files that exist on the provided path
  */
 let minifyCss = function (destPath) {
     
@@ -189,7 +189,7 @@ let minifyCss = function (destPath) {
 
 
 /**
- * Minifies all the image files (overwrites) that exist on the provided path
+ * Minifies (overwrites) all the image files that exist on the provided path
  */
 let minifyImages = function (destPath) {
     
@@ -219,6 +219,74 @@ let minifyImages = function (destPath) {
         
         console.success("minify Images ok");
     }    
+}
+
+
+/**
+ * Minifies (overwrites) all the php files that exist on the provided path
+ */
+let minifyPhpFiles = function (destPath) {
+    
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    let phpFiles = fm.findDirectoryItems(destDist, /.*\.php$/i, 'absolute', 'files');
+    
+    for (let phpFile of phpFiles) {
+        
+        let phpMinified = '';
+        
+        try{
+            
+            phpMinified = execSync('php -w "' + phpFile + '"', {stdio : 'pipe'}).toString();
+            
+        }catch(e){
+
+            console.error("Php minify failed");
+        }
+        
+        fm.deleteFile(phpFile);
+        fm.saveFile(phpFile, phpMinified); 
+    }
+    
+    if(phpFiles.length > 0){
+        
+        console.success("minify php ok");
+    }
+}
+
+
+/**
+ * Minifies (overwrites) all the .htaccess files that exist on the provided path
+ */
+let minifyHtaccess = function (destPath) {
+    
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    let htaccessFiles = fm.findDirectoryItems(destDist, /.*\.htaccess$/i, 'absolute', 'files');
+    
+    for (let htaccessFile of htaccessFiles) {
+        
+        let htaccessMinified = [];
+        let htaccessLines = StringUtils.getLines(fm.readFile(htaccessFile));
+        
+        for (let line of htaccessLines) {
+            
+            if(line.trim().indexOf('#') !== 0){
+                
+                htaccessMinified.push(line);
+            }
+        }
+        
+        fm.deleteFile(htaccessFile);
+        fm.saveFile(htaccessFile, htaccessMinified.join("\n")); 
+    }
+    
+    if(htaccessFiles.length > 0){
+        
+        console.success("minify .htaccess ok");
+    }
 }
 
 
