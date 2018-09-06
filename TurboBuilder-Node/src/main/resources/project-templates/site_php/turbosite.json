@@ -34,7 +34,8 @@
     "globalCDNS": [
         {
             "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
-            "fallback": "libs/jquery/jquery.js"
+            "fallbackVerify": "window.jQuery",
+            "fallbackResource": "libs/jquery/jquery.js"
         }
     ],
     

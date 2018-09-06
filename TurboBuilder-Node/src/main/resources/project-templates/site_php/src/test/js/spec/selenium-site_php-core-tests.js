@@ -4,7 +4,7 @@
 
 
 /**
- * All those tests are check that a site_php project type works as expected.
+ * All those tests check that a site_php project type works as expected.
  * Any site_php project that is up to date must pass all of these tests.
  * 
  * No multi browser is necessary as we are only testing url behaviours, so we will use only

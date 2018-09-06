@@ -116,7 +116,8 @@
                 "description": "The Items Schema",
                 "required": [
                     "url",
-                    "fallback"
+                    "fallbackVerify",
+                    "fallbackResource"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -127,9 +128,16 @@
                             "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                         ]
                     },
-                    "fallback": {
+                    "fallbackVerify": {
                         "type": "string",
-                        "description": "The Fallback Schema",
+                        "description": "A javascript sentence that must evaluate to true. If it evaluates to false it means that the CDN was not reachable and the fallback resource will be loaded",
+                        "examples": [
+                            "window.jQuery"
+                        ]
+                    },
+                    "fallbackResource": {
+                        "type": "string",
+                        "description": "The project path inside src/main from where the library fallback resource will be loaded if CDN is not available",
                         "examples": [
                             "libs/jquery/jquery.js"
                         ]

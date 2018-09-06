@@ -274,11 +274,6 @@
             "type": "object",
             "description": "The Release Schema",
             "required": [
-                "printTodoFiles",
-                "gitChangeLog",
-                "gitChangeLogCount",
-                "optimizePictures",
-                "generateCodeDocumentation"
             ],
             "additionalProperties": false, 
             "properties": {
