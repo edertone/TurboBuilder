@@ -201,4 +201,53 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         });
     });
     
+    
+    it('should not show warnings on browser for a site_php project type when disabled in setup', function(done) {
+        
+        expect(fm.saveFile(this.homeViewFilePath,
+               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b;', 1))
+              ).toBe(true);
+        
+        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+                
+                expect(source)
+                    .not.toContain('turbosite-global-error-manager-problem', 'Expected a php problem: warning to be shown on browser');
+                
+                expect(source)
+                    .not.toContain('E_NOTICE', 'Expected a php problem: warning to be shown on browser');
+            
+                expect(source)
+                    .not.toContain('Undefined variable: b', 'Expected a php problem: warning to be shown on browser');
+        
+                return done();
+            });
+        });
+    });
+    
+    
+    it('should not show errors on browser for a site_php project type when disabled in setup', function(done) {
+
+        expect(fm.saveFile(this.homeViewFilePath,
+               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
+              ).toBe(true);
+        
+        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+                
+                expect(source)
+                    .not.toContain('turbosite-global-error-manager-problem', 'Expected a php problem: exception to be shown on browser');
+                
+                expect(source)
+                    .not.toContain('FATAL EXCEPTION', 'Expected a php problem: exception to be shown on browser');
+            
+                expect(source)
+                    .not.toContain('Call to undefined function nonexistantfunction()', 'Expected a php problem: exception to be shown on browser');
+        
+                return done();
+            });
+        });
+    });
 });
