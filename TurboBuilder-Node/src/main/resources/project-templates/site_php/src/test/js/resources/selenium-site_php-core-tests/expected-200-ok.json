@@ -64,7 +64,9 @@
 		  	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		  	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		  	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		  	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""
+		  	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+		  	"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+		  	"/libs/jquery/jquery.js"
 	  	],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
@@ -84,7 +86,10 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+            "/libs/jquery/jquery.js"
+        ],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
@@ -102,7 +107,10 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+            "/libs/jquery/jquery.js"
+        ],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
@@ -115,7 +123,10 @@
 	   		"lang=\"en\"",
 	   		"This is the footer",
 	   		"href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
-	   		"href=\"$baseURL/testparameter2\">english", "href=\"$baseURL/testparameter2\">spanish"],
+	   		"href=\"$baseURL/testparameter2\">english", "href=\"$baseURL/testparameter2\">spanish",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+            "/libs/jquery/jquery.js"
+        ],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
@@ -131,7 +142,10 @@
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
 		   	"link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\""],
+		   	"link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+            "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+            "/libs/jquery/jquery.js"
+        ],
         "startWith": "<!DOCTYPE",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
@@ -239,5 +253,13 @@
         "startWith": null,
         "endWith": null,
         "notContains": null
-	}
+	},
+    {
+        "url": "https://$host/libs/jquery/jquery.js",
+        "title": null,
+        "source": "jQuery",
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    }
 ]

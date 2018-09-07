@@ -209,13 +209,13 @@ describe('selenium-site_php-error-manager-feature.js', function() {
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                    .not.toContain('turbosite-global-error-manager-problem', 'Expected a php problem: warning to be shown on browser');
+                    .not.toContain('turbosite-global-error-manager-problem', 'NOT Expected a php problem: warning to be shown on browser');
                 
                 expect(source)
-                    .not.toContain('E_NOTICE', 'Expected a php problem: warning to be shown on browser');
+                    .not.toContain('E_NOTICE', 'NOT Expected a php problem: warning to be shown on browser');
             
                 expect(source)
-                    .not.toContain('Undefined variable: b', 'Expected a php problem: warning to be shown on browser');
+                    .not.toContain('Undefined variable: b', 'NOT Expected a php problem: warning to be shown on browser');
         
                 return done();
             });
@@ -234,13 +234,13 @@ describe('selenium-site_php-error-manager-feature.js', function() {
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                    .not.toContain('turbosite-global-error-manager-problem', 'Expected a php problem: exception to be shown on browser');
+                    .not.toContain('turbosite-global-error-manager-problem', 'NOT Expected a php problem: exception to be shown on browser');
                 
                 expect(source)
-                    .not.toContain('FATAL EXCEPTION', 'Expected a php problem: exception to be shown on browser');
+                    .not.toContain('FATAL EXCEPTION', 'NOT Expected a php problem: exception to be shown on browser');
             
                 expect(source)
-                    .not.toContain('Call to undefined function nonexistantfunction()', 'Expected a php problem: exception to be shown on browser');
+                    .not.toContain('Call to undefined function nonexistantfunction()', 'NOT Expected a php problem: exception to be shown on browser');
         
                 return done();
             });
