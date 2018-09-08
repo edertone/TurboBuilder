@@ -36,7 +36,6 @@
     
     "build": {
     
-        "keepUnpackedSrcFiles" : false,
         "printTodoFiles" : false,
         
         "site_php" : {
@@ -48,6 +47,11 @@
         
         "lib_java" : {
             "createJar": true
+        },
+        
+        "lib_js" : {
+            "onlyMergedFile": true,
+            "mergedFile": "PackedJsFileName-ES5"
         },
         
         "lib_ts" : {

@@ -179,14 +179,11 @@
                 {"required": ["site_php"]},
                 {"required": ["lib_php"]},
                 {"required": ["lib_java"]},
+                {"required": ["lib_js"]},
                 {"required": ["lib_ts"]}
             ],
             "additionalProperties": false, 
             "properties": {
-                "keepUnpackedSrcFiles": {
-                    "type": "boolean",
-                    "description": "The Keepunpackedsrcfiles Schema"
-                },
                 "printTodoFiles": {
                     "type": "boolean",
                     "description": "The Printtodofiles Schema"
@@ -215,6 +212,21 @@
                         "createJar": {
                             "type": "boolean",
                             "description": "The Createjar Schema"
+                        }
+                    }
+                },
+                "lib_js": {
+                    "type": "object",
+                    "description": "A project that contains javascript files and generates a reusable js library",
+                    "additionalProperties": false,
+                    "properties": {
+                        "onlyMergedFile": {
+                            "type": "boolean",
+                            "description": "When set to true, the build process will generate a js file that is merged from all the project individual js files"
+                        },
+                        "mergedFile": {
+                            "type": "string",
+                            "description": "Defines the name for the js file that contains all the library code merged. Extension (.js) must not be written here"
                         }
                     }
                 },
@@ -257,7 +269,7 @@
                                     },
                                     "mergedFile": {
                                         "type": "string",
-                                        "description": "TODO"
+                                        "description": "Defines the name for the js file that contains all the library code merged for this specific ES target. Extension (.js) must not be written here"
                                     },
                                     "globalVar": {
                                         "type": "string",
