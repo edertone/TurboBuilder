@@ -45,7 +45,7 @@ let validate = function (type) {
 
     if(global.setupBuildTypes.indexOf(type) < 0){
         
-        console.error("invalid project type");
+        console.error("invalid project type. Allowed types: " + global.setupBuildTypes.join(', '));
     }
     
     let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;

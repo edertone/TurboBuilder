@@ -19,7 +19,7 @@ global.setup = null;
 /**
  * Defines the list of possible project build setup types
  */
-global.setupBuildTypes = ["site_php", "lib_php", "lib_java", "lib_ts"];
+global.setupBuildTypes = ["site_php", "lib_php", "lib_java", "lib_js", "lib_ts"];
 
 
 /**
