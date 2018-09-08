@@ -30,11 +30,7 @@ let releaseRelativePath = '';
  */
 process.on('exit', () => {
  
-    if(global.setup !== null &&
-            !global.setup.build.keepUnpackedSrcFiles){
-        
-        buildModule.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath());
-    }
+    buildModule.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath());
 });
 
 
@@ -75,7 +71,6 @@ exports.execute = function () {
     minifyJs(releaseFullPath);
     minifyCss(releaseFullPath);
     minifyHtaccess(releaseFullPath);
-
     minifyPhpFiles(releaseFullPath);
     
     if(global.setup.release.optimizePictures){

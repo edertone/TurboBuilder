@@ -177,7 +177,8 @@ let mergeSetup = function (templateSetup, projectSetup) {
 exports.customizeSetupTemplateToProjectType = function (type) {
     
     // Read the default template setup file
-    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
+    let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates'
+        + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
     
     let setupContents = JSON.parse(fm.readFile(templateSetupPath));
     

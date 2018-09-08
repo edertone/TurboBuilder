@@ -24,11 +24,7 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 process.on('exit', () => {
 
-    if(global.setup !== null &&
-            !global.setup.build.keepUnpackedSrcFiles){
-        
-        this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath());
-    }
+    this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath());
 });
 
 
@@ -61,6 +57,11 @@ exports.execute = function () {
     if(global.setup.build.lib_php){
         
         this.buildLibPhp(buildFullPath);
+    }
+    
+    if(global.setup.build.lib_js){
+        
+        this.buildLibJs(buildFullPath);
     }
     
     if(global.setup.build.lib_ts){
@@ -362,6 +363,14 @@ exports.buildLibPhp = function (destPath) {
     phpExecCommand += '"';
     
     console.exec(phpExecCommand);
+}
+
+
+/**
+ * Execute the lib_js build process to the specified dest folder
+ */
+exports.buildLibJs = function (destPath) {
+ 
 }
 
 
