@@ -59,6 +59,33 @@ describe('cmd-parameter-generate', function(){
     });
 
 
+    it('should generate lib_js project structure', function(){
+
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+
+        expect(utils.exec('-l')).toContain("validate ok");
+
+        expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
+        expect(utils.fm.isDirectory('./src/main/js')).toBe(true);
+        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
+        expect(utils.fm.isFile('./src/main/js/utils/MyStaticClass.js')).toBe(true);
+        expect(utils.fm.isFile('./src/main/js/model/MySingletonClass.js')).toBe(true);
+
+        let setup = utils.readSetupFile();
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_js')).toBe(true);
+        expect(setup.sync.length).toBe(0);
+        expect(setup.test.length).toBe(1);
+        expect(setup.test[0].type).toBe("jasmine");
+    });
+
+
     it('should generate lib_ts project structure', function(){
 
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
