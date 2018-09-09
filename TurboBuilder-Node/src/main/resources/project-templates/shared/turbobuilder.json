@@ -50,7 +50,7 @@
         },
         
         "lib_js" : {
-            "mergedFile": "PackedJsFileName-ES5"
+            "mergedFile": "PackedJsFileName"
         },
         
         "lib_ts" : {

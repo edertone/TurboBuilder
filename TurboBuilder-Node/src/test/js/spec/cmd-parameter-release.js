@@ -56,7 +56,7 @@ describe('cmd-parameter-release', function() {
     });
     
     
-    it('should include project semver (0.4.0) inside all generated release merged JS on a git project with created tags', function() {
+    it('should include project semver (0.4.0) inside all generated release merged JS on a lib_ts git project with created tags', function() {
 
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
@@ -132,8 +132,21 @@ describe('cmd-parameter-release', function() {
         expect(cssReleaseFileSize).toBeGreaterThan(0);
         expect(cssBuildFileSize).toBeGreaterThan(cssReleaseFileSize);
     
-        // TODO Test that php files are smaller on release than on build
-        // TODO Test that htaccess file is smaller on release than on build
+        // Test that php files are smaller on release than on build
+        let phpBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'index.php');
+        let phpReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'index.php');
+        
+        expect(phpBuildFileSize).toBeGreaterThan(0);
+        expect(phpReleaseFileSize).toBeGreaterThan(0);
+        expect(phpBuildFileSize).toBeGreaterThan(phpReleaseFileSize);
+        
+        // Test that htaccess file is smaller on release than on build
+        let htaccessBuildFileSize = utils.fm.getFileSize(buildRoot + sep + '..' + sep + '.htaccess');
+        let htaccessReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + '..' + sep + '.htaccess');
+        
+        expect(htaccessBuildFileSize).toBeGreaterThan(0);
+        expect(htaccessReleaseFileSize).toBeGreaterThan(0);
+        expect(htaccessBuildFileSize).toBeGreaterThan(htaccessReleaseFileSize);
 
         // Check that apple touch icon size is smaller on release compilation
         let imgBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'apple-touch-icon.png');
@@ -144,5 +157,63 @@ describe('cmd-parameter-release', function() {
         expect(imgBuildFileSize).toBeGreaterThan(imgReleaseFileSize);
         
         // TODO We must also test that jpg files are reduced in size
+    });
+    
+    
+    it('should correctly generate release minifications for a lib_js generated project', function() {
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+        let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist';
+        let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+                
+        let launchResult = utils.exec('-cbr');
+        expect(launchResult).toContain("clean start");
+        expect(launchResult).toContain("clean ok");
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("release ok");
+        expect(launchResult).toContain("build start");
+        expect(launchResult).toContain("build ok");
+        
+        expect(utils.fm.isDirectory(buildRoot)).toBe(true);
+        expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
+        
+        // Check that js merged file is smaller on release than on setup
+        let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'PackedJsFileName.js');
+        let jsReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'PackedJsFileName.js');
+        
+        expect(jsBuildFileSize).toBeGreaterThan(0);
+        expect(jsReleaseFileSize).toBeGreaterThan(0);
+        expect(jsBuildFileSize).toBeGreaterThan(jsReleaseFileSize);
+    });
+    
+    
+    it('should include project semver (0.4.0) inside all generated release merged JS on a lib_ts git project with created tags', function() {
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        expect(utils.execCmdCommand('git init')).toContain("Initialized empty Git repository");
+        utils.execCmdCommand('git add .');
+        utils.execCmdCommand('git commit -m "test commit"');
+        utils.execCmdCommand('git tag 0.1.0');
+        
+        utils.fm.saveFile('.' + sep + 'test.txt');
+        utils.execCmdCommand('git add .');
+        utils.execCmdCommand('git commit -m "test commit 2"');
+        
+        utils.execCmdCommand('git tag 0.4.0');
+        
+        let launchResult = utils.exec('-cr');
+        expect(launchResult).toContain("0.4.0");
+        
+        let mergedContent = utils.fm.readFile(
+            '.' + sep + 'target' + sep + folderName + '-0.4.0' + sep + 'dist' + sep + 'PackedJsFileName.js');
+        
+        expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
     });
 });

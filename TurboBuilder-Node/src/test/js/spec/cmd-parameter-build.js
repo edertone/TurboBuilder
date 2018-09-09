@@ -95,6 +95,39 @@ describe('cmd-parameter-build', function() {
     });
     
     
+    it('should build correctly when -b argument is passed after generating a lib_js structure with some js files', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        expect(utils.fm.isDirectory('./target/test-build/dist/resources')).toBe(true);
+        expect(utils.fm.isFile('./target/test-build/dist/PackedJsFileName.js')).toBe(true);
+    });
+    
+    
+    it('should correctly build a lib_js when mergeFile name is not specified on setup and generate a merged file with the project name', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        setup.build.lib_js.mergedFile = "";
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        expect(utils.fm.isFile('./target/test-build/dist/test-build.js')).toBe(true);
+        
+        let mergedFileContents = utils.fm.readFile('./target/test-build/dist/test-build.js');
+        
+        expect(mergedFileContents).toContain('this will be the main library entry point');
+        expect(mergedFileContents).toContain('MyInstantiableClass');
+        expect(mergedFileContents).toContain('MyExtendedClass');
+        expect(mergedFileContents).toContain('MySingletonClass');
+    });
+    
+    
     it('should create phar file when -b argument is executed after generating a lib_php project structure with some php files', function() {
         
         expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
@@ -129,7 +162,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should show a warning when no favicons are defined', function() {
+    it('should show a warning when no favicons are defined on a site_php project', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
@@ -139,7 +172,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should fail when a non expected favicon is found', function() {
+    it('should fail when a non expected favicon is found on a site_php project', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
