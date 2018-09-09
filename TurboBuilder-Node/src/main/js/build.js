@@ -110,8 +110,6 @@ exports.copyMainFiles = function (destPath) {
     
     fm.copyDirectory(global.runtimePaths.main, destMain);
     
-    // TODO - Replace the string @@package-build-version@@ on all the files with the real build version number
-    
     console.success('copy main files ok');
 }
 
@@ -370,7 +368,44 @@ exports.buildLibPhp = function (destPath) {
  * Execute the lib_js build process to the specified dest folder
  */
 exports.buildLibJs = function (destPath) {
- 
+    
+    let sep = fm.dirSep();
+    let destMain = destPath + sep + 'main';
+    let destDist = destPath + sep + 'dist';
+    
+    // Create the dist folder if not exists
+    if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
+        
+        console.error('Could not create ' + destDist);
+    }
+    
+    // Create the resources folder if not exists
+    if(!fm.isDirectory(destDist + sep + 'resources') && !fm.createDirectory(destDist + sep + 'resources')){
+        
+        console.error('Could not create ' + destDist + sep + 'resources');
+    }
+    
+    // Copy the resources folder if it exist
+    if(fm.isDirectory(destMain + sep + 'resources')){
+        
+        fm.copyDirectory(destMain + sep + 'resources', destDist + sep + 'resources');
+    }
+    
+    // Get the merged code from js folder
+    let jsFiles = fm.findDirectoryItems(destMain + sep + 'js', /^.*\.js$/i, 'absolute', 'files');
+    let mergedJsCode = mergeFilesFromArray(jsFiles, '', false);
+    
+    // Read the index code and append it after the previous merged code
+    mergedJsCode += "\n\n" + fm.readFile(destMain + sep + 'index.js');
+    
+    let mergedFileName = global.runtimePaths.projectName;
+    
+    if(global.setup.build.lib_js.mergedFile && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFile)){
+    
+        mergedFileName = global.setup.build.lib_js.mergedFile;
+    }
+    
+    fm.saveFile(destDist + sep + mergedFileName + '.js', mergedJsCode);
 }
 
 
@@ -444,22 +479,40 @@ exports.buildLibTs = function (destPath) {
  */
 exports.markMergedJsWithVersion = function (destPath) {
     
-    for (let target of global.setup.build.lib_ts.targets) {
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    if(global.setup.build.lib_js){
         
-        let isMergedFile = target.hasOwnProperty('mergedFile') && !StringUtils.isEmpty(target.mergedFile);
+        let mergedFileName = global.runtimePaths.projectName;
         
-        if(isMergedFile){
-            
-            let sep = fm.dirSep();
-            let destDist = destPath + sep + 'dist';
-            
-            let mergedFileContent = fm.readFile(destDist + sep + target.folder + sep + target.mergedFile + '.js');
-            
-            mergedFileContent = "// " + setupModule.getProjectRepoSemVer(true) + "\n" + mergedFileContent;
-            
-            fm.saveFile(destDist + sep + target.folder + sep + target.mergedFile + '.js', mergedFileContent);
+        if(global.setup.build.lib_js.mergedFile && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFile)){
+        
+            mergedFileName = global.setup.build.lib_js.mergedFile;
         }
-    }
+        
+        let mergedFileContent = fm.readFile(destDist + sep + mergedFileName + '.js');
+        
+        mergedFileContent = "// " + setupModule.getProjectRepoSemVer(true) + "\n" + mergedFileContent;
+        
+        fm.saveFile(destDist + sep + mergedFileName + '.js', mergedFileContent);
+    
+    }else {
+        
+        for (let target of global.setup.build.lib_ts.targets) {
+            
+            let isMergedFile = target.hasOwnProperty('mergedFile') && !StringUtils.isEmpty(target.mergedFile);
+            
+            if(isMergedFile){
+                
+                let mergedFileContent = fm.readFile(destDist + sep + target.folder + sep + target.mergedFile + '.js');
+                
+                mergedFileContent = "// " + setupModule.getProjectRepoSemVer(true) + "\n" + mergedFileContent;
+                
+                fm.saveFile(destDist + sep + target.folder + sep + target.mergedFile + '.js', mergedFileContent);
+            }
+        }
+    }    
 }
 
 
