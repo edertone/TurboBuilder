@@ -181,8 +181,8 @@ describe('cmd-parameter-release', function() {
         expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
         
         // Check that js merged file is smaller on release than on setup
-        let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'PackedJsFileName.js');
-        let jsReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'PackedJsFileName.js');
+        let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + folderName + '.js');
+        let jsReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + folderName + '.js');
         
         expect(jsBuildFileSize).toBeGreaterThan(0);
         expect(jsReleaseFileSize).toBeGreaterThan(0);
@@ -190,7 +190,7 @@ describe('cmd-parameter-release', function() {
     });
     
     
-    it('should include project semver (0.4.0) inside all generated release merged JS on a lib_ts git project with created tags', function() {
+    it('should include project semver (0.4.0) inside all generated release merged JS on a lib_js git project with created tags', function() {
         
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
@@ -212,7 +212,7 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("0.4.0");
         
         let mergedContent = utils.fm.readFile(
-            '.' + sep + 'target' + sep + folderName + '-0.4.0' + sep + 'dist' + sep + 'PackedJsFileName.js');
+            '.' + sep + 'target' + sep + folderName + '-0.4.0' + sep + 'dist' + sep + folderName + '.js');
         
         expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
     });

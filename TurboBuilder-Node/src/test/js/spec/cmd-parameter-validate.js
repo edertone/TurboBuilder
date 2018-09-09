@@ -44,6 +44,20 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail on a lib_js project with a turbobuilder file with unexpected field', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        setup.build.lib_js.invalidField = 'invalid';
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('additionalProperty "invalidField" exists in instance when not allowed');
+    });
+
+    
     it('should validate ok a newly generated lib_ts project', function() {
 
         expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");

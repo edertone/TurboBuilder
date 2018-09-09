@@ -83,43 +83,91 @@ describe('cmd-parameter-build', function() {
     
     it('should build correctly when -b argument is passed after generating a lib_ts structure with some ts files', function() {
         
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
        
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
         
-        expect(utils.fm.isFile('./target/test-build/dist/es5/PackedJsFileName-ES5.js')).toBe(true);
-        expect(utils.fm.isFile('./target/test-build/dist/es6/PackedJsFileName-ES6.js')).toBe(true);
-        expect(utils.fm.isFile('./target/test-build/dist/ts/index.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/es5/PackedJsFileName-ES5.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/es6/PackedJsFileName-ES6.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/ts/index.js')).toBe(true);
     });
     
     
-    it('should build correctly when -b argument is passed after generating a lib_js structure with some js files', function() {
+    it('should build correctly when -b argument is passed after generating a lib_js structure', function() {
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
         
         expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
         
         expect(utils.exec('-b')).toContain('build ok');
         
-        expect(utils.fm.isDirectory('./target/test-build/dist/resources')).toBe(true);
-        expect(utils.fm.isFile('./target/test-build/dist/PackedJsFileName.js')).toBe(true);
+        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
+        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(false);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(true);
     });
     
     
-    it('should correctly build a lib_js when mergeFile name is not specified on setup and generate a merged file with the project name', function() {
+    it('should build correctly when -b argument is passed after generating a lib_js structure and deleteNonMergedJs is false', function() {
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
         
         expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
         
         let setup = utils.readSetupFile();
-        setup.build.lib_js.mergedFile = "";
+        setup.build.lib_js.deleteNonMergedJs = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
+        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/js/managers/MyInstantiableClass.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/js/utils/MyStaticClass.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(true);
+    });
+    
+    
+    it('should build correctly when -b argument is passed after generating a lib_js structure and createMergedFile is false', function() {
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        setup.build.lib_js.createMergedFile = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
+        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(false);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(false);
+    });
+    
+    
+    it('should correctly build a lib_js when mergeFileName is specified on setup', function() {
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        setup.build.lib_js.mergedFileName = "SomeMergeFileName";
         
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
         
-        expect(utils.fm.isFile('./target/test-build/dist/test-build.js')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/SomeMergeFileName.js')).toBe(true);
         
-        let mergedFileContents = utils.fm.readFile('./target/test-build/dist/test-build.js');
+        let mergedFileContents = utils.fm.readFile('./target/' + folderName + '/dist/SomeMergeFileName.js');
         
         expect(mergedFileContents).toContain('this will be the main library entry point');
         expect(mergedFileContents).toContain('MyInstantiableClass');

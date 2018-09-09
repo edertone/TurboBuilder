@@ -50,7 +50,9 @@
         },
         
         "lib_js" : {
-            "mergedFile": "PackedJsFileName"
+            "deleteNonMergedJs": true,
+            "createMergedFile": true,
+            "mergedFileName": ""
         },
         
         "lib_ts" : {

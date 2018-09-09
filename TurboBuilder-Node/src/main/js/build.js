@@ -379,33 +379,37 @@ exports.buildLibJs = function (destPath) {
         console.error('Could not create ' + destDist);
     }
     
-    // Create the resources folder if not exists
-    if(!fm.isDirectory(destDist + sep + 'resources') && !fm.createDirectory(destDist + sep + 'resources')){
+    // Copy the main source folder to the target dist
+    fm.copyDirectory(destMain, destDist);
+    
+    // Get all the files on the js folder
+    let jsFiles = fm.findDirectoryItems(destDist + sep + 'js', /^.*\.js$/i, 'absolute', 'files');
+    
+    // Merge all the js files code if necessary
+    if(global.setup.build.lib_js.createMergedFile){
         
-        console.error('Could not create ' + destDist + sep + 'resources');
-    }
-    
-    // Copy the resources folder if it exist
-    if(fm.isDirectory(destMain + sep + 'resources')){
+        let mergedJsCode = mergeFilesFromArray(jsFiles, '', false);
         
-        fm.copyDirectory(destMain + sep + 'resources', destDist + sep + 'resources');
+        // Read the index code and append it after the previous merged code
+        mergedJsCode += "\n\n" + fm.readFile(destMain + sep + 'index.js');
+        
+        let mergedFileName = global.runtimePaths.projectName;
+        
+        if(global.setup.build.lib_js.mergedFileName && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFileName)){
+            
+            mergedFileName = global.setup.build.lib_js.mergedFileName;
+        }
+        
+        fm.saveFile(destDist + sep + mergedFileName + '.js', mergedJsCode);
     }
     
-    // Get the merged code from js folder
-    let jsFiles = fm.findDirectoryItems(destMain + sep + 'js', /^.*\.js$/i, 'absolute', 'files');
-    let mergedJsCode = mergeFilesFromArray(jsFiles, '', false);
-    
-    // Read the index code and append it after the previous merged code
-    mergedJsCode += "\n\n" + fm.readFile(destMain + sep + 'index.js');
-    
-    let mergedFileName = global.runtimePaths.projectName;
-    
-    if(global.setup.build.lib_js.mergedFile && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFile)){
-    
-        mergedFileName = global.setup.build.lib_js.mergedFile;
+    // Clear the js files if necessary
+    if(global.setup.build.lib_js.deleteNonMergedJs){
+        
+        fm.deleteFiles(jsFiles);
+        fm.deleteFile(destDist + sep + 'index.js');
+        fm.deleteDirectory(destDist + sep + 'js');
     }
-    
-    fm.saveFile(destDist + sep + mergedFileName + '.js', mergedJsCode);
 }
 
 
@@ -486,9 +490,9 @@ exports.markMergedJsWithVersion = function (destPath) {
         
         let mergedFileName = global.runtimePaths.projectName;
         
-        if(global.setup.build.lib_js.mergedFile && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFile)){
+        if(global.setup.build.lib_js.mergedFileName && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFileName)){
         
-            mergedFileName = global.setup.build.lib_js.mergedFile;
+            mergedFileName = global.setup.build.lib_js.mergedFileName;
         }
         
         let mergedFileContent = fm.readFile(destDist + sep + mergedFileName + '.js');
