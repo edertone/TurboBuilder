@@ -58,6 +58,11 @@ exports.execute = function () {
         buildModule.buildLibPhp(releaseFullPath);
     }
     
+    if(global.setup.build.lib_js){
+        
+        buildModule.buildLibJs(releaseFullPath);
+    }
+    
     if(global.setup.build.lib_ts){
     
         buildModule.buildLibTs(releaseFullPath);
@@ -79,8 +84,8 @@ exports.execute = function () {
     }
     
     // After js files are minified, we will write the project version
-    // inside the merged js files of the lib_ts projects
-    if(global.setup.build.lib_ts){
+    // inside the merged js files of the lib_js and lib_ts projects
+    if(global.setup.build.lib_js || global.setup.build.lib_ts){
         
         buildModule.markMergedJsWithVersion(releaseFullPath);
     }
