@@ -232,7 +232,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             testArray.push(testItem);
         }
         
-        if((type === 'site_php' || type === 'lib_ts') &&
+        if((type === 'site_php' || type === 'lib_js' || type === 'lib_ts') &&
                 testItem.type === 'jasmine'){
 
             testArray.push(testItem);
