@@ -220,13 +220,9 @@
                     "description": "A project that contains javascript files and generates a reusable js library",
                     "additionalProperties": false,
                     "properties": {
-                        "onlyMergedFile": {
-                            "type": "boolean",
-                            "description": "When set to true, the build process will generate a js file that is merged from all the project individual js files"
-                        },
                         "mergedFile": {
                             "type": "string",
-                            "description": "Defines the name for the js file that contains all the library code merged. Extension (.js) must not be written here"
+                            "description": "Defines the name for the js file that contains all the library merged code. Extension (.js) must not be written here. If left empty, the project name will be used by default"
                         }
                     }
                 },
