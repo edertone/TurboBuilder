@@ -36,6 +36,14 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should validate ok a newly generated lib_js project', function() {
+
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+    
     it('should validate ok a newly generated lib_ts project', function() {
 
         expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
