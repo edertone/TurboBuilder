@@ -50,7 +50,6 @@
         },
         
         "lib_js" : {
-            "onlyMergedFile": true,
             "mergedFile": "PackedJsFileName-ES5"
         },
         
