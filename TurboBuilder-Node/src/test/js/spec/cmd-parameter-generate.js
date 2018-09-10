@@ -44,8 +44,11 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.exec('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/php')).toBe(true);
 
         let setup = utils.readSetupFile();
@@ -65,8 +68,11 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.exec('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/js')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
         expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
@@ -83,6 +89,8 @@ describe('cmd-parameter-generate', function(){
         expect(setup.sync.length).toBe(0);
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
+
+        // TODO - Verificar que el turbobuilder no conte les propietats corresponents a php
     });
 
 
@@ -92,8 +100,11 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.exec('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/ts')).toBe(true);
 
         let setup = utils.readSetupFile();
@@ -113,8 +124,11 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.exec('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/todo/Features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/Unit tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
 
         let setup = utils.readSetupFile();
