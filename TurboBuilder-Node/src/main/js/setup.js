@@ -201,7 +201,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the build section
     for (let key of ObjectUtils.getKeys(setupContents.build)) {
         
-        if(key !== type){
+        if(key !== type && global.setupBuildTypes.indexOf(key) >= 0){
             
             delete setupContents.build[key]; 
         }
