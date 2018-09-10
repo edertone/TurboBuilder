@@ -188,6 +188,16 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the validate section
     setupContents.validate.copyrightHeaders = [];
     
+    if(type !== 'site_php'){
+        
+        delete setupContents.validate['sitePhp'];
+        
+        if(type !== 'lib_php'){
+            
+            delete setupContents.validate['phpNamespaces'];
+        }
+    }
+    
     // Customize the build section
     for (let key of ObjectUtils.getKeys(setupContents.build)) {
         
@@ -195,12 +205,6 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             
             delete setupContents.build[key]; 
         }
-    }
-    
-    // Customize the release section
-    if(type !== 'site_php' && type === 'lib_php'){
-        
-        delete setupContents.release['optimizePhp']; 
     }
     
     // Customize the sync section

@@ -160,6 +160,35 @@ describe('cmd-parameter-release', function() {
     });
     
     
+    it('should correctly generate release for a lib_js project type when deleteNonMergedJs and deleteNonMergedJs are false', function() {
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+        let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist';
+        let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        setup.build.lib_js.deleteNonMergedJs = false;
+        setup.build.lib_js.createMergedFile = false;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+                
+        let launchResult = utils.exec('-cr');
+        expect(launchResult).toContain("clean start");
+        expect(launchResult).toContain("clean ok");
+        expect(launchResult).toContain("release ok");
+     
+        expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
+        expect(utils.fm.isFile(releaseRoot + sep + folderName + '.js')).toBe(false);
+        expect(utils.fm.isDirectory(releaseRoot + '/resources')).toBe(true);
+        expect(utils.fm.isDirectory(releaseRoot + '/js')).toBe(true);
+        expect(utils.fm.isFile(releaseRoot + '/index.js')).toBe(true);
+        expect(utils.fm.isFile(releaseRoot + '/js/managers/MyInstantiableClass.js')).toBe(true);
+        expect(utils.fm.isFile(releaseRoot + '/js/utils/MyStaticClass.js')).toBe(true);
+    });
+    
+    
     it('should correctly generate release minifications for a lib_js generated project', function() {
         
         let sep = utils.fm.dirSep();

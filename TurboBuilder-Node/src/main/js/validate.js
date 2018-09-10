@@ -231,7 +231,8 @@ let validateNamespaces = function () {
         return '';
     }
     
-    if(global.setup.validate.phpNamespaces.enabled){
+    if(global.setup.validate.phpNamespaces &&
+       global.setup.validate.phpNamespaces.enabled){
         
         let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'php', /.*\.php$/i, 'absolute', 'files');
         

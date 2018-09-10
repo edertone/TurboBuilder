@@ -488,20 +488,23 @@ exports.markMergedJsWithVersion = function (destPath) {
     
     if(global.setup.build.lib_js){
         
-        let mergedFileName = global.runtimePaths.projectName;
-        
-        if(global.setup.build.lib_js.mergedFileName && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFileName)){
-        
-            mergedFileName = global.setup.build.lib_js.mergedFileName;
+        if(global.setup.build.lib_js.createMergedFile){
+            
+            let mergedFileName = global.runtimePaths.projectName;
+            
+            if(global.setup.build.lib_js.mergedFileName && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFileName)){
+                
+                mergedFileName = global.setup.build.lib_js.mergedFileName;
+            }
+            
+            let mergedFileContent = fm.readFile(destDist + sep + mergedFileName + '.js');
+            
+            mergedFileContent = "// " + setupModule.getProjectRepoSemVer(true) + "\n" + mergedFileContent;
+            
+            fm.saveFile(destDist + sep + mergedFileName + '.js', mergedFileContent);
         }
-        
-        let mergedFileContent = fm.readFile(destDist + sep + mergedFileName + '.js');
-        
-        mergedFileContent = "// " + setupModule.getProjectRepoSemVer(true) + "\n" + mergedFileContent;
-        
-        fm.saveFile(destDist + sep + mergedFileName + '.js', mergedFileContent);
     
-    }else {
+    }else{
         
         for (let target of global.setup.build.lib_ts.targets) {
             
