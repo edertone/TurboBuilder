@@ -123,9 +123,9 @@ exports.printFolderContents = function (path, headlineText) {
             
             if(!StringUtils.isEmpty(todoContents)){
             
-                this.warning("\n" + headlineText + item + "\n");
+                this.warning("\n" + headlineText + item);
                         
-                this.warning(todoContents + "\n");
+                this.warning(todoContents);
             }
         }
     }

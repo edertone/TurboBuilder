@@ -111,6 +111,8 @@ exports.copyMainFiles = function (destPath) {
     fm.copyDirectory(global.runtimePaths.main, destMain);
     
     console.success('copy main files ok');
+    
+    this.replaceVersionOnAllFiles(destPath);
 }
 
 
@@ -472,6 +474,39 @@ exports.buildLibTs = function (destPath) {
             console.exec(webPackExecution, 'Webpack ' + target.jsTarget + ' ok');
             
             fm.deleteDirectory(compiledFolder);   
+        }
+    }
+}
+
+
+/**
+ * Replace the project version number on all the files as defined on project setup
+ */
+exports.replaceVersionOnAllFiles = function (destPath) {
+
+    let sep = fm.dirSep();
+    let destMain = destPath + sep + 'main';
+    
+    let wildCard = global.setup.build.replaceVersion.wildCard;
+    
+    if(StringUtils.isEmpty(wildCard)){
+    
+        return;
+    }
+    
+    let extensionsToReplace = global.setup.build.replaceVersion.extensions.join('|');
+    
+    let filesToReplaceRegExp = new RegExp("^.*\.(" + extensionsToReplace + ")$", "i" );
+    
+    let filesToReplace = fm.findDirectoryItems(destMain, filesToReplaceRegExp, 'absolute', 'files');
+    
+    for (let fileToReplace of filesToReplace) {
+        
+        let fileContent = fm.readFile(fileToReplace);
+        
+        if(fileContent.indexOf(wildCard) >= 0){
+            
+            fm.saveFile(fileToReplace, StringUtils.replace(fileContent, wildCard, setupModule.getProjectRepoSemVer(false)));
         }
     }
 }

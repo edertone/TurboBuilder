@@ -186,7 +186,22 @@
             "properties": {
                 "printTodoFiles": {
                     "type": "boolean",
-                    "description": "The Printtodofiles Schema"
+                    "description": "If enabled, the contents of all the files on the extras/todo folder will be displayed as part of the build console output"
+                },
+                "replaceVersion": {
+                    "type": "object",
+                    "description": "We can define a wildcard to be replaced with the project version number after the build process finishes",
+                    "additionalProperties": false, 
+                    "properties": {
+                        "wildCard": {
+                            "type": "string",
+                            "description": "The pattern to search on the specified file extensions that will be replaced with the project version number"
+                        },
+                        "extensions": {
+                            "type": "array",
+                            "description": "List of file extensions where the replacement will be performed"
+                        }
+                    }
                 },
                 "site_php": {
                     "type": "object",
@@ -300,7 +315,7 @@
             "properties": {
                 "printTodoFiles": {
                     "type": "boolean",
-                    "description": "The Printtodofiles Schema"
+                    "description": "If enabled, the contents of all the files on the extras/todo folder will be displayed as part of the release console output"
                 },
                 "gitChangeLog": {
                     "type": "boolean",

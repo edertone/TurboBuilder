@@ -54,6 +54,10 @@ describe('cmd-parameter-generate', function(){
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
+        expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
+        expect(setup.build.replaceVersion.wildCard).toBe("@@--build-version--@@");
+        expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.sync.length).toBe(0);
@@ -82,6 +86,10 @@ describe('cmd-parameter-generate', function(){
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
+        expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
+        expect(setup.build.replaceVersion.wildCard).toBe("@@--build-version--@@");
+        expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
@@ -110,6 +118,10 @@ describe('cmd-parameter-generate', function(){
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
+        expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
+        expect(setup.build.replaceVersion.wildCard).toBe("@@--build-version--@@");
+        expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.sync.length).toBe(0);
@@ -134,6 +146,10 @@ describe('cmd-parameter-generate', function(){
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
+        expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
+        expect(setup.build.replaceVersion.wildCard).toBe("@@--build-version--@@");
+        expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.sync.length).toBe(1);

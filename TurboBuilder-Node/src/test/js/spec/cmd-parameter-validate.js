@@ -330,4 +330,18 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-l')).toContain('additionalProperty "unexpectedValue" exists in instance when not allowed');
     });
+    
+    
+    it('should validate ok if replaceVersion is missing on turbosite setup.build for a lib_js project type', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        delete setup.build.replaceVersion;
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
 });

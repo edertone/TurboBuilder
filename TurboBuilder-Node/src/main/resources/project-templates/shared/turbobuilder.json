@@ -38,6 +38,13 @@
     
         "printTodoFiles" : false,
         
+        "replaceVersion": {
+            
+            "wildCard": "@@--build-version--@@",
+            
+            "extensions": ["js", "php", "json"]
+        },
+        
         "site_php" : {
         },
         

@@ -245,4 +245,70 @@ describe('cmd-parameter-release', function() {
         
         expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
     });
+    
+    
+    it('should replace all wildcard matches with project version on all configured file extensions', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t2.js', 'var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        
+        expect(utils.exec('-r')).toContain('release ok');
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
+            .toBe('<?php ?>');
+    
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
+            .toBe('<?php $1 = "0.0.0"; $2 = "0.0.0" ?>');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
+            .toBe('var a="0.0.0",b="0.0.0";');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
+            .toBe('{ "a": "0.0.0", "b": "0.0.0"}');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
+            .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
+    });
+    
+    
+    it('should NOT replace wildcard matches on configured file extensions when wildcard is set to empty string', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t2.js', 'var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        
+        let setup = utils.readSetupFile();
+        setup.build.replaceVersion.wildCard = "";        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-r')).toContain('release ok');
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
+            .toBe('<?php ?>');
+    
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
+            .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
+            .toBe('var a="@@--build-version--@@",b="@@--build-version--@@";');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
+            .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
+            .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
+    });
 });
