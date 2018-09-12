@@ -232,6 +232,8 @@ describe('cmd-parameter-build', function() {
     
     it('should replace all wildcard matches with project version on all configured file extensions', function() {
         
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
@@ -239,9 +241,11 @@ describe('cmd-parameter-build', function() {
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        let setup = utils.readSetupFile(); 
+        setup.build.replaceVersion.enabled = true;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        expect(utils.exec('-b')).toContain('build ok');
         
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php // 1 - 0.0.0 2 - 0.0.0 ?>');
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('// a - 0.0.0 b - 0.0.0');
@@ -252,6 +256,8 @@ describe('cmd-parameter-build', function() {
     
     it('should NOT replace wildcard matches on configured file extensions when wildcard is set to empty string', function() {
         
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
@@ -259,14 +265,29 @@ describe('cmd-parameter-build', function() {
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
+        // replaceVersion.enabled is false by default, so no replacement must happen
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+            .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
+            .toBe('// a - @@--build-version--@@ b - @@--build-version--@@');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
+            .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
+        
+        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
+            .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
+        
+        // We will now enable replaceversion and set an empty wildcard. No replacement must happen
         let setup = utils.readSetupFile();
+        setup.build.replaceVersion.enabled = true;
         setup.build.replaceVersion.wildCard = "";        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
-        
-        let folderName = StringUtils.getPathElement(this.workdir);
-        
+                
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
         

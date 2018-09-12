@@ -489,7 +489,7 @@ exports.replaceVersionOnAllFiles = function (destPath) {
     
     let wildCard = global.setup.build.replaceVersion.wildCard;
     
-    if(StringUtils.isEmpty(wildCard)){
+    if(!global.setup.build.replaceVersion.enabled || StringUtils.isEmpty(wildCard)){
     
         return;
     }

@@ -190,16 +190,25 @@
                 },
                 "replaceVersion": {
                     "type": "object",
-                    "description": "We can define a wildcard to be replaced with the project version number after the build process finishes",
+                    "description": "This feature that allows us to replace a specific wildcard with the current project version number on all the specified file types as part of the build and release processes",
+                    "required": [
+                        "enabled",
+                        "wildCard",
+                        "extensions"
+                    ],
                     "additionalProperties": false, 
                     "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enables or disables the replace version feature"
+                        },
                         "wildCard": {
                             "type": "string",
-                            "description": "The pattern to search on the specified file extensions that will be replaced with the project version number"
+                            "description": "A pattern to search on the specified file extensions which will be replaced with the project version number"
                         },
                         "extensions": {
                             "type": "array",
-                            "description": "List of file extensions where the replacement will be performed"
+                            "description": "List of file extensions where the wildcard search and replacement will be performed ('php', 'js', 'json', etc...)"
                         }
                     }
                 },

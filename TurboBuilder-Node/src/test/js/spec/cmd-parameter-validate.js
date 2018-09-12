@@ -344,4 +344,18 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-l')).toContain("validate ok");
     });
+    
+    
+    it('should fail validate if replaceVersion.enabled is missing on turbosite setup.build for a lib_js project type', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        delete setup.build.replaceVersion.enabled;
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("instance.build.replaceVersion requires property \"enabled\"");
+    });
 });

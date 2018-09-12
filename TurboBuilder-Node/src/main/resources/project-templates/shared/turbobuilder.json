@@ -35,33 +35,26 @@
     },
     
     "build": {
-    
         "printTodoFiles" : false,
-        
         "replaceVersion": {
-            
+            "enabled": false,
             "wildCard": "@@--build-version--@@",
-            
             "extensions": ["js", "php", "json"]
-        },
-        
+        },        
         "site_php" : {
         },
         
         "lib_php" : {
             "createPhar": true
         },
-        
         "lib_java" : {
             "createJar": true
         },
-        
         "lib_js" : {
             "deleteNonMergedJs": true,
             "createMergedFile": true,
             "mergedFileName": ""
         },
-        
         "lib_ts" : {
             "declaration": true,
             "strict": true,
