@@ -42,10 +42,6 @@ Used to compile the typescript code
 
 Used to minify and compress js files
 
-## clean-css
-
-Used to minify and compress css files
-
 ## webpack
 
 Used to merge and create web deployment packages
@@ -57,3 +53,15 @@ A library to resize images
 ## jsonschema
 
 A library to validate json files agains their respective json schemas
+
+## clean-css
+
+Used to minify and compress css files
+
+## imagemin (imagemin-jpegtran, imagemin-pngquant)
+
+Used to compress image files on release build
+
+## html-minifier
+
+A library to minify and optimize html code

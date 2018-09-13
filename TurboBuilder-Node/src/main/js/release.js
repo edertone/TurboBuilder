@@ -76,6 +76,7 @@ exports.execute = function () {
     minifyJs(releaseFullPath);
     minifyCss(releaseFullPath);
     minifyHtaccess(releaseFullPath);
+    minifyHtmlFiles(releaseFullPath);
     minifyPhpFiles(releaseFullPath);
     
     if(global.setup.release.optimizePictures){
@@ -207,7 +208,7 @@ let minifyImages = function (destPath) {
                     progressive: true
                 }),
                 imageminPngquant({
-                    quality: '65-80',
+                    quality: '80-90',
                     speed: 1, // The lowest speed of optimization with the highest quality
                     floyd: 1 // Controls level of dithering (0 = none, 1 = full).
                 })
@@ -219,6 +220,52 @@ let minifyImages = function (destPath) {
         
         console.success("minify Images ok");
     }    
+}
+
+
+/**
+ * Minifies (overwrites) all the html files that exist on the provided path
+ */
+let minifyHtmlFiles = function (destPath) {
+    
+    var minify = require('html-minifier').minify;
+        
+    let sep = fm.dirSep();
+    let destDist = destPath + sep + 'dist';
+    
+    let htmlFiles = fm.findDirectoryItems(destDist, /^.*\.(php|html)$/i, 'absolute', 'files');
+    
+    for (let htmlFile of htmlFiles) {
+        
+        let htmlFileContent = fm.readFile(htmlFile);
+        
+        let htmlMinified = htmlFileContent;
+        
+        try{
+            
+            htmlMinified = minify(htmlFileContent, {
+                collapseWhitespace: true,
+                removeComments: true,
+                removeEmptyAttributes: true,
+                removeRedundantAttributes: true,
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                minifyCSS: true,
+                minifyJS: true
+            });
+                        
+        }catch(e){
+
+            console.error("Html minify failed");
+        }
+        
+        fm.saveFile(htmlFile, htmlMinified); 
+    }
+    
+    if(htmlFiles.length > 0){
+        
+        console.success("minify html ok");
+    }
 }
 
 
