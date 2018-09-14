@@ -359,4 +359,161 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-l')).toContain("instance.build.replaceVersion requires property \"enabled\"");
     });
+    
+    
+    it('should validate ok setup with empty sync property', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();         
+        setup.sync = [];       
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+    
+    it('should validate ok setup with correct sync filesystem task', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();         
+        setup.sync = [
+            {
+                "runAfterBuild": false,
+                "type": "fileSystem",
+                "excludes": ["some-filename-string"],
+                "sourceRoot": "build",
+                "sourcePath": "dist/",
+                "destPath": "X:\\somepath-to-copy-files-to",
+                "deleteDestPathContents": true
+            }
+        ];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+    
+    it('should validate ok setup with correct sync ftp task', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();         
+        setup.sync = [
+            {
+                "runAfterBuild": false,
+                "type": "ftp",
+                "excludes": ["some-filename-string"],
+                "sourceRoot": "release",
+                "sourcePath": "dist/",
+                "remotePath": "/public_html/somepath",
+                "host": "www.someserver.com",
+                "user": "serverUser",
+                "psw": "serverpsw"
+            }
+        ];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+    
+    it('should validate ok setup with correct sync filesystem and ftp task', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();         
+        setup.sync = [
+            {
+                "runAfterBuild": false,
+                "type": "fileSystem",
+                "excludes": ["some-filename-string"],
+                "sourceRoot": "build",
+                "sourcePath": "dist/",
+                "destPath": "X:\\somepath-to-copy-files-to",
+                "deleteDestPathContents": true
+            },
+            {
+                "runAfterBuild": false,
+                "type": "ftp",
+                "excludes": ["some-filename-string"],
+                "sourceRoot": "release",
+                "sourcePath": "dist/",
+                "remotePath": "/public_html/somepath",
+                "host": "www.someserver.com",
+                "user": "serverUser",
+                "psw": "serverpsw"
+            }
+        ];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+
+    it('should fail validate setup with a wrong sync ftp task', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();         
+        setup.sync = [
+            {
+                "runAfterBuild": false,
+                "type": "ftp",
+                "excludes": ["some-filename-string"],
+                "sourceRoot": "invalidvalue",
+                "sourcePath": "dist/",
+                "remotePath": "/public_html/somepath",
+                "host": "www.someserver.com",
+                "user": "serverUser",
+                "psw": "serverpsw"
+            }
+        ];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+        
+        setup.sync[0].sourceRoot = 'build';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        setup.sync[0].nonexistant = 'somevalue';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+    });
+    
+    
+    it('should fail validate setup with a wrong sync filesystem task', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();         
+        setup.sync = [
+            {
+                "runAfterBuild": false,
+                "type": "invalidtype",
+                "excludes": ["some-filename-string"],
+                "sourceRoot": "build",
+                "sourcePath": "dist/",
+                "destPath": "X:\\somepath-to-copy-files-to",
+                "deleteDestPathContents": true
+            }
+        ];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+        
+        setup.sync[0].type = 'fileSystem';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        setup.sync[0].destPath = 1;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+    });
 });
