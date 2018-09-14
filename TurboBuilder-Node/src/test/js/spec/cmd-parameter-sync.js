@@ -81,7 +81,8 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : false,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourcePath" : "target/$dev/dist/",
+            "sourceRoot" : "build",
+            "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
         }];
@@ -124,7 +125,8 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : true,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourcePath" : "target/$dev/dist/",
+            "sourceRoot" : "build",
+            "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
         }];
@@ -150,7 +152,8 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : false,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourcePath" : "target/$dev/dist/",
+            "sourceRoot" : "build",
+            "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
         }];
@@ -178,7 +181,8 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : true,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourcePath" : "target/$dev/dist/",
+            "sourceRoot" : "build",
+            "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
         }];

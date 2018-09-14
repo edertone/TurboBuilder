@@ -1,4 +1,7 @@
 {
+
+    "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbobuilder.schema.json",
+
     "metadata": {
         "name": "write project name here",
         "description": "write some project description here",
@@ -80,7 +83,8 @@
             "runAfterBuild": false,
             "type": "fileSystem",
             "excludes": ["some-filename-string"],
-            "sourcePath": "target/$dev/dist/",
+            "sourceRoot": "build",
+            "sourcePath": "dist/",
             "destPath": "X:\\somepath-to-copy-files-to",
             "deleteDestPathContents": true
         },
@@ -88,7 +92,8 @@
             "runAfterBuild": false,
             "type": "ftp",
             "excludes": ["some-filename-string"],
-            "sourcePath": "target/$prod/dist/",
+            "sourceRoot": "release",
+            "sourcePath": "dist/",
             "remotePath": "/public_html/somepath",
             "host": "www.someserver.com",
             "user": "serverUser",

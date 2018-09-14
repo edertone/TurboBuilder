@@ -4,10 +4,15 @@
     "type": "object",
     "title": "turbobuilder.json schema",
     "required": [
+        "$schema",
         "metadata"
     ],
     "additionalProperties": false, 
     "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "Url to the json schema definition to validate this file"
+        },
         "metadata": {
             "type": "object",
             "description": "Contains information about the project",
@@ -346,54 +351,103 @@
         },
         "sync": {
             "type": "array",
-            "description": "The Sync Schema",
+            "description": "Defines the parameters for the sync process",
             "items": {
-                "type": "object",
-                "description": "The Items Schema",
-                "required": [
-                    "runAfterBuild",
-                    "type",
-                    "excludes",
-                    "sourcePath",
-                    "destPath",
-                    "deleteDestPathContents"
-                ],
-                "additionalProperties": false, 
-                "properties": {
-                    "runAfterBuild": {
-                        "type": "boolean",
-                        "description": "The Runafterbuild Schema"
-                    },
-                    "type": {
-                        "type": "string",
-                        "description": "The Type Schema"
-                    },
-                    "excludes": {
-                        "type": "array",
-                        "description": "The Excludes Schema",
-                        "items": {
-                            "type": "string",
-                            "description": "The Items Schema"
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "minProperties": 7,
+                        "additionalProperties": false, 
+                        "properties": {
+                            "runAfterBuild": {
+                                "type": "boolean",
+                                "description": "If enabled, this sync task will be executed automatically after each build"
+                            },
+                            "type": {
+                                "type": "string",
+                                "description": "Defines the type of task to execute: an ftp or fileSystem synchronization",
+                                "enum": ["fileSystem"]
+                            },
+                            "excludes": {
+                                "type": "array",
+                                "description": "List of string patterns that will be used to exclude files or folders from the sync task.",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "sourceRoot": {
+                                "type": "string",
+                                "description": "Defines the root path from which the files will be transfered. If set to build, the source will be target/projectname. If set to release, the source will be target/projectname-semversion",
+                                "enum": ["build", "release"]
+                            },
+                            "sourcePath": {
+                                "type": "string",
+                                "description": "A path relative to the defined source root where the files to be synced are located"
+                            },
+                            "destPath": {
+                                "type": "string",
+                                "description": "A file system path where the source files will be copied"
+                            },
+                            "deleteDestPathContents": {
+                                "type": "boolean",
+                                "description": "If set to true, all files found on the destPath will be deleted before executing the sync"
+                            }
                         }
                     },
-                    "sourcePath": {
-                        "type": "string",
-                        "description": "The Sourcepath Schema"
-                    },
-                    "destPath": {
-                        "type": "string",
-                        "description": "The Destpath Schema"
-                    },
-                    "deleteDestPathContents": {
-                        "type": "boolean",
-                        "description": "The Deletedestpathcontents Schema"
+                    {
+                        "type": "object",
+                        "minProperties": 9,
+                        "additionalProperties": false, 
+                        "properties": {
+                            "runAfterBuild": {
+                                "type": "boolean",
+                                "description": "If enabled, this sync task will be executed automatically after each build"
+                            },
+                            "type": {
+                                "type": "string",
+                                "description": "Defines the type of task to execute: an ftp or fileSystem synchronization",
+                                "enum": ["ftp"]
+                            },
+                            "excludes": {
+                                "type": "array",
+                                "description": "List of string patterns that will be used to exclude files or folders from the sync task.",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "sourceRoot": {
+                                "type": "string",
+                                "description": "Defines the root path from which the files will be transfered. If set to build, the source will be target/projectname. If set to release, the source will be target/projectname-semversion",
+                                "enum": ["build", "release"]
+                            },
+                            "sourcePath": {
+                                "type": "string",
+                                "description": "A path relative to the defined source root where the files to be synced are located"
+                            },
+                            "remotePath": {
+                                "type": "string",
+                                "description": "A path relative to the remote host where the files will be synchronized"
+                            },
+                            "host": {
+                                "type": "string",
+                                "description": "A remote host where the files will be synchronized"
+                            },
+                            "user": {
+                                "type": "string",
+                                "description": "The remote user"
+                            },
+                            "psw": {
+                                "type": "string",
+                                "description": "The remote password"
+                            }
+                        }
                     }
-                }
+                ]
             }
         },
         "test": {
             "type": "array",
-            "description": "The Test Schema",
+            "description": "Defines the parameters for the test process",
             "items": {
                 "anyOf": [
                     {

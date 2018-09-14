@@ -69,9 +69,18 @@ exports.isAnyRunAfterBuildEnabled = function () {
  */
 let calculateSourcePath = function (syncSetup) {
     
-    let result = global.runtimePaths.root + fm.dirSep() + syncSetup.sourcePath;
+    let result = global.runtimePaths.root + fm.dirSep() + 'target' + fm.dirSep();
     
-    return StringUtils.replace(result, ['$dev', '$prod'], [global.runtimePaths.projectName, 'TODO']);
+    if(syncSetup.sourceRoot === 'build'){
+        
+        result += global.runtimePaths.projectName + fm.dirSep() + syncSetup.sourcePath;
+    
+    } else {
+        
+        // TODO - implement prod sync and launch tests to verify production version works as expected with selenium    
+    }
+    
+    return StringUtils.formatPath(result, fm.dirSep());
 }
 
 

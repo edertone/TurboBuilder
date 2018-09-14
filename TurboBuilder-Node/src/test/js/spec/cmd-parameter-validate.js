@@ -80,7 +80,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_php: {}}}))
+        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_php: {}}}))
             .toBe(true);
         
         expect(utils.fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
@@ -96,7 +96,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
+        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
             .toBe(true);
         
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
@@ -113,7 +113,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
+        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
             .toBe(true);
         
         let buildResult = utils.exec('-b');
@@ -127,7 +127,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
+        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
             .toBe(true);
         
         let buildResult = utils.exec('-bl');
@@ -146,7 +146,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail if only a setup file exists on the folder', function() {
         
-        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, 
+        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
@@ -159,7 +159,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({metadata: {builderVersion: setupModule.getBuilderVersion()}, 
+        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
@@ -176,6 +176,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
         let setupFile = {
+                "$schema": '',
                 metadata: {
                     builderVersion: setupModule.getBuilderVersion()
                 }, 
