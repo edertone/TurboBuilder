@@ -133,11 +133,6 @@ let replaceDependenciesIntoTemplate = function () {
             fm.copyFile(libsPath + sep + 'jquery.js', depParent + sep + 'jquery.js');
         }
         
-        if(depFile === 'phpunit.tbdependency'){
-            
-            fm.copyFile(libsPath + sep + 'phpunit-6.2.3.phar', depParent + sep + 'phpunit-6.2.3.phar');
-        }
-        
         if(depFile === 'turbocommons-es5.tbdependency'){
             
             fm.copyFile(libsPath + sep + 'turbocommons-es5.js', depParent + sep + 'turbocommons-es5.js');

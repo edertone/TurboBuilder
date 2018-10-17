@@ -50,6 +50,7 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
         expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/php')).toBe(true);
+        expect(utils.fm.isDirectory('./src/test/php')).toBe(true);
 
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());

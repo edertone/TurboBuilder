@@ -19,6 +19,8 @@ This project uses libraries and dependencies from a variety of sources. To make 
 
 - Check generate.js file contents and update the library versions to match the new ones
 
+- Check test.js file contents to update the phpUnit and qunit versions used
+
 - Update the dependencies on the site_php template:
 	src/main/resources/project-templates/site_php/package.json
 	

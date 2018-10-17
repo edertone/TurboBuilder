@@ -59,6 +59,25 @@ describe('cmd-parameter-test', function() {
     });
     
     
+    it('should correctly run php unit tests on a generated lib_php project', function() {
+
+        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+ 
+        setup.test[0].coverageReport = false;
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let testResult = utils.exec('-bt');
+        
+        expect(testResult).toContain('launching phpunit tests');
+        expect(testResult).toContain('(100%)');
+        expect(testResult).toContain('OK, but incomplete, skipped, or risky tests!');
+        expect(testResult).toContain('test done');
+    });
+    
+    
     it('should fail when a site_php is generated and no npm install is performed before build and test', function() {
         
         let testsGenerateResult = utils.exec('-g site_php');   

@@ -118,7 +118,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         // Launch unit tests via php executable
         let phpExecCommand = 'php';
         
-        phpExecCommand += ' "' + global.installationPaths.testResources + sep + 'libs' + sep + 'phpunit-7.1.5.phar"';
+        phpExecCommand += ' "' + global.installationPaths.testResources + sep + 'libs' + sep + 'phpunit-7.4.0.phar"';
         
         if(testSetup.coverageReport){
             
@@ -241,12 +241,12 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     htmlIndexCode += '<meta charset="utf-8">';
                     htmlIndexCode += '<meta name="viewport" content="width=device-width">';
                     htmlIndexCode += '<title>Tests results</title>';
-                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.6.0.css">';
+                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.7.0.css">';
                     htmlIndexCode += '</head>';
                     htmlIndexCode += '<body>';
                     htmlIndexCode += '<div id="qunit"></div>';
                     htmlIndexCode += '<div id="qunit-fixture"></div>';
-                    htmlIndexCode += '<script src="qunit-2.6.0.js"></script>';
+                    htmlIndexCode += '<script src="qunit-2.7.0.js"></script>';
                     htmlIndexCode += '<script src="source.js"></script>';
                     htmlIndexCode += '<script src="tests.js"></script>';
                     htmlIndexCode += '</body>';
