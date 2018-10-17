@@ -7,6 +7,7 @@
 
 const console = require('./console.js');
 const buildModule = require('./build');
+const setupModule = require('./setup');
 const { StringUtils, FilesManager } = require('turbocommons-ts');
 
 
@@ -77,7 +78,10 @@ let calculateSourcePath = function (syncSetup) {
     
     } else {
         
-        // TODO - implement prod sync and launch tests to verify production version works as expected with selenium    
+        // TODO - si sourceroot es release cal que la opció de release estigui activada
+        // TODO - implement prod sync and launch tests to verify production version works as expected with selenium
+        result += global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer(false)
+            + fm.dirSep() + syncSetup.sourcePath;
     }
     
     return StringUtils.formatPath(result, fm.dirSep());

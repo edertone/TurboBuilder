@@ -78,6 +78,7 @@ exports.replaceWildCardsOnText = function (text) {
     
     let projectName = StringUtils.getPathElement(path.resolve('./'));
     
+    // TODO - aqui el project name falla si estem testejant un release    
     this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
     
     return StringUtils.replace(text,
