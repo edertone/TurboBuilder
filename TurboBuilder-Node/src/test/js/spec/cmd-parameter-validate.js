@@ -68,7 +68,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated site_php project', function() {
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         let buildResult = utils.exec('-l');
         expect(buildResult).toContain("validate start");
@@ -76,11 +76,49 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validaton on a newly generated site_php project with an empty turbobuilder setup', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.saveToSetupFile({})).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("No valid project type specified. Please enable any of");
+    });
+    
+    
+    it('should fail validaton on a newly generated site_php project with a turbobuilder setup containing only $schema and metadata', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}}))
+            .toBe(true);
+        
+        expect(utils.exec('-l')).toContain("No valid project type specified. Please enable any of");    
+    });
+
+    
+    it('should validate ok a newly generated site_php project with a turbobuilder setup containing only $schema, metadata and build', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
+            .toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");  
+    });
+    
+    
     it('should validate by default before build on a generated lib_php project', function() {
         
         expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_php: {}}}))
+        let setup = utils.readSetupFile(); 
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_php: {}}}))
             .toBe(true);
         
         expect(utils.fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
@@ -96,7 +134,9 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
+        let setup = utils.readSetupFile(); 
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
             .toBe(true);
         
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
@@ -113,7 +153,9 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
+        let setup = utils.readSetupFile(); 
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
             .toBe(true);
         
         let buildResult = utils.exec('-b');
@@ -127,7 +169,9 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
+        let setup = utils.readSetupFile();
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
             .toBe(true);
         
         let buildResult = utils.exec('-bl');
@@ -146,7 +190,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail if only a setup file exists on the folder', function() {
         
-        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, 
+        expect(utils.saveToSetupFile({"$schema": "", metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
@@ -159,7 +203,9 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
-        expect(utils.saveToSetupFile({"$schema": '', metadata: {builderVersion: setupModule.getBuilderVersion()}, 
+        let setup = utils.readSetupFile();
+        
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
@@ -175,8 +221,10 @@ describe('cmd-parameter-validate', function() {
     
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
+        let setup = utils.readSetupFile();
+        
         let setupFile = {
-                "$schema": '',
+                "$schema": setup.$schema,
                 metadata: {
                     builderVersion: setupModule.getBuilderVersion()
                 }, 
@@ -515,5 +563,91 @@ describe('cmd-parameter-validate', function() {
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-l')).toContain("Invalid JSON schema");
+    });
+    
+    
+    it('should fail when a corrupted turbobuilder.json file exists', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setup, '{ "a": 1, { ')).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Corrupted JSON for');
+    });
+    
+    
+    it('should fail when a corrupted turbosite.json file exists', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, '{ "a": 1, { }')).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Corrupted JSON for');
+    });
+
+    
+    it('should fail when turbobuilder.json does not contain a $schema property', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        delete setup.$schema;
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbobuilder.json');
+        expect(lintResult).toContain('instance requires property "$schema"');  
+    });
+    
+    
+    it('should fail when turbosite.json does not contain a $schema property', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let tsSetup = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        delete tsSetup.$schema;
+        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
+        expect(lintResult).toContain('instance requires property "$schema"');
+    });
+    
+
+    it('should fail when turbobuilder.json $schema property contains invalid values', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile(); 
+        
+        setup.$schema = 'some invalid value';
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbobuilder.json');
+        expect(lintResult).toContain('instance.$schema is not one of enum values'); 
+    });
+    
+    
+    it('should fail when turbosite.json $schema property contains invalid values', function() {
+    
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let tsSetup = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        tsSetup.$schema = 'some invalid value';
+        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
+        expect(lintResult).toContain('instance.$schema is not one of enum values');
     });
 });

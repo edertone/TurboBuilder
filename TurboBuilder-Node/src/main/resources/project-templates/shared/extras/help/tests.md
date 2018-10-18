@@ -3,7 +3,9 @@
 
 ## via command line
 
-Write here docs about running project tests via cmd
+Basic default tests are called by running tb -bst
+
+Write here more docs about running project tests via cmd
 
 ## via IDE
 

@@ -92,7 +92,18 @@ exports.loadSetupFromDisk = function () {
         console.error(global.fileNames.setup + ' setup file not found');
     }
     
-    let projectSetup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
+    let projectSetup = '';
+    
+    try{
+        
+        projectSetup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
+        
+    }catch(e){
+        
+        console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
+        
+        return;
+    }
     
     // Load the template setup
     global.setup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(projectSetup));
@@ -110,12 +121,15 @@ exports.detectProjectTypeFromSetup = function (setup) {
     let projectType = '';
     let projectTypesCount = 0;
     
-    for (let key of ObjectUtils.getKeys(setup.build)) {
+    if(setup.build){
         
-        if(global.setupBuildTypes.indexOf(key) >= 0){
+        for (let key of ObjectUtils.getKeys(setup.build)) {
             
-            projectType = key;
-            projectTypesCount ++;
+            if(global.setupBuildTypes.indexOf(key) >= 0){
+                
+                projectType = key;
+                projectTypesCount ++;
+            }
         }
     }
     

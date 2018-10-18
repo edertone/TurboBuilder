@@ -5,13 +5,15 @@
     "title": "turbobuilder.json schema",
     "required": [
         "$schema",
-        "metadata"
+        "metadata",
+        "build"
     ],
     "additionalProperties": false, 
     "properties": {
         "$schema": {
             "type": "string",
-            "description": "Url to the json schema definition to validate this file"
+            "description": "Url to the json schema definition to validate this file",
+            "enum": ["https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbobuilder.schema.json"]
         },
         "metadata": {
             "type": "object",
@@ -195,7 +197,7 @@
                 },
                 "replaceVersion": {
                     "type": "object",
-                    "description": "This feature that allows us to replace a specific wildcard with the current project version number on all the specified file types as part of the build and release processes",
+                    "description": "This feature allows us to replace a specific wildcard with the current project version number on all the specified file types as part of the build and release processes",
                     "required": [
                         "enabled",
                         "wildCard",
@@ -333,19 +335,19 @@
                 },
                 "gitChangeLog": {
                     "type": "boolean",
-                    "description": "The Gitchangelog Schema"
+                    "description": "If enabled, a Changelog.txt file containing the list of recent GIT changes will be generated inside the release folder"
                 },
                 "gitChangeLogCount": {
                     "type": "integer",
-                    "description": "The Gitchangelogcount Schema"
+                    "description": "Defines the number of most recent tags to be included into the GIT change log file"
                 },
                 "optimizePictures": {
                     "type": "boolean",
-                    "description": "The Optimizepictures Schema"
+                    "description": "If enabled, all project pictures will be optimized to be as small as possible into the release folder"
                 },
                 "generateCodeDocumentation": {
                     "type": "boolean",
-                    "description": "The Generatecodedocumentation Schema"
+                    "description": "If enabled, a docs folder will be created into the release destination containing auto generted code documentation for the project languages"
                 }
             }
         },

@@ -391,7 +391,7 @@ let generateCodeDocumentation = function (destPath) {
 
 
 /**
- * Generates the code documentation for the configured languages
+ * Generates the git changelog.txt file
  */
 let createGitChangeLog = function (destPath) {
     

@@ -111,7 +111,19 @@ let validateJSONSchema = function (filePath, schemaFileName) {
         console.error("Could not find " + StringUtils.getPathElement(filePath) + " at " + filePath);
     }
     
-    let fileContent = JSON.parse(fm.readFile(filePath));
+    let fileContent = '';
+    
+    try{
+    
+        fileContent = JSON.parse(fm.readFile(filePath));
+        
+    }catch(e){
+        
+        errors.push("Corrupted JSON for " + StringUtils.getPathElement(filePath) + ":\n" + e.toString());
+        
+        return;
+    }
+    
     let schemaContent = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + schemaFileName));
     
     let results = validate(fileContent, schemaContent);
