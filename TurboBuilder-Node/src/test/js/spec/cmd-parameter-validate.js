@@ -668,4 +668,61 @@ describe('cmd-parameter-validate', function() {
         expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
         expect(lintResult).toContain('instance.$schema is not one of enum values');
     });
+    
+    
+    it('should validate ok when turbobuilder.json and package.json contain same project name and description on a site_php project', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        setup.metadata.name = 'name';        
+        setup.metadata.description = 'description';        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
+        packageJson.name = 'name';        
+        packageJson.description = 'description';         
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('validate ok');
+    });
+    
+    
+    it('should fail when turbobuilder.json and package.json contain different project names on a site_php project', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        setup.metadata.name = 'name 1';        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
+        packageJson.name = 'name 2';        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Name and description must match between the following files');
+        expect(lintResult).toContain('package.json');
+        expect(lintResult).toContain('turbobuilder.json');
+    });
+    
+    
+    it('should fail when turbobuilder.json and package.json contain different project descriptions on a site_php project', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        setup.metadata.description = 'desc 1';        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
+        packageJson.description = 'desc 2';        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
+        
+        let lintResult = utils.exec('-l');
+        expect(lintResult).toContain('Name and description must match between the following files');
+        expect(lintResult).toContain('package.json');
+        expect(lintResult).toContain('turbobuilder.json');
+    });
 });
