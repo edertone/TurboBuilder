@@ -2,8 +2,6 @@
 
     "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbosite.schema.json",
     
-    "cacheHash": "",
-	
     "errorSetup": {
         "exceptionsToBrowser": false,
         "exceptionsToMail": "",
