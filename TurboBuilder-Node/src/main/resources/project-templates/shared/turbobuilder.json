@@ -3,8 +3,8 @@
     "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbobuilder.schema.json",
 
     "metadata": {
-        "name": "write project name here",
-        "description": "write some project description here",
+        "name": "",
+        "description": "",
         "builderVersion": ""
     },
     

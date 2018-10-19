@@ -46,6 +46,8 @@ exports.execute = function (verbose = true) {
      
     validateNamespaces();
     
+    validatePackageAndTurboBuilderJsonIntegrity();
+    
     // Validate site php if this is the project type
     if(global.setup.build.site_php){
         
@@ -284,6 +286,34 @@ let validateNamespaces = function () {
                 }
             }
         }       
+    }
+}
+
+
+/**
+ * Make sure that turbobuilder.json and package.json (if it exists) share the same common property values
+ */
+let validatePackageAndTurboBuilderJsonIntegrity = function () {
+    
+    let setupPath = global.runtimePaths.root + fm.dirSep() + global.fileNames.setup;
+    let packagePath = global.runtimePaths.root + fm.dirSep() + 'package.json';
+    
+    
+    // If package.json does not exist we won't vaidate anything
+    if(!fm.isFile(packagePath)){
+        
+        return;
+    }
+    
+    let setup = JSON.parse(fm.readFile(setupPath));
+    let packageJson = JSON.parse(fm.readFile(packagePath));
+    
+    if(setup.metadata.name !== packageJson.name ||
+       setup.metadata.description !== packageJson.description){
+   
+        errors.push("\nName and description must match between the following files:\n" +
+                global.runtimePaths.root + fm.dirSep() + global.fileNames.setup + "\n" + 
+                global.runtimePaths.root + fm.dirSep() + 'package.json');
     }
 }
 

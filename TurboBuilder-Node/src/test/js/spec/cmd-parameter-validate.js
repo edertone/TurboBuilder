@@ -105,8 +105,14 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.readSetupFile(); 
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
-            .toBe(true);
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, 
+            metadata: {
+                name: '',
+                description: '',
+                builderVersion: setupModule.getBuilderVersion()
+            },
+            build: {site_php: {}}}))
+                .toBe(true);
         
         expect(utils.exec('-l')).toContain("validate ok");  
     });
@@ -155,8 +161,14 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.readSetupFile(); 
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
-            .toBe(true);
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, 
+            metadata: {
+                name: '',
+                description: '',
+                builderVersion: setupModule.getBuilderVersion()
+            },
+            build: {site_php: {}}}))
+                .toBe(true);
         
         let buildResult = utils.exec('-b');
         
@@ -171,8 +183,14 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.readSetupFile();
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {site_php: {}}}))
-            .toBe(true);
+        expect(utils.saveToSetupFile({"$schema": setup.$schema, 
+            metadata: {
+                name: '',
+                description: '',
+                builderVersion: setupModule.getBuilderVersion()
+            },
+            build: {site_php: {}}}))
+                .toBe(true);
         
         let buildResult = utils.exec('-bl');
         
