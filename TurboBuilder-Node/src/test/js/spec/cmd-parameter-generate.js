@@ -100,8 +100,6 @@ describe('cmd-parameter-generate', function(){
         expect(setup.sync.length).toBe(0);
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
-
-        // TODO - Verificar que el turbobuilder no conte les propietats corresponents a php
     });
 
 
@@ -140,6 +138,8 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.exec('-l')).toContain("validate ok");
 
+        expect(utils.fm.isFile('./turbosite.json')).toBe(true);
+        expect(utils.fm.isFile('./turbosite.release.json')).toBe(true);
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);

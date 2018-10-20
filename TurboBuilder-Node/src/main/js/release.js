@@ -6,6 +6,7 @@
 
 
 const { StringUtils } = require('turbocommons-ts');
+const { ObjectUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbocommons-ts');
 const { execSync } = require('child_process');
 const console = require('./console');
@@ -73,6 +74,8 @@ exports.execute = function () {
         buildModule.buildSitePhp(releaseFullPath);
     }
     
+    overrideTurboBuilderJsonWithRelease();
+    
     minifyJs(releaseFullPath);
     minifyCss(releaseFullPath);
     minifyHtaccess(releaseFullPath);
@@ -116,6 +119,26 @@ exports.getReleaseRelativePath = function () {
     }
 
     return releaseRelativePath; 
+}
+
+
+/**
+ * If the file turbosite.release.json exists at the root of our project, all its setup properties will
+ * override the turbosite.json on release target.
+ */
+let overrideTurboBuilderJsonWithRelease = function () {
+    
+    let releaseFullPath = global.runtimePaths.target + fm.dirSep() + module.exports.getReleaseRelativePath();
+    let tsPath = releaseFullPath + fm.dirSep() + 'dist'  + fm.dirSep() + 'site'  + fm.dirSep() + 'turbosite.json';
+    let tsReleasePath = global.runtimePaths.root + fm.dirSep() + 'turbosite.release.json';
+    
+    if(fm.isFile(tsReleasePath)){
+        
+        let tsSetup = JSON.parse(fm.readFile(tsPath));
+        let tsSetupRelease = JSON.parse(fm.readFile(tsReleasePath));
+        
+        fm.saveFile(tsPath, JSON.stringify(ObjectUtils.merge(tsSetup, tsSetupRelease), null, 4));        
+    }
 }
 
 
@@ -430,7 +453,14 @@ let createGitChangeLog = function (destPath) {
     changeLogContents += "\n\n";
         
     // Log the changes from the newest defined tag to the current repo state
-    changeLogContents += execSync("git log " + tags[0] + '..HEAD --oneline --pretty=format:"%ad: %s%n%b" --date=short', {stdio : 'pipe'}).toString(); 
+    try{
+        
+        changeLogContents += execSync("git log " + tags[0] + '..HEAD --oneline --pretty=format:"%ad: %s%n%b" --date=short', {stdio : 'pipe'}).toString(); 
+    
+    }catch(e){
+
+        // A tag could not be found
+    }
               
     // Log all the changes for each one of the defined tags
     
