@@ -337,6 +337,28 @@ describe('cmd-parameter-release', function() {
     });
     
     
+    it('should build correctly when turbosite.release.json is missing', function() {
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+       
+        expect(utils.fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
+    
+        let launchResult = utils.exec('-r');
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("release ok");
+        
+        let tsSetup = JSON.parse(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/turbosite.json'));
+
+        expect(tsSetup.baseURL).toBe("");
+        expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
+        expect(tsSetup.errorSetup.exceptionsToMail).toBe("");
+        expect(tsSetup.errorSetup.warningsToMail).toBe("");
+    }); 
+    
+    
     it('should override turbosite.json with turbosite.release.jon values on release target folder', function() {
         
         let sep = utils.fm.dirSep();
@@ -347,7 +369,7 @@ describe('cmd-parameter-release', function() {
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
        
         let tsRelease = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.release.json')); 
-        tsRelease.baseUrl = 'some custom base url';
+        tsRelease.baseURL = 'some custom base url';
         tsRelease.errorSetup = {};
         tsRelease.errorSetup.exceptionsToMail = 'mycustommail';
         expect(utils.fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
@@ -358,7 +380,7 @@ describe('cmd-parameter-release', function() {
         
         let tsSetup = JSON.parse(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/turbosite.json'));
 
-        expect(tsSetup.baseUrl).toBe("some custom base url");
+        expect(tsSetup.baseURL).toBe("some custom base url");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("mycustommail");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
