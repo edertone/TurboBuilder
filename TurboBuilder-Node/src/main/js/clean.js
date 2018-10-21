@@ -7,6 +7,7 @@
 
 const { FilesManager } = require('turbocommons-ts');
 const console = require('./console.js');
+const buildModule = require('./build');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -36,8 +37,33 @@ exports.execute = function () {
             console.error("could not delete contents of " + syncSetup.destPath);
         }
         
-        // TODO - delete ftp files also
+        if(syncSetup.type === "ftp"){
+            
+            deleteRemoteSyncFolder(syncSetup);
+        }
     }
 
     console.success("clean ok");
+}
+
+
+/**
+ * Clean the configured remote sync ftp folder
+ */
+let deleteRemoteSyncFolder = function (syncSetup) {
+    
+    buildModule.checkWinSCPAvailable();
+    
+    let winscpExec = 'winscp /command';
+        
+    winscpExec += ' "open ftp://' + syncSetup.user + ':' + syncSetup.psw + '@' + syncSetup.host + '/"';
+    winscpExec += ' "rm ' + syncSetup.remotePath + '/*.*"';
+    winscpExec += ' "exit"';
+    
+    if(!console.exec(winscpExec, '', true)){
+        
+        console.error('Remote clean errors');
+    }
+
+    console.success('cleaned remote ftp: ' + syncSetup.host);
 }
