@@ -260,6 +260,12 @@ let minifyHtmlFiles = function (destPath) {
     
     for (let htmlFile of htmlFiles) {
         
+        // if the path contains a libs folder, html minification will be ignored
+        if(htmlFile.indexOf(sep + 'libs' + sep) >= 0){
+           
+            continue;
+        }
+        
         let htmlFileContent = fm.readFile(htmlFile);
         
         let htmlMinified = htmlFileContent;
@@ -279,7 +285,7 @@ let minifyHtmlFiles = function (destPath) {
                         
         }catch(e){
 
-            console.error("Html minify failed");
+            console.error("Html minify failed:\n" + htmlFile);
         }
         
         fm.saveFile(htmlFile, htmlMinified); 

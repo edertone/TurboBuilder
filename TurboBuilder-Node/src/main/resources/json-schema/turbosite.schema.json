@@ -85,12 +85,13 @@
                 "properties": {
                     "path": {
                         "type": "string",
-                        "description": "The Path Schema",
+                        "description": "A path relative to src/main that defines the file structure to reach the translation files inside a folder. Wilcards must be used for $bundle and $locale",
                         "examples": ["resources/locales/$bundle/$bundle_$locale.properties"]
                     },
                     "bundles": {
                         "type": "array",
-                        "description": "The Bundles Schema"
+                        "description": "The list of bundles that will be initially loaded from the provided path. This list can be empty here and bundles added later as required.",
+                        "examples": ["home", "footer"]
                     }
                 }
             }
