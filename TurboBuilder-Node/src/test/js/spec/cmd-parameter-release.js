@@ -352,7 +352,7 @@ describe('cmd-parameter-release', function() {
         
         let tsSetup = JSON.parse(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/turbosite.json'));
 
-        expect(tsSetup.baseURL).toBe("");
+        expect(tsSetup.baseURL).toBe("dev");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
