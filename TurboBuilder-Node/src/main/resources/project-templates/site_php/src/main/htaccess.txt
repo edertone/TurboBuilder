@@ -6,6 +6,7 @@ ErrorDocument 404 /site/error-404.php
 # Redirect all allowed static files to the site folder
 RewriteCond %{REQUEST_URI} !site/
 RewriteCond %{REQUEST_URI} !cache/
+RewriteCond %{REQUEST_URI} !data/storage/
 RewriteRule ^(.*)\.(.{1,5})$ site/$1.$2 [L]
 
 # Redirect all executable urls to the index entry point
