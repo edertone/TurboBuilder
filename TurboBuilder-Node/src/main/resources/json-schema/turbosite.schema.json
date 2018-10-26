@@ -13,8 +13,7 @@
         "resourceBundles",
         "globalCss",
         "globalCDNS",
-        "globalJs",
-        "testsSetup"
+        "globalJs"
     ],
     "additionalProperties": false, 
     "properties": {
@@ -155,19 +154,6 @@
                 "examples": [
                     "libs/turbocommons-es5/turbocommons-es5.js"
                 ]
-            }
-        },
-        "testsSetup": {
-            "type": "object",
-            "description": "Configuration for the tests execution",
-            "required": ["host"],
-            "additionalProperties": false,
-            "properties": {
-                "host": {
-                    "type": "string",
-                    "description": "TODO",
-                    "examples": ["localhost"]
-                }
             }
         }
     }
