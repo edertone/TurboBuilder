@@ -27,20 +27,17 @@ exports.execute = function () {
         console.error('could not delete ' + global.runtimePaths.target);
     }
     
-    // Delete all synced files
-    for (let syncSetup of global.setup.sync) {
+    // Delete all synced files 
+    if(global.setup.sync && global.setup.sync.type === "fileSystem" &&
+       fm.isDirectory(global.setup.sync.destPath) &&
+       !fm.deleteDirectory(global.setup.sync.destPath, false)){
         
-        if(syncSetup.type === "fileSystem" &&
-                fm.isDirectory(syncSetup.destPath) &&
-                !fm.deleteDirectory(syncSetup.destPath, false)){
-            
-            console.error("could not delete contents of " + syncSetup.destPath);
-        }
+        console.error("could not delete contents of " + global.setup.sync.destPath);
+    }
+    
+    if(global.setup.sync && global.setup.sync.type === "ftp"){
         
-        if(syncSetup.type === "ftp"){
-            
-            deleteRemoteSyncFolder(syncSetup);
-        }
+        deleteRemoteSyncFolder(global.setup.sync);
     }
 
     console.success("clean ok");

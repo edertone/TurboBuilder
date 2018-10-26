@@ -86,7 +86,7 @@ if (program.release){
 }
 
 if (program.sync && 
-    !(program.build && syncModule.isAnyRunAfterBuildEnabled())){
+    !(program.build && global.setup.sync.runAfterBuild)){
     
     syncModule.execute();
 }

@@ -222,23 +222,21 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     }
     
     // Customize the sync section
-    let syncArray = [];
+    delete setupContents.sync;
     
-    for (let syncItem of setupContents.sync) {
+    if(type === 'site_php'){
         
-        if(type === 'site_php' && syncItem.type === 'fileSystem'){
-
-            syncItem.excludes = [];
-            
-            // We expect the following symlink to point to the
-            // local webserver http docs root
-            syncItem.destPath = 'C:/turbosite-webserver-symlink';
-            
-            syncArray.push(syncItem);
-        }
+        setupContents.sync = {
+            "runAfterBuild": false,
+            "type": "fileSystem",
+            "excludes": [],
+            "sourceRoot": "build",
+            "sourcePath": "dist/",
+            "destPath": "C:/turbosite-webserver-symlink/dev",
+            "remoteUrl": "https://localhost/dev",
+            "deleteDestPathContents": true
+        };
     }
-    
-    setupContents.sync = syncArray;
     
     // Customize the test section
     let testArray = [];

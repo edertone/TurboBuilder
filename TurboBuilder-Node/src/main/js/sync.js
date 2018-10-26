@@ -28,40 +28,19 @@ exports.execute = function (verbose = true) {
         
         console.log("\nsync start");
     }
+      
+    if(verbose || global.setup.sync.runAfterBuild === true){
     
-    for (let syncSetup of global.setup.sync) {
-        
-        if(verbose || syncSetup.runAfterBuild === true){
-        
-            if(syncSetup.type === "fileSystem"){
-                
-                syncFileSystem(syncSetup);
-            }
-    
-            if(syncSetup.type === "ftp"){
-                
-                syncFtp(syncSetup);
-            }
-        }
-    }
-}
-
-
-/**
- * True if there's any sync element on the global setup that has an enabled value for
- * runAfterBuild
- */
-exports.isAnyRunAfterBuildEnabled = function () {
-    
-    for (let syncSetupItem of global.setup.sync) {
-        
-        if(syncSetupItem.runAfterBuild){
+        if(global.setup.sync.type === "fileSystem"){
             
-            return true;
+            syncFileSystem(global.setup.sync);
+        }
+
+        if(global.setup.sync.type === "ftp"){
+            
+            syncFtp(global.setup.sync);
         }
     }
-    
-    return false;
 }
 
 
@@ -78,13 +57,24 @@ let calculateSourcePath = function (syncSetup) {
     
     } else {
         
-        // TODO - si sourceroot es release cal que la opció de release estigui activada
-        // TODO - implement prod sync and launch tests to verify production version works as expected with selenium
         result += global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer(false)
             + fm.dirSep() + syncSetup.sourcePath;
     }
     
-    return StringUtils.formatPath(result, fm.dirSep());
+    let sourcePath = StringUtils.formatPath(result, fm.dirSep());
+    
+    // Copy the remoteUrl value from this sync setup to the turbosite file
+    let turbositePath = sourcePath + fm.dirSep() + 'site' + fm.dirSep() + global.fileNames.turboSiteSetup;
+    
+    if(fm.isFile(turbositePath)){
+        
+        let turboSiteSetup = JSON.parse(fm.readFile(turbositePath));
+        
+        turboSiteSetup.remoteUrl = syncSetup.remoteUrl;        
+        fm.saveFile(turbositePath, JSON.stringify(turboSiteSetup, null, 4));
+    }
+
+    return sourcePath;
 }
 
 

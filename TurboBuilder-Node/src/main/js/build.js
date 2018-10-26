@@ -69,8 +69,8 @@ exports.execute = function () {
         this.buildLibTs(buildFullPath);
     }
     
-    // Check if any of the sync elements is configured to be executed after build
-    if(syncModule.isAnyRunAfterBuildEnabled()){
+    // Check if sync is configured to be executed after build
+    if(global.setup.sync && global.setup.sync.runAfterBuild){
         
         syncModule.execute(false);
     }
@@ -148,7 +148,7 @@ exports.buildSitePhp = function (destPath) {
     
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
     
-    fm.saveFile(destSite + sep + 'turbosite.json', JSON.stringify(turboSiteSetup, null, 4));
+    fm.saveFile(destSite + sep + global.fileNames.turboSiteSetup, JSON.stringify(turboSiteSetup, null, 4));
     
     // Launch a warning if errors or warnings are sent to browser
     if(turboSiteSetup.errorSetup.exceptionsToBrowser ||turboSiteSetup.errorSetup.warningsToBrowser){
