@@ -78,28 +78,18 @@
         "generateCodeDocumentation": true
     },
         
-    "sync": [
-        {
-            "runAfterBuild": false,
-            "type": "fileSystem",
-            "excludes": ["some-filename-string"],
-            "sourceRoot": "build",
-            "sourcePath": "dist/",
-            "destPath": "X:\\somepath-to-copy-files-to",
-            "deleteDestPathContents": true
-        },
-        {
-            "runAfterBuild": false,
-            "type": "ftp",
-            "excludes": ["some-filename-string"],
-            "sourceRoot": "release",
-            "sourcePath": "dist/",
-            "remotePath": "/public_html/somepath",
-            "host": "www.someserver.com",
-            "user": "serverUser",
-            "psw": "serverpsw"
-        }
-    ],
+    "sync": {
+        "runAfterBuild": false,
+        "type": "ftp",
+        "excludes": ["some-filename-string"],
+        "sourceRoot": "release",
+        "sourcePath": "dist/",
+        "remotePath": "/public_html/somepath",
+        "remoteUrl": "https://www.someserver.com/somepath",
+        "host": "www.someserver.com",
+        "user": "serverUser",
+        "psw": "serverpsw"
+    },
     
     "test": [
         {
