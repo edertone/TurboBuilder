@@ -223,32 +223,3 @@ describe('selenium-site_php-core-tests', function() {
         recursiveCaller(list, done);
     });
 });
-
-
-/*
-
-    test links between pages and custom texts
-
-    404 expected ??
-        "http://$host/robots.TXT",
-        "http://$host/robots.txT",
-        "http://$host/Robots.txt",
-        "http://$host/robOts.txt",
-        "http://$host/ROBOTS.txt",
-        "http://$host/ROBOTS.TXT",
-        "http://$host/glob-$cacheHash.CSS",
-        "http://$host/glob-$cacheHash.Css",
-        "http://$host/glob-$cacheHash.css",
-        "http://$host/glob-$cacheHash.JS",
-        "http://$host/glob-$cacheHash.Js",
-        "http://$host/Glob-$cacheHash.js"
-
-    https://localhost/app must load single parameter view
-    https://localhost/app/ must load single parameter view
-    https://localhost/storage/ must redirect to the storage folder
-    https://localhost/storage must redirect to the storage folder
-    
-    - que pasa amb un caracter ? alla on no toca? es/home?/
-    
-    - Que pasa amb més de un ? en la mateixa url? i dins de parametres? /xxx?xxx/
- */

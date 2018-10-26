@@ -62,7 +62,7 @@ describe('cmd-parameter-generate', function(){
         expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
-        expect(setup.sync.length).toBe(0);
+        expect(setup.hasOwnProperty("sync")).toBe(false);
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("phpUnit");
     });
@@ -97,7 +97,7 @@ describe('cmd-parameter-generate', function(){
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_js')).toBe(true);
-        expect(setup.sync.length).toBe(0);
+        expect(setup.hasOwnProperty("sync")).toBe(false);
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
     });
@@ -126,7 +126,7 @@ describe('cmd-parameter-generate', function(){
         expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
-        expect(setup.sync.length).toBe(0);
+        expect(setup.hasOwnProperty("sync")).toBe(false);
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
     });
@@ -157,7 +157,7 @@ describe('cmd-parameter-generate', function(){
         expect(setup.build.replaceVersion.extensions.length).toBe(3);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
-        expect(setup.sync.length).toBe(1);
+        expect(setup.sync.type).toBe("fileSystem");
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
     });

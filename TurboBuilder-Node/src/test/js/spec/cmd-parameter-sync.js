@@ -77,7 +77,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.readSetupFile();
 
-        setup.sync = [{
+        setup.sync = {
             "runAfterBuild" : false,
             "type" : "fileSystem",
             "excludes" : [],
@@ -85,7 +85,7 @@ describe('cmd-parameter-sync', function(){
             "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
-        }];
+        };
 
         expect(utils.saveToSetupFile(setup)).toBe(true);
 
@@ -103,7 +103,7 @@ describe('cmd-parameter-sync', function(){
         expect(utils.exec('-s')).toContain('Destination path is not empty');
 
         // Modify setup to allow delete dest path and try again
-        setup.sync[0].deleteDestPathContents = true;
+        setup.sync.deleteDestPathContents = true;
         expect(utils.saveToSetupFile(setup)).toBe(true);
 
         expect(utils.exec('-s')).toContain('sync ok to fs');
@@ -121,7 +121,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.readSetupFile();
 
-        setup.sync = [{
+        setup.sync = {
             "runAfterBuild" : true,
             "type" : "fileSystem",
             "excludes" : [],
@@ -129,7 +129,7 @@ describe('cmd-parameter-sync', function(){
             "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
-        }];
+        };
 
         expect(utils.saveToSetupFile(setup)).toBe(true);
 
@@ -148,7 +148,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.readSetupFile();
 
-        setup.sync = [{
+        setup.sync = {
             "runAfterBuild" : false,
             "type" : "fileSystem",
             "excludes" : [],
@@ -156,7 +156,7 @@ describe('cmd-parameter-sync', function(){
             "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
-        }];
+        };
 
         expect(utils.saveToSetupFile(setup)).toBe(true);
 
@@ -177,7 +177,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.readSetupFile();
 
-        setup.sync = [{
+        setup.sync = {
             "runAfterBuild" : true,
             "type" : "fileSystem",
             "excludes" : [],
@@ -185,7 +185,7 @@ describe('cmd-parameter-sync', function(){
             "sourcePath" : "dist/",
             "destPath" : destFolder,
             "deleteDestPathContents" : false
-        }];
+        };
 
         expect(utils.saveToSetupFile(setup)).toBe(true);
 

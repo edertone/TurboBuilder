@@ -48,11 +48,11 @@ describe('selenium-site_php-error-manager-feature.js', function() {
 
         this.turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));
         
-        this.turbobuilderSetupPath = this.turbobuilderSetup.sync[0].destPath + '/site/turbosite.json';
+        this.turbobuilderSetupPath = this.turbobuilderSetup.sync.destPath + '/site/turbosite.json';
         this.turbositeSetupString = fm.readFile(this.turbobuilderSetupPath);
         this.turbositeSetup = JSON.parse(this.turbositeSetupString);
         
-        this.homeViewFilePath = this.turbobuilderSetup.sync[0].destPath + '/site/view/views/home/home.php';
+        this.homeViewFilePath = this.turbobuilderSetup.sync.destPath + '/site/view/views/home/home.php';
         this.homeViewFileContents = fm.readFile(this.homeViewFilePath);
     });
     

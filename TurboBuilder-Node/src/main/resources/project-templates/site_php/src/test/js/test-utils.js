@@ -25,7 +25,7 @@ const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
 /**
- * Execute an arbitrary cmd command on the current active dir
+ * Check that chrome driver is available to use
  */
 exports.checkChromeDriverAvailable = function () {
     
@@ -83,7 +83,7 @@ exports.replaceWildCardsOnText = function (text) {
     
     return StringUtils.replace(text,
             ['$host', '$locale', '$homeView', '$cacheHash', '$baseURL'],
-            [this.siteSetup.testsSetup.host,
+            [this.siteSetup.remoteUrl.split('://')[1],
              this.siteSetup.locales[0].split('_')[0],
              this.siteSetup.homeView,
              this.siteSetup.cacheHash,

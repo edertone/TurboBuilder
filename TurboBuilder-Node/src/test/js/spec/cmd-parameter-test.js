@@ -93,9 +93,22 @@ describe('cmd-parameter-test', function() {
     });
     
     
-    it('should successfully run the jasmine tests on a generated site_php project', function() {
+    it('should successfully run the jasmine tests on a generated site_php project when baseUrl is the root', function() {
 
+        let sep = utils.fm.dirSep();
+        
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        // Modify the project setup to sync the files to /
+        let setup = utils.readSetupFile();        
+        setup.sync.destPath = 'C:/turbosite-webserver-symlink';         
+        setup.sync.remoteUrl = 'https://localhost';          
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        // Modify the turbosite tests setup to point the host to /subfolder
+        let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        turboSiteSetup.baseURL = '';
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
         let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
         expect(npmInstallResult).toContain("added");
@@ -122,19 +135,19 @@ describe('cmd-parameter-test', function() {
         
         // Modify the project setup to sync the files to /subfolder
         let setup = utils.readSetupFile();        
-        setup.sync[0].destPath = setup.sync[0].destPath + sep + 'subfolder';        
+        setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder';        
+        setup.sync.remoteUrl = 'https://localhost/subfolder';        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
         let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = 'subfolder';
-        turboSiteSetup.testsSetup.host += '/subfolder';
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
         // Create the subfolder on server
-        if(!utils.fm.isDirectory(setup.sync[0].destPath)){
+        if(!utils.fm.isDirectory(setup.sync.destPath)){
             
-            expect(utils.fm.createDirectory(setup.sync[0].destPath)).toBe(true);
+            expect(utils.fm.createDirectory(setup.sync.destPath)).toBe(true);
         }
         
         let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
@@ -163,19 +176,19 @@ describe('cmd-parameter-test', function() {
         
         // Modify the project setup to sync the files to /subfolder1/subfolder2
         let setup = utils.readSetupFile();        
-        setup.sync[0].destPath = setup.sync[0].destPath + sep + 'subfolder1' + sep + 'subfolder2';        
+        setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder1/subfolder2';        
+        setup.sync.remoteUrl = 'https://localhost/subfolder1/subfolder2';          
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
         let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = 'subfolder1/subfolder2';
-        turboSiteSetup.testsSetup.host += '/subfolder1/subfolder2';
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
         // Create the subfolders on server
-        if(!utils.fm.isDirectory(setup.sync[0].destPath)){
+        if(!utils.fm.isDirectory(setup.sync.destPath)){
             
-            expect(utils.fm.createDirectory(setup.sync[0].destPath, true)).toBe(true);
+            expect(utils.fm.createDirectory(setup.sync.destPath, true)).toBe(true);
         }
         
         let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
