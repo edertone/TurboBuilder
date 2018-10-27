@@ -82,7 +82,6 @@
         "runAfterBuild": false,
         "type": "ftp",
         "excludes": ["some-filename-string"],
-        "sourceRoot": "release",
         "sourcePath": "dist/",
         "remotePath": "/public_html/somepath",
         "remoteUrl": "https://www.someserver.com/somepath",

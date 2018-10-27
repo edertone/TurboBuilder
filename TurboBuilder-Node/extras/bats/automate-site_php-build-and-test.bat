@@ -28,6 +28,8 @@ cd %currentdir%
 copy "--git-root--\TurboCommons\TurboCommons-Php\target\TurboCommons-Php\dist\*.*" "src\main\libs\turbocommons-php"
 copy "--git-root--\TurboSite\TurboSite-Php\target\TurboSite-Php\dist\*.*" "src\main\libs\turbosite"
 
+md "C:/turbosite-webserver-symlink/dev"
+
 call tb -cbst
 
 pause

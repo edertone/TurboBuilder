@@ -83,7 +83,7 @@ exports.countCommitsSinceLatestTag = function () {
 
 
 /**
- * Read the json setup file from the current project and store all the data to a global variable
+ * Read the json setup file from the current project and store all the data to a global variable.
  */
 exports.loadSetupFromDisk = function () {
 
@@ -110,6 +110,21 @@ exports.loadSetupFromDisk = function () {
     
     // Merge the project setup into the template one
     mergeSetup(global.setup, projectSetup);
+    
+    // Check if turbobuilder.release.json must be also merged into the setup
+    if(global.isRelease && fm.isFile(global.runtimePaths.setupReleaseFile)){
+
+        try{
+            
+            let projectReleaseSetup = JSON.parse(fm.readFile(global.runtimePaths.setupReleaseFile));
+            
+            ObjectUtils.merge(global.setup, projectReleaseSetup);
+            
+        }catch(e){
+            
+            console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
+        }
+    }
 };
 
 
@@ -230,7 +245,6 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             "runAfterBuild": false,
             "type": "fileSystem",
             "excludes": [],
-            "sourceRoot": "build",
             "sourcePath": "dist/",
             "destPath": "C:/turbosite-webserver-symlink/dev",
             "remoteUrl": "https://localhost/dev",

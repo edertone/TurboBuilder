@@ -50,6 +50,18 @@ if(!program.generate &&
     process.exit(0);
 }
 
+// Initialize global release flag
+if (program.release){
+    
+    global.isRelease = true;
+}
+
+//Build and release cannot be launched at the same time
+if (program.build && program.release){
+ 
+	console.error('build and release cannot be executed at the same time. Please launch separately');
+}
+
 // Generate the default project files if necessary
 if (program.generate){
     
@@ -85,8 +97,7 @@ if (program.release){
     releaseModule.execute();
 }
 
-if (program.sync && 
-    !(program.build && global.setup.sync.runAfterBuild)){
+if (program.sync && !global.setup.sync.runAfterBuild){
     
     syncModule.execute();
 }
@@ -98,7 +109,7 @@ if (program.test){
         console.error('--test must be used at the same time as -b --build or -r --release');
     }
     
-    testModule.execute(program.build, program.release);
+    testModule.execute();
 }
 
 // Print the todo folder contents on console if necessary

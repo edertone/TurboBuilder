@@ -101,14 +101,18 @@ describe('cmd-parameter-release', function() {
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'site';
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-                
-        let launchResult = utils.exec('-cbr');
+        
+        // First launch the build
+        let launchResult = utils.exec('-cb');
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
-        expect(launchResult).toContain("release start");
-        expect(launchResult).toContain("release ok");
         expect(launchResult).toContain("build start");
         expect(launchResult).toContain("build ok");
+        
+        // Next launch the release
+        launchResult = utils.exec('-r');
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("release ok");
         
         expect(utils.fm.isDirectory(buildRoot)).toBe(true);
         expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
@@ -197,14 +201,18 @@ describe('cmd-parameter-release', function() {
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
         expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
-                
-        let launchResult = utils.exec('-cbr');
+        
+        // First launch the build
+        let launchResult = utils.exec('-cb');
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
-        expect(launchResult).toContain("release start");
-        expect(launchResult).toContain("release ok");
         expect(launchResult).toContain("build start");
         expect(launchResult).toContain("build ok");
+        
+        // Next launch the release
+        launchResult = utils.exec('-r');
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("release ok");
         
         expect(utils.fm.isDirectory(buildRoot)).toBe(true);
         expect(utils.fm.isDirectory(releaseRoot)).toBe(true);

@@ -11,6 +11,7 @@ const { FilesManager } = require('turbocommons-ts');
 const { execSync } = require('child_process');
 const console = require('./console');
 const validateModule = require('./validate');
+const syncModule = require('./sync');
 const setupModule = require('./setup');
 const buildModule = require('./build');
 const UglifyJS = require("uglify-es");
@@ -39,6 +40,8 @@ process.on('exit', () => {
  * Execute the release process
  */
 exports.execute = function () {
+    
+    global.isRelease = true;
     
     console.log("\nrelease start");
     
@@ -74,7 +77,7 @@ exports.execute = function () {
         buildModule.buildSitePhp(releaseFullPath);
     }
     
-    overrideTurboBuilderJsonWithRelease();
+    overrideTurboSiteJsonWithRelease();
     
     minifyJs(releaseFullPath);
     minifyCss(releaseFullPath);
@@ -104,6 +107,12 @@ exports.execute = function () {
         createGitChangeLog(releaseFullPath);
     }
     
+    // Check if sync is configured to be executed after build
+    if(global.setup.sync && global.setup.sync.runAfterBuild){
+        
+        syncModule.execute(false);
+    }
+    
     console.success('release ok (' + this.getReleaseRelativePath() + ')');
 };
 
@@ -126,7 +135,7 @@ exports.getReleaseRelativePath = function () {
  * If the file turbosite.release.json exists at the root of our project, all its setup properties will
  * override the turbosite.json on release target.
  */
-let overrideTurboBuilderJsonWithRelease = function () {
+let overrideTurboSiteJsonWithRelease = function () {
     
     let releaseFullPath = global.runtimePaths.target + fm.dirSep() + module.exports.getReleaseRelativePath();
     let tsPath = releaseFullPath + fm.dirSep() + 'dist'  + fm.dirSep() + 'site'  + fm.dirSep() + 'turbosite.json';

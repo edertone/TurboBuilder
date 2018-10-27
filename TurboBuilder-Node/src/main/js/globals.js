@@ -11,6 +11,12 @@ const { StringUtils } = require('turbocommons-ts');
 
 
 /**
+ * Flag that tells us if the release process is being executed
+ */
+global.isRelease = false;
+
+
+/**
  * Contains all the turbo builder setup loaded from the project config file
  */
 global.setup = null;
@@ -35,6 +41,7 @@ global.folderNames = {
  */
 global.fileNames = {
     setup: 'turbobuilder.json',
+    setupRelease: 'turbobuilder.release.json',
     turboSiteSetup: 'turbosite.json',
     gitignore: '.gitignore',
     readme: 'README.md'
@@ -69,6 +76,7 @@ global.runtimePaths = {
     projectName: StringUtils.getPathElement(path.resolve('./')),
     root: path.resolve('./'),
     setupFile: path.resolve('./' + global.fileNames.setup),
+    setupReleaseFile: path.resolve('./' + global.fileNames.setupRelease),
     readmeFile: path.resolve('./' + global.fileNames.readme),
     extras: path.resolve('./' + global.folderNames.extras),
     todoFolder: path.resolve('./extras/todo'),

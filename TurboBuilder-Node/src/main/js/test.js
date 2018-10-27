@@ -19,7 +19,7 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 /**
  * Execute the test process
  */
-exports.execute = function (build, release) {
+exports.execute = function () {
     
     console.log("\ntest start");
     
@@ -31,14 +31,13 @@ exports.execute = function (build, release) {
     // Check which build paths must be tested
     let pathsToTest = [];
     
-    if(build){
-        
-        pathsToTest.push(buildModule.getBuildRelativePath());
-    }
-    
-    if(release){
+    if(global.isRelease){
         
         pathsToTest.push(releaseModule.getReleaseRelativePath());
+        
+    } else {
+        
+        pathsToTest.push(buildModule.getBuildRelativePath());
     }
     
     for (let testSetup of global.setup.test) {

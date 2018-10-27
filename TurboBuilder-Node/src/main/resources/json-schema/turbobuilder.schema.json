@@ -376,11 +376,6 @@
                                 "type": "string"
                             }
                         },
-                        "sourceRoot": {
-                            "type": "string",
-                            "description": "Defines the root path from which the files will be transfered. If set to build, the source will be target/projectname. If set to release, the source will be target/projectname-semversion",
-                            "enum": ["build", "release"]
-                        },
                         "sourcePath": {
                             "type": "string",
                             "description": "A path relative to the defined source root where the files to be synced are located"
@@ -419,11 +414,6 @@
                             "items": {
                                 "type": "string"
                             }
-                        },
-                        "sourceRoot": {
-                            "type": "string",
-                            "description": "Defines the root path from which the files will be transfered. If set to build, the source will be target/projectname. If set to release, the source will be target/projectname-semversion",
-                            "enum": ["build", "release"]
                         },
                         "sourcePath": {
                             "type": "string",

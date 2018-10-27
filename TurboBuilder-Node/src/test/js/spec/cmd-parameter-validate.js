@@ -448,9 +448,9 @@ describe('cmd-parameter-validate', function() {
             "runAfterBuild": false,
             "type": "fileSystem",
             "excludes": ["some-filename-string"],
-            "sourceRoot": "build",
             "sourcePath": "dist/",
             "destPath": "X:\\somepath-to-copy-files-to",
+            "remoteUrl" : "http://localhost",
             "deleteDestPathContents": true
         };
         expect(utils.saveToSetupFile(setup)).toBe(true);
@@ -468,9 +468,9 @@ describe('cmd-parameter-validate', function() {
             "runAfterBuild": false,
             "type": "ftp",
             "excludes": ["some-filename-string"],
-            "sourceRoot": "release",
             "sourcePath": "dist/",
             "remotePath": "/public_html/somepath",
+            "remoteUrl" : "http://localhost",
             "host": "www.someserver.com",
             "user": "serverUser",
             "psw": "serverpsw"
@@ -490,9 +490,10 @@ describe('cmd-parameter-validate', function() {
             "runAfterBuild": false,
             "type": "ftp",
             "excludes": ["some-filename-string"],
-            "sourceRoot": "invalidvalue",
+            "someinvalid": "invalidvalue",
             "sourcePath": "dist/",
             "remotePath": "/public_html/somepath",
+            "remoteUrl" : "http://localhost",
             "host": "www.someserver.com",
             "user": "serverUser",
             "psw": "serverpsw"
@@ -501,7 +502,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-l')).toContain("Invalid JSON schema");
         
-        setup.sync.sourceRoot = 'build';
+        delete setup.sync.someinvalid;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-l')).toContain("validate ok");
@@ -522,9 +523,9 @@ describe('cmd-parameter-validate', function() {
             "runAfterBuild": false,
             "type": "invalidtype",
             "excludes": ["some-filename-string"],
-            "sourceRoot": "build",
             "sourcePath": "dist/",
             "destPath": "X:\\somepath-to-copy-files-to",
+            "remoteUrl" : "http://localhost",
             "deleteDestPathContents": true
         };
         expect(utils.saveToSetupFile(setup)).toBe(true);

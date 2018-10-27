@@ -81,9 +81,9 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : false,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourceRoot" : "build",
             "sourcePath" : "dist/",
             "destPath" : destFolder,
+            "remoteUrl" : "http://localhost",
             "deleteDestPathContents" : false
         };
 
@@ -125,9 +125,9 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : true,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourceRoot" : "build",
             "sourcePath" : "dist/",
             "destPath" : destFolder,
+            "remoteUrl" : "http://localhost",
             "deleteDestPathContents" : false
         };
 
@@ -152,9 +152,9 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : false,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourceRoot" : "build",
             "sourcePath" : "dist/",
             "destPath" : destFolder,
+            "remoteUrl" : "http://localhost",
             "deleteDestPathContents" : false
         };
 
@@ -181,9 +181,9 @@ describe('cmd-parameter-sync', function(){
             "runAfterBuild" : true,
             "type" : "fileSystem",
             "excludes" : [],
-            "sourceRoot" : "build",
             "sourcePath" : "dist/",
             "destPath" : destFolder,
+            "remoteUrl" : "http://localhost",
             "deleteDestPathContents" : false
         };
 
@@ -193,5 +193,113 @@ describe('cmd-parameter-sync', function(){
         expect(testsLaunchResult).toContain("sync ok to fs");
         expect(testsLaunchResult).not.toContain("sync start");
         expect(testsLaunchResult.split("sync ok to fs").length - 1).toBe(1);
+    });
+
+
+    it('should sync release to another folder when fileSystem sync is enabled', function(){
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+
+        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+
+        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+
+        let setup = utils.readSetupFile();
+
+        // Create a raw file on the dest folder, so we can check that it gets removed after sync due to the
+        // deleteDestPathContents being enabled
+        expect(utils.fm.saveFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt', 'content')).toBe(true);
+        expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(true);
+
+        setup.sync = {
+            "runAfterBuild" : false,
+            "type" : "fileSystem",
+            "excludes" : [],
+            "sourcePath" : "dist/",
+            "destPath" : destFolder,
+            "remoteUrl" : "http://localhost",
+            "deleteDestPathContents" : true
+        };
+
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+
+        expect(utils.exec('-rs')).toContain('sync ok to fs');
+
+        expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(false);
+        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+
+        expect(utils.fm.deleteDirectory(destFolder, false)).toBe(true);
+
+        expect(utils.exec('--release --sync')).toContain('sync ok to fs');
+
+        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+    });
+
+
+    it('should sync release to another folder when fileSystem sync is enabled and runAfterBuild is true', function(){
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+
+        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+
+        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+
+        let setup = utils.readSetupFile();
+
+        setup.sync = {
+            "runAfterBuild" : true,
+            "type" : "fileSystem",
+            "excludes" : [],
+            "sourcePath" : "dist/",
+            "destPath" : destFolder,
+            "remoteUrl" : "http://localhost",
+            "deleteDestPathContents" : false
+        };
+
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+
+        let testsLaunchResult = utils.exec('-r');
+        expect(testsLaunchResult).toContain("sync ok to fs");
+        expect(testsLaunchResult).not.toContain("sync start");
+        expect(testsLaunchResult.split("sync ok to fs").length - 1).toBe(1);
+    });
+
+
+    it('should sync release to a folder as overrided by turbobuilder.release.json when filesystem sync is enabled', function(){
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+
+        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+
+        expect(utils.fm.createDirectory(destFolder + '-dev')).toBe(true);
+        expect(utils.fm.createDirectory(destFolder + '-release')).toBe(true);
+
+        let setup = utils.readSetupFile();
+
+        setup.sync = {
+            "runAfterBuild" : false,
+            "type" : "fileSystem",
+            "excludes" : [],
+            "sourcePath" : "dist/",
+            "destPath" : destFolder + '-dev',
+            "remoteUrl" : "http://localhost",
+            "deleteDestPathContents" : true
+        };
+
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+
+        // Create a setup file that overrides the destpath to a different location
+        utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setupRelease, JSON.stringify({
+            "sync" : {
+                "destPath" : destFolder + '-release'
+            }
+        }));
+
+        // Verify that release generates the files into the -release folder
+        expect(utils.exec('-rs')).toContain('sync ok to fs');
+
+        expect(utils.fm.isDirectoryEmpty(destFolder + '-dev')).toBe(true);
+        expect(utils.fm.isDirectoryEmpty(destFolder + '-release')).toBe(false);
+        expect(utils.fm.isDirectory(destFolder + '-release' + utils.fm.dirSep() + 'site')).toBe(true);
     });
 });
