@@ -37,7 +37,7 @@ exports.execute = function () {
     
     if(global.setup.sync && global.setup.sync.type === "ftp"){
         
-        deleteRemoteSyncFolder(global.setup.sync);
+        deleteRemoteSyncFolder();
     }
 
     console.success("clean ok");
@@ -47,14 +47,14 @@ exports.execute = function () {
 /**
  * Clean the configured remote sync ftp folder
  */
-let deleteRemoteSyncFolder = function (syncSetup) {
+let deleteRemoteSyncFolder = function () {
     
     buildModule.checkWinSCPAvailable();
     
     let winscpExec = 'winscp /command';
         
-    winscpExec += ' "open ftp://' + syncSetup.user + ':' + syncSetup.psw + '@' + syncSetup.host + '/"';
-    winscpExec += ' "rm ' + syncSetup.remotePath + '/*.*"';
+    winscpExec += ' "open ftp://' + global.setup.sync.user + ':' + global.setup.sync.psw + '@' + global.setup.sync.host + '/"';
+    winscpExec += ' "rm ' + global.setup.sync.remotePath + '/*.*"';
     winscpExec += ' "exit"';
     
     if(!console.exec(winscpExec, '', true)){
@@ -62,5 +62,5 @@ let deleteRemoteSyncFolder = function (syncSetup) {
         console.error('Remote clean errors');
     }
 
-    console.success('cleaned remote ftp: ' + syncSetup.host);
+    console.success('cleaned remote ftp: ' + global.setup.sync.host);
 }

@@ -109,7 +109,7 @@ exports.loadSetupFromDisk = function () {
     global.setup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(projectSetup));
     
     // Merge the project setup into the template one
-    mergeSetup(global.setup, projectSetup);
+    ObjectUtils.merge(global.setup, projectSetup);
     
     // Check if turbobuilder.release.json must be also merged into the setup
     if(global.isRelease && fm.isFile(global.runtimePaths.setupReleaseFile)){
@@ -160,43 +160,6 @@ exports.detectProjectTypeFromSetup = function (setup) {
     }
     
     return projectType;
-};
-
-
-/**
- * Merge the project custom setup with the template default one
- */
-let mergeSetup = function (templateSetup, projectSetup) {
-    
-    for (let key of ObjectUtils.getKeys(templateSetup)){
-        
-        // Clear the sync setup on the template if nothing is specified on the project setup file
-        if(key === 'sync' &&
-           !projectSetup.hasOwnProperty(key)){
-            
-            templateSetup[key] = [];
-        }
-        
-        // Build project types are deleted from the default template, cause there can only be one
-        // defined
-        if(global.setupBuildTypes.indexOf(key) >= 0 &&
-           !projectSetup.hasOwnProperty(key)){
-            
-            delete templateSetup[key];
-        }
-        
-        if(projectSetup.hasOwnProperty(key)){
-            
-            if(ObjectUtils.isObject(templateSetup[key])){
-                
-                mergeSetup(templateSetup[key], projectSetup[key]);
-            
-            }else{
-                
-                templateSetup[key] = projectSetup[key];
-            }
-        }
-    }
 };
 
 

@@ -127,7 +127,7 @@ let syncFtp = function () {
     // TODO - apply excludes option
     
     winscpExec += ' "open ftp://' + global.setup.sync.user + ':' + global.setup.sync.psw + '@' + global.setup.sync.host + '/"';
-    winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + syncSetup.remotePath + '"';
+    winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + global.setup.sync.remotePath + '"';
     winscpExec += ' "exit"';
     
     if(!console.exec(winscpExec, '', true)){
