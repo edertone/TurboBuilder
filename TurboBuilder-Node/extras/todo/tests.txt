@@ -1,2 +1,7 @@
+Sorted by priority:
+
+- Selenium tests should have a setup json file to define things like sync destination folder
+
 - Implement unit tests: print TODO file to console feature both for test-build and test-release
+
 - Implement unit tests: php namespaces validation functionality

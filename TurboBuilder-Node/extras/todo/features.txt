@@ -1,0 +1,21 @@
+Sorted by priority:
+
+- When a site_php, lib_php, lib_ts, etc.. project is generated via -g, the generated turbobuilder.json file should have "autoloader.php", "libs", and any other
+  non useful path or file name excluded from namespaces and copyright headers validation setup.
+
+- Implement project structure validation for site_php:
+    All files inside view/views folder must be lower case, do not have spaces or non url friendly characters
+    All files inside view/views folder must be analyzed so the correct code, code order and html structure is used.
+
+- Implement general project structure validation regarding the case of all the different possible files 
+
+- upgrade to webpack 4
+
+- Implement local html validator into turbobuilder. See:
+    https://github.com/validator/validator
+    https://validator.w3.org/docs/install.html
+
+- Save all the turbobuilder CLI application console output into a txt file on target when executing release 
+
+- Add a feature as part of the build project that lets us define some urls to be launched after project is built.
+  Wildcards can be used to customize the url so we can launch sites like google pagespeed, seo analisis, w3c validators...
