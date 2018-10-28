@@ -30,7 +30,7 @@ program
     .version(console.printVersionInfo(), '-v, --version')
     .option('-g, --generate <type>', 'Create a full project structure on the current directory. Allowed types: ' + global.setupBuildTypes.join(', '))
     .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
-    .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder')
+    .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder. If -s is executed at the same time, synced files will be also deleted')
     .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
     .option('-r, --release', 'Generate the project production ready version as configured in ' + global.fileNames.setup)
@@ -83,7 +83,9 @@ if (program.lint &&
 // Perform the project cleanup
 if (program.clean){
  
-    cleanModule.execute();
+    cleanModule.execute(program.sync ||
+        (program.build && global.setup.sync && global.setup.sync.runAfterBuild) ||
+        (program.release && global.setup.sync && global.setup.sync.runAfterBuild));
 }
 
 // Perform the build as defined on xml setup

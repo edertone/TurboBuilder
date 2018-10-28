@@ -16,7 +16,7 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 /**
  * Execute the clean process
  */
-exports.execute = function () {
+exports.execute = function (alsoCleanSync = false) {
     
     console.log("\nclean start");
     
@@ -27,19 +27,22 @@ exports.execute = function () {
         console.error('could not delete ' + global.runtimePaths.target);
     }
     
-    // Delete all synced files 
-    if(global.setup.sync && global.setup.sync.type === "fileSystem" &&
-       fm.isDirectory(global.setup.sync.destPath) &&
-       !fm.deleteDirectory(global.setup.sync.destPath, false)){
+    // Delete all synced files if necessary
+    if(alsoCleanSync){
         
-        console.error("could not delete contents of " + global.setup.sync.destPath);
+        if(global.setup.sync && global.setup.sync.type === "fileSystem" &&
+            fm.isDirectory(global.setup.sync.destPath) &&
+            !fm.deleteDirectory(global.setup.sync.destPath, false)){
+             
+             console.error("could not delete contents of " + global.setup.sync.destPath);
+         }
+         
+         if(global.setup.sync && global.setup.sync.type === "ftp"){
+             
+             deleteRemoteSyncFolder();
+         }
     }
     
-    if(global.setup.sync && global.setup.sync.type === "ftp"){
-        
-        deleteRemoteSyncFolder();
-    }
-
     console.success("clean ok");
 }
 

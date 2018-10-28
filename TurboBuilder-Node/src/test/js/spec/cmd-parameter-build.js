@@ -196,7 +196,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should build ok when -b argumetn is executed on a generated site_php project', function() {
+    it('should build ok when -b argument is executed on a generated site_php project', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
