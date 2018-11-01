@@ -176,6 +176,10 @@
 		"to": "https://$host/cache"
 	},
     {
+        "url": "https://$host/en/multi-parameters/param1/param2",
+        "to": "https://$host/en/multi-parameters/param1/param2/default-param3-value"
+    },
+    {
         "url": "https://$host/en/multi-parameters/param1/param2/param3/param4",
         "to": "https://$host/en/multi-parameters/param1/param2/param3"
     },
