@@ -10,13 +10,11 @@
     
     "validate": {
         "runBeforeBuild": true,
-        "projectStructure" : {
-            "enabled": true,
-            "forceExtrasFolder": true,
-            "forceReadmeFile": true,
-            "forceTodoFolder": true,
-            "resourcesStructure": true,
-            "checkGitIgnore": true
+        "projectStructure" : {                    
+            "readmeFileMandatory": true,
+            "extrasFolderMandatory": true,
+            "extrasSubFoldersMandatory": ["help", "todo"],
+            "extrasTodoExtension": true
         },
         "phpNamespaces" : {
             "enabled": false,

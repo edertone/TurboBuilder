@@ -48,40 +48,28 @@
                 },
                 "projectStructure": {
                     "type": "object",
-                    "description": "The Projectstructure Schema",
-                    "required": [
-                        "enabled",
-                        "forceExtrasFolder",
-                        "forceReadmeFile",
-                        "forceTodoFolder",
-                        "resourcesStructure",
-                        "checkGitIgnore"
-                    ],
+                    "description": "Defines validations related to the project files and folders structure",
                     "additionalProperties": false, 
                     "properties": {
-                        "enabled": {
+                        "readmeFileMandatory": {
                             "type": "boolean",
-                            "description": "The Enabled Schema"
+                            "description": "If set to true, the README.md file will be mandatory at the root of the project"
                         },
-                        "forceExtrasFolder": {
+                        "extrasFolderMandatory": {
                             "type": "boolean",
-                            "description": "The Forceextrasfolder Schema"
+                            "description": "If set to true, the extras folder will be mandatory at the root of the project"
                         },
-                        "forceReadmeFile": {
-                            "type": "boolean",
-                            "description": "The Forcereadmefile Schema"
+                        "extrasSubFoldersMandatory": {
+                            "type": "array",
+                            "description": "Defines a list of folder names that must exist inside the extras folder",
+                            "items": {
+                                "type": "string",
+                                "description": "A sub folder name"
+                            }
                         },
-                        "forceTodoFolder": {
+                        "extrasTodoExtension": {
                             "type": "boolean",
-                            "description": "The Forcetodofolder Schema"
-                        },
-                        "resourcesStructure": {
-                            "type": "boolean",
-                            "description": "The Resourcesstructure Schema"
-                        },
-                        "checkGitIgnore": {
-                            "type": "boolean",
-                            "description": "The Checkgitignore Schema"
+                            "description": "If set to true, all files inside the extras/todo folder must have a .todo extension"
                         }
                     }
                 },

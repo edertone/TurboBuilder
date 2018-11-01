@@ -142,39 +142,55 @@ let validateJSONSchema = function (filePath, schemaFileName) {
  */
 let validateProjectStructure = function () {
     
-    if(!global.setup.validate.projectStructure.enabled){
+    let sep = fm.dirSep();
+    let extrasPath = global.runtimePaths.root + sep + global.folderNames.extras;
     
-        return;
+    // Validate README.md main file is mandatory
+    if(global.setup.validate.projectStructure.readmeFileMandatory &&
+        !fm.isFile(global.runtimePaths.root + sep + global.fileNames.readme)){
+     
+         errors.push(global.runtimePaths.root + sep + global.fileNames.readme +
+                 " does not exist.\nSet readmeFileMandatory = false to disable this error");
+     }
+    
+    // Validate extras folder is mandatory
+    if(global.setup.validate.projectStructure.extrasFolderMandatory && !fm.isDirectory(extrasPath)){
+    
+        errors.push(extrasPath + " does not exist.\nSet extrasFolderMandatory = false to disable this error");
     }
     
-    // Todo - get project structure from template and check it on runtime folder
+    // Validate all mandatory folders inside the extras folder
+    if(global.setup.validate.projectStructure.extrasSubFoldersMandatory){
+         
+        for (let folder of global.setup.validate.projectStructure.extrasSubFoldersMandatory) {
+            
+            if(!fm.isDirectory(extrasPath + sep + folder)){
+                
+                errors.push(extrasPath + sep + folder +
+                    " does not exist.\nRemove it from extrasSubFoldersMandatory to disable this error");
+            }
+        }
+    }
     
-    // Check that all the project mandatory folders and files exist
-//    for (let key of ObjectUtils.getKeys(global.runtimePaths)) {
-//        
-//        // Ignore files that are not mandatory or disabled via setup
-//        if(key === 'target' ||
-//           (key === 'extras' && !global.setupValidate.ProjectStructure.forceExtrasFolder) ||
-//           (key === 'readmeFile' && !global.setupValidate.ProjectStructure.forceReadmeFile) ||
-//           (key === 'todoFile' && !global.setupValidate.ProjectStructure.forceTODOFile)){
-//            
-//            continue;
-//        }
-//        
-//        if (!fs.existsSync(global.runtimePaths[key])) {
-//            
-//            errors.push(global.runtimePaths[key] + " does not exist");
-//        }
-//    }
-    
-    // Check that no strange files or folders exist
-    //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
-    
-    // Validate that gitIgnore file is correct
-    if(global.setup.validate.projectStructure.checkGitIgnore === true){
+    // Validate extras/todo folder contains .todo files
+    if(global.setup.validate.projectStructure.extrasTodoExtension && fm.isDirectory(extrasPath + sep + 'todo')){
         
-        // TODO - validate git ignore    
-    }   
+        for (let file of fm.getDirectoryList(extrasPath + sep + 'todo')){
+
+            if(StringUtils.getPathExtension(file) !== 'todo'){
+                
+                errors.push(extrasPath + sep + 'todo' +  sep + file +
+                    " must have .todo extension.\nSet extrasTodoExtension = false to disable this error");
+            }
+        }
+    }
+    
+    // TODO - validate the case for all the files and folders
+    
+    // TODO - validate that gitIgnore file structure is correct
+    
+    // TODO - Check that no strange files or folders exist
+    //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
 }
 
 

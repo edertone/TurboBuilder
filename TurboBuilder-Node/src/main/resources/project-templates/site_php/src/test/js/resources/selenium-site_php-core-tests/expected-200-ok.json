@@ -30,6 +30,7 @@
 		"url": "https://$host/glob-$cacheHash.css",
 		"title": null,
 		"source": ["font-size", "nav section", "2px solid #0e0e0e", "footer p", "2px solid #d3d4d4"],
+        "skipLogsTest": true,
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -38,6 +39,7 @@
 		"url": "https://$host/glob-$cacheHash.js",
 		"title": null,
 		"source": "\"use strict\"",
+        "skipLogsTest": true,
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -46,6 +48,7 @@
 		"url": "https://$host/resources/fonts/readme.txt",
 		"title": null,
 		"source": "This folder contains all the project fonts in several formats",
+        "skipLogsTest": true,
         "startWith": null,
         "endWith": null,
         "notContains": null

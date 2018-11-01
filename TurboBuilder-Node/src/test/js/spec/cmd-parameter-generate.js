@@ -47,8 +47,8 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/php')).toBe(true);
         expect(utils.fm.isDirectory('./src/test/php')).toBe(true);
 
@@ -77,8 +77,8 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/js')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
         expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
@@ -112,8 +112,8 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/ts')).toBe(true);
 
         let setup = utils.readSetupFile();
@@ -143,8 +143,8 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.txt')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
 
         let setup = utils.readSetupFile();
