@@ -36,7 +36,7 @@ To avoid losing the executable, copy it inside program files / chromedriver
 Add the chromedriver.exe to the windows path environment variable, so it is available
 via standard windows cmd
 
-test it by opening a cmd and typing chromedriver. It should show its version and other info
+test it by opening a cmd and typing chromedriver -v. It should show its version and other info
 
 ### Create a symlink from C:/turbosite-webserver-symlink to your local http webserver web root folder
 
