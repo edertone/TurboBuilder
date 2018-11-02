@@ -4,7 +4,7 @@ use org\turbosite\src\main\php\managers\WebSiteManager;
 
 $ws = WebSiteManager::getInstance();
 
-$ws->initializeView(3, ['', '', 'default-param3-value']);
+$ws->initializeView(3, ['default-param1', 'default-param2', 'default-param3']);
 
 $ws->loadBundles(['multi-parameters']);
 

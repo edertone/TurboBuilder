@@ -176,8 +176,32 @@
 		"to": "https://$host/cache"
 	},
     {
+        "url": "https://$host/en/multi-parameters",
+        "to": "https://$host/en/multi-parameters/default-param1/default-param2/default-param3"
+    },
+    {
+        "url": "https://$host/en/multi-parameters/param1",
+        "to": "https://$host/en/multi-parameters/param1/default-param2/default-param3"
+    },
+    {
         "url": "https://$host/en/multi-parameters/param1/param2",
-        "to": "https://$host/en/multi-parameters/param1/param2/default-param3-value"
+        "to": "https://$host/en/multi-parameters/param1/param2/default-param3"
+    },
+    {
+        "url": "https://$host/en/multi-parameters/param1/param2//param4",
+        "to": "https://$host/en/multi-parameters/param1/param2/param4"
+    },
+    {
+        "url": "https://$host/en/multi-parameters/param1/param2///param3",
+        "to": "https://$host/en/multi-parameters/param1/param2/param3"
+    },
+    {
+        "url": "https://$host/en/multi-parameters/////////////param1////param2",
+        "to": "https://$host/en/multi-parameters/param1/param2/default-param3"
+    },
+    {
+        "url": "https://$host////////en/////multi-parameters/////////////param1////param2",
+        "to": "https://$host/en/multi-parameters/param1/param2/default-param3"
     },
     {
         "url": "https://$host/en/multi-parameters/param1/param2/param3/param4",
