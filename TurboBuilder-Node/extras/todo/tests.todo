@@ -5,3 +5,5 @@ Sorted by priority:
 - Implement unit tests: print TODO file to console feature both for test-build and test-release
 
 - Implement unit tests: php namespaces validation functionality
+
+- What happens when a site_php view url contains parameters with only empty spaces? For example: http://localhost/en/view/param1/    /param3

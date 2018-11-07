@@ -19,3 +19,11 @@ Sorted by priority:
 
 - Add a feature as part of the build project that lets us define some urls to be launched after project is built.
   Wildcards can be used to customize the url so we can launch sites like google pagespeed, seo analisis, w3c validators...
+  
+- Create the turbo builder website.
+
+- Create a post explaining how to create a javascript library with turbocommons
+
+- Create a post explaining how to optimize all images on a project with turbo commons
+
+- Create a post explaining how to create a php library with turbocommons
