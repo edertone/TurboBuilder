@@ -24,6 +24,13 @@
         }
     ],
     
+    "globalHtml": {
+        "afterBodyOpen": [
+        ],
+        "beforeBodyClose": [
+        ]
+    },
+    
     "globalCss": [
         "libs/normalize/normalize.css",
         "view/css/global-styles.scss",

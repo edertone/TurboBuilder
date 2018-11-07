@@ -11,6 +11,7 @@
         "singleParameterView",
         "locales",
         "resourceBundles",
+        "globalHtml",
         "globalCss",
         "globalCDNS",
         "globalJs"
@@ -92,6 +93,39 @@
                         "description": "The list of bundles that will be initially loaded from the provided path. This list can be empty here and bundles added later as required.",
                         "examples": ["home", "footer"]
                     }
+                }
+            }
+        },
+        "globalHtml": {
+            "type": "object",
+            "description": "Defines extra fragments of html that will be added to all the project views at compile time",
+            "required": [
+                "afterBodyOpen",
+                "beforeBodyClose"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "afterBodyOpen": {
+                    "type": "array",
+                    "description": "List of paths to files containing html code that will be added just after the <body> tag on all the project views, sorted in the same order as here",
+                    "items": {
+                        "type": "string",
+                        "description": "Path to a file containing some html code"
+                    },
+                    "examples": [
+                        "view/components/google-analytics/google-analytics.html"
+                    ]
+                },
+                "beforeBodyClose": {
+                    "type": "array",
+                    "description": "List of paths to files containing html code that will be added just before the </body> tag on all the project views, sorted in the same order as here",
+                    "items": {
+                        "type": "string",
+                        "description": "Path to a file containing some html code"
+                    },
+                    "examples": [
+                        "view/components/google-analytics/google-analytics.html"
+                    ]
                 }
             }
         },
