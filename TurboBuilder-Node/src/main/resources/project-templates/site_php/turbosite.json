@@ -24,20 +24,6 @@
         }
     ],
     
-    "globalHtml": {
-        "afterBodyOpen": [
-        ],
-        "beforeBodyClose": [
-        ]
-    },
-    
-    "globalCss": [
-        "libs/normalize/normalize.css",
-        "view/css/global-styles.scss",
-        "view/components/main-menu/main-menu.scss",
-        "view/components/footer/footer.scss"
-    ],
-    
     "globalCDNS": [
         {
             "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
@@ -48,5 +34,25 @@
     
     "globalJs": [
         "libs/turbocommons-es5/turbocommons-es5.js"
+    ],
+    
+    "globalCss": [
+        "libs/normalize/normalize.css",
+        "view/css/global-styles.scss"
+    ],
+    
+    "globalComponents": [
+        "view/components/main-menu/main-menu",
+        "view/components/footer/footer"
+    ],
+    
+    "globalHtml": {
+        "afterBodyOpen": [
+        ],
+        "beforeBodyClose": [
+        ]
+    },
+    
+    "viewComponents": [
     ]
 }

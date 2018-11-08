@@ -11,10 +11,12 @@
         "singleParameterView",
         "locales",
         "resourceBundles",
-        "globalHtml",
-        "globalCss",
         "globalCDNS",
-        "globalJs"
+        "globalJs",
+        "globalCss",
+        "globalComponents",
+        "globalHtml",
+        "viewComponents"
     ],
     "additionalProperties": false, 
     "properties": {
@@ -96,56 +98,9 @@
                 }
             }
         },
-        "globalHtml": {
-            "type": "object",
-            "description": "Defines extra fragments of html that will be added to all the project views at compile time",
-            "required": [
-                "afterBodyOpen",
-                "beforeBodyClose"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "afterBodyOpen": {
-                    "type": "array",
-                    "description": "List of paths to files containing html code that will be added just after the <body> tag on all the project views, sorted in the same order as here",
-                    "items": {
-                        "type": "string",
-                        "description": "Path to a file containing some html code"
-                    },
-                    "examples": [
-                        "view/components/google-analytics/google-analytics.html"
-                    ]
-                },
-                "beforeBodyClose": {
-                    "type": "array",
-                    "description": "List of paths to files containing html code that will be added just before the </body> tag on all the project views, sorted in the same order as here",
-                    "items": {
-                        "type": "string",
-                        "description": "Path to a file containing some html code"
-                    },
-                    "examples": [
-                        "view/components/google-analytics/google-analytics.html"
-                    ]
-                }
-            }
-        },
-        "globalCss": {
-            "type": "array",
-            "description": "List of css file paths that will be included globally on all the project views. All the specified files will be merged into a single global css file to optimize performance. The merge order will be exactly the same as the one defined here",
-            "items": {
-                "type": "string",
-                "description": "The Items Schema"
-            },
-            "examples": [
-                "libs/normalize/normalize.css",
-                "view/css/global-styles.scss",
-                "view/components/main-menu/main-menu.scss",
-                "view/components/footer/footer.scss"
-            ]
-        },
         "globalCDNS": {
             "type": "array",
-            "description": "A list with the js files that will be loaded from CDN urls before the global js files. Each array item must be an object with two properties: ",
+            "description": "List of js files that will be loaded from CDN urls. These files are loaded first on the view documents, before any other global js files. They will be loaded in the same order as provided here. Each array item must be an object with 3 properties: url (direct url to the CDN file), fallbackVerify (a sentence that must evaluate to true to check that CDN is correctly loaded) and fallbackResource (A path inside src/main to load the local CDN file if remote not possible)",
             "items": {
                 "type": "object",
                 "description": "The Items Schema",
@@ -178,16 +133,99 @@
                         ]
                     }
                 }
-            }
+            },
+            "examples": [
+                "TODO"
+            ]
         },
         "globalJs": {
             "type": "array",
-            "description": "List of js file paths that will be included globally on all the project views. All the specified files will be merged into a single global js file to optimize performance. The merge order will be exactly the same as the one defined here",
+            "description": "List of js file paths (relative to src/main) that will be included globally on all the project views. All the specified files will be merged into a single global js file to optimize performance. The merge order will be exactly the same as the one defined here",
             "items": {
                 "type": "string",
                 "examples": [
                     "libs/turbocommons-es5/turbocommons-es5.js"
                 ]
+            }
+        },
+        "globalCss": {
+            "type": "array",
+            "description": "List of css file paths that will be included globally on all the project views. All the specified files will be merged into a single global css file to optimize performance. The merge order will be exactly the same as the one defined here",
+            "items": {
+                "type": "string",
+                "description": "The Items Schema"
+            },
+            "examples": [
+                "libs/normalize/normalize.css",
+                "view/css/global-styles.scss",
+                "view/components/main-menu/main-menu.scss",
+                "view/components/footer/footer.scss"
+            ]
+        },
+        "globalComponents": {
+            "type": "array",
+            "description": "A list of components that will be globally loaded right after the globalJs and globalCss. Each array element is a string with the path to a component (based on src/main) without a file extension",
+            "items": {
+                "type": "string",
+                "description": "A path to the component (based on src/main) without the file extension"
+            },
+            "examples": [
+                "view/components/main-menu/main-menu",
+                "view/components/footer/footer"
+            ]
+        },
+        "globalHtml": {
+            "type": "object",
+            "description": "Defines extra fragments of html that will be added globally to all the project views",
+            "required": [
+                "afterBodyOpen",
+                "beforeBodyClose"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "afterBodyOpen": {
+                    "type": "array",
+                    "description": "List of paths to files containing html code that will be added just after the <body> tag on all the project views, sorted in the same order as here",
+                    "items": {
+                        "type": "string",
+                        "description": "Path to a file containing some html code"
+                    },
+                    "examples": [
+                        "view/components/google-analytics/google-analytics.html"
+                    ]
+                },
+                "beforeBodyClose": {
+                    "type": "array",
+                    "description": "List of paths to files containing html code that will be added just before the </body> tag on all the project views, sorted in the same order as here",
+                    "items": {
+                        "type": "string",
+                        "description": "Path to a file containing some html code"
+                    },
+                    "examples": [
+                        "view/components/google-analytics/google-analytics.html"
+                    ]
+                }
+            }
+        },
+        "viewComponents": {
+            "type": "array",
+            "description": "A list of components that will be loaded with a specific view only. They will be loaded after the global css, js and global elements. Each array item is an object with two properties: view (the name of the view that will load the component) and component (the path based on src/main to the component to load, without file extension)",
+            "items": {
+                "type": "object",
+                "required": ["view", "component"],
+                "additionalProperties": false,
+                "properties": {
+                    "view": {
+                        "type": "string",
+                        "description": "A view name",
+                        "examples": ["home"]
+                    },
+                    "component": {
+                        "type": "string",
+                        "description": "The path based on src/main to the component, without file extension",
+                        "examples": ["view/components/main-menu/main-menu"]
+                    }
+                }
             }
         }
     }

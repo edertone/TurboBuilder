@@ -90,6 +90,9 @@ exports.execute = function () {
         minifyImages(releaseFullPath);
     }
     
+    // TODO - delete all minified view and component css/js files which are empty (useless), to prevent them from
+    // being linked as simply empty js or css files at the views html part.
+    
     // After js files are minified, we will write the project version
     // inside the merged js files of the lib_js and lib_ts projects
     if(global.setup.build.lib_js || global.setup.build.lib_ts){

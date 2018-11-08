@@ -8,10 +8,6 @@ $ws->initializeView();
 
 $ws->loadBundles(['home']);
 
-$ws->loadComponents([
-    'view/components/main-menu',
-    'view/components/footer']);
-
 $ws->metaTitle = $ws->getLoc('META_TITLE');
 $ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 

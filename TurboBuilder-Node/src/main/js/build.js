@@ -304,20 +304,91 @@ exports.buildSitePhp = function (destPath) {
             }
         }
     }
-             
-    // Create global css file
+    
+    // Generate the array of css files that will be merged into the global css file
+    let globalCssFiles = ObjectUtils.clone(turboSiteSetup.globalCss);
+    
+    for (let globalComponent of turboSiteSetup.globalComponents) {
+        
+        globalCssFiles.push(globalComponent + '.css');
+    }
+    
+    // Create the global css file
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
-            mergeFilesFromArray(turboSiteSetup.globalCss, destSite, true));
+            mergeFilesFromArray(globalCssFiles, destSite, true));
+    
+    // Generate the array of js files that will be merged into the global css file
+    let globalJsFiles = ObjectUtils.clone(turboSiteSetup.globalJs);
+    
+    for (let globalComponent of turboSiteSetup.globalComponents) {
+        
+        globalJsFiles.push(globalComponent + '.js');
+    }
     
     // Create global Js file
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
-            mergeFilesFromArray(turboSiteSetup.globalJs, destSite, true));
-    
-    // Generate all the components css and js merged files
-    mergeCssAndJsByFolder(destSite + sep + 'view' + sep + 'components', destSite, turboSiteSetup.cacheHash, 'comp-view-components-');
+            mergeFilesFromArray(globalJsFiles, destSite, true));
     
     // Generate all the views css and js merged files
-    mergeCssAndJsByFolder(destSite + sep + 'view' + sep + 'views', destSite, turboSiteSetup.cacheHash, 'view-view-views-');
+    let viewsRoot = destSite + sep + 'view' + sep + 'views';
+    
+    for (let viewName of fm.getDirectoryList(viewsRoot)) {
+        
+        if(fm.isDirectory(viewsRoot + sep + viewName)){
+            
+            // Generate an array with the view css file plus all the defined view components css files
+            let cssFiles = [viewsRoot + sep + viewName + sep + viewName + '.css'];
+            
+            if(!fm.isFile(cssFiles[0])){
+                
+                console.error('View ' + viewName + ' must have a ' + viewName + '.css file');
+            }
+            
+            // Generate an array with the view js file plus all the defined view components js files
+            let jsFiles = [viewsRoot + sep + viewName + sep + viewName + '.js'];
+            
+            if(!fm.isFile(jsFiles[0])){
+                
+                console.error('View ' + viewName + ' must have a ' + viewName + '.js file');
+            }
+            
+            // Append all the components related to this view to the arrays of css and js files
+            for (let viewComponent of turboSiteSetup.viewComponents) {
+                
+                if(viewComponent.view === viewName){
+                    
+                    cssFiles.push(destSite + sep + viewComponent.component + '.css');
+                    
+                    if(!fm.isFile(cssFiles[cssFiles.length - 1])){
+                        
+                        console.error('Missing component file ' + viewComponent.component + '.css');
+                    }                    
+                    
+                    jsFiles.push(destSite + sep + viewComponent.component + '.js');
+                    
+                    if(!fm.isFile(jsFiles[jsFiles.length - 1])){
+                        
+                        console.error('Missing component file ' + viewComponent.component + '.js');
+                    }
+                }
+            }
+            
+            // Merge all the css and js arrays into single css and js files            
+            let cssContent = mergeFilesFromArray(cssFiles, '', true);
+            
+            if(!StringUtils.isEmpty(cssContent)){
+                
+                fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.css', cssContent);
+            }
+                        
+            let jsContent = mergeFilesFromArray(jsFiles, '', true);
+            
+            if(!StringUtils.isEmpty(jsContent)){
+                
+                fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
+            }
+        }
+    }
 }
 
 
@@ -584,40 +655,6 @@ let mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
     }
     
     return result;
-}
-
-
-/**
- * Join all the css and js files for each folder on the specified path and generate the global js and css files
- */
-let mergeCssAndJsByFolder = function (basePath, destPath, cacheHash, prefix = "comp-view-components-") {
-    
-    let sep = fm.dirSep();
-    let items = fm.getDirectoryList(basePath);
-    
-    for (let item of items) {
-        
-        if(fm.isDirectory(basePath + fm.dirSep() + item)){
-            
-            // Merge all css files on the folder and generate the css
-            let cssFiles = fm.findDirectoryItems(basePath + fm.dirSep() + item, /^.*\.css$/i, 'absolute', 'files');
-            let cssContent = mergeFilesFromArray(cssFiles, '', true);
-            
-            if(!StringUtils.isEmpty(cssContent)){
-                
-                fm.saveFile(destPath + sep + prefix + item + '-' + cacheHash +'.css', cssContent);
-            }
-                        
-            // Merge all the js files on the folder and generate the component js
-            let jsFiles = fm.findDirectoryItems(basePath + fm.dirSep() + item, /.*\.js$/i, 'absolute', 'files');
-            let jsContent = mergeFilesFromArray(jsFiles, '', true);
-            
-            if(!StringUtils.isEmpty(jsContent)){
-                
-                fm.saveFile(destPath + sep + prefix + item + '-' + cacheHash +'.js', jsContent);    
-            }
-        }
-    }
 }
 
 
