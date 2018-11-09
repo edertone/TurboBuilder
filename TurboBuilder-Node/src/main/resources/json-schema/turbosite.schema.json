@@ -209,10 +209,10 @@
         },
         "viewComponents": {
             "type": "array",
-            "description": "A list of components that will be loaded with a specific view only. They will be loaded after the global css, js and global elements. Each array item is an object with two properties: view (the name of the view that will load the component) and component (the path based on src/main to the component to load, without file extension)",
+            "description": "A list of components that will be loaded with specific views. They will be loaded after the global css, js and global elements. Each array item is an object with two properties: view (the name of the view that will load the component) and components (a list of paths based on src/main to the components to load with the view, without file extension)",
             "items": {
                 "type": "object",
-                "required": ["view", "component"],
+                "required": ["view", "components"],
                 "additionalProperties": false,
                 "properties": {
                     "view": {
@@ -220,9 +220,9 @@
                         "description": "A view name",
                         "examples": ["home"]
                     },
-                    "component": {
-                        "type": "string",
-                        "description": "The path based on src/main to the component, without file extension",
+                    "components": {
+                        "type": "array",
+                        "description": "A list of paths to the components based on src/main, without file extension",
                         "examples": ["view/components/main-menu/main-menu"]
                     }
                 }

@@ -76,9 +76,7 @@ exports.execute = function () {
         
         buildModule.buildSitePhp(releaseFullPath);
     }
-    
-    overrideTurboSiteJsonWithRelease();
-    
+     
     minifyJs(releaseFullPath);
     minifyCss(releaseFullPath);
     minifyHtaccess(releaseFullPath);
@@ -131,26 +129,6 @@ exports.getReleaseRelativePath = function () {
     }
 
     return releaseRelativePath; 
-}
-
-
-/**
- * If the file turbosite.release.json exists at the root of our project, all its setup properties will
- * override the turbosite.json on release target.
- */
-let overrideTurboSiteJsonWithRelease = function () {
-    
-    let releaseFullPath = global.runtimePaths.target + fm.dirSep() + module.exports.getReleaseRelativePath();
-    let tsPath = releaseFullPath + fm.dirSep() + 'dist'  + fm.dirSep() + 'site'  + fm.dirSep() + 'turbosite.json';
-    let tsReleasePath = global.runtimePaths.root + fm.dirSep() + 'turbosite.release.json';
-    
-    if(fm.isFile(tsReleasePath)){
-        
-        let tsSetup = JSON.parse(fm.readFile(tsPath));
-        let tsSetupRelease = JSON.parse(fm.readFile(tsReleasePath));
-        
-        fm.saveFile(tsPath, JSON.stringify(ObjectUtils.merge(tsSetup, tsSetupRelease), null, 4));        
-    }
 }
 
 

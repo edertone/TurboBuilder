@@ -148,6 +148,17 @@ exports.buildSitePhp = function (destPath) {
     
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
     
+    // If the file turbosite.release.json exists at the root of our project, all its setup properties will
+    // override the turbosite.json if the release process is being executed
+    let tsReleasePath = global.runtimePaths.root + sep + 'turbosite.release.json';
+    
+    if(fm.isFile(tsReleasePath) && global.isRelease){
+        
+        let tsSetupRelease = JSON.parse(fm.readFile(tsReleasePath));
+        
+        ObjectUtils.merge(turboSiteSetup, tsSetupRelease);        
+    }
+    
     fm.saveFile(destSite + sep + global.fileNames.turboSiteSetup, JSON.stringify(turboSiteSetup, null, 4));
     
     // Launch a warning if errors or warnings are sent to browser
@@ -336,6 +347,46 @@ exports.buildSitePhp = function (destPath) {
         
         if(fm.isDirectory(viewsRoot + sep + viewName)){
             
+            if(!fm.isFile(viewsRoot + sep + viewName + sep + viewName + '.php')){
+                
+                console.error('View ' + viewName + ' must have a ' + viewName + '.php file');
+            }
+
+            // Add extra html code to the view if necessary
+            let viewHtmlCode = fm.readFile(viewsRoot + sep + viewName + sep + viewName + '.php');
+            
+            let afterBodyOpenHtml = '';
+            
+            for (let afterBodyOpenPath of turboSiteSetup.globalHtml.afterBodyOpen) {
+
+                if(!fm.isFile(destSite + sep + afterBodyOpenPath)){
+                
+                    console.error('afterBodyOpen file not found: ' + afterBodyOpenPath);
+                }
+                
+                afterBodyOpenHtml += "\n" + fm.readFile(destSite + sep + afterBodyOpenPath);
+            }
+            
+            let beforeBodyCloseHtml = '';
+            
+            for (let beforeBodyClosePath of turboSiteSetup.globalHtml.beforeBodyClose) {
+
+                if(!fm.isFile(destSite + sep + beforeBodyClosePath)){
+                
+                    console.error('beforeBodyClose file not found: ' + beforeBodyClosePath);
+                }
+                
+                beforeBodyCloseHtml += "\n" + fm.readFile(destSite + sep + beforeBodyClosePath);
+            }
+            
+            if(!StringUtils.isEmpty(afterBodyOpenHtml) || !StringUtils.isEmpty(beforeBodyCloseHtml)){
+                 
+                viewHtmlCode = StringUtils.replace(viewHtmlCode, '<body>', '<body>' + afterBodyOpenHtml, 1);
+                viewHtmlCode = StringUtils.replace(viewHtmlCode, '</body>', beforeBodyCloseHtml + "\n</body>", 1);
+                
+                fm.saveFile(viewsRoot + sep + viewName + sep + viewName + '.php', viewHtmlCode);
+            }
+            
             // Generate an array with the view css file plus all the defined view components css files
             let cssFiles = [viewsRoot + sep + viewName + sep + viewName + '.css'];
             
@@ -357,19 +408,23 @@ exports.buildSitePhp = function (destPath) {
                 
                 if(viewComponent.view === viewName){
                     
-                    cssFiles.push(destSite + sep + viewComponent.component + '.css');
-                    
-                    if(!fm.isFile(cssFiles[cssFiles.length - 1])){
+                    for (let component of viewComponent.components) {
                         
-                        console.error('Missing component file ' + viewComponent.component + '.css');
-                    }                    
-                    
-                    jsFiles.push(destSite + sep + viewComponent.component + '.js');
-                    
-                    if(!fm.isFile(jsFiles[jsFiles.length - 1])){
+                        cssFiles.push(destSite + sep + component + '.css');
                         
-                        console.error('Missing component file ' + viewComponent.component + '.js');
+                        if(!fm.isFile(cssFiles[cssFiles.length - 1])){
+                            
+                            console.error('Missing component file ' + component + '.css');
+                        }                    
+                        
+                        jsFiles.push(destSite + sep + component + '.js');
+                        
+                        if(!fm.isFile(jsFiles[jsFiles.length - 1])){
+                            
+                            console.error('Missing component file ' + component + '.js');
+                        }
                     }
+                    
                 }
             }
             
