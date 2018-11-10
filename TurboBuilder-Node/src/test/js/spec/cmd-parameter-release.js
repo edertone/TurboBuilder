@@ -263,7 +263,7 @@ describe('cmd-parameter-release', function() {
         
         expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t2.js', 'var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
@@ -280,7 +280,7 @@ describe('cmd-parameter-release', function() {
             .toBe('<?php $1 = "0.0.0"; $2 = "0.0.0" ?>');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
-            .toBe('var a="0.0.0",b="0.0.0";');
+            .toBe('"use strict";var a="0.0.0",b="0.0.0";');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
             .toBe('{ "a": "0.0.0", "b": "0.0.0"}');
@@ -298,7 +298,7 @@ describe('cmd-parameter-release', function() {
         
         expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t2.js', 'var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
+        expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
@@ -312,7 +312,7 @@ describe('cmd-parameter-release', function() {
             .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
-            .toBe('var a="@@--build-version--@@",b="@@--build-version--@@";');
+            .toBe('"use strict";var a="@@--build-version--@@",b="@@--build-version--@@";');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
@@ -335,7 +335,7 @@ describe('cmd-parameter-release', function() {
             .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
-            .toBe('var a="@@--build-version--@@",b="@@--build-version--@@";');
+            .toBe('"use strict";var a="@@--build-version--@@",b="@@--build-version--@@";');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
