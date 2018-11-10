@@ -53,7 +53,7 @@ $ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 
     <?php $ws->includeComponent('view/components/footer/footer') ?>
 
-    <?php $ws->echoJavaScriptTags() ?>
+<?php $ws->echoJavaScriptTags() ?>
 
 </body>
 </html>

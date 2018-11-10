@@ -37,7 +37,7 @@ $ws->metaDescription = $ws->getParam();
 
     <?php $ws->includeComponent('view/components/footer/footer') ?>
 
-    <?php $ws->echoJavaScriptTags() ?>
+<?php $ws->echoJavaScriptTags() ?>
 
 </body>
 
