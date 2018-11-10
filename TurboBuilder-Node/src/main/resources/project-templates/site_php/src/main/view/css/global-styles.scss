@@ -84,3 +84,7 @@ a{
 a:hover{
     color: $color-link-secondary;
 }
+
+a:visited { 
+    color: $color-link-tertiary;
+}
