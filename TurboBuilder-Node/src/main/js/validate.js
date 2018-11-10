@@ -185,6 +185,8 @@ let validateProjectStructure = function () {
         }
     }
     
+    // TODO - Validate that all folders inside src/main are the expected.
+    
     // TODO - validate the case for all the files and folders
     
     // TODO - validate that gitIgnore file structure is correct
@@ -356,4 +358,26 @@ let validateSitePhp = function () {
             errors.push("File contains hardcoded css color: " + cssFile);
         }
     }
+    
+    // Validate js files
+    let jsFiles = fm.findDirectoryItems(global.runtimePaths.main, /^.*\.(js)$/i, 'absolute', 'files');
+    
+    for (let jsFile of jsFiles){
+        
+        // Files inside the src/main/libs folder won't be verified
+        if(jsFile.includes('src/main/libs') || jsFile.includes('src\\main\\libs')){
+            
+            continue;
+        }
+        
+        let jsContents = fm.readFile(jsFile);
+        
+        // All project js files must contain "use strict" at the very first beginning of the file
+        if(global.setup.validate.sitePhp.jsUseStrict &&
+           jsContents.indexOf('"use strict"') !== 0) {
+                
+            errors.push('File must start with "use strict": ' + jsFile);
+        }
+    }
+    
 }

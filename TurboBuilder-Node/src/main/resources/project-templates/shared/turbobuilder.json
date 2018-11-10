@@ -31,7 +31,8 @@
             }
         ],
         "sitePhp" : {
-            "cssHardcodedColors": true
+            "cssHardcodedColors": true,
+            "jsUseStrict": true
         }
     },
     

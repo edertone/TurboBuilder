@@ -155,13 +155,18 @@
                     "type": "object",
                     "description": "The Sitephp Schema",
                     "required": [
-                        "cssHardcodedColors"
+                        "cssHardcodedColors",
+                        "jsUseStrict"
                     ],
                     "additionalProperties": false, 
                     "properties": {
                         "cssHardcodedColors": {
                             "type": "boolean",
-                            "description": "The Csshardcodedcolors Schema"
+                            "description": "If enabled, no hardcoded colors will be accepted on the project css files. Use a palete with variables instead"
+                        },
+                        "jsUseStrict": {
+                            "type": "boolean",
+                            "description": "If enabled, all project js files must start with 'use strict'"
                         }
                     }
                 }
