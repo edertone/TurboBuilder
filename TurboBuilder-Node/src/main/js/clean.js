@@ -82,5 +82,5 @@ let deleteRemoteSyncFolder = function (setup) {
         console.error('Remote clean errors');
     }
 
-    console.success('cleaned remote ftp: ' + setup.sync.host);
+    console.success('cleaned remote ftp: ' + setup.sync.host + ' ' + setup.sync.remotePath);
 }

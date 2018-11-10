@@ -328,7 +328,7 @@ exports.buildSitePhp = function (destPath) {
     fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
             mergeFilesFromArray(globalCssFiles, destSite, true));
     
-    // Generate the array of js files that will be merged into the global css file
+    // Generate the array of js files that will be merged into the global js file
     let globalJsFiles = ObjectUtils.clone(turboSiteSetup.globalJs);
     
     for (let globalComponent of turboSiteSetup.globalComponents) {
