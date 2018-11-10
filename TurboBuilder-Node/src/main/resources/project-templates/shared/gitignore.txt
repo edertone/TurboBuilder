@@ -27,6 +27,7 @@ thumbs.db
 *.launch
 .settings/
 *.sublime-workspace
+.sonarlint
 
 
 # IDE - VSCode

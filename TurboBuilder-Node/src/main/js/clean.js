@@ -8,6 +8,7 @@
 const { FilesManager } = require('turbocommons-ts');
 const console = require('./console.js');
 const buildModule = require('./build');
+const setupModule = require('./setup');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -30,16 +31,13 @@ exports.execute = function (alsoCleanSync = false) {
     // Delete all synced files if necessary
     if(alsoCleanSync){
         
-        if(global.setup.sync && global.setup.sync.type === "fileSystem" &&
-            fm.isDirectory(global.setup.sync.destPath) &&
-            !fm.deleteDirectory(global.setup.sync.destPath, false)){
+        // Load the non release setup and execute the clean for it
+        cleanSyncDests(setupModule.loadSetupFromDisk());
+                
+        // Load the release setup and execute the clean for it
+         if(fm.isFile(global.runtimePaths.setupReleaseFile)){
              
-             console.error("could not delete contents of " + global.setup.sync.destPath);
-         }
-         
-         if(global.setup.sync && global.setup.sync.type === "ftp"){
-             
-             deleteRemoteSyncFolder();
+             cleanSyncDests(setupModule.loadReleaseSetupFromDisk());
          }
     }
     
@@ -48,16 +46,35 @@ exports.execute = function (alsoCleanSync = false) {
 
 
 /**
+ * Clean the configured remote sync ftp and or filesystem destinations
+ */
+let cleanSyncDests = function (setup) {
+    
+    if(setup.sync && setup.sync.type === "fileSystem" &&
+        fm.isDirectory(setup.sync.destPath) &&
+        !fm.deleteDirectory(setup.sync.destPath, false)){
+         
+         console.error("could not delete contents of " + setup.sync.destPath);
+     }
+     
+     if(setup.sync && setup.sync.type === "ftp"){
+
+         deleteRemoteSyncFolder(setup);
+     }
+}
+
+
+/**
  * Clean the configured remote sync ftp folder
  */
-let deleteRemoteSyncFolder = function () {
+let deleteRemoteSyncFolder = function (setup) {
     
     buildModule.checkWinSCPAvailable();
     
     let winscpExec = 'winscp /command';
         
-    winscpExec += ' "open ftp://' + global.setup.sync.user + ':' + global.setup.sync.psw + '@' + global.setup.sync.host + '/"';
-    winscpExec += ' "rm ' + global.setup.sync.remotePath + '/*.*"';
+    winscpExec += ' "open ftp://' + setup.sync.user + ':' + setup.sync.psw + '@' + setup.sync.host + '/"';
+    winscpExec += ' "rm ' + setup.sync.remotePath + '/*.*"';
     winscpExec += ' "exit"';
     
     if(!console.exec(winscpExec, '', true)){
@@ -65,5 +82,5 @@ let deleteRemoteSyncFolder = function () {
         console.error('Remote clean errors');
     }
 
-    console.success('cleaned remote ftp: ' + global.setup.sync.host);
+    console.success('cleaned remote ftp: ' + setup.sync.host);
 }

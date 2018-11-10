@@ -21,7 +21,7 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 exports.init = function () {
     
-    this.loadSetupFromDisk();
+    global.setup = global.isRelease ? this.loadReleaseSetupFromDisk() : this.loadSetupFromDisk();
 
     validateModule.validateBuilderVersion();
 }
@@ -83,7 +83,7 @@ exports.countCommitsSinceLatestTag = function () {
 
 
 /**
- * Read the json setup file from the current project and store all the data to a global variable.
+ * Read the json setup file from the current project
  */
 exports.loadSetupFromDisk = function () {
 
@@ -101,30 +101,41 @@ exports.loadSetupFromDisk = function () {
     }catch(e){
         
         console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
-        
-        return;
     }
     
     // Load the template setup
-    global.setup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(projectSetup));
+    let templateSetup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(projectSetup));
     
     // Merge the project setup into the template one
-    ObjectUtils.merge(global.setup, projectSetup);
+    ObjectUtils.merge(templateSetup, projectSetup);
+    
+    return templateSetup;
+};
+
+
+/**
+ * Read the json setup file from the current project and override it with the release setup if it exists
+ */
+exports.loadReleaseSetupFromDisk = function () {
+    
+    let setup = module.exports.loadSetupFromDisk();
     
     // Check if turbobuilder.release.json must be also merged into the setup
-    if(global.isRelease && fm.isFile(global.runtimePaths.setupReleaseFile)){
+    if(fm.isFile(global.runtimePaths.setupReleaseFile)){
 
         try{
             
             let projectReleaseSetup = JSON.parse(fm.readFile(global.runtimePaths.setupReleaseFile));
             
-            ObjectUtils.merge(global.setup, projectReleaseSetup);
+            ObjectUtils.merge(setup, projectReleaseSetup);
             
         }catch(e){
             
             console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
         }
     }
+    
+    return setup;
 };
 
 
