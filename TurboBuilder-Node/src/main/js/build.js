@@ -746,7 +746,7 @@ exports.checkWinSCPAvailable = function () {
             
         }catch(e){
 
-            console.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable) to perform sync operations');
+            console.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable if necessary) to perform sync operations');
         }
     }
 }
