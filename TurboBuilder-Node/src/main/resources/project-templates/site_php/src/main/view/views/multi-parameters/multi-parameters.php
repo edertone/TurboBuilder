@@ -1,10 +1,16 @@
 <?php
 
 use org\turbosite\src\main\php\managers\WebSiteManager;
+use org\turbosite\src\main\php\model\WebViewSetup;
 
 $ws = WebSiteManager::getInstance();
 
-$ws->initializeView(3, ['default-param1', 'default-param2', 'default-param3']);
+$webViewSetup = new WebViewSetup();
+
+$webViewSetup->enabledParams = 3;
+$webViewSetup->defaultParameters = ['default-param1', 'default-param2', 'default-param3'];
+
+$ws->initializeView($webViewSetup);
 
 $ws->loadBundles(['multi-parameters']);
 
