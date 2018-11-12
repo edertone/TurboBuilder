@@ -1,9 +1,9 @@
 @import "../../css/global-vars.scss";
 
 footer{
-    color: $color-text-primary;
-    background-color: $color-bg-tertiary;
-    border-top: 2px solid $color-bg-quaternary;
+    color: $color-text-1;
+    background-color: $color-bg-3;
+    border-top: 2px solid $color-bg-4;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -14,5 +14,5 @@ footer{
 }
 
 footer p {
-    color: $color-text-secondary;
+    color: $color-text-2;
 }

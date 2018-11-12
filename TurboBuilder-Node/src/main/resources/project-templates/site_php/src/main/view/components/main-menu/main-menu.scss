@@ -3,9 +3,9 @@
 nav{
     width: 100%;
     min-height: 70px;
-    color: $color-text-inverted-primary;
-    background-color: $color-bg-inverted-primary;
-    border-bottom: 2px solid $color-bg-inverted-secondary;
+    color: $color-text-inverted-1;
+    background-color: $color-bg-inverted-1;
+    border-bottom: 2px solid $color-bg-inverted-2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -20,7 +20,7 @@ nav section{
 }
 
 nav section p{
-    color: $color-text-inverted-primary;
+    color: $color-text-inverted-1;
     position: absolute;
     left: 3%;
     margin: 0px;
@@ -29,12 +29,12 @@ nav section p{
 nav section a{
     text-decoration: none;
     margin-left: 5%;
-    color: $color-text-inverted-quaternary;
+    color: $color-text-inverted-4;
     transition: color 1s;
 }
 
 nav section a:hover{
-    color: $color-text-inverted-primary;
+    color: $color-text-inverted-1;
     text-decoration: underline;
 }
 
