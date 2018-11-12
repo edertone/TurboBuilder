@@ -3,6 +3,6 @@ User-agent: *
 Disallow: /trash/
 Disallow: /site/
 Disallow: /release/
-Disallow: /dev/
+Disallow: /build/
 Disallow: /data/ 
 Allow: /data/storage/

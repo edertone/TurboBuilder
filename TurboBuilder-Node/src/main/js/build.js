@@ -40,7 +40,7 @@ exports.execute = function () {
     // Delete all files inside the target/projectName folder
     fm.deleteDirectory(buildFullPath);
     
-    // Copy all the src main files to the target dev build folder
+    // Copy all the src main files to the target build folder
     this.copyMainFiles(buildFullPath);
     
     if(global.setup.validate.runBeforeBuild){

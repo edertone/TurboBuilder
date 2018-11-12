@@ -271,7 +271,7 @@ describe('cmd-parameter-sync', function(){
 
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder + '-dev')).toBe(true);
+        expect(utils.fm.createDirectory(destFolder + '-build')).toBe(true);
         expect(utils.fm.createDirectory(destFolder + '-release')).toBe(true);
 
         let setup = utils.readSetupFile();
@@ -281,7 +281,7 @@ describe('cmd-parameter-sync', function(){
             "type" : "fileSystem",
             "excludes" : [],
             "sourcePath" : "dist/",
-            "destPath" : destFolder + '-dev',
+            "destPath" : destFolder + '-build',
             "remoteUrl" : "http://localhost",
             "deleteDestPathContents" : true
         };
@@ -298,7 +298,7 @@ describe('cmd-parameter-sync', function(){
         // Verify that release generates the files into the -release folder
         expect(utils.exec('-rs')).toContain('sync ok to fs');
 
-        expect(utils.fm.isDirectoryEmpty(destFolder + '-dev')).toBe(true);
+        expect(utils.fm.isDirectoryEmpty(destFolder + '-build')).toBe(true);
         expect(utils.fm.isDirectoryEmpty(destFolder + '-release')).toBe(false);
         expect(utils.fm.isDirectory(destFolder + '-release' + utils.fm.dirSep() + 'site')).toBe(true);
     });

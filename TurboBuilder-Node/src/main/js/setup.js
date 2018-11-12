@@ -220,8 +220,8 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             "type": "fileSystem",
             "excludes": [],
             "sourcePath": "dist/",
-            "destPath": "C:/turbosite-webserver-symlink/dev",
-            "remoteUrl": "https://localhost/dev",
+            "destPath": "C:/turbosite-webserver-symlink/build",
+            "remoteUrl": "https://localhost/build",
             "deleteDestPathContents": true
         };
     }
