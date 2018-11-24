@@ -19,6 +19,8 @@ Sorted by priority:
 
 - Add a feature as part of the build project that lets us define some urls to be launched after project is built.
   Wildcards can be used to customize the url so we can launch sites like google pagespeed, seo analisis, w3c validators...
+
+- Incorporate ts lint as a feature of the builder
   
 - Create the turbo builder website.
 
@@ -27,3 +29,5 @@ Sorted by priority:
 - Create a post explaining how to optimize all images on a project with turbo commons
 
 - Create a post explaining how to create a php library with turbocommons
+
+- Should it be interesting to incorporate a code formatter to the builder? 
