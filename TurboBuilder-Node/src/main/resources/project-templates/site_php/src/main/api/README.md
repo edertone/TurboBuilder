@@ -1,6 +1,7 @@
-- The project rest api will be accessed only by this entry point:
+- The project rest api will be accessed only by this entry points:
 
-    http://host/api
+    http://host/api/site/ (To access the website API)
+    http://host/api/othername/ (To access the API for libraries or other projects)
     
 - There will be 2 different ways to perform a request to the API
     
@@ -10,7 +11,9 @@
           responses will be returned in the same order as the operations were received.
     
     2 - via get, using the following format: 
-        http://host/api/operation-full-name/parameter1/parameter2/parameter3/...
+        http://host/api/site/operation/path/operation-full-name/parameter1/parameter2/...
+        http://host/api/server/operation/path/operation-full-name/parameter1/parameter2/...
+        http://host/api/othername/operation/path/operation-full-name/parameter1/parameter2/...
         
        
 - Operations will be placed inside the api folder, using any folder structure. Each operation will be inside a file, which will be
