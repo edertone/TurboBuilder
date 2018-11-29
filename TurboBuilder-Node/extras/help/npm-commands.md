@@ -5,6 +5,20 @@
 
 node ./src/main/js/index.js
 
+## Generate a node_modules folder strictly from package-lock file contents
+
+If we have checkout a new project form a repo and we want to get exactly the dependencies state as it is expected on its package-lock file, we must use:
+
+npm ci
+
+We will use npm install or update only if we want to modify the dependency tree of the project (update dependency versions, remove unused ones, etc...) 
+
+## Update all the package.json dependencies versions
+
+If we want to put our package.json dependencies to their latest versions, we will use:
+
+npm update
+
 ## Install the project globally to execute in development via cmd "turbobuilder" "tb"
 
 npm install -g
