@@ -1,3 +1,6 @@
+import { NgModule } from '@angular/core';
+
+
 /**
  * This module contains all the visual global components
  */

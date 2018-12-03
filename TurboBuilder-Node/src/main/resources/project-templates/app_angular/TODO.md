@@ -31,6 +31,7 @@ So you've generated a new angular project with turbobuilder, and there's no angu
     
     - `npm install turbocommons-ts`
     - `npm install turbogui-angular`
+    - `npm install --save @angular/material @angular/cdk @angular/animations`
     
 8. Edit the package.json file and:
 
@@ -55,5 +56,12 @@ So you've generated a new angular project with turbobuilder, and there's no angu
 12. Edit the src/main/model/modules/app.module.ts file and:
 
     - Fix the `import { AppComponent } from './app.component';` path to `../../view/components/app/app.component`
+    
+    - Add the following modules to imports:
+    	BrowserModule,
+    	BrowserAnimationsModule,
+    	MatSnackBarModule,
+    	MatDialogModule,
+    	ComponentsModule
 
 13. Delete this TODO.md file!!
