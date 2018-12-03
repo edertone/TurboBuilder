@@ -180,7 +180,8 @@
                 {"required": ["lib_php"]},
                 {"required": ["lib_java"]},
                 {"required": ["lib_js"]},
-                {"required": ["lib_ts"]}
+                {"required": ["lib_ts"]},
+                {"required": ["app_angular"]}
             ],
             "additionalProperties": false, 
             "properties": {
@@ -214,7 +215,7 @@
                 },
                 "site_php": {
                     "type": "object",
-                    "description": "The Site_php Schema",
+                    "description": "A php website project type",
                     "additionalProperties": false
                 },
                 "lib_php": {
@@ -312,6 +313,11 @@
                             }
                         }
                     }
+                },
+                "app_angular": {
+                    "type": "object",
+                    "description": "An angular application project type",
+                    "additionalProperties": false
                 }
             }
         },

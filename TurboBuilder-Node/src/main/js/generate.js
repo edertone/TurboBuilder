@@ -34,6 +34,11 @@ exports.execute = function (type) {
     
     console.success('Created ' + global.fileNames.setup + ' file');
     
+    if(type === 'app_angular'){
+    	
+    	console.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
+    }
+    
     console.success('Generated project structure ok');
 };
 

@@ -65,6 +65,8 @@
                 {"folder": "es5", "jsTarget": "ES5", "mergedFile": "PackedJsFileName-ES5", "globalVar": "global_lib_var"},
                 {"folder": "es6", "jsTarget": "ES6", "mergedFile": "PackedJsFileName-ES6", "globalVar": "global_lib_var"}
             ]
+        },
+        "app_angular": {
         }
     },
     
