@@ -57,6 +57,11 @@ exports.execute = function () {
         validateModule.execute(false);
     }
     
+    if(global.setup.build.site_php){
+        
+        buildModule.buildSitePhp(releaseFullPath);
+    }
+    
     if(global.setup.build.lib_php){
         
         buildModule.buildLibPhp(releaseFullPath);
@@ -72,22 +77,27 @@ exports.execute = function () {
         buildModule.buildLibTs(releaseFullPath);
     }
     
-    if(global.setup.build.site_php){
+    if(global.setup.build.app_angular){
+    	
+    	// Use angular cli to compile the project to the target folder
+    	let angularReleaseCommand = 'ng build --prod --output-path=' + global.folderNames.target + fm.dirSep() + this.getReleaseRelativePath() + fm.dirSep() + 'dist';
+    	console.log("\nLaunching " + angularReleaseCommand + "\n");
+        console.exec(angularReleaseCommand, '', true);
+    
+    } else {
+    
+    	minifyJs(releaseFullPath);
+        minifyCss(releaseFullPath);
+        minifyHtaccess(releaseFullPath);
+        minifyHtmlFiles(releaseFullPath);
+        minifyPhpFiles(releaseFullPath);
         
-        buildModule.buildSitePhp(releaseFullPath);
+        if(global.setup.release.optimizePictures){
+        
+            minifyImages(releaseFullPath);
+        }
     }
-     
-    minifyJs(releaseFullPath);
-    minifyCss(releaseFullPath);
-    minifyHtaccess(releaseFullPath);
-    minifyHtmlFiles(releaseFullPath);
-    minifyPhpFiles(releaseFullPath);
-    
-    if(global.setup.release.optimizePictures){
-    
-        minifyImages(releaseFullPath);
-    }
-    
+         
     // TODO - delete all minified view and component css/js files which are empty (useless), to prevent them from
     // being linked as simply empty js or css files at the views html part.
     

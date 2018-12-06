@@ -48,10 +48,20 @@ exports.execute = function (verbose = true) {
     
     validatePackageAndTurboBuilderJsonIntegrity();
     
-    // Validate site php if this is the project type
     if(global.setup.build.site_php){
         
         validateSitePhp();
+    }
+    
+    // Use angular cli to run the tslint verification for angular projects
+	if(global.setup.build.app_angular){
+    
+	    console.log("\nLaunching ng lint");
+        
+	    if(!console.exec('ng lint', '', true)){
+	        
+	        console.error("validate failed");
+	    }	    
     }
     
     console.errors(errors);

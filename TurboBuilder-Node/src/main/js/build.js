@@ -69,6 +69,14 @@ exports.execute = function () {
         this.buildLibTs(buildFullPath);
     }
     
+    if(global.setup.build.app_angular){
+    	
+    	// Use angular cli to compile the project to the target folder
+    	let angularBuildCommand = 'ng build --output-path=' + global.folderNames.target + fm.dirSep() + this.getBuildRelativePath() + fm.dirSep() + 'dist';
+    	console.log("\nLaunching " + angularBuildCommand + "\n");
+        console.exec(angularBuildCommand, '', true);
+    }
+    
     // Check if sync is configured to be executed after build
     if(global.setup.sync && global.setup.sync.runAfterBuild){
         

@@ -24,6 +24,9 @@ Run `ng build`. This will create a my-app-name folder inside the target folder, 
 
 Run `ng build --prod`. This will create a my-app-name folder inside the target folder, containing the production ready application
 
+## LINT the application
+
+Run `ng lint`. This will show any existing errors for the current project linter setup
 
 # frequently used NPM cmd commands
 
