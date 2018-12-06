@@ -45,32 +45,38 @@ So you've generated a new angular project with turbobuilder, and there's no angu
 
 10. Edit the angular.json file and:
     
-    - Change "outputPath" from dist/my-project-name to target/my-project-name
+- Change "outputPath" from dist/my-project-name to target/my-project-name
+
+- Replace the entries on "my-project-name" > "architect" > "build" > "options" > "styles" with the following:
     
-    - Replace the entries on "my-project-name" > "architect" > "build" > "options" > "styles" with the following:
-        - "src/main/view/css/normalize.css"
-        - "src/main/view/css/global.styles.scss"
-    
-    - Add the following entries inside "my-project-name" > "architect" > "lint" > "options" > "exclude"
-        - "**/src/polyfills.ts"
-        - "**/src/test.ts"
-    
-    - Totally remove the "lint" section from the "my-project-name-e2e" part
+    ```
+    "src/main/view/css/normalize.css",
+    "src/main/view/css/global.styles.scss"
+    ```
+
+- Add the following entries inside "my-project-name" > "architect" > "lint" > "options" > "exclude"
+
+    ```
+    "**/src/polyfills.ts",
+    "**/src/test.ts"
+    ```
+
+- Totally remove the "lint" section from the "my-project-name-e2e" part
         
 11. Edit the src/main.ts file and:
 
-    - Fix the `import { AppModule } from './app/app.module';` path to `./main/model/modules/app.module`
+- Fix the `import { AppModule } from './app/app.module';` path to `./main/model/modules/app.module`
             
 12. Edit the src/main/model/modules/app.module.ts file and:
 
-    - Fix the `import { AppComponent } from './app.component';` path to `../../view/components/app/app.component`
-    
-    - Add the following modules to imports:
-        BrowserModule,
-        BrowserAnimationsModule,
-        ComponentsModule
+- Fix the `import { AppComponent } from './app.component';` path to `../../view/components/app/app.component`
 
-    - Add any missing module that may throw an error when launching the application (Angular material ones for example)
+- Add the following modules to imports:
+    BrowserModule,
+    BrowserAnimationsModule,
+    ComponentsModule
+
+- Add any missing module that may throw an error when launching the application (Angular material ones for example)
 
 13. Enable strict typescript compilation
 

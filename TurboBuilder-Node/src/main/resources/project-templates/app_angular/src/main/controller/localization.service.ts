@@ -8,5 +8,5 @@ import { LocalizationManager } from 'turbocommons-ts';
 @Injectable()
 export class LocalizationService extends LocalizationManager {
 
-    
+
 }
