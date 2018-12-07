@@ -181,6 +181,7 @@
                 {"required": ["lib_java"]},
                 {"required": ["lib_js"]},
                 {"required": ["lib_ts"]},
+                {"required": ["lib_angular"]},
                 {"required": ["app_angular"]}
             ],
             "additionalProperties": false, 
@@ -313,6 +314,11 @@
                             }
                         }
                     }
+                },
+                "lib_angular": {
+                    "type": "object",
+                    "description": "An angular library project type",
+                    "additionalProperties": false
                 },
                 "app_angular": {
                     "type": "object",

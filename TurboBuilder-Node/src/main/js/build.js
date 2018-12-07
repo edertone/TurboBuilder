@@ -35,6 +35,12 @@ exports.execute = function () {
     
     console.log("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
+    // Angular libs are built using ng cli and nothing more is necessary
+    if(global.setup.build.lib_angular){
+        
+        return this.buildLibAngular();
+    }
+    
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
     
     // Delete all files inside the target/projectName folder
@@ -612,6 +618,22 @@ exports.buildLibTs = function (destPath) {
     }
 }
 
+
+/**
+ * Execute the lib_angular build process
+ */
+exports.buildLibAngular = function () {
+    
+    if(global.setup.validate.runBeforeBuild){
+        
+        validateModule.execute(false);
+    }
+
+    // Use angular cli to compile the project to the target folder
+    let angularBuildCommand = 'ng build ' + global.setup.metadata.name;
+    console.log("\nLaunching " + angularBuildCommand + "\n");
+    console.exec(angularBuildCommand, '', true);
+}
 
 /**
  * Replace the project version number on all the files as defined on project setup

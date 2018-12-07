@@ -323,9 +323,15 @@ let validateNamespaces = function () {
  */
 let validatePackageAndTurboBuilderJsonIntegrity = function () {
     
-    let setupPath = global.runtimePaths.root + fm.dirSep() + global.fileNames.setup;
-    let packagePath = global.runtimePaths.root + fm.dirSep() + 'package.json';
+    let sep = fm.dirSep();
+    let setupPath = global.runtimePaths.root + sep + global.fileNames.setup;
+    let packagePath = global.runtimePaths.root + sep + 'package.json';
     
+    // Angular library package is located inside projects/library-name
+    if(global.setup.build.lib_angular){
+
+        packagePath = global.runtimePaths.root + sep + 'projects' + sep + global.setup.metadata.name + sep + 'package.json';
+    }
     
     // If package.json does not exist we won't vaidate anything
     if(!fm.isFile(packagePath)){
@@ -339,9 +345,7 @@ let validatePackageAndTurboBuilderJsonIntegrity = function () {
     if(setup.metadata.name !== packageJson.name ||
        setup.metadata.description !== packageJson.description){
    
-        errors.push("\nName and description must match between the following files:\n" +
-                global.runtimePaths.root + fm.dirSep() + global.fileNames.setup + "\n" + 
-                global.runtimePaths.root + fm.dirSep() + 'package.json');
+        errors.push("\nName and description must match between the following files:\n" + setupPath + "\n" + packagePath);
     }
 }
 

@@ -43,6 +43,12 @@ exports.execute = function () {
     
     global.isRelease = true;
     
+    // Angular libs are only built via -b
+    if(global.setup.build.lib_angular){
+        
+        console.error("Angular libs can only be built with -b option");
+    }
+    
     console.log("\nrelease start");
     
     let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();

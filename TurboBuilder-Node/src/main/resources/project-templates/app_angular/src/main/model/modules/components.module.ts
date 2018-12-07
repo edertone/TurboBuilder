@@ -12,7 +12,7 @@ import { NgModule } from '@angular/core';
     declarations: [
     ],
 
-    // Add here components that wil be globally created at runtime
+    // Add here components that must be dynamically created at runtime
     entryComponents: [
     ],
 
