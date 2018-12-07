@@ -54,7 +54,7 @@ exports.execute = function (verbose = true) {
     }
     
     // Use angular cli to run the tslint verification for angular projects
-	if(global.setup.build.app_angular){
+	if(global.setup.build.app_angular || global.setup.build.lib_angular){
     
 	    console.log("\nLaunching ng lint");
         
