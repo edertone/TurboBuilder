@@ -88,7 +88,11 @@ exports.execute = function () {
     	// Use angular cli to compile the project to the target folder
     	let angularReleaseCommand = 'ng build --prod --output-path=' + global.folderNames.target + fm.dirSep() + this.getReleaseRelativePath() + fm.dirSep() + 'dist';
     	console.log("\nLaunching " + angularReleaseCommand + "\n");
-        console.exec(angularReleaseCommand, '', true);
+        
+        if(!console.exec(angularReleaseCommand, '', true)){
+            
+            console.error('release failed');
+        }
     
     } else {
     
