@@ -200,4 +200,33 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.exec('-l')).toContain("Warning: Current turbobuilder version");
     });
+    
+    
+    it('should generate app_angular project structure', function() {
+
+        let generateResult = utils.exec('--generate app_angular');
+        expect(generateResult).toContain("NOT FINISHED YET! - Remember to follow the instructions on TODO.md");
+        expect(generateResult).toContain("Generated project structure ok");
+        
+        expect(utils.fm.isFile('./TODO.md')).toBe(true);
+        expect(utils.fm.isFile('./README.md')).toBe(true);
+        expect(utils.fm.isFile('./tslint.json')).toBe(true);
+        expect(utils.fm.isFile('./turbobuilder.json')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
+
+        expect(utils.fm.readFile('./tslint.json')).toContain('"extends": "./tslint-angular.json"');
+
+        let setup = utils.readSetupFile();
+        
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('app_angular')).toBe(true);
+        expect(setup.build.hasOwnProperty('optimizePictures')).toBe(false);
+        expect(setup.build.hasOwnProperty('generateCodeDocumentation')).toBe(false);
+        expect(setup.test.length).toBe(0);
+    });
 });

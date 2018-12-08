@@ -210,6 +210,13 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         }
     }
     
+    // Customize the release section
+    if(type === 'app_angular' || type === 'lib_angular'){
+        
+        delete setupContents.release.optimizePictures;
+        delete setupContents.release.generateCodeDocumentation;
+    }
+    
     // Customize the sync section
     delete setupContents.sync;
     
