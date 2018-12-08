@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { DialogService } from 'turbogui-angular';
+import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
+import { TurboGuiAngularModule, GlobalErrorService } from 'turbogui-angular';
 import { AppComponent } from '../../view/components/app/app.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ComponentsModule } from 'src/main/model/modules/components.module';
+import { AppInitializerService } from '../../controller/appinitializer.service';
 
 
 /**
@@ -14,23 +15,35 @@ import { ComponentsModule } from 'src/main/model/modules/components.module';
  */
 @NgModule({
 
-  declarations: [
-    AppComponent
-  ],
+    declarations: [
+        AppComponent
+    ],
 
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    ComponentsModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatSnackBarModule,
+        MatDialogModule,
+        TurboGuiAngularModule,
+        ComponentsModule
+    ],
 
-  providers: [
-      DialogService
-  ],
+    providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (appInitializerService: AppInitializerService) => appInitializerService.load(),
+            deps: [AppInitializerService],
+            multi: true
+        },
+        AppInitializerService,
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorService
+        },
+        GlobalErrorService
+    ],
 
-  bootstrap: [AppComponent]
+    bootstrap: [AppComponent]
 })
 
 export class AppModule { }
