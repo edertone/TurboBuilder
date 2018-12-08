@@ -56,38 +56,16 @@ exports.execute = function () {
     // Delete all files inside the release path folder
     fm.deleteDirectory(releaseFullPath);
     
-    buildModule.copyMainFiles(releaseFullPath);
-    
     if(global.setup.validate.runBeforeBuild){
         
         validateModule.execute(false);
     }
     
-    if(global.setup.build.site_php){
-        
-        buildModule.buildSitePhp(releaseFullPath);
-    }
-    
-    if(global.setup.build.lib_php){
-        
-        buildModule.buildLibPhp(releaseFullPath);
-    }
-    
-    if(global.setup.build.lib_js){
-        
-        buildModule.buildLibJs(releaseFullPath);
-    }
-    
-    if(global.setup.build.lib_ts){
-    
-        buildModule.buildLibTs(releaseFullPath);
-    }
-    
+    // Angular apps are compiled exclusively with ng cli
     if(global.setup.build.app_angular){
-    	
-    	// Use angular cli to compile the project to the target folder
-    	let angularReleaseCommand = 'ng build --prod --output-path=' + global.folderNames.target + fm.dirSep() + this.getReleaseRelativePath() + fm.dirSep() + 'dist';
-    	console.log("\nLaunching " + angularReleaseCommand + "\n");
+        
+        let angularReleaseCommand = 'ng build --prod --output-path=' + global.folderNames.target + fm.dirSep() + this.getReleaseRelativePath() + fm.dirSep() + 'dist';
+        console.log("\nLaunching " + angularReleaseCommand + "\n");
         
         if(!console.exec(angularReleaseCommand, '', true)){
             
@@ -96,6 +74,28 @@ exports.execute = function () {
     
     } else {
     
+        buildModule.copyMainFiles(releaseFullPath);
+        
+        if(global.setup.build.site_php){
+            
+            buildModule.buildSitePhp(releaseFullPath);
+        }
+        
+        if(global.setup.build.lib_php){
+            
+            buildModule.buildLibPhp(releaseFullPath);
+        }
+        
+        if(global.setup.build.lib_js){
+            
+            buildModule.buildLibJs(releaseFullPath);
+        }
+        
+        if(global.setup.build.lib_ts){
+        
+            buildModule.buildLibTs(releaseFullPath);
+        }
+        
     	minifyJs(releaseFullPath);
         minifyCss(releaseFullPath);
         minifyHtaccess(releaseFullPath);

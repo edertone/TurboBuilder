@@ -41,6 +41,12 @@ exports.execute = function () {
         return this.buildLibAngular();
     }
     
+    // Angular apps are built using ng cli and nothing more is necessary
+    if(global.setup.build.app_angular){
+        
+        return this.buildAppAngular();
+    }
+    
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
     
     // Delete all files inside the target/projectName folder
@@ -73,18 +79,6 @@ exports.execute = function () {
     if(global.setup.build.lib_ts){
     
         this.buildLibTs(buildFullPath);
-    }
-    
-    if(global.setup.build.app_angular){
-    	
-    	// Use angular cli to compile the project to the target folder
-    	let angularBuildCommand = 'ng build --output-path=' + global.folderNames.target + fm.dirSep() + this.getBuildRelativePath() + fm.dirSep() + 'dist';
-    	console.log("\nLaunching " + angularBuildCommand + "\n");
-        
-    	if(!console.exec(angularBuildCommand, '', true)){
-    	    
-    	    console.error('build failed');
-    	}
     }
     
     // Check if sync is configured to be executed after build
@@ -588,6 +582,8 @@ exports.buildLibTs = function (destPath) {
         tsExecution += global.setup.build.lib_ts.declaration ? ' --declaration' : '';
         tsExecution += global.setup.build.lib_ts.sourceMap ? ' --sourceMap' : '';
 
+        tsExecution += ' --noUnusedLocals';
+        tsExecution += ' --noUnusedParameters';
         tsExecution += ' --alwaysStrict';             
         tsExecution += ' --target ' + target.jsTarget;
         tsExecution += ' --outDir "' + compiledFolder + '"';
@@ -636,8 +632,38 @@ exports.buildLibAngular = function () {
     // Use angular cli to compile the project to the target folder
     let angularBuildCommand = 'ng build ' + global.setup.metadata.name;
     console.log("\nLaunching " + angularBuildCommand + "\n");
-    console.exec(angularBuildCommand, '', true);
+    
+    if(!console.exec(angularBuildCommand, '', true)){
+        
+        console.error('build failed');
+    }
+    
+    console.success('build ok');
 }
+
+
+/**
+ * Execute the lib_angular build process
+ */
+exports.buildAppAngular = function () {
+    
+    if(global.setup.validate.runBeforeBuild){
+        
+        validateModule.execute(false);
+    }
+
+    //Use angular cli to compile the project to the target folder
+    let angularBuildCommand = 'ng build --output-path=' + global.folderNames.target + fm.dirSep() + this.getBuildRelativePath() + fm.dirSep() + 'dist';
+    console.log("\nLaunching " + angularBuildCommand + "\n");
+
+    if(!console.exec(angularBuildCommand, '', true)){
+        
+        console.error('build failed');
+    }
+    
+    console.success('build ok');
+}
+
 
 /**
  * Replace the project version number on all the files as defined on project setup
@@ -752,6 +778,14 @@ let mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
  */
 exports.removeUnpackedSrcFiles = function (destPath) {
 
+    // Angular apps are exclusively compiled with ng cli, so we won't alter in any way the result of its
+    // compilation
+    if(global.setup &&
+       (global.setup.build.lib_angular || global.setup.build.app_angular)){
+            
+        return;
+    }
+    
     let destMain = destPath + fm.dirSep() + 'main';
     
     // Delete the files

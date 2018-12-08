@@ -84,7 +84,9 @@ So you've generated a new angular project with turbobuilder, and there's no angu
 
     ```
     "strict": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
     ```
 
 14. Setup TSLint on your IDE of choice.
