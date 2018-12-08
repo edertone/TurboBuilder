@@ -685,4 +685,114 @@ describe('cmd-parameter-validate', function() {
         expect(lintResult).toContain('package.json');
         expect(lintResult).toContain('turbobuilder.json');
     });
+    
+    
+    it('should validate with default values even if projectStructure is missing on turbobuilder.json', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        
+        expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
+        
+        delete setup.validate.projectStructure;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
+        expect(utils.exec('-l')).toContain('README.md does not exist');
+        
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBe(true);        
+        expect(utils.exec('-l')).toContain('extras does not exist');
+    });
+    
+    
+    it('should fail validation when projectStructure.readmeFileMandatory is enabled and README.md does not exist', function() {
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        
+        expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
+        
+        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
+        
+        expect(utils.exec('-l')).toContain('README.md does not exist');
+        
+        setup.validate.projectStructure.readmeFileMandatory = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        delete setup.validate.projectStructure.readmeFileMandatory;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('README.md does not exist');
+    });
+    
+    
+    it('should fail validation when projectStructure.extrasFolderMandatory is enabled and extras folder does not exist', function() {
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        
+        expect(setup.validate.projectStructure.extrasFolderMandatory).toBe(true);
+        
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBe(true);        
+        
+        expect(utils.exec('-l')).toContain('extras does not exist');
+        
+        setup.validate.projectStructure.extrasSubFoldersMandatory = [];        
+        setup.validate.projectStructure.extrasFolderMandatory = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        delete setup.validate.projectStructure.extrasFolderMandatory;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('extras does not exist');
+    });
+    
+    
+    it('should fail validation when projectStructure.extrasSubFoldersMandatory is enabled and extras subfolders do not match', function() {
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        
+        expect(utils.fm.createDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'somedir')).toBe(true);        
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'help')).toBe(true);        
+        expect(utils.exec('-l')).toContain('help does not exist');
+        
+        setup.validate.projectStructure.extrasSubFoldersMandatory = [];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        delete setup.validate.projectStructure.extrasSubFoldersMandatory;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('help does not exist');
+    });
+    
+    
+    it('should fail validation when projectStructure.extrasTodoExtension is enabled and extras/todo files do not have .todo extension', function() {
+
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();        
+        
+        expect(setup.validate.projectStructure.extrasTodoExtension).toBe(true);
+        
+        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() +
+                'todo' + utils.fm.dirSep() + 'test.txt', 'txt')).toBe(true);        
+        
+        expect(utils.exec('-l')).toContain('test.txt must have .todo extension');
+        
+        setup.validate.projectStructure.extrasTodoExtension = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+                
+        delete setup.validate.projectStructure.extrasTodoExtension;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('test.txt must have .todo extension');
+    });
 });
