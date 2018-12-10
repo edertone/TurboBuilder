@@ -73,6 +73,17 @@
                         }
                     }
                 },
+                "styleSheets": {
+                    "type": "object",
+                    "description": "Defines validations related to the project css style sheets",
+                    "additionalProperties": false, 
+                    "properties": {
+                        "noCssHardcodedColors": {
+                            "type": "boolean",
+                            "description": "If enabled, no hardcoded colors will be accepted on the project css files. Use a palete with variables instead"
+                        }
+                    }
+                },
                 "phpNamespaces": {
                     "type": "object",
                     "description": "The Phpnamespaces Schema",
@@ -155,15 +166,10 @@
                     "type": "object",
                     "description": "The Sitephp Schema",
                     "required": [
-                        "cssHardcodedColors",
                         "jsUseStrict"
                     ],
                     "additionalProperties": false, 
                     "properties": {
-                        "cssHardcodedColors": {
-                            "type": "boolean",
-                            "description": "If enabled, no hardcoded colors will be accepted on the project css files. Use a palete with variables instead"
-                        },
                         "jsUseStrict": {
                             "type": "boolean",
                             "description": "If enabled, all project js files must start with 'use strict'"

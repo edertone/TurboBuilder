@@ -42,9 +42,11 @@ exports.execute = function (verbose = true) {
     
     validateProjectStructure();
     
-    validateCopyrightHeaders();
-     
+    validateStyleSheets();
+    
     validateNamespaces();
+    
+    validateCopyrightHeaders();
     
     validatePackageAndTurboBuilderJsonIntegrity();
     
@@ -207,6 +209,32 @@ let validateProjectStructure = function () {
 
 
 /**
+ * Validates the project css style sheets
+ */
+let validateStyleSheets = function () {
+    
+    if(!fm.isDirectory(global.runtimePaths.main + fm.dirSep() + 'view')){
+        
+        return;
+    }
+    
+    let cssFiles = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'view', /^.*\.(css|scss)$/i, 'absolute', 'files');
+    
+    for (let cssFile of cssFiles){
+        
+        let cssContents = fm.readFile(cssFile);
+        
+        // Check if css hardcoded colors are forbidden
+        if(global.setup.validate.styleSheets.noCssHardcodedColors &&
+           /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
+                
+            errors.push("File contains hardcoded css color: " + cssFile);
+        }
+    }
+}
+
+
+/**
  * Validates the copyright headers
  */
 let validateCopyrightHeaders = function () {
@@ -357,21 +385,6 @@ let validateSitePhp = function () {
 
     // Validate the turbosite.json schema
     validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
-    
-    // Validate css files
-    let cssFiles = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'view', /^.*\.(css|scss)$/i, 'absolute', 'files');
-    
-    for (let cssFile of cssFiles){
-        
-        let cssContents = fm.readFile(cssFile);
-        
-        // Check if css hardcoded colors are forbidden
-        if(global.setup.validate.sitePhp.cssHardcodedColors &&
-           /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
-                
-            errors.push("File contains hardcoded css color: " + cssFile);
-        }
-    }
     
     // Validate js files
     let jsFiles = fm.findDirectoryItems(global.runtimePaths.main, /^.*\.(js)$/i, 'absolute', 'files');

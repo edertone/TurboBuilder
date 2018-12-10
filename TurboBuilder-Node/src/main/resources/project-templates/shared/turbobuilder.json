@@ -16,6 +16,9 @@
             "extrasSubFoldersMandatory": ["help", "todo"],
             "extrasTodoExtension": true
         },
+        "styleSheets": {
+            "noCssHardcodedColors": true
+        },
         "phpNamespaces" : {
             "enabled": false,
             "mandatory": true,
@@ -31,7 +34,6 @@
             }
         ],
         "sitePhp" : {
-            "cssHardcodedColors": true,
             "jsUseStrict": true
         }
     },
