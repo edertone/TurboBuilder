@@ -229,4 +229,10 @@ describe('cmd-parameter-generate', function(){
         expect(setup.build.hasOwnProperty('generateCodeDocumentation')).toBe(false);
         expect(setup.test.length).toBe(0);
     });
+    
+    
+    it('should generate lib_angular project structure', function() {
+        
+        // TODO
+    });
 });
