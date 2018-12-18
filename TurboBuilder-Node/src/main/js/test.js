@@ -8,6 +8,7 @@
 const { FilesManager, ArrayUtils } = require('turbocommons-ts');
 const { spawn } = require('child_process');
 const console = require('./console');
+const setupModule = require('./setup');
 const buildModule = require('./build');
 const releaseModule = require('./release');
 const opn = require('opn');
@@ -37,7 +38,7 @@ exports.execute = function () {
         
     } else {
         
-        pathsToTest.push(buildModule.getBuildRelativePath());
+        pathsToTest.push(setupModule.getProjectName());
     }
     
     for (let testSetup of global.setup.test) {

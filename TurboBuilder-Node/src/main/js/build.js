@@ -24,7 +24,7 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
  */
 process.on('exit', () => {
 
-    this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath());
+    this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName());
 });
 
 
@@ -47,9 +47,9 @@ exports.execute = function () {
         return this.buildAppAngular();
     }
     
-    let buildFullPath = global.runtimePaths.target + fm.dirSep() + this.getBuildRelativePath();
+    let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
     
-    // Delete all files inside the target/projectName folder
+    // Delete all files inside the target/project name folder
     fm.deleteDirectory(buildFullPath);
     
     // Copy all the src main files to the target build folder
@@ -89,15 +89,6 @@ exports.execute = function () {
     
     console.success('build ok');
 };
-
-
-/**
- * Gets the path relative to project target where current build version is generated
- */
-exports.getBuildRelativePath = function () {
-    
-    return global.runtimePaths.projectName;    
-}
 
 
 /**
@@ -479,7 +470,7 @@ exports.buildLibPhp = function (destPath) {
     }
     
     // Define the contents for the stub file that will be autoexecuted when the phar file is included
-    let pharName = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '.phar';
+    let pharName = setupModule.getProjectName() + "-" + setupModule.getProjectRepoSemVer() + '.phar';
     
     let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/autoloader.php\\'; __HALT_COMPILER(); ?>";
     
@@ -533,7 +524,7 @@ exports.buildLibJs = function (destPath) {
         // Read the index code and append it after the previous merged code
         mergedJsCode += "\n\n" + fm.readFile(destMain + sep + 'index.js');
         
-        let mergedFileName = global.runtimePaths.projectName;
+        let mergedFileName = setupModule.getProjectName();
         
         if(global.setup.build.lib_js.mergedFileName && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFileName)){
             
@@ -630,7 +621,7 @@ exports.buildLibAngular = function () {
     }
 
     // Use angular cli to compile the project to the target folder
-    let angularBuildCommand = 'ng build ' + global.setup.metadata.name;
+    let angularBuildCommand = 'ng build ' + setupModule.getProjectName();
     console.log("\nLaunching " + angularBuildCommand + "\n");
     
     if(!console.exec(angularBuildCommand, '', true)){
@@ -653,7 +644,7 @@ exports.buildAppAngular = function () {
     }
 
     //Use angular cli to compile the project to the target folder
-    let angularBuildCommand = 'ng build --output-path=' + global.folderNames.target + fm.dirSep() + this.getBuildRelativePath() + fm.dirSep() + 'dist';
+    let angularBuildCommand = 'ng build --output-path=' + global.folderNames.target + fm.dirSep() + setupModule.getProjectName() + fm.dirSep() + 'dist';
     console.log("\nLaunching " + angularBuildCommand + "\n");
 
     if(!console.exec(angularBuildCommand, '', true)){
@@ -711,7 +702,7 @@ exports.markMergedJsWithVersion = function (destPath) {
         
         if(global.setup.build.lib_js.createMergedFile){
             
-            let mergedFileName = global.runtimePaths.projectName;
+            let mergedFileName = setupModule.getProjectName();
             
             if(global.setup.build.lib_js.mergedFileName && !StringUtils.isEmpty(global.setup.build.lib_js.mergedFileName)){
                 

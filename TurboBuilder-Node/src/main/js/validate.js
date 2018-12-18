@@ -358,7 +358,7 @@ let validatePackageAndTurboBuilderJsonIntegrity = function () {
     // Angular library package is located inside projects/library-name
     if(global.setup.build.lib_angular){
 
-        packagePath = global.runtimePaths.root + sep + 'projects' + sep + global.setup.metadata.name + sep + 'package.json';
+        packagePath = global.runtimePaths.root + sep + 'projects' + sep + setupModule.getProjectName() + sep + 'package.json';
     }
     
     // If package.json does not exist we won't vaidate anything

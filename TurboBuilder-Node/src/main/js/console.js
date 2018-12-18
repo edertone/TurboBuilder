@@ -141,7 +141,7 @@ exports.printVersionInfo = function () {
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
     
-        result += "\n\n" + global.runtimePaths.projectName + ': ' + setupModule.getProjectRepoSemVer(true);
+        result += "\n\n" + setupModule.getProjectName() + ': ' + setupModule.getProjectRepoSemVer(true);
     }
     
     return result;

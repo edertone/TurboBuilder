@@ -145,7 +145,7 @@ exports.getReleaseRelativePath = function () {
     
     if(releaseRelativePath === ''){
         
-        releaseRelativePath = global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer(true);
+        releaseRelativePath = setupModule.getProjectName() + "-" + setupModule.getProjectRepoSemVer(true);
     }
 
     return releaseRelativePath; 
@@ -398,7 +398,7 @@ let generateCodeDocumentation = function (destPath) {
         phpDocExec += ' "' + global.installationPaths.mainResources + sep + 'libs' + sep + 'phpDocumentor.phar"';
         phpDocExec += ' --template="responsive-twig"';
         phpDocExec += ' --visibility="public"';
-        phpDocExec += ' --title="' + global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer() + '"';
+        phpDocExec += ' --title="' + setupModule.getProjectName() + "-" + setupModule.getProjectRepoSemVer() + '"';
         phpDocExec += ' -i "' + destMain + '/php/libs,autoloader.php"';
         phpDocExec += ' -d "' + destMain + sep + 'php"';
         phpDocExec += ' -t "' + docsPath + sep + 'php"';
@@ -416,7 +416,7 @@ let generateCodeDocumentation = function (destPath) {
         
         let typeDocExec = global.installationPaths.typeDocBin;
         
-        typeDocExec += ' --name ' + global.runtimePaths.projectName;
+        typeDocExec += ' --name ' + setupModule.getProjectName();
         typeDocExec += ' --module commonjs';
         typeDocExec += ' --mode modules';
         typeDocExec += ' --target ES5'; 
@@ -437,7 +437,7 @@ let createGitChangeLog = function (destPath) {
     buildModule.checkGitAvailable();
     
     // Define the changelog text
-    let changeLogContents = global.runtimePaths.projectName + ' DEV CHANGELOG ---------------------------------------------';
+    let changeLogContents = setupModule.getProjectName() + ' DEV CHANGELOG ---------------------------------------------';
     
     // Get the GIT tags sorted by date ascending
     let gitTagsList = '';

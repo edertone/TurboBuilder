@@ -73,7 +73,7 @@ global.installationPaths = {
  * All the relevant paths relative to the folder where the application's been executed
  */
 global.runtimePaths = {
-    projectName: StringUtils.getPathElement(path.resolve('./')),
+    projectFolderName: StringUtils.getPathElement(path.resolve('./')),
     root: path.resolve('./'),
     setupFile: path.resolve('./' + global.fileNames.setup),
     setupReleaseFile: path.resolve('./' + global.fileNames.setupRelease),

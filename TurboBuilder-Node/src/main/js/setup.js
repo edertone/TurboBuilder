@@ -28,6 +28,38 @@ exports.init = function () {
 
 
 /**
+ * Obtain the current project name.
+ */
+exports.getProjectName = function () {
+    
+    if(global.setup && global.setup.metadata && global.setup.metadata.name){
+    
+        return global.setup.metadata.name;
+    }
+    
+    if (fm.isFile(global.runtimePaths.setupFile)) {
+        
+        try{
+        
+            let projectSetup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
+            
+            if(projectSetup.metadata && projectSetup.metadata.name &&
+                    !StringUtils.isEmpty(projectSetup.metadata.name)){
+            
+                return projectSetup.metadata.name;
+            }
+            
+        }catch(e){
+            
+            console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
+        }
+    }
+    
+    return global.runtimePaths.projectFolderName;
+}
+
+
+/**
  * Calculate the turbo builder cmd current version
  */
 exports.getBuilderVersion = function () {

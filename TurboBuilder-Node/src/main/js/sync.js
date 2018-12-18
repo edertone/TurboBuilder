@@ -48,12 +48,12 @@ let calculateSourcePath = function () {
     
     if(global.isRelease){
         
-        result += global.runtimePaths.projectName + "-" + setupModule.getProjectRepoSemVer(false)
+        result += setupModule.getProjectName() + "-" + setupModule.getProjectRepoSemVer(false)
             + fm.dirSep() + global.setup.sync.sourcePath;
     
     } else {
         
-        result += global.runtimePaths.projectName + fm.dirSep() + global.setup.sync.sourcePath;
+        result += setupModule.getProjectName() + fm.dirSep() + global.setup.sync.sourcePath;
     }
     
     let sourcePath = StringUtils.formatPath(result, fm.dirSep());

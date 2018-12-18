@@ -100,10 +100,16 @@ describe('cmd-parameter-test', function() {
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         // Modify the project setup to sync the files to /
-        let setup = utils.readSetupFile();        
+        let setup = utils.readSetupFile();  
+        setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink';         
         setup.sync.remoteUrl = 'https://localhost';          
         expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        // Add the project name to the package.json file
+        let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
+        packageSetup.name = 'project-name';
+        expect(utils.fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
         let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
@@ -134,10 +140,16 @@ describe('cmd-parameter-test', function() {
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         // Modify the project setup to sync the files to /subfolder
-        let setup = utils.readSetupFile();        
+        let setup = utils.readSetupFile();
+        setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder';        
         setup.sync.remoteUrl = 'https://localhost/subfolder';        
         expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        // Add the project name to the package.json file
+        let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
+        packageSetup.name = 'project-name';
+        expect(utils.fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
         let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
@@ -175,10 +187,16 @@ describe('cmd-parameter-test', function() {
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         // Modify the project setup to sync the files to /subfolder1/subfolder2
-        let setup = utils.readSetupFile();        
+        let setup = utils.readSetupFile();
+        setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder1/subfolder2';        
         setup.sync.remoteUrl = 'https://localhost/subfolder1/subfolder2';          
         expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        // Add the project name to the package.json file
+        let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
+        packageSetup.name = 'project-name';
+        expect(utils.fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
         let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
