@@ -213,12 +213,19 @@ let validateProjectStructure = function () {
  */
 let validateStyleSheets = function () {
     
-    if(!fm.isDirectory(global.runtimePaths.main + fm.dirSep() + 'view')){
+    let sep = fm.dirSep();
+    
+    // Detect the root view folder based on the current project type
+    let viewFolder = (global.setup.build.lib_angular) ?
+        global.runtimePaths.root + sep + 'projects' + sep + global.setup.metadata.name + sep + 'src' + sep + 'main' + sep + 'view':
+        global.runtimePaths.main + sep + 'view';
+    
+    if(!fm.isDirectory(viewFolder)){
         
         return;
     }
     
-    let cssFiles = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'view', /^.*\.(css|scss)$/i, 'absolute', 'files');
+    let cssFiles = fm.findDirectoryItems(viewFolder, /^.*\.(css|scss)$/i, 'absolute', 'files');
     
     for (let cssFile of cssFiles){
         
