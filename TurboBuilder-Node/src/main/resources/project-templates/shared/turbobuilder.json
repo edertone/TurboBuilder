@@ -17,6 +17,7 @@
             "extrasTodoExtension": true
         },
         "styleSheets": {
+            "onlyScss": true,
             "noCssHardcodedColors": true
         },
         "phpNamespaces" : {

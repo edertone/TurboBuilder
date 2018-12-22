@@ -795,4 +795,16 @@ describe('cmd-parameter-validate', function() {
         expect(utils.saveToSetupFile(setup)).toBe(true);
         expect(utils.exec('-l')).toContain('test.txt must have .todo extension');
     });
+    
+    
+    it('should fail validation if css files exist and only scss files are allowed', function() {
+
+        // TODO
+    });
+    
+    
+    it('should pass validation if css and scss files exist and onlyScss rule is disabled', function() {
+
+        // TODO
+    });
 });

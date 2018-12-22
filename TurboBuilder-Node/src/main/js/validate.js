@@ -225,13 +225,24 @@ let validateStyleSheets = function () {
         return;
     }
     
+    // Check if only scss files are allowed
+    if(global.setup.validate.styleSheets.onlyScss) {
+        
+        let cssFilesFound = fm.findDirectoryItems(viewFolder, /^.*\.(css)$/i, 'absolute', 'files');
+        
+        if (cssFilesFound.length > 0){
+            
+            errors.push("only scss files are allowed: " + cssFilesFound[0]);
+        }
+    }
+    
+    // Check forbidden hardcoded colors
     let cssFiles = fm.findDirectoryItems(viewFolder, /^.*\.(css|scss)$/i, 'absolute', 'files');
     
     for (let cssFile of cssFiles){
         
         let cssContents = fm.readFile(cssFile);
         
-        // Check if css hardcoded colors are forbidden
         if(global.setup.validate.styleSheets.noCssHardcodedColors &&
            /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
                 
