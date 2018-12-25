@@ -11,3 +11,10 @@ body{
     color: $color-text-1;
     background-color: $color-bg-1;
 }
+
+
+/** We globally disable the images dragging and selection to give a more app-like appearance to the project */
+img{
+    pointer-events: none; 
+    user-select: none;
+}
