@@ -52,6 +52,7 @@ So you've generated a new angular project with turbobuilder, and there's no angu
     ```
     "src/main/view/css/normalize.css",
     "src/main/view/css/global.styles.scss"
+    "src/main/view/css/material-theme.scss"
     ```
 
 - Add the following entries inside "my-project-name" > "architect" > "lint" > "options" > "exclude"

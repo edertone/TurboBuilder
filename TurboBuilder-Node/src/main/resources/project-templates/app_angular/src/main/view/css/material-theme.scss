@@ -1,0 +1,33 @@
+/*
+    This file contains the customization for the angular material components
+*/
+
+@import "global-vars.scss";
+@import '~@angular/material/theming';
+
+
+/* 
+    Custom typography config that overrides the font-family on material components
+*/
+    
+    $custom-typography: mat-typography-config(
+      $font-family: 'Roboto-Regular, sans-serif',
+      $headline: mat-typography-level(32px, 48px, 700),
+      $body-1: mat-typography-level(16px, 24px, 500)
+    );
+    
+    @include mat-core($custom-typography);
+
+
+/* 
+    Angular material components custom base colors (primary, accent, warn)
+    Material color names can be found here: https://material.io/tools/color
+*/
+    
+    $custom-theme-primary: mat-palette($mat-blue);
+    $custom-theme-accent: mat-palette($mat-orange);
+    $custom-theme-warn: mat-palette($mat-red);
+    
+    $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+    
+    @include angular-material-theme($custom-theme);
