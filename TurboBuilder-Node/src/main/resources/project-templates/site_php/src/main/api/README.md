@@ -1,7 +1,9 @@
 - The project rest api will be accessed only by this entry points:
 
     http://host/api/site/ (To access the website API)
+    http://host/api/server/ (To access the API for a server only project)
     http://host/api/othername/ (To access the API for libraries or other projects)
+    
     
 - There will be 2 different ways to perform a request to the API
     
@@ -21,9 +23,5 @@
   
     api/customers/create-customer.php
         will contain the create-customer operation.
-
-
-- Operations that are saved as files on the api folder will take preference over the operations that may have been loaded by default
-  or by an included dependency
-  
+ 
 - Any badly formatted request to the api, or a request to a non existing operation will result in a 404 error
