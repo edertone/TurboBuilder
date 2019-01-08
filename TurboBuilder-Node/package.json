@@ -1,6 +1,6 @@
 {
   "name": "turbobuilder",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
   "files": [
     "src/main",
