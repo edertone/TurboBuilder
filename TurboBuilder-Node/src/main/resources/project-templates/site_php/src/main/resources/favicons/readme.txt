@@ -5,7 +5,7 @@ all missing favicons will be auto generated based on the biggest one we have pla
 
 Following list contains all the accepted favicon file names:
 
-	196x196.png
+    196x196.png
     apple-touch-icon-180x180.png
     apple-touch-icon-precomposed.png
     apple-touch-icon.png
