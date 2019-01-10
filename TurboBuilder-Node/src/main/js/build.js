@@ -621,10 +621,10 @@ exports.buildLibAngular = function () {
     }
 
     // Use angular cli to compile the project to the target folder
-    let angularBuildCommand = 'ng build ' + setupModule.getProjectName();
-    console.log("\nLaunching " + angularBuildCommand + "\n");
+    let angularBuildCommand = 'build ' + setupModule.getProjectName();
+    console.log("\nLaunching ng " + angularBuildCommand + "\n");
     
-    if(!console.exec(angularBuildCommand, '', true)){
+    if(!console.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, '', true)){
         
         console.error('build failed');
     }
@@ -644,10 +644,10 @@ exports.buildAppAngular = function () {
     }
 
     //Use angular cli to compile the project to the target folder
-    let angularBuildCommand = 'ng build --output-path=' + global.folderNames.target + fm.dirSep() + setupModule.getProjectName() + fm.dirSep() + 'dist';
-    console.log("\nLaunching " + angularBuildCommand + "\n");
+    let angularBuildCommand = 'build --output-path=' + global.folderNames.target + fm.dirSep() + setupModule.getProjectName() + fm.dirSep() + 'dist';
+    console.log("\nLaunching ng " + angularBuildCommand + "\n");
 
-    if(!console.exec(angularBuildCommand, '', true)){
+    if(!console.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, '', true)){
         
         console.error('build failed');
     }

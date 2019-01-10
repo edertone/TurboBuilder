@@ -73,6 +73,40 @@
                         }
                     }
                 },
+                "filesContent": {
+                    "type": "object",
+                    "description": "Defines validations related to the content of the project files",
+                    "additionalProperties": false, 
+                    "properties": {
+                        "tabsForbidden": {
+                            "type": "object",
+                            "description": "Contains the setup for the rule that allows us to totally disallow the tabulation characters in the project files",
+                            "additionalProperties": false, 
+                            "required": [
+                                "enabled",
+                                "appliesTo"
+                            ],
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enables the forbidden tabs validation rule"
+                                },
+                                "appliesTo": {
+                                    "type": "array",
+                                    "description": "List of folders relative to project root that will be scanned for tab characters.",
+                                    "examples": [
+                                        "src",
+                                        "extras"
+                                    ]
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "A list of strings. Any file inside the appliesTo folders which full path contains any of the provided texts will be ignored"
+                                }
+                            }
+                        }
+                    }
+                },
                 "styleSheets": {
                     "type": "object",
                     "description": "Defines validations related to the project css style sheets",

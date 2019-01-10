@@ -42,6 +42,8 @@ exports.execute = function (verbose = true) {
     
     validateProjectStructure();
     
+    validateFilesContent();
+    
     validateStyleSheets();
     
     validateNamespaces();
@@ -60,7 +62,7 @@ exports.execute = function (verbose = true) {
     
 	    console.log("\nLaunching ng lint");
         
-	    if(!console.exec('ng lint', '', true)){
+	    if(!console.exec('"./node_modules/.bin/ng" lint', '', true)){
 	        
 	        console.error("validate failed");
 	    }	    
@@ -205,6 +207,56 @@ let validateProjectStructure = function () {
     
     // TODO - Check that no strange files or folders exist
     //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
+}
+
+
+/**
+ * Validates the content of the project files
+ */
+let validateFilesContent = function () {
+
+    let sep = fm.dirSep();
+
+    // Validate that no tabulations exist
+    if(global.setup.validate.filesContent.tabsForbidden.enabled){
+    
+        let excludedStrings = global.setup.validate.filesContent.tabsForbidden.excludes
+            .concat([".ico", ".jpg", ".png", ".ttf", ".phar", ".woff"]);
+    
+        for(let appliesTo of global.setup.validate.filesContent.tabsForbidden.appliesTo){
+        
+            let projectFolder = global.runtimePaths.root + sep + appliesTo;
+        
+            if(fm.isDirectory(projectFolder)) {
+        
+                let files = fm.findDirectoryItems(projectFolder, /^.*\.*$/i, 'absolute', 'files');
+                
+                for (let file of files){
+                    
+                    let fileIsExcluded = false;
+                    
+                    for(let excluded of excludedStrings){
+                       
+                        if(file.indexOf(excluded) >= 0){
+                            
+                            fileIsExcluded = true;
+                        }
+                    }
+                    
+                    if(!fileIsExcluded &&
+                       file.indexOf(sep + 'main' + sep + 'libs') < 0){
+                    
+                        let fileContents = fm.readFile(file);
+                        
+                        if(fileContents.indexOf('\t') >= 0) {
+                                
+                            errors.push("File contains tabulations: " + file);
+                        }
+                    }
+                }
+            }
+        }
+     }
 }
 
 

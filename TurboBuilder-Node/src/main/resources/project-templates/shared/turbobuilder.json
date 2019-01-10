@@ -16,6 +16,13 @@
             "extrasSubFoldersMandatory": ["help", "todo"],
             "extrasTodoExtension": true
         },
+        "filesContent" : {
+            "tabsForbidden": {
+                "enabled": true,
+                "appliesTo": ["src", "extras"],
+                "excludes": [".svg", ".properties"]
+            }
+        },
         "styleSheets": {
             "onlyScss": true,
             "noCssHardcodedColors": true

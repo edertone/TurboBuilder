@@ -60,7 +60,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated lib_ts project', function() {
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
+        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
         
         expect(utils.exec('-l')).toContain("validate ok");
     });
@@ -797,14 +797,87 @@ describe('cmd-parameter-validate', function() {
     });
     
     
-    it('should fail validation if css files exist and only scss files are allowed', function() {
+    it('should correctly validate when css files exist / not exist and onlyScss validation rule is true / false', function() {
 
-        // TODO
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-l')).toContain('validate ok');
+       
+        let setup = utils.readSetupFile();        
+        
+        // Check that the only css rule is enabled
+        expect(setup.validate.styleSheets.onlyScss).toBe(true);
+        
+        expect(utils.fm.saveFile('./src/main/view/css/test.css', "")).toBe(true);
+
+        expect(utils.exec('-l')).toContain('only scss files are allowed');
+        
+        // Disable the only css rule
+        setup.validate.styleSheets.onlyScss = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        expect(utils.fm.deleteFile('./src/main/view/css/test.css')).toBe(true);
+        
+        expect(utils.exec('-l')).toContain('validate ok');
     });
     
     
-    it('should pass validation if css and scss files exist and onlyScss rule is disabled', function() {
+    it('should correctly validate when tabulations exist / not exist and tabsForbidden validation rule is true / false', function() {
 
-        // TODO
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-l')).toContain('validate ok');
+       
+        let setup = utils.readSetupFile();        
+        
+        // Check that the tabsForbidden rule is enabled
+        expect(setup.validate.filesContent.tabsForbidden.enabled).toBe(true);
+        expect(setup.validate.filesContent.tabsForbidden.appliesTo).toEqual(["src", "extras"]);
+        expect(setup.validate.filesContent.tabsForbidden.excludes).toEqual([".svg", ".properties"]);
+        
+        // Create files with tabs and make sure validation fails
+        expect(utils.fm.saveFile('./src/main/test.php', "contains\ttabs")).toBe(true);
+        expect(utils.fm.saveFile('./extras/help/test.md', "contains\ttabs")).toBe(true);
+        
+        let validateResult = utils.exec('-l');
+        expect(validateResult).toContain('File contains tabulations');
+        expect(validateResult).toContain('test.php');
+        expect(validateResult).toContain('test.md');
+        
+        setup.validate.filesContent.tabsForbidden.appliesTo = ["src"];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        validateResult = utils.exec('-l');
+        expect(validateResult).toContain('File contains tabulations');
+        expect(validateResult).toContain('test.php');
+        expect(validateResult).not.toContain('test.md');
+        
+        // Disable validation and make sure it now validates ok
+        setup.validate.filesContent.tabsForbidden.enabled = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        setup.validate.filesContent.tabsForbidden.appliesTo = [];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        setup.validate.filesContent.tabsForbidden.excludes = [];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Delete the validation rule and make sure it now fails
+        delete setup.validate.filesContent.tabsForbidden.enabled;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('filesContent.tabsForbidden requires property "enabled"');
+        
+        delete setup.validate.filesContent.tabsForbidden;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('File contains tabulations');
+        
+        delete setup.validate.filesContent;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('File contains tabulations');
     });
 });
