@@ -80,7 +80,9 @@ let createProjectStructure = function (type) {
     let templatesFolder = global.installationPaths.mainResources + sep + 'project-templates';
     
     // Copy the project type specific files
-    fm.copyDirectory(templatesFolder + sep + type, global.runtimePaths.root);
+    let filesToCopy = templatesFolder + sep + (type === 'server_php' ? 'site_php' : type);
+    
+    fm.copyDirectory(filesToCopy, global.runtimePaths.root);
     
     // Copy the extras folder
     fm.createDirectory(global.runtimePaths.extras);
@@ -94,6 +96,12 @@ let createProjectStructure = function (type) {
 
         // The expected-ftp-structure.md file is not necessary for this project type
         fm.deleteFile(global.runtimePaths.extras + sep + 'help' + sep + 'expected-ftp-structure.md');
+    }
+    
+    // Server php project is basically a site_php project but with some parts removed
+    if(type === 'server_php'){
+    
+        fm.deleteDirectory(global.runtimePaths.main + sep + 'view');
     }
     
     // Create readme file

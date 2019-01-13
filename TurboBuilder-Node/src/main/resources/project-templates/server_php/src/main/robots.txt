@@ -1,9 +1,0 @@
-# Allow crawling of all content
-User-agent: *
-Disallow: /trash/
-Disallow: /site/
-Disallow: /server/
-Disallow: /release/
-Disallow: /build/
-Disallow: /data/ 
-Allow: /data/storage/

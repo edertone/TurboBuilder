@@ -266,7 +266,7 @@
                 },
                 "server_php": {
                     "type": "object",
-                    "description": "A php server with a rest api project type",
+                    "description": "A subset of the site_php project type. It basically shares the same project structure, folders, files and setup but without all the visual part. This project type can be upgraded at any time to a site_php one",
                     "additionalProperties": false
                 },
                 "lib_php": {

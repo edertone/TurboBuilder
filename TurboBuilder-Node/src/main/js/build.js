@@ -61,7 +61,7 @@ exports.execute = function () {
     }
     
     // Perform custom build depending on project type
-    if(global.setup.build.site_php){
+    if(global.setup.build.site_php || global.setup.build.server_php){
         
         this.buildSitePhp(buildFullPath);
     }
@@ -128,6 +128,12 @@ exports.buildSitePhp = function (destPath) {
     let destMain = destPath + sep + 'main';
     let destDist = destPath + sep + 'dist';
     let destSite = destDist + sep + 'site';
+    
+    // Validate turbosite setup exists
+    if(!fm.isFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup)){
+    
+        console.error(global.fileNames.turboSiteSetup + ' does not exist');
+    }
     
     // Create the dist and site folders if not exists
     if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
