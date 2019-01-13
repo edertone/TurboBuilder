@@ -159,6 +159,12 @@ let validateProjectStructure = function () {
     let sep = fm.dirSep();
     let extrasPath = global.runtimePaths.root + sep + global.folderNames.extras;
     
+    // Validate project name is not empty
+    if(StringUtils.isEmpty(global.setup.metadata.name)){
+    
+        console.warning(`No project name defined. Please add it to ${global.fileNames.setup} -> metadata.name`);
+    }
+    
     // Validate README.md main file is mandatory
     if(global.setup.validate.projectStructure.readmeFileMandatory &&
         !fm.isFile(global.runtimePaths.root + sep + global.fileNames.readme)){

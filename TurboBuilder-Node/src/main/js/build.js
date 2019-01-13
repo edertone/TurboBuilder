@@ -164,10 +164,10 @@ exports.buildSitePhp = function (destPath) {
     
     fm.saveFile(destSite + sep + global.fileNames.turboSiteSetup, JSON.stringify(turboSiteSetup, null, 4));
     
-    // Launch a warning if errors or warnings are sent to browser
-    if(turboSiteSetup.errorSetup.exceptionsToBrowser ||turboSiteSetup.errorSetup.warningsToBrowser){
+    // Fail if errors or warnings are configured to be sent to browser
+    if(global.isRelease && (turboSiteSetup.errorSetup.exceptionsToBrowser || turboSiteSetup.errorSetup.warningsToBrowser)){
         
-        console.warning("Warning exceptions or warnings are enabled to be shown on browser. " +
+        console.error("Exceptions or warnings are enabled to be shown on browser. " +
         		"This is a security problem. Please disable them on " + global.fileNames.turboSiteSetup);
     }
     

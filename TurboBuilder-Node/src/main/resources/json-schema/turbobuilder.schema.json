@@ -221,6 +221,7 @@
             "description": "Defines the parameters for the build process",
             "oneOf": [
                 {"required": ["site_php"]},
+                {"required": ["server_php"]},
                 {"required": ["lib_php"]},
                 {"required": ["lib_java"]},
                 {"required": ["lib_js"]},
@@ -261,6 +262,11 @@
                 "site_php": {
                     "type": "object",
                     "description": "A php website project type",
+                    "additionalProperties": false
+                },
+                "server_php": {
+                    "type": "object",
+                    "description": "A php server with a rest api project type",
                     "additionalProperties": false
                 },
                 "lib_php": {
@@ -466,7 +472,7 @@
                         },
                         "sourcePath": {
                             "type": "string",
-                            "description": "A path relative to the defined source root where the files to be synced are located"
+                            "description": "A path relative to the target compiled folder root (target/project-name/)"
                         },
                         "remotePath": {
                             "type": "string",

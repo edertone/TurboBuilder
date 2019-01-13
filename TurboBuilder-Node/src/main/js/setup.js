@@ -252,7 +252,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the sync section
     delete setupContents.sync;
     
-    if(type === 'site_php'){
+    if(type === 'site_php' || type === 'server_php'){
         
         setupContents.sync = {
             "runAfterBuild": false,

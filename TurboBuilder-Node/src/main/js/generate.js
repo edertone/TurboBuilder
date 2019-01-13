@@ -5,9 +5,8 @@
  */
 
 
-const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { FilesManager, StringUtils } = require('turbocommons-ts');
 const console = require('./console');
-const validateModule = require('./validate');
 const setupModule = require('./setup');
 
 
@@ -89,6 +88,12 @@ let createProjectStructure = function (type) {
     if(!fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras, false)){
     
         console.error('Failed creating: ' + global.runtimePaths.extras);
+    }
+    
+    if(type !== 'site_php' && type !== 'server_php' && type !== 'app_angular'){
+
+        // The expected-ftp-structure.md file is not necessary for this project type
+        fm.deleteFile(global.runtimePaths.extras + sep + 'help' + sep + 'expected-ftp-structure.md');
     }
     
     // Create readme file

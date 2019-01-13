@@ -54,6 +54,8 @@
             "extensions": ["js", "php", "json"]
         },        
         "site_php" : {
+        },
+        "server_php" : {
         },        
         "lib_php" : {
             "createPhar": true

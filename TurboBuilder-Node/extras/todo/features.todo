@@ -5,6 +5,7 @@ Sorted by priority:
 - Implement project structure validation for site_php:
     All files inside view/views folder must be lower case, do not have spaces or non url friendly characters
     All files inside view/views folder must be analyzed so the correct code, code order and html structure is used.
+    All php class files inside a site_php project must have a namespace that starts with "site/php". (are components excluded from this rule or not?)
     .. more ideas?  
 
 - upgrade to webpack 4
