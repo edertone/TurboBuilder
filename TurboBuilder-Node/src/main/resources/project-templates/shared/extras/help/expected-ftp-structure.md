@@ -3,7 +3,8 @@
 We expect to work with a structure that matches the following folders:
 
 - trash
-- site
+- at least one of:
+    - site, server, app
 - release
 - build
 - data
