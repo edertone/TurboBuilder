@@ -4,7 +4,7 @@ We expect to work with a structure that matches the following folders:
 
 - trash
 - at least one of:
-    - site, server, app
+    - site, app
 - release
 - build
 - data

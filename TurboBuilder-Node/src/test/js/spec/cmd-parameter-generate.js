@@ -155,11 +155,48 @@ describe('cmd-parameter-generate', function(){
         expect(setup.build.replaceVersion.enabled).toBe(false);
         expect(setup.build.replaceVersion.wildCard).toBe("@@--build-version--@@");
         expect(setup.build.replaceVersion.extensions.length).toBe(3);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(true);
+        expect(setup.build.hasOwnProperty('server_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.sync.type).toBe("fileSystem");
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
+    });
+    
+    
+    it('should generate server_php project structure', function(){
+
+        expect(utils.exec('--generate server_php')).toContain("Generated project structure ok");
+
+        expect(utils.exec('-l')).toContain("validate ok");
+
+        expect(utils.fm.isFile('./turbosite.json')).toBe(true);
+        expect(utils.fm.isFile('./turbosite.release.json')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(utils.fm.isDirectory('./src/main/resources/fonts')).toBe(false);
+        expect(utils.fm.isDirectory('./src/main/view')).toBe(false);
+
+        let setup = utils.readSetupFile();
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
+        expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
+        expect(setup.build.replaceVersion.enabled).toBe(false);
+        expect(setup.build.replaceVersion.wildCard).toBe("@@--build-version--@@");
+        expect(setup.build.replaceVersion.extensions.length).toBe(3);
+        expect(setup.build.hasOwnProperty('server_php')).toBe(true);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.sync.type).toBe("fileSystem");
+        expect(setup.test.length).toBe(1);
+        expect(setup.test[0].type).toBe("phpUnit");
     });
 
 

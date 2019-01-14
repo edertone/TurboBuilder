@@ -194,54 +194,6 @@ exports.buildSitePhp = function (destPath) {
         fm.deleteFile(scssFile);
     }
     
-    // Generate all missing favicons
-    let destFaviconsPath = destSite + sep + 'resources' + sep + 'favicons';
-    let faviconFiles = fm.findDirectoryItems(destFaviconsPath, /^.*\.png$/i, 'name', 'files');
-    
-    // If no favicons are specified, launch a warning
-    if(faviconFiles.length <= 0){
-        
-        console.warning("Warning: No favicons specified");
-    }
-    
-    // List of expected favicon files and sizes, sorted from biggest to smallest
-    let faviconExpectedFiles = [
-            {name: "196x196.png", w: 196, h: 196},
-            {name: "apple-touch-icon-180x180.png", w: 180, h: 180},
-            {name: "apple-touch-icon-precomposed.png", w: 152, h: 152},
-            {name: "apple-touch-icon.png", w: 152, h: 152},
-            {name: "apple-touch-icon-152x152.png", w: 152, h: 152},
-            {name: "apple-touch-icon-144x144.png", w: 144, h: 144},
-            {name: "128x128.png", w: 128, h: 128},
-            {name: "apple-touch-icon-114x114.png", w: 114, h: 114},
-            {name: "96x96.png", w: 96, h: 96},
-            {name: "apple-touch-icon-76x76.png", w: 76, h: 76},
-            {name: "apple-touch-icon-57x57.png", w: 57, h: 57},
-            {name: "32x32.png", w: 32, h: 32},
-            {name: "16x16.png", w: 16, h: 16},
-        ];
-    
-    // Make sure all favicons on the resources folder match any of the expected ones
-    for (let faviconFile of faviconFiles) {
-        
-        let fileNameFound = false;
-        
-        for (let faviconExpectedFile of faviconExpectedFiles) {
-
-            if(faviconFile === faviconExpectedFile.name){
-                
-                fileNameFound = true;
-                
-                break;
-            }
-        }
-        
-        if(!fileNameFound){
-            
-            console.error('Unexpected favicon name: ' + faviconFile);
-        }
-    }
-    
     // Aux method to add the cache hash to a file and rename it
     let renameFileToAddHash = (filePath) => {
         
@@ -256,70 +208,122 @@ exports.buildSitePhp = function (destPath) {
         return StringUtils.getPathElement(filePathWithHash);
     }
     
-    // Find the biggest favicon that is provided on the project based on the list of expected ones
-    let biggestFound = '';
-    let biggestFoundWithHash = '';
+    // Generate all missing favicons
+    let destFaviconsPath = destSite + sep + 'resources' + sep + 'favicons';
+        
+    if(fm.isDirectory(destFaviconsPath)){
     
-    for (let faviconExpectedFile of faviconExpectedFiles) {
-
-        if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
+        let faviconFiles = fm.findDirectoryItems(destFaviconsPath, /^.*\.png$/i, 'name', 'files');
+        
+        // If no favicons are specified, launch a warning
+        if(faviconFiles.length <= 0){
             
-            biggestFound = faviconExpectedFile.name;
-            biggestFoundWithHash = renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
+            console.warning("Warning: No favicons specified");
         }
-    }
-    
-    // Generate all missing favicon images with the sharp image processing library
-    if(biggestFound !== ''){
+        
+        // List of expected favicon files and sizes, sorted from biggest to smallest
+        let faviconExpectedFiles = [
+                {name: "196x196.png", w: 196, h: 196},
+                {name: "apple-touch-icon-180x180.png", w: 180, h: 180},
+                {name: "apple-touch-icon-precomposed.png", w: 152, h: 152},
+                {name: "apple-touch-icon.png", w: 152, h: 152},
+                {name: "apple-touch-icon-152x152.png", w: 152, h: 152},
+                {name: "apple-touch-icon-144x144.png", w: 144, h: 144},
+                {name: "128x128.png", w: 128, h: 128},
+                {name: "apple-touch-icon-114x114.png", w: 114, h: 114},
+                {name: "96x96.png", w: 96, h: 96},
+                {name: "apple-touch-icon-76x76.png", w: 76, h: 76},
+                {name: "apple-touch-icon-57x57.png", w: 57, h: 57},
+                {name: "32x32.png", w: 32, h: 32},
+                {name: "16x16.png", w: 16, h: 16},
+            ];
+        
+        // Make sure all favicons on the resources folder match any of the expected ones
+        for (let faviconFile of faviconFiles) {
             
+            let fileNameFound = false;
+            
+            for (let faviconExpectedFile of faviconExpectedFiles) {
+    
+                if(faviconFile === faviconExpectedFile.name){
+                    
+                    fileNameFound = true;
+                    
+                    break;
+                }
+            }
+            
+            if(!fileNameFound){
+                
+                console.error('Unexpected favicon name: ' + faviconFile);
+            }
+        }
+        
+        // Find the biggest favicon that is provided on the project based on the list of expected ones
+        let biggestFound = '';
+        let biggestFoundWithHash = '';
+        
         for (let faviconExpectedFile of faviconExpectedFiles) {
     
-            if(faviconFiles.indexOf(faviconExpectedFile.name) < 0){
+            if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
                 
-                // Apple touch icons are placed at the root of the site cause they are autodetected by apple devices
-                if(faviconExpectedFile.name.indexOf("apple-touch-") === 0){
+                biggestFound = faviconExpectedFile.name;
+                biggestFoundWithHash = renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
+            }
+        }
+        
+        // Generate all missing favicon images with the sharp image processing library
+        if(biggestFound !== ''){
+                
+            for (let faviconExpectedFile of faviconExpectedFiles) {
+        
+                if(faviconFiles.indexOf(faviconExpectedFile.name) < 0){
                     
-                    // Use the amazing sharp lib to resize the image to the missing width and height
-                    sharp(destFaviconsPath + sep + biggestFoundWithHash)
-                        .resize(faviconExpectedFile.w, faviconExpectedFile.h)
-                        .toFile(destSite + sep + faviconExpectedFile.name, function(err) {
-                            
-                            if(err || !fm.isFile(destSite + sep + faviconExpectedFile.name)) {
+                    // Apple touch icons are placed at the root of the site cause they are autodetected by apple devices
+                    if(faviconExpectedFile.name.indexOf("apple-touch-") === 0){
+                        
+                        // Use the amazing sharp lib to resize the image to the missing width and height
+                        sharp(destFaviconsPath + sep + biggestFoundWithHash)
+                            .resize(faviconExpectedFile.w, faviconExpectedFile.h)
+                            .toFile(destSite + sep + faviconExpectedFile.name, function(err) {
                                 
-                                console.error('Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name + "\n" + err);
-                            }
-                        });
-                    
-                    // Hard block till we are sure the file is created
-                    blockingSleepTill(() => {return fm.isFile(destSite + sep + faviconExpectedFile.name);}, 60000,
-                        'Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name);
-                                        
+                                if(err || !fm.isFile(destSite + sep + faviconExpectedFile.name)) {
+                                    
+                                    console.error('Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name + "\n" + err);
+                                }
+                            });
+                        
+                        // Hard block till we are sure the file is created
+                        blockingSleepTill(() => {return fm.isFile(destSite + sep + faviconExpectedFile.name);}, 60000,
+                            'Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name);
+                                            
+                    }else{
+                        
+                        // Add the hash to the expected favicon
+                        let faviconExpectedFileWithHash = StringUtils.getPathElementWithoutExt(faviconExpectedFile.name) + '-' + turboSiteSetup.cacheHash
+                            + '.' + StringUtils.getPathExtension(faviconExpectedFile.name);
+                        
+                        sharp(destFaviconsPath + sep + biggestFoundWithHash)
+                            .resize(faviconExpectedFile.w, faviconExpectedFile.h)
+                            .toFile(destFaviconsPath + sep + faviconExpectedFileWithHash, function(err) {
+                                
+                                if(err || !fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash)) {
+                                    
+                                    console.error('Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name + "\n" + err);
+                                }
+                            });
+                        
+                        // Hard block till we are sure the file is created
+                        blockingSleepTill(() => {return fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash);}, 60000,
+                            'Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name);
+                    }
+                
                 }else{
                     
-                    // Add the hash to the expected favicon
-                    let faviconExpectedFileWithHash = StringUtils.getPathElementWithoutExt(faviconExpectedFile.name) + '-' + turboSiteSetup.cacheHash
-                        + '.' + StringUtils.getPathExtension(faviconExpectedFile.name);
+                    if(biggestFound !== faviconExpectedFile.name){
                     
-                    sharp(destFaviconsPath + sep + biggestFoundWithHash)
-                        .resize(faviconExpectedFile.w, faviconExpectedFile.h)
-                        .toFile(destFaviconsPath + sep + faviconExpectedFileWithHash, function(err) {
-                            
-                            if(err || !fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash)) {
-                                
-                                console.error('Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name + "\n" + err);
-                            }
-                        });
-                    
-                    // Hard block till we are sure the file is created
-                    blockingSleepTill(() => {return fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash);}, 60000,
-                        'Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name);
-                }
-            
-            }else{
-                
-                if(biggestFound !== faviconExpectedFile.name){
-                
-                    renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
+                        renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
+                    }
                 }
             }
         }
@@ -334,122 +338,125 @@ exports.buildSitePhp = function (destPath) {
     }
     
     // Create the global css file
-    fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
-            mergeFilesFromArray(globalCssFiles, destSite, true));
-    
-    // Generate the array of js files that will be merged into the global js file
-    let globalJsFiles = ObjectUtils.clone(turboSiteSetup.globalJs);
-    
-    for (let globalComponent of turboSiteSetup.globalComponents) {
-        
-        globalJsFiles.push(globalComponent + '.js');
-    }
-    
-    // Create global Js file
-    fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
-            mergeFilesFromArray(globalJsFiles, destSite, true));
-    
-    // Generate all the views css and js merged files
     let viewsRoot = destSite + sep + 'view' + sep + 'views';
-    
-    for (let viewName of fm.getDirectoryList(viewsRoot)) {
         
-        if(fm.isDirectory(viewsRoot + sep + viewName)){
+    if(fm.isDirectory(viewsRoot)){
+        
+        fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
+                mergeFilesFromArray(globalCssFiles, destSite, true));
+        
+        // Generate the array of js files that will be merged into the global js file
+        let globalJsFiles = ObjectUtils.clone(turboSiteSetup.globalJs);
+        
+        for (let globalComponent of turboSiteSetup.globalComponents) {
             
-            if(!fm.isFile(viewsRoot + sep + viewName + sep + viewName + '.php')){
+            globalJsFiles.push(globalComponent + '.js');
+        }
+        
+        // Create global Js file
+        fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
+                mergeFilesFromArray(globalJsFiles, destSite, true));
+        
+        // Generate all the views css and js merged files
+        for (let viewName of fm.getDirectoryList(viewsRoot)) {
+            
+            if(fm.isDirectory(viewsRoot + sep + viewName)){
                 
-                console.error('View ' + viewName + ' must have a ' + viewName + '.php file');
-            }
-
-            // Add extra html code to the view if necessary
-            let viewHtmlCode = fm.readFile(viewsRoot + sep + viewName + sep + viewName + '.php');
-            
-            let afterBodyOpenHtml = '';
-            
-            for (let afterBodyOpenPath of turboSiteSetup.globalHtml.afterBodyOpen) {
-
-                if(!fm.isFile(destSite + sep + afterBodyOpenPath)){
-                
-                    console.error('afterBodyOpen file not found: ' + afterBodyOpenPath);
-                }
-                
-                afterBodyOpenHtml += "\n" + fm.readFile(destSite + sep + afterBodyOpenPath);
-            }
-            
-            let beforeBodyCloseHtml = '';
-            
-            for (let beforeBodyClosePath of turboSiteSetup.globalHtml.beforeBodyClose) {
-
-                if(!fm.isFile(destSite + sep + beforeBodyClosePath)){
-                
-                    console.error('beforeBodyClose file not found: ' + beforeBodyClosePath);
-                }
-                
-                beforeBodyCloseHtml += "\n" + fm.readFile(destSite + sep + beforeBodyClosePath);
-            }
-            
-            if(!StringUtils.isEmpty(afterBodyOpenHtml) || !StringUtils.isEmpty(beforeBodyCloseHtml)){
-                 
-                viewHtmlCode = StringUtils.replace(viewHtmlCode, '<body>', '<body>' + afterBodyOpenHtml, 1);
-                viewHtmlCode = StringUtils.replace(viewHtmlCode, '</body>', beforeBodyCloseHtml + "\n</body>", 1);
-                
-                fm.saveFile(viewsRoot + sep + viewName + sep + viewName + '.php', viewHtmlCode);
-            }
-            
-            // Generate an array with the view css file plus all the defined view components css files
-            let cssFiles = [viewsRoot + sep + viewName + sep + viewName + '.css'];
-            
-            if(!fm.isFile(cssFiles[0])){
-                
-                console.error('View ' + viewName + ' must have a ' + viewName + '.css file');
-            }
-            
-            // Generate an array with the view js file plus all the defined view components js files
-            let jsFiles = [viewsRoot + sep + viewName + sep + viewName + '.js'];
-            
-            if(!fm.isFile(jsFiles[0])){
-                
-                console.error('View ' + viewName + ' must have a ' + viewName + '.js file');
-            }
-            
-            // Append all the components related to this view to the arrays of css and js files
-            for (let viewComponent of turboSiteSetup.viewComponents) {
-                
-                if(viewComponent.view === viewName){
+                if(!fm.isFile(viewsRoot + sep + viewName + sep + viewName + '.php')){
                     
-                    for (let component of viewComponent.components) {
-                        
-                        cssFiles.push(destSite + sep + component + '.css');
-                        
-                        if(!fm.isFile(cssFiles[cssFiles.length - 1])){
-                            
-                            console.error('Missing component file ' + component + '.css');
-                        }                    
-                        
-                        jsFiles.push(destSite + sep + component + '.js');
-                        
-                        if(!fm.isFile(jsFiles[jsFiles.length - 1])){
-                            
-                            console.error('Missing component file ' + component + '.js');
-                        }
+                    console.error('View ' + viewName + ' must have a ' + viewName + '.php file');
+                }
+    
+                // Add extra html code to the view if necessary
+                let viewHtmlCode = fm.readFile(viewsRoot + sep + viewName + sep + viewName + '.php');
+                
+                let afterBodyOpenHtml = '';
+                
+                for (let afterBodyOpenPath of turboSiteSetup.globalHtml.afterBodyOpen) {
+    
+                    if(!fm.isFile(destSite + sep + afterBodyOpenPath)){
+                    
+                        console.error('afterBodyOpen file not found: ' + afterBodyOpenPath);
                     }
                     
+                    afterBodyOpenHtml += "\n" + fm.readFile(destSite + sep + afterBodyOpenPath);
                 }
-            }
-            
-            // Merge all the css and js arrays into single css and js files            
-            let cssContent = mergeFilesFromArray(cssFiles, '', true);
-            
-            if(!StringUtils.isEmpty(cssContent)){
                 
-                fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.css', cssContent);
-            }
+                let beforeBodyCloseHtml = '';
+                
+                for (let beforeBodyClosePath of turboSiteSetup.globalHtml.beforeBodyClose) {
+    
+                    if(!fm.isFile(destSite + sep + beforeBodyClosePath)){
+                    
+                        console.error('beforeBodyClose file not found: ' + beforeBodyClosePath);
+                    }
+                    
+                    beforeBodyCloseHtml += "\n" + fm.readFile(destSite + sep + beforeBodyClosePath);
+                }
+                
+                if(!StringUtils.isEmpty(afterBodyOpenHtml) || !StringUtils.isEmpty(beforeBodyCloseHtml)){
+                     
+                    viewHtmlCode = StringUtils.replace(viewHtmlCode, '<body>', '<body>' + afterBodyOpenHtml, 1);
+                    viewHtmlCode = StringUtils.replace(viewHtmlCode, '</body>', beforeBodyCloseHtml + "\n</body>", 1);
+                    
+                    fm.saveFile(viewsRoot + sep + viewName + sep + viewName + '.php', viewHtmlCode);
+                }
+                
+                // Generate an array with the view css file plus all the defined view components css files
+                let cssFiles = [viewsRoot + sep + viewName + sep + viewName + '.css'];
+                
+                if(!fm.isFile(cssFiles[0])){
+                    
+                    console.error('View ' + viewName + ' must have a ' + viewName + '.css file');
+                }
+                
+                // Generate an array with the view js file plus all the defined view components js files
+                let jsFiles = [viewsRoot + sep + viewName + sep + viewName + '.js'];
+                
+                if(!fm.isFile(jsFiles[0])){
+                    
+                    console.error('View ' + viewName + ' must have a ' + viewName + '.js file');
+                }
+                
+                // Append all the components related to this view to the arrays of css and js files
+                for (let viewComponent of turboSiteSetup.viewComponents) {
+                    
+                    if(viewComponent.view === viewName){
                         
-            let jsContent = mergeFilesFromArray(jsFiles, '', true);
-            
-            if(!StringUtils.isEmpty(jsContent)){
+                        for (let component of viewComponent.components) {
+                            
+                            cssFiles.push(destSite + sep + component + '.css');
+                            
+                            if(!fm.isFile(cssFiles[cssFiles.length - 1])){
+                                
+                                console.error('Missing component file ' + component + '.css');
+                            }                    
+                            
+                            jsFiles.push(destSite + sep + component + '.js');
+                            
+                            if(!fm.isFile(jsFiles[jsFiles.length - 1])){
+                                
+                                console.error('Missing component file ' + component + '.js');
+                            }
+                        }
+                        
+                    }
+                }
                 
-                fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
+                // Merge all the css and js arrays into single css and js files            
+                let cssContent = mergeFilesFromArray(cssFiles, '', true);
+                
+                if(!StringUtils.isEmpty(cssContent)){
+                    
+                    fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.css', cssContent);
+                }
+                            
+                let jsContent = mergeFilesFromArray(jsFiles, '', true);
+                
+                if(!StringUtils.isEmpty(jsContent)){
+                    
+                    fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
+                }
             }
         }
     }

@@ -80,6 +80,25 @@ describe('cmd-parameter-clean', function(){
 
         expect(utils.fm.isDirectory('./target')).toBe(false);        
     });
+    
+    
+    it('should correctly clean a server_php project', function(){
+
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        expect(utils.fm.isDirectory('./target')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/dist/.htaccess')).toBe(true);
+        
+        expect(utils.exec('-c')).toContain("clean ok");
+
+        expect(utils.fm.isDirectory('./target')).toBe(false);        
+    });
 
 
     it('should correctly clean a filesystem synced site_php and keep the synced folder data when -c is called but delete it if -cs is called', function(){

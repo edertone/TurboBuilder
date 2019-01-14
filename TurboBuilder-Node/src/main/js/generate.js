@@ -92,9 +92,9 @@ let createProjectStructure = function (type) {
         console.error('Failed creating: ' + global.runtimePaths.extras);
     }
     
+    // The expected-ftp-structure.md file is not necessary on some project types
     if(type !== 'site_php' && type !== 'server_php' && type !== 'app_angular'){
 
-        // The expected-ftp-structure.md file is not necessary for this project type
         fm.deleteFile(global.runtimePaths.extras + sep + 'help' + sep + 'expected-ftp-structure.md');
     }
     
@@ -102,6 +102,15 @@ let createProjectStructure = function (type) {
     if(type === 'server_php'){
     
         fm.deleteDirectory(global.runtimePaths.main + sep + 'view');
+        fm.deleteDirectory(global.runtimePaths.main + sep + 'resources' + sep + 'favicons');
+        fm.deleteDirectory(global.runtimePaths.main + sep + 'resources' + sep + 'fonts');
+        
+        let localesReadmeContent = fm.readFile(global.runtimePaths.main + sep + 'resources' + sep + 'locales' + sep + 'readme.txt');
+        fm.deleteDirectory(global.runtimePaths.main + sep + 'resources' + sep + 'locales', false);
+        fm.saveFile(global.runtimePaths.main + sep + 'resources' + sep + 'locales' + sep + 'readme.txt', localesReadmeContent);
+        
+        fm.deleteDirectory(global.runtimePaths.test + sep + 'js', false);
+        fm.saveFile(global.runtimePaths.test + sep + 'js' + sep + 'TODO.txt', 'To get a js tests template you can generate a site_php project and copy them from there');
     }
     
     // Create readme file

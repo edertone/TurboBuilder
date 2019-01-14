@@ -270,13 +270,14 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     
     for (let testItem of setupContents.test) {
         
-        if(type === 'lib_php' && testItem.type === 'phpUnit'){
+        if((type === 'server_php' || type === 'lib_php') &&
+            testItem.type === 'phpUnit'){
 
             testArray.push(testItem);
         }
         
         if((type === 'site_php' || type === 'lib_js' || type === 'lib_ts') &&
-                testItem.type === 'jasmine'){
+            testItem.type === 'jasmine'){
 
             testArray.push(testItem);
         }

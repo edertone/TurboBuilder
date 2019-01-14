@@ -230,6 +230,21 @@ describe('cmd-parameter-build', function() {
     });
     
     
+    it('should build ok when -b argument is executed on a generated server_php project', function() {
+        
+        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('server_php')).toBe(true);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        
+        expect(utils.exec('-b')).toContain('build ok');
+    });
+        
+    
     it('should replace all wildcard matches with project version on all configured file extensions', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
