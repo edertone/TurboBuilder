@@ -4,9 +4,9 @@
 // Register the autoload method that will locate and automatically load the classes
 spl_autoload_register(function($className){
 
-    // This autoloader will only load php classes which namespace begins with "site\\src".
+    // This autoloader will only load php classes which namespace begins with "project\\src".
     // This is the namespace that is mandatory for all the classes that are defined on the site_php project itself
-    if(strpos($className, 'site\\src\\') === 0 && !class_exists($className)){
+    if(strpos($className, 'project\\src\\') === 0 && !class_exists($className)){
 
         // Replace all slashes to the correct OS directory separator
         $classPath = str_replace('\\', DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $className));
