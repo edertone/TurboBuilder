@@ -23,6 +23,9 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         
         utils.checkChromeDriverAvailable();
         
+        this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+        
         // Initialize the chrome driver with english language
         let chromeCapabilities = webdriver.Capabilities.chrome();
         
@@ -69,6 +72,8 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     afterAll(function() {
 
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
+        
         this.driver.quit(); 
     });
     
@@ -82,18 +87,20 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
               ).toBe(true);
         
-        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                    .toContain('turbosite-global-error-manager-problem', 'Expected a php problem: exception to be shown on browser');
+                    .toContain('turbosite-global-error-manager-problem', url + ' Expected a php problem: exception to be shown on browser');
                 
                 expect(source)
-                    .toContain('FATAL EXCEPTION', 'Expected a php problem: exception to be shown on browser');
+                    .toContain('FATAL EXCEPTION', url + ' Expected a php problem: exception to be shown on browser');
             
                 expect(source)
-                    .toContain('Call to undefined function nonexistantfunction()', 'Expected a php problem: exception to be shown on browser');
+                    .toContain('Call to undefined function nonexistantfunction()', url + ' Expected a php problem: exception to be shown on browser');
         
                 return done();
             });
@@ -110,18 +117,20 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b;', 1))
               ).toBe(true);
         
-        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                    .toContain('turbosite-global-error-manager-problem', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('turbosite-global-error-manager-problem', url + ' Expected a php problem: warning to be shown on browser');
                 
                 expect(source)
-                    .toContain('E_NOTICE', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('E_NOTICE', url + ' Expected a php problem: warning to be shown on browser');
             
                 expect(source)
-                    .toContain('Undefined variable: b', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('Undefined variable: b', url + ' Expected a php problem: warning to be shown on browser');
         
                 return done();
             });
@@ -139,24 +148,26 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b; nonexistantfunction();', 1))
               ).toBe(true);
         
-        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                .toContain('turbosite-global-error-manager-problem', 'Expected a php problem: exception to be shown on browser');
+                .toContain('turbosite-global-error-manager-problem', url + ' Expected a php problem: exception to be shown on browser');
             
                 expect(source)
-                    .toContain('FATAL EXCEPTION', 'Expected a php problem: exception to be shown on browser');
+                    .toContain('FATAL EXCEPTION', url + ' Expected a php problem: exception to be shown on browser');
             
                 expect(source)
-                    .toContain('Call to undefined function nonexistantfunction()', 'Expected a php problem: exception to be shown on browser');
+                    .toContain('Call to undefined function nonexistantfunction()', url + ' Expected a php problem: exception to be shown on browser');
         
                 expect(source)
-                    .toContain('E_NOTICE', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('E_NOTICE', url + ' Expected a php problem: warning to be shown on browser');
             
                 expect(source)
-                    .toContain('Undefined variable: b', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('Undefined variable: b', url + ' Expected a php problem: warning to be shown on browser');
         
                 return done();
             });
@@ -173,24 +184,26 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b; $a=$c; $a=$d;', 1))
               ).toBe(true);
         
-        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                .toContain('turbosite-global-error-manager-problem', 'Expected a php problem: exception to be shown on browser');
+                .toContain('turbosite-global-error-manager-problem', url + ' Expected a php problem: exception to be shown on browser');
             
                 expect(source)
-                    .toContain('E_NOTICE', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('E_NOTICE', url + ' Expected a php problem: warning to be shown on browser');
             
                 expect(source)
-                    .toContain('Undefined variable: b', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('Undefined variable: b', url + ' Expected a php problem: warning to be shown on browser');
         
                 expect(source)
-                    .toContain('Undefined variable: c', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('Undefined variable: c', url + ' Expected a php problem: warning to be shown on browser');
     
                 expect(source)
-                    .toContain('Undefined variable: d', 'Expected a php problem: warning to be shown on browser');
+                    .toContain('Undefined variable: d', url + ' Expected a php problem: warning to be shown on browser');
     
                 return done();
             });
@@ -200,22 +213,27 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should not show warnings on browser for a site_php project type when disabled in setup', function(done) {
         
+        this.turbositeSetup.errorSetup.warningsToBrowser = false;
+        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b;', 1))
               ).toBe(true);
         
-        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                    .not.toContain('turbosite-global-error-manager-problem', 'NOT Expected a php problem: warning to be shown on browser');
+                    .not.toContain('turbosite-global-error-manager-problem', url + ' NOT Expected a php problem: warning to be shown on browser');
                 
                 expect(source)
-                    .not.toContain('E_NOTICE', 'NOT Expected a php problem: warning to be shown on browser');
+                    .not.toContain('E_NOTICE', url + ' NOT Expected a php problem: warning to be shown on browser');
             
                 expect(source)
-                    .not.toContain('Undefined variable: b', 'NOT Expected a php problem: warning to be shown on browser');
+                    .not.toContain('Undefined variable: b', url + ' NOT Expected a php problem: warning to be shown on browser');
         
                 return done();
             });
@@ -225,22 +243,27 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should not show errors on browser for a site_php project type when disabled in setup', function(done) {
 
+        this.turbositeSetup.errorSetup.exceptionsToBrowser = false;
+        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(this.homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
               ).toBe(true);
         
-        this.driver.get(utils.replaceWildCardsOnText("https://$host/$locale")).then(() => {
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
                 
                 expect(source)
-                    .not.toContain('turbosite-global-error-manager-problem', 'NOT Expected a php problem: exception to be shown on browser');
+                    .not.toContain('turbosite-global-error-manager-problem', url + ' NOT Expected a php problem: exception to be shown on browser');
                 
                 expect(source)
-                    .not.toContain('FATAL EXCEPTION', 'NOT Expected a php problem: exception to be shown on browser');
+                    .not.toContain('FATAL EXCEPTION', url + ' NOT Expected a php problem: exception to be shown on browser');
             
                 expect(source)
-                    .not.toContain('Call to undefined function nonexistantfunction()', 'NOT Expected a php problem: exception to be shown on browser');
+                    .not.toContain('Call to undefined function nonexistantfunction()', url + ' NOT Expected a php problem: exception to be shown on browser');
         
                 return done();
             });

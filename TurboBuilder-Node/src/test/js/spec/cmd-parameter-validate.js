@@ -880,4 +880,18 @@ describe('cmd-parameter-validate', function() {
         expect(utils.saveToSetupFile(setup)).toBe(true);
         expect(utils.exec('-l')).toContain('File contains tabulations');
     });
+    
+    
+    it('should validate ok a newly generated server_php project', function() {
+
+        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        
+        let buildResult = utils.exec('-l');
+        expect(buildResult).toContain("validate start");
+        expect(buildResult).toContain("validate ok");
+    });
+    
+    
+    // TODO - more validation tests related to server_php
+    
 });

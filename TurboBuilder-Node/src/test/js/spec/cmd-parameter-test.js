@@ -164,7 +164,7 @@ describe('cmd-parameter-test', function() {
         
         let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
         expect(npmInstallResult).toContain("added");
-        expect(npmInstallResult).toContain("packages in");
+        expect(npmInstallResult).toContain("packages");
         expect(npmInstallResult).not.toContain("npm ERR");
         
         // launch selenium tests on root localhost

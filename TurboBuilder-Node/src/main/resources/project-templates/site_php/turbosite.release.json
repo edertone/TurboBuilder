@@ -1,4 +1,11 @@
 {
 
+    "errorSetup": {
+        "exceptionsToBrowser": false,
+        "exceptionsToMail": "",
+        "warningsToBrowser": false,
+        "warningsToMail": ""
+    },
+
     "baseURL": ""
 }

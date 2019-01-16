@@ -78,7 +78,9 @@ exports.replaceWildCardsOnText = function (text) {
     
     let rootSetup = JSON.parse(fm.readFile('turbobuilder.json'));
     
-    let projectName = rootSetup.metadata.name;
+    let projectName = (rootSetup.metadata.name === '') ?
+        StringUtils.getPathElement(path.resolve('./')) :
+        rootSetup.metadata.name;
     
     // TODO - aqui el project name falla si estem testejant un release    
     this.siteSetup = JSON.parse(fm.readFile('target/' + projectName + '/dist/site/turbosite.json'));
