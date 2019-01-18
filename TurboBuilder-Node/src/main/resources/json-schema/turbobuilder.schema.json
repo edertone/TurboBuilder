@@ -124,7 +124,7 @@
                 },
                 "phpNamespaces": {
                     "type": "object",
-                    "description": "The Phpnamespaces Schema",
+                    "description": "Defines the validation of php namespaces for all the php project files",
                     "required": [
                         "enabled",
                         "mandatory",
@@ -135,23 +135,23 @@
                     "properties": {
                         "enabled": {
                             "type": "boolean",
-                            "description": "The Enabled Schema"
+                            "description": "Enables or disables the php namespaces validation"
                         },
                         "mandatory": {
                             "type": "boolean",
-                            "description": "The Mandatory Schema"
+                            "description": "If set to true, all php files on the project (except those which path matches any of the exclude strings) must have a namespace declaration"
                         },
                         "mustContain": {
                             "type": "array",
-                            "description": "The Mustcontain Schema",
+                            "description": "A list of strings that must appear on namespaces for all files of the project. Wildcards can be used to customize these strings: $path will be replaced with the php file path relative to src folder (For example: main\\php\\model)",
                             "items": {
                                 "type": "string",
-                                "description": "The Items Schema"
+                                "description": "A pattern that must appear on all the php files namespaces"
                             }
                         },
                         "excludes": {
                             "type": "array",
-                            "description": "The Excludes Schema",
+                            "description": "Any php file which full filesystem path contanis any of the provided strings will be excluded from namespace validation",
                             "items": {
                                 "type": "string",
                                 "description": "The Items Schema"

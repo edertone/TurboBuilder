@@ -254,6 +254,20 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     
     if(type === 'site_php' || type === 'server_php'){
         
+        setupContents.validate.phpNamespaces = {
+            "enabled": true,
+            "mandatory": true,
+            "mustContain": [
+                "project\\src\\$path"
+            ],
+            "excludes": [
+                "autoloader.php",
+                "index.php",
+                "error-404.php",
+                "main\\view"
+            ]
+        }
+        
         setupContents.sync = {
             "runAfterBuild": false,
             "type": "fileSystem",

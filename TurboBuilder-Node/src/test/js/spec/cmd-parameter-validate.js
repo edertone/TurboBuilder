@@ -830,7 +830,11 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-l')).toContain('validate ok');
        
-        let setup = utils.readSetupFile();        
+        let setup = utils.readSetupFile();
+        
+        // Disable the namespaces validation
+        setup.validate.phpNamespaces.enabled = false;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
         
         // Check that the tabsForbidden rule is enabled
         expect(setup.validate.filesContent.tabsForbidden.enabled).toBe(true);

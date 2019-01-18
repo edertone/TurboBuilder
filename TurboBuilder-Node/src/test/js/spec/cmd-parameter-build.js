@@ -258,6 +258,7 @@ describe('cmd-parameter-build', function() {
         
         let setup = utils.readSetupFile(); 
         setup.build.replaceVersion.enabled = true;
+        setup.validate.phpNamespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
@@ -274,6 +275,10 @@ describe('cmd-parameter-build', function() {
         let folderName = StringUtils.getPathElement(this.workdir);
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        setup.validate.phpNamespaces.enabled = false;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
@@ -296,7 +301,7 @@ describe('cmd-parameter-build', function() {
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
         // We will now enable replaceversion and set an empty wildcard. No replacement must happen
-        let setup = utils.readSetupFile();
+        setup = utils.readSetupFile();
         setup.build.replaceVersion.enabled = true;
         setup.build.replaceVersion.wildCard = "";        
         expect(utils.saveToSetupFile(setup)).toBe(true);

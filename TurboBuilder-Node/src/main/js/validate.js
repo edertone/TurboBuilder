@@ -362,11 +362,6 @@ let validateNamespaces = function () {
                 // Replace the wildcards on the mustContain
                 mustContain = mustContain.replace('$path', pathToReplace);
                 
-                for(var i = 0; i < StringUtils.countPathElements(fileAbsolutePath); i++){
-                    
-                    mustContain = mustContain.replace('$' + String(i), StringUtils.getPathElement(fileAbsolutePath, i));
-                }
-                
                 if(namespaceToCheck.indexOf(mustContain) < 0){
                     
                     return mustContain;
@@ -380,7 +375,7 @@ let validateNamespaces = function () {
     if(global.setup.validate.phpNamespaces &&
        global.setup.validate.phpNamespaces.enabled){
         
-        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main + fm.dirSep() + 'php', /.*\.php$/i, 'absolute', 'files');
+        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main , /.*\.php$/i, 'absolute', 'files');
         
         for (let fileToValidate of filesToValidate){
             
