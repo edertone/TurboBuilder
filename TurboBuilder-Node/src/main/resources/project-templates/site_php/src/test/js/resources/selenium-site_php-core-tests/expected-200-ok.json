@@ -264,5 +264,69 @@
         "startWith": null,
         "endWith": null,
         "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-without-params",
+        "title": null,
+        "source": "Any value can be output by the service as a string (json or xml data, plain text, etc..)",
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-without-params/unexpected-param",
+        "title": null,
+        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of get parameters passed to service. Received 1 but expected 0"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-without-params/unexpected-param1/unexpected-param2",
+        "title": null,
+        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of get parameters passed to service. Received 2 but expected 0"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-with-get-params",
+        "title": null,
+        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of get parameters passed to service. Received 0 but expected 2"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-with-get-params/param1",
+        "title": null,
+        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of get parameters passed to service. Received 1 but expected 2"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2",
+        "title": null,
+        "source": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"param1\",\"received-param-1-value\":\"param2\"}"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-with-get-params/0-1-2-3-4-5-6/FFF9900022",
+        "title": null,
+        "source": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"0-1-2-3-4-5-6\",\"received-param-1-value\":\"FFF9900022\"}"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2/param3",
+        "title": null,
+        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of get parameters passed to service. Received 3 but expected 2"],
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
     }
 ]

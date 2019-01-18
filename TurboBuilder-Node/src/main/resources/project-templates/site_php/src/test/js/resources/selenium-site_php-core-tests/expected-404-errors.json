@@ -48,5 +48,15 @@
     "https://$host/resources/favicons/32x32.png",
     "https://$host/resources/favicons/96x96.png",
     "https://$host/resources/favicons/128x128.png",
-    "https://$host/resources/favicons/196x196.png"
+    "https://$host/resources/favicons/196x196.png",
+    "https://$host/build/api/site/example",
+    "https://$host/build/api/site/example/",
+    "https://$host/build/api/site/example/example-service-without-param",
+    "https://$host/build/api/site/example/example-servi",
+    "https://$host/build/api/site/example1/example-service-without-params",
+    "https://$host/build/api/sit/example/example-service-without-params",
+    "https://$host/build/api/unexistant",
+    "https://$host/build/api/unexistant/service",
+    "https://$host/puppy/site/example/example-service-without-params",
+    "https://$host/build/api/site/example/example-service-with-get-arams/param1/param2"
 ]

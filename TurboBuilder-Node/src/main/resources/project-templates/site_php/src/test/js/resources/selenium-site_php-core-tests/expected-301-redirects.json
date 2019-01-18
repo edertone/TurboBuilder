@@ -210,5 +210,41 @@
     {
         "url": "https://$host/en/multi-parameters/param1/param2/param3/param4/param5",
         "to": "https://$host/en/multi-parameters/param1/param2/param3"
-    }
+    },
+    {
+        "url": "http://$host/api/site/example/example-service-without-params",
+        "to": "https://$host/api/site/example/example-service-without-params"
+    },
+    {
+        "url": "http://www.$host/api/site/example/example-service-without-params",
+        "to": "https://$host/api/site/example/example-service-without-params"
+    },
+    {
+        "url": "http://$host/api/site/example/example-service-without-params/",
+        "to": "https://$host/api/site/example/example-service-without-params"
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-without-params///",
+        "to": "https://$host/api/site/example/example-service-without-params"
+    },
+    {
+        "url": "http://$host/build/api/site/example/example-service-with-get-params/p1/p2",
+        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+    },
+    {
+        "url": "http://www.$host/build/api/site/example/example-service-with-get-params/p1/p2",
+        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+    },
+    {
+        "url": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2/",
+        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+    },
+    {
+        "url": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2////",
+        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+    },
+    {
+        "url": "https://$host/build/api/site/example/example-service-with-get-params/1/?2",
+        "to": "https://$host/build/api/site/example/example-service-with-get-params/1"
+    }     
 ]
