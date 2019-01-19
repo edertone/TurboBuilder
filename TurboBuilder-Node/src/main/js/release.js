@@ -54,7 +54,10 @@ exports.execute = function () {
     let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
     
     // Delete all files inside the release path folder
-    fm.deleteDirectory(releaseFullPath);
+    if(fm.isDirectory(releaseFullPath)){
+
+        fm.deleteDirectory(releaseFullPath);
+    }
     
     if(global.setup.validate.runBeforeBuild){
         

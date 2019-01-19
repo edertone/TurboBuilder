@@ -50,7 +50,10 @@ exports.execute = function () {
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
     
     // Delete all files inside the target/project name folder
-    fm.deleteDirectory(buildFullPath);
+    if(fm.isDirectory(buildFullPath)){
+    
+        fm.deleteDirectory(buildFullPath);
+    }
     
     // Copy all the src main files to the target build folder
     this.copyMainFiles(buildFullPath);
