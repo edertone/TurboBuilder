@@ -246,5 +246,17 @@
     {
         "url": "https://$host/build/api/site/example/example-service-with-get-params/1/?2",
         "to": "https://$host/build/api/site/example/example-service-with-get-params/1"
+    },
+    {
+        "url": "http://$host/api/site/example/example-service-with-post-params",
+        "to": "https://$host/api/site/example/example-service-with-post-params"
+    },
+    {
+        "url": "http://www.$host/api/site/example/example-service-with-post-params",
+        "to": "https://$host/api/site/example/example-service-with-post-params"
+    },
+    {
+        "url": "https://$host/api/site/example/example-service-with-post-params/////",
+        "to": "https://$host/api/site/example/example-service-with-post-params"
     }     
 ]
