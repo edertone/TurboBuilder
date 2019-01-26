@@ -11,7 +11,7 @@ use org\turbosite\src\main\php\model\WebService;
 class ExampleServiceWithGetParams extends WebService{
 
 
-    public function setup(){
+    protected function setup(){
 
         // We will accept two get parameters
         $this->enabledGetParams = 2;

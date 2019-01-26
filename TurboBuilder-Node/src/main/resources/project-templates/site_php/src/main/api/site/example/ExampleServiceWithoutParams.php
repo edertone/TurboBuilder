@@ -11,7 +11,7 @@ use org\turbosite\src\main\php\model\WebService;
 class ExampleServiceWithoutParams extends WebService{
 
 
-    public function setup(){
+    protected function setup(){
 
         // Nothing is changed here
     }

@@ -11,7 +11,7 @@ use org\turbosite\src\main\php\model\WebService;
 class ExampleServiceWithPostAndGetParams extends WebService{
 
 
-    public function setup(){
+    protected function setup(){
 
         $this->enablePostParams = true;
 
