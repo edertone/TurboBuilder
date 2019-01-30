@@ -24,37 +24,37 @@ class ExampleServiceThatCallsAnotherOne extends WebService{
         $exampleServiceWithoutParams = new ExampleServiceWithoutParams();
 
         $result = "ExampleServiceWithoutParams called. Result:\n";
-        $result .= $exampleServiceWithoutParams->run();
+        $result .= json_encode($exampleServiceWithoutParams->run());
         $result .= "\n\n";
 
         $exampleServiceWithGetParams = new ExampleServiceWithGetParams(['param0', 'param1']);
 
         $result .= "ExampleServiceWithGetParams called. Result:\n";
-        $result .= $exampleServiceWithGetParams->run();
+        $result .= json_encode($exampleServiceWithGetParams->run());
         $result .= "\n\n";
 
         $exampleServiceWithGetParamsOptional = new ExampleServiceWithGetParamsOptional(['param0']);
 
         $result .= "ExampleServiceWithGetParamsOptional called. Result:\n";
-        $result .= $exampleServiceWithGetParamsOptional->run();
+        $result .= json_encode($exampleServiceWithGetParamsOptional->run());
         $result .= "\n\n";
 
         $exampleServiceWithPostParams = new ExampleServiceWithPostParams(null, 'data from constructor');
 
         $result .= "ExampleServiceWithPostParams called. Result:\n";
-        $result .= $exampleServiceWithPostParams->run();
+        $result .= json_encode($exampleServiceWithPostParams->run());
         $result .= "\n\n";
 
         $exampleServiceWithPostAndGetParams = new ExampleServiceWithPostAndGetParams(['param0', 'param1'], 'data from constructor');
 
         $result .= "ExampleServiceWithPostAndGetParams called. Result:\n";
-        $result .= $exampleServiceWithPostAndGetParams->run();
+        $result .= json_encode($exampleServiceWithPostAndGetParams->run());
         $result .= "\n\n";
 
         $exampleServiceWithPostAndGetParamsOptional = new ExampleServiceWithPostAndGetParamsOptional([], null);
 
         $result .= "ExampleServiceWithPostAndGetParamsOptional called. Result:\n";
-        $result .= $exampleServiceWithPostAndGetParamsOptional->run();
+        $result .= json_encode($exampleServiceWithPostAndGetParamsOptional->run());
 
         return $result."\n";
     }

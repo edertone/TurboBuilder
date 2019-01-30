@@ -19,12 +19,10 @@ class ExampleServiceWithPostParams extends WebService{
 
     public function run(){
 
-        $result = [
+        return [
             "info" => "this object is returned as a json string with the received POST parameters object",
             "received-params" => $this->getPostData()
         ];
-
-        return json_encode($result);
     }
 }
 

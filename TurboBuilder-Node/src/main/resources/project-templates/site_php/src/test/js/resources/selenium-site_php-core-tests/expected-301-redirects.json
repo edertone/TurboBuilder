@@ -228,6 +228,10 @@
         "to": "https://$host/api/site/example/example-service-without-params"
     },
     {
+        "url": "https://$host/api/site/example/example-service-without-params?param1=value1&param2=value2",
+        "to": "https://$host/api/site/example/example-service-without-params"
+    },
+    {
         "url": "http://$host/build/api/site/example/example-service-with-get-params/p1/p2",
         "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
     },

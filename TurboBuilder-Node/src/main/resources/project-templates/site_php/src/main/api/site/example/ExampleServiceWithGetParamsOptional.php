@@ -21,15 +21,13 @@ class ExampleServiceWithGetParamsOptional extends WebService{
 
     public function run(){
 
-        $result = [
+        return [
             "info" => "this object is returned as a json string with the optionally received GET parameters values",
             "received-param-0-value" => $this->getParam(0),
             "received-param-1-value" => $this->getParam(1),
             "received-param-2-value" => $this->getParam(2),
             "received-param-3-value" => $this->getParam(3)
         ];
-
-        return json_encode($result);
     }
 }
 
