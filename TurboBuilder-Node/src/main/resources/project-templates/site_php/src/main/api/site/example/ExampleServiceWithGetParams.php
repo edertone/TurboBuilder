@@ -6,14 +6,13 @@ use org\turbosite\src\main\php\model\WebService;
 
 
 /**
- * An example of a service with get parameters
+ * An example of a service that must be called with get parameters
  */
 class ExampleServiceWithGetParams extends WebService{
 
 
     protected function setup(){
 
-        // We will accept two get parameters
         $this->enabledGetParams = 2;
     }
 

@@ -14,6 +14,7 @@ class ExampleServiceWithoutParams extends WebService{
     protected function setup(){
 
         // Nothing is changed here
+        // No GET nor POST parameters are accepted
     }
 
 

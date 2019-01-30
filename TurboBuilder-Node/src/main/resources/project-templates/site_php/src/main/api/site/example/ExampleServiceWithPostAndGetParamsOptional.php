@@ -6,25 +6,30 @@ use org\turbosite\src\main\php\model\WebService;
 
 
 /**
- * An example of a service that must be called with POST and GET parameters
+ * An example of a service that may be called with POST or GET parameters
  */
-class ExampleServiceWithPostAndGetParams extends WebService{
+class ExampleServiceWithPostAndGetParamsOptional extends WebService{
 
 
     protected function setup(){
 
         $this->isPostDataEnabled = true;
 
-        $this->enabledGetParams = 2;
+        $this->isPostDataMandatory = false;
+
+        $this->enabledGetParams = 3;
+
+        $this->isGetDataMandatory = false;
     }
 
 
     public function run(){
 
         $result = [
-            "info" => "this object is returned as a json string with the received GET and POST parameters values",
+            "info" => "this object is returned as a json string with the optionally received GET and POST parameters values",
             "received-GET-param-0-value" => $this->getParam(0),
             "received-GET-param-1-value" => $this->getParam(1),
+            "received-GET-param-2-value" => $this->getParam(2),
             "received-POST-params" => $this->getPostData()
         ];
 
