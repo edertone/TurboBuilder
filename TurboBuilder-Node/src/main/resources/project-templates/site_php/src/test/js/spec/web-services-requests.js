@@ -109,7 +109,7 @@ describe('web-services-post-requests', function() {
 
         let request = this.createGETRequest('example-service-without-params/param0/param1', done,
             ['turbosite-global-error-manager-problem',
-             'Invalid number of get parameters passed to service. Received 2 but expected 0']);
+             'Invalid number of GET parameters passed to service. Received 2 but expected 0']);
         
         this.httpManager.execute(request);
     });
@@ -119,7 +119,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createGETRequest('example-service-without-params/&& &&   /&&&  /-----???', done,
             ['turbosite-global-error-manager-problem',
-             'Invalid number of get parameters passed to service. Received 3 but expected 0']);
+             'Invalid number of GET parameters passed to service. Received 3 but expected 0']);
         
         this.httpManager.execute(request);
     });
@@ -158,7 +158,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createGETRequest('example-service-with-get-params', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 0 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']);
         
         this.httpManager.execute(request);
     });
@@ -177,7 +177,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createGETRequest('example-service-with-get-params/param1/param2/param3/param4', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 4 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 2']);
         
         this.httpManager.execute(request);
     });
@@ -187,7 +187,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-get-params', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 0 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']);
         
         request.parameters = {
             "data": "some arbitrary string"
@@ -264,13 +264,13 @@ describe('web-services-post-requests', function() {
     
         let request1 = this.createGETRequest('example-service-with-get-params-optional/param1/param2/param3/param4/param5', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 5 but expected 4']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 5 but expected 4']);
         
         this.httpManager.execute(request1);
         
         let request2 = this.createGETRequest('example-service-with-get-params-optional/param1/param2/param3/param4/param5/param6/param7', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 7 but expected 4']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 7 but expected 4']);
         
         this.httpManager.execute(request2);
     });
@@ -334,7 +334,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-params/param1/param2', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 2 but expected 0']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 2 but expected 0']);
        
         this.httpManager.execute(request);
     });
@@ -344,7 +344,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-params/param1/param2/===$$$$!!!!!!/   ---', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 4 but expected 0']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 0']);
        
         this.httpManager.execute(request);
     });
@@ -391,7 +391,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-params/param1/param2', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 2 but expected 0']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 2 but expected 0']);
        
         request.parameters = {
             "data": "some arbitrary string"
@@ -405,7 +405,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 0 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']);
                
         this.httpManager.execute(request);
     });
@@ -425,7 +425,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params/param1/param2/param3/param4', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 4 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 2']);
                
         this.httpManager.execute(request);
     });
@@ -435,7 +435,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 0 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']);
         
         request.parameters = {
             "data": "some arbitrary string"
@@ -449,7 +449,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 0 but expected 2']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']);
         
         request.parameters = {
             "data": "some arbitrary string",
@@ -500,7 +500,7 @@ describe('web-services-post-requests', function() {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params-optional/param1/param2/param3/param4/param5', done,
             ['turbosite-global-error-manager-problem',
-             'FATAL EXCEPTION<br>Invalid number of get parameters passed to service. Received 5 but expected 3']);
+             'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 5 but expected 3']);
                 
         this.httpManager.execute(request);
     });

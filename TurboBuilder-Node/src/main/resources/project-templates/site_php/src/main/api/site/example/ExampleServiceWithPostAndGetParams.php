@@ -13,7 +13,7 @@ class ExampleServiceWithPostAndGetParams extends WebService{
 
     protected function setup(){
 
-        $this->isPostDataEnabled = true;
+        $this->enabledPostParams = ['data'];
 
         $this->enabledGetParams = 2;
     }
@@ -25,7 +25,7 @@ class ExampleServiceWithPostAndGetParams extends WebService{
             "info" => "this object is returned as a json string with the received GET and POST parameters values",
             "received-GET-param-0-value" => $this->getParam(0),
             "received-GET-param-1-value" => $this->getParam(1),
-            "received-POST-params" => $this->getPostData()
+            "received-POST-params" => $this->getPost('data')
         ];
     }
 }
