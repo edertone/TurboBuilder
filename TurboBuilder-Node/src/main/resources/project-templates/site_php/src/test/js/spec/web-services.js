@@ -353,19 +353,21 @@ describe('web-services-post-requests', function() {
     it('should correctly load the ExampleServiceWithPostParams when POST parameters are passed', function(done) {
     
         let request1 = this.createPOSTRequest('example-service-with-post-params', done,
-            ['{"info":"this object is returned as a json string with the received POST parameters object","received-params":""}']);
+            ['{"info":"this object is returned as a json string with the received POST parameters","received-param1":"","received-param2":""}']);
        
         request1.parameters = {
-            "data": ""
+            "param1": "",
+            "param2": "",
         };
         
         this.httpManager.execute(request1);
     
         let request2 = this.createPOSTRequest('example-service-with-post-params', done,
-            ['{"info":"this object is returned as a json string with the received POST parameters object","received-params":"some arbitrary string"}']);
+            ['{"info":"this object is returned as a json string with the received POST parameters","received-param1":"some arbitrary string","received-param2":"param 2 value"}']);
        
         request2.parameters = {
-            "data": "some arbitrary string"
+            "param1": "some arbitrary string",
+            "param2": "param 2 value"
         };
         
         this.httpManager.execute(request2);
@@ -379,7 +381,7 @@ describe('web-services-post-requests', function() {
              'FATAL EXCEPTION<br>Unexpected POST variables received']);
        
         request.parameters = {
-            "data": "some arbitrary string",
+            "param1": "some arbitrary string",
             "extradata": "some extra value"
         };
         
@@ -476,7 +478,7 @@ describe('web-services-post-requests', function() {
     it('should correctly load the ExampleServiceWithPostAndGetParamsOptional when no parameters are passed', function(done) {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params-optional', done,
-            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-params":""}']);
+            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":""}']);
                
         this.httpManager.execute(request);
     });
@@ -485,12 +487,12 @@ describe('web-services-post-requests', function() {
     it('should correctly load the ExampleServiceWithPostAndGetParamsOptional when GET parameters are passed', function(done) {
     
         let request1 = this.createPOSTRequest('example-service-with-post-and-get-params-optional/param1', done,
-            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-params":""}']);
+            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":""}']);
                
         this.httpManager.execute(request1);
         
         let request2 = this.createPOSTRequest('example-service-with-post-and-get-params-optional/param1/param2', done,
-            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":"","received-POST-params":""}']);
+            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":"","received-POST-param-data":""}']);
                
         this.httpManager.execute(request2);
     });
@@ -509,7 +511,7 @@ describe('web-services-post-requests', function() {
     it('should correctly load the ExampleServiceWithPostAndGetParamsOptional when POST parameters are passed', function(done) {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params-optional', done,
-            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-params":"some arbitrary string"}']);
+            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":"some arbitrary string"}']);
         
         request.parameters = {
             "data": "some arbitrary string"
@@ -537,7 +539,7 @@ describe('web-services-post-requests', function() {
     it('should correctly load the ExampleServiceWithPostAndGetParamsOptional when GET and POST parameters are passed', function(done) {
     
         let request = this.createPOSTRequest('example-service-with-post-and-get-params-optional/param1/param2', done,
-            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":"","received-POST-params":"some arbitrary string"}']);
+            ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":"","received-POST-param-data":"some arbitrary string"}']);
         
         request.parameters = {
             "data": "some arbitrary string"
@@ -557,11 +559,13 @@ describe('web-services-post-requests', function() {
              'ExampleServiceWithGetParamsOptional called. Result',
              '{"info":"this object is returned as a json string with the optionally received GET parameters values","received-param-0-value":"param0","received-param-1-value":"","received-param-2-value":"","received-param-3-value":""}',
              'ExampleServiceWithPostParams called. Result:',
-             '{"info":"this object is returned as a json string with the received POST parameters object","received-params":"data from constructor"}',
+             '{"info":"this object is returned as a json string with the received POST parameters","received-param1":"p1 value","received-param2":"p2 value"}',
              'ExampleServiceWithPostAndGetParams called. Result:',
              '{"info":"this object is returned as a json string with the received GET and POST parameters values","received-GET-param-0-value":"param0","received-GET-param-1-value":"param1","received-POST-params":"data from constructor"}',
              'ExampleServiceWithPostAndGetParamsOptional called. Result:',
-             '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-params":"data from constructor"}']);
+             '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":""}',
+             'ExampleServiceWithPostAndGetParamsOptional called 2. Result:',
+             '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":"","received-POST-param-data":"datavalue"}']);
                 
         this.httpManager.execute(request);
     });

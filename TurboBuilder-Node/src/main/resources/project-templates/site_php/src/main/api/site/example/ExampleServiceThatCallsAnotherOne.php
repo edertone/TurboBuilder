@@ -39,13 +39,13 @@ class ExampleServiceThatCallsAnotherOne extends WebService{
         $result .= json_encode($exampleServiceWithGetParamsOptional->run());
         $result .= "\n\n";
 
-        $exampleServiceWithPostParams = new ExampleServiceWithPostParams(null, 'data from constructor');
+        $exampleServiceWithPostParams = new ExampleServiceWithPostParams(null, ['param1' => 'p1 value', 'param2' => 'p2 value']);
 
         $result .= "ExampleServiceWithPostParams called. Result:\n";
         $result .= json_encode($exampleServiceWithPostParams->run());
         $result .= "\n\n";
 
-        $exampleServiceWithPostAndGetParams = new ExampleServiceWithPostAndGetParams(['param0', 'param1'], 'data from constructor');
+        $exampleServiceWithPostAndGetParams = new ExampleServiceWithPostAndGetParams(['param0', 'param1'], ['data' => 'data from constructor']);
 
         $result .= "ExampleServiceWithPostAndGetParams called. Result:\n";
         $result .= json_encode($exampleServiceWithPostAndGetParams->run());
@@ -54,6 +54,12 @@ class ExampleServiceThatCallsAnotherOne extends WebService{
         $exampleServiceWithPostAndGetParamsOptional = new ExampleServiceWithPostAndGetParamsOptional([], null);
 
         $result .= "ExampleServiceWithPostAndGetParamsOptional called. Result:\n";
+        $result .= json_encode($exampleServiceWithPostAndGetParamsOptional->run());
+        $result .= "\n\n";
+
+        $exampleServiceWithPostAndGetParamsOptional = new ExampleServiceWithPostAndGetParamsOptional(['p1', 'p2'], ['data' => 'datavalue']);
+
+        $result .= "ExampleServiceWithPostAndGetParamsOptional called 2. Result:\n";
         $result .= json_encode($exampleServiceWithPostAndGetParamsOptional->run());
 
         return $result."\n";
