@@ -11,7 +11,7 @@ if(file_exists('cache/hash')){
     die();
 }
 
-require 'autoloader.php';
+require 'phar://libs/turbosite/turbosite-php-0.3.0.phar/php/autoloader-project.php';
 require 'libs/turbocommons-php/TurboCommons-Php-0.7.3.phar';
 require 'libs/turbosite/turbosite-php-0.3.0.phar';
 

@@ -14,7 +14,6 @@
 5- Overwrite all the files found at src/main with the ones on tmpfolder
    (if you have modified any of them, you should update them manually):
 
-    src/main/autoloader.php
     src/main/error-404.php
     src/main/htaccess.txt
     src/main/index.php

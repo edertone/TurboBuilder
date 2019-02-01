@@ -16,7 +16,8 @@
         "globalCss",
         "globalComponents",
         "globalHtml",
-        "viewComponents"
+        "viewComponents",
+        "api"
     ],
     "additionalProperties": false, 
     "properties": {
@@ -224,6 +225,27 @@
                         "type": "array",
                         "description": "A list of paths to the components based on src/main, without file extension",
                         "examples": ["view/components/main-menu/main-menu"]
+                    }
+                }
+            }
+        },
+        "api": {
+            "type": "array",
+            "description": "List of API definitions. Each element links a URL services path to the code namespace where the respective webservice classes can be found",
+            "items": {
+                "type": "object",
+                "required": ["uri", "namespace"],
+                "additionalProperties": false,
+                "properties": {
+                    "uri": {
+                        "type": "string",
+                        "description": "A fragment of the URL that calls the services which defines the services API path. Must start with api/ and no ending slash must exist",
+                        "examples": ["api/site"]
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace where the webservice classes that relate to the specified URI can be found. Namespace must point to the root of the service classes folder that matches the specified URI fragment. No ending slash must exist",
+                        "examples": ["project/src/main/api/site"]
                     }
                 }
             }
