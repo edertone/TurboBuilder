@@ -1,6 +1,6 @@
 <?php
 
-namespace project\src\main\api\site\example;
+namespace project\src\main\services\example;
 
 use org\turbosite\src\main\php\model\WebService;
 

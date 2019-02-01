@@ -59,7 +59,7 @@
     "api": [
         {
             "uri": "api/site",
-            "namespace": "project\\src\\main\\api\\site"
+            "namespace": "project\\src\\main\\services"
         }
     ]
 }
