@@ -56,6 +56,42 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.exec('-l')).toContain('additionalProperty "invalidField" exists in instance when not allowed');
     });
+    
+    
+    it('should fail validate for javascript files that do not contain the use strict modifier', function() {
+    
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        expect(utils.fm.saveFile('./src/main/test.js', "does not begin with use strict")).toBe(true);
+         
+        expect(utils.exec('-l')).toContain('File must start with "use strict":');
+        
+        // Disable use strict validation on setup and test that it now validates
+        let setup = utils.readSetupFile();
+        
+        setup.validate.javascript.useStrict = {
+                "enabled": false,
+                "includes": [".js"],
+                "excludes": ["src/main/libs"]
+            };
+        
+        utils.saveToSetupFile(setup);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        // Enable again the use strict validation on setup but ignore the bad file
+        setup.validate.javascript.useStrict = {
+                "enabled": true,
+                "includes": [".js"],
+                "excludes": ["test.js"]
+            };
+        
+        utils.saveToSetupFile(setup);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
 
     
     it('should validate ok a newly generated lib_ts project', function() {
@@ -234,7 +270,7 @@ describe('cmd-parameter-validate', function() {
         expect(buildResult).not.toContain("validate ok");
     });
     
-
+    
     it('should validate copyright headers when enabled in setup and all project files have valid headers except an excluded one', function() {
     
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
@@ -307,6 +343,62 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should corectly detect files that match the includes list on copyrightHeaders setup', function() {
+    
+        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        
+        setup.validate.copyrightHeaders = [
+            {
+                "path": "extras/copyright headers/TsFiles-Header.txt",
+                "appliesTo": "src",
+                "includes": ["ts"],
+                "excludes": []
+            }
+        ];
+        
+        utils.saveToSetupFile(setup);
+    
+        // Create the copyright header template
+        expect(utils.fm.createDirectory('./extras/copyright headers')).toBe(true);
+        expect(utils.fm.saveFile('./extras/copyright headers/TsFiles-Header.txt', "/* this header is correct */\n")).toBe(true);
+        
+        // Add the correct header to all existing ts files on the generated project structure
+        let tsFiles = utils.fm.findDirectoryItems('./', /.*\.ts$/i, 'absolute');
+     
+        for(let tsFile of tsFiles){
+            
+            expect(utils.fm.saveFile(tsFile, "/* this header is correct */\n\n\nand some more text")).toBe(true);
+        }
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        // Create a file that ends with ts but is not a .ts file. This must currently fail cause we have included all files which end with ts
+        expect(utils.fm.saveFile('./src/main/ts/ThisIsNotAts', "invalid header")).toBe(true);
+        
+        let buildResult = utils.exec('-l');
+        expect(buildResult).toContain("Bad copyright header");
+        expect(buildResult).toContain("ThisIsNotAts");
+        expect(buildResult).toContain("Must be as defined in extras/copyright headers/TsFiles-Header.txt");
+        
+        // We now alter the includes pattern to be .ts instead of ts
+        setup.validate.copyrightHeaders = [
+            {
+                "path": "extras/copyright headers/TsFiles-Header.txt",
+                "appliesTo": "src",
+                "includes": [".ts"],
+                "excludes": []
+            }
+        ];
+        
+        utils.saveToSetupFile(setup);
+        
+        // The ThisIsNotAts file is now ignored
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+   
     it('should fail on a site_php project with a missing turbobuilder setup file', function() {
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");

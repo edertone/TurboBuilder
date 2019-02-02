@@ -57,6 +57,8 @@ exports.execute = function (verbose = true) {
         validateSitePhp();
     }
     
+    validateJavascript();
+    
     // Use angular cli to run the tslint verification for angular projects
 	if(global.setup.build.app_angular || global.setup.build.lib_angular){
     
@@ -319,9 +321,7 @@ let validateCopyrightHeaders = function () {
     
         let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
         
-        let regex = new RegExp('^.*(' + validator.includes.join('|') + ')$', 'i');
-        
-        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, regex, 'absolute', 'files');
+        let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, validator.includes);
         
         for (let fileToValidate of filesToValidate){
             
@@ -457,25 +457,79 @@ let validateSitePhp = function () {
     // Validate the turbosite.json schema
     validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
     
-    // Validate js files
-    let jsFiles = fm.findDirectoryItems(global.runtimePaths.main, /^.*\.(js)$/i, 'absolute', 'files');
+    // Validate the turbosite.json contents
+    // TODO - all uri properties inside api must start with api/ 
+}
+
+
+/**
+ * Validates javascript files
+ */
+let validateJavascript = function () {
+
+    if(!global.setup.validate.javascript){
     
-    for (let jsFile of jsFiles){
+        return;
+    }
+    
+    let filesToValidate = getFilesFromIncludeList(global.runtimePaths.src, global.setup.validate.javascript.useStrict.includes);
         
-        // Files inside the src/main/libs folder won't be verified
-        if(jsFile.includes('src/main/libs') || jsFile.includes('src\\main\\libs')){
+    for (let file of filesToValidate){
+        
+        // Check if js files must contain "use strict" at the very first beginning of the file
+        if(global.setup.validate.javascript.useStrict.enabled &&
+           !isExcluded(file, global.setup.validate.javascript.useStrict.excludes)) {
+          
+            let jsContents = fm.readFile(file);
             
-            continue;
-        }
-        
-        let jsContents = fm.readFile(jsFile);
-        
-        // All project js files must contain "use strict" at the very first beginning of the file
-        if(global.setup.validate.sitePhp.jsUseStrict &&
-           jsContents.indexOf('"use strict"') !== 0) {
+            if(jsContents.indexOf('#!/usr/bin/env node') === 0){
+            
+                if((jsContents.indexOf('use strict') < 0 && jsContents.indexOf("'use strict'") < 0) ||
+                   (jsContents.indexOf('use strict') > 24 && jsContents.indexOf("'use strict'") > 24)){
+                          
+                    errors.push('File must have "use strict" after #!/usr/bin/env node:\n' + file);
+                }
                 
-            errors.push('File must start with "use strict": ' + jsFile);
+            }else if(jsContents.indexOf('"use strict"') !== 0 && jsContents.indexOf("'use strict'") !== 0){
+                      
+                errors.push('File must start with "use strict": ' + file);
+            }
+        }
+    }
+}
+
+
+/**
+ * Generates a list of absolute paths for files on the specified folder which full path that matches any of the patterns
+ * specified on the includeList parameter.
+ */
+let getFilesFromIncludeList = function (path, includeList) {
+
+    let includeListProcessed = [];
+    
+    for (let include of includeList){
+    
+        includeListProcessed.push(StringUtils.replace(include, '.', '\\.'));
+    }
+
+    let regex = new RegExp('^.*(' + includeListProcessed.join('|') + ')$', 'i');
+        
+    return fm.findDirectoryItems(path, regex, 'absolute', 'files');
+}
+
+
+/**
+ * Checks if the specified path contains any of the provided exclude patterns
+ */
+let isExcluded = function (path, excludeList) {
+
+    for (let exclude of excludeList){
+    
+        if(StringUtils.formatPath(path, '/').includes(StringUtils.formatPath(exclude, '/'))){
+
+            return true;
         }
     }
     
+    return false;
 }

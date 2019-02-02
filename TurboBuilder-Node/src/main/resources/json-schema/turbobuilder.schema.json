@@ -186,7 +186,7 @@
                                 "description": "The Includes Schema",
                                 "items": {
                                     "type": "string",
-                                    "description": "The Items Schema"
+                                    "description": "List of string patterns that will be used to include files or folders from the validation"
                                 }
                             },
                             "excludes": {
@@ -194,23 +194,40 @@
                                 "description": "The Excludes Schema",
                                 "items": {
                                     "type": "string",
-                                    "description": "The Items Schema"
+                                    "description": "List of string patterns that will be used to exclude files or folders from the validation"
                                 }
                             }
                         }
                     }
                 },
-                "sitePhp": {
+                "javascript": {
                     "type": "object",
-                    "description": "The Sitephp Schema",
-                    "required": [
-                        "jsUseStrict"
-                    ],
+                    "description": "Defines validation rules that apply to javascript files",
                     "additionalProperties": false, 
                     "properties": {
-                        "jsUseStrict": {
-                            "type": "boolean",
-                            "description": "If enabled, all project js files must start with 'use strict'"
+                        "useStrict": {
+                            "type": "object",
+                            "description": "Sets up the requirement of having 'use strict' at the first line of the js files",
+                            "required": [
+                                "enabled",
+                                "includes",
+                                "excludes"
+                            ],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enables or disables the 'use strict' rule for javascript files"
+                                },
+                                "includes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to include files or folders from the validation"
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to exclude files or folders from the validation"
+                                }
+                            }
                         }
                     }
                 }

@@ -37,12 +37,16 @@
             {
                 "path": "path/to/some/CoyprightHeaderFile.txt",
                 "appliesTo": "src",
-                "includes": ["js", "ts", "some-filename-pattern"],
+                "includes": [".js", ".ts", "some-filename-pattern"],
                 "excludes": ["some-filename-pattern"]
             }
         ],
-        "sitePhp" : {
-            "jsUseStrict": true
+        "javascript": {
+            "useStrict": {
+                "enabled": true,
+                "includes": [".js"],
+                "excludes": ["src/main/libs"]
+            }
         }
     },
     
