@@ -5,9 +5,10 @@
 
 2- Update the turbobuilder expected version on this project's turbosite.json file
 
-3- Create a tmpfolder and generate a default site_php project:
+3- Create a tmpfolder and generate a default site_php or server_php project (the same as yours):
 
     tb -g site_php
+    tb -g server_php
 
 4- Update this file with the one created at the generated temporary folder
 
@@ -20,6 +21,8 @@
     src/main/robots.txt
 
 6- Overwrite all the libraries found at src/main/libs/ with the ones on tmpfolder
+
+7- Review that turbosite.json and turbobuilder.json are valid compared to the generated ones
 
 7- Review extras folder for outdated documentation
 

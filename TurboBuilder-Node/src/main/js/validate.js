@@ -38,7 +38,7 @@ exports.execute = function (verbose = true) {
         console.log("\nvalidate start");
     }
     
-    validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.setup, 'turbobuilder.schema.json');
+    validateAllJSONSchemas();
     
     validateProjectStructure();
     
@@ -52,10 +52,7 @@ exports.execute = function (verbose = true) {
     
     validatePackageAndTurboBuilderJsonIntegrity();
     
-    if(global.setup.build.site_php){
-        
-        validateSitePhp();
-    }
+    validateSitePhp();
     
     validateJavascript();
     
@@ -117,7 +114,27 @@ let validateAllowedFolders = function (foldersToInspect, allowedContents){
 
 
 /**
- * Validates all the affected JSON Schemas
+ * Validates all the possible existing JSON Schemas
+ */
+let validateAllJSONSchemas = function () {
+
+    validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.setup, 'turbobuilder.schema.json');
+    
+    if(fm.isFile(global.runtimePaths.root + fm.dirSep() + 'turbousers.json')){
+    
+        validateJSONSchema(global.runtimePaths.root + fm.dirSep() + 'turbousers.json', 'turbousers.schema.json');
+    }
+    
+    if(global.setup.build.site_php ||
+       fm.isFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup)){
+    
+        validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
+    }
+}
+
+
+/**
+ * Validates a single json schema given its file name and related schema
  */
 let validateJSONSchema = function (filePath, schemaFileName) {
     
@@ -454,11 +471,14 @@ let validatePackageAndTurboBuilderJsonIntegrity = function () {
  */
 let validateSitePhp = function () {
 
-    // Validate the turbosite.json schema
-    validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
-    
-    // Validate the turbosite.json contents
-    // TODO - all uri properties inside api must start with api/ 
+    if(global.setup.build.site_php){
+        
+        // Validate the turbosite.json contents
+        // TODO - all uri properties inside api must start with api/ 
+        
+        // Validate services
+        // TODO - any echo or print_r command on a webservice launches warning on build and error on release
+    }
 }
 
 

@@ -1,0 +1,17 @@
+{
+
+    "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbousers.schema.json",
+    
+    "storage": {
+        "filesystem": {
+            "stores": ["tokens", "rules", "users"],
+            "path": "somepath/turbousers"
+        },
+        "turbodepot": {
+            "stores": []
+        },
+        "sqlite": {
+            "stores": []
+        }
+    }
+}
