@@ -336,6 +336,11 @@ let validateCopyrightHeaders = function () {
     
     for (let validator of global.setup.validate.copyrightHeaders) {
     
+        if(!fm.isFile(global.runtimePaths.root + fm.dirSep() + validator.path)){
+        
+            console.error("Copyrhight headers template not found:\n" + global.runtimePaths.root + fm.dirSep() + validator.path);
+        }
+    
         let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
         
         let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, validator.includes);

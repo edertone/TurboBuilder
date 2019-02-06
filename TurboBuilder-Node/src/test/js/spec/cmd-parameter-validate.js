@@ -271,6 +271,30 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation if copyright headers file template is not found', function() {
+    
+        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        
+        setup.validate.copyrightHeaders = [
+                        {
+                            "path": "extras/copyright headers/nonexistantfile.txt",
+                            "appliesTo": "src",
+                            "includes": ["ts"],
+                            "excludes": ["file3"]
+                        }
+                    ];
+        
+        utils.saveToSetupFile(setup);
+        
+        let execResult = utils.exec('-l');
+        
+        expect(execResult).toContain("Copyrhight headers template not found");
+        expect(execResult).toContain("nonexistantfile.txt");
+    });
+    
+    
     it('should validate copyright headers when enabled in setup and all project files have valid headers except an excluded one', function() {
     
         expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
