@@ -258,7 +258,7 @@ describe('cmd-parameter-build', function() {
         
         let setup = utils.readSetupFile(); 
         setup.build.replaceVersion.enabled = true;
-        setup.validate.phpNamespaces.enabled = false;
+        setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
@@ -277,7 +277,7 @@ describe('cmd-parameter-build', function() {
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         let setup = utils.readSetupFile();
-        setup.validate.phpNamespaces.enabled = false;
+        setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);

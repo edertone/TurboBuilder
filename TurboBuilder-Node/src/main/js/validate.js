@@ -46,13 +46,11 @@ exports.execute = function (verbose = true) {
     
     validateStyleSheets();
     
-    validateNamespaces();
-    
-    validateCopyrightHeaders();
-    
     validatePackageAndTurboBuilderJsonIntegrity();
     
     validateSitePhp();
+    
+    validatePhp();
     
     validateJavascript();
     
@@ -270,17 +268,7 @@ let validateFilesContent = function () {
                 
                 for (let file of files){
                     
-                    let fileIsExcluded = false;
-                    
-                    for(let excluded of excludedStrings){
-                       
-                        if(file.indexOf(excluded) >= 0){
-                            
-                            fileIsExcluded = true;
-                        }
-                    }
-                    
-                    if(!fileIsExcluded &&
+                    if(!isExcluded(file, excludedStrings) &&
                        file.indexOf(sep + 'main' + sep + 'libs') < 0){
                     
                         let fileContents = fm.readFile(file);
@@ -293,7 +281,9 @@ let validateFilesContent = function () {
                 }
             }
         }
-     }
+    }
+     
+    validateCopyrightHeaders();
 }
 
 
@@ -346,7 +336,7 @@ let validateStyleSheets = function () {
  */
 let validateCopyrightHeaders = function () {
     
-    for (let validator of global.setup.validate.copyrightHeaders) {
+    for (let validator of global.setup.validate.filesContent.copyrightHeaders) {
     
         if(!fm.isFile(global.runtimePaths.root + fm.dirSep() + validator.path)){
         
@@ -359,17 +349,7 @@ let validateCopyrightHeaders = function () {
         
         for (let fileToValidate of filesToValidate){
             
-            let fileIsExcluded = false;
-            
-            for(let excluded of validator.excludes){
-               
-                if(fileToValidate.indexOf(excluded) >= 0){
-                    
-                    fileIsExcluded = true;
-                }
-            }
-            
-            if(!fileIsExcluded && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+            if(!isExcluded(fileToValidate, validator.excludes) && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
                 
                 errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
             }
@@ -379,9 +359,9 @@ let validateCopyrightHeaders = function () {
 
 
 /**
- * Validates the Name spaces
+ * Validates the php code
  */
-let validateNamespaces = function () {
+let validatePhp = function () {
     
     // Auxiliary function to perform namespace validations
     function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
@@ -406,24 +386,15 @@ let validateNamespaces = function () {
         return '';
     }
     
-    if(global.setup.validate.phpNamespaces &&
-       global.setup.validate.phpNamespaces.enabled){
+    if(global.setup.validate.php &&
+       global.setup.validate.php.namespaces &&
+       global.setup.validate.php.namespaces.enabled){
         
         let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main , /.*\.php$/i, 'absolute', 'files');
         
         for (let fileToValidate of filesToValidate){
             
-            let fileIsExcluded = false;
-            
-            for(let excluded of global.setup.validate.phpNamespaces.excludes){
-               
-                if(fileToValidate.indexOf(excluded) >= 0){
-                    
-                    fileIsExcluded = true;
-                }
-            }
-            
-            if(!fileIsExcluded){
+            if(!isExcluded(fileToValidate, global.setup.validate.php.namespaces.excludes)){
                 
                 var fileContents = fm.readFile(fileToValidate);
                 
@@ -431,7 +402,7 @@ let validateNamespaces = function () {
     
                     var namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
                     
-                    var validateNamespace = validate(namespace, fileToValidate, global.setup.validate.phpNamespaces.mustContain);
+                    var validateNamespace = validate(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
                     
                     if(validateNamespace !== ''){
                     
@@ -440,7 +411,7 @@ let validateNamespaces = function () {
                     
                 }else{
                     
-                    if(global.setup.validate.phpNamespaces.mandatory){
+                    if(global.setup.validate.php.namespaces.mandatory){
                     
                         errors.push("File does not contain a namespace declaration: " + fileToValidate);
                     }           
@@ -448,6 +419,8 @@ let validateNamespaces = function () {
             }
         }       
     }
+    
+    // TODO - The php classes must be on files with the same exact name as the php class (this validation should be generic to all php projects not only site php ones)
 }
 
 
@@ -489,8 +462,6 @@ let validatePackageAndTurboBuilderJsonIntegrity = function () {
 let validateSitePhp = function () {
 
     if(global.setup.build.site_php){
-        
-        // TODO - The php classes must be on files with the same exact name as the php class (this validation should be generic to all php projects not only site php ones)
             
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }

@@ -277,7 +277,7 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.readSetupFile();
         
-        setup.validate.copyrightHeaders = [
+        setup.validate.filesContent.copyrightHeaders = [
                         {
                             "path": "extras/copyright headers/nonexistantfile.txt",
                             "appliesTo": "src",
@@ -312,14 +312,16 @@ describe('cmd-parameter-validate', function() {
                 },
                 validate: {
                     runBeforeBuild: false,
-                    copyrightHeaders: [
-                        {
-                            "path": "extras/copyright headers/TsFiles-Header.txt",
-                            "appliesTo": "src",
-                            "includes": ["ts"],
-                            "excludes": ["file3"]
-                        }
-                    ]
+                    filesContent: {
+                        copyrightHeaders: [
+                            {
+                                "path": "extras/copyright headers/TsFiles-Header.txt",
+                                "appliesTo": "src",
+                                "includes": ["ts"],
+                                "excludes": ["file3"]
+                            }
+                        ]
+                    }
                 }
             };
         
@@ -347,7 +349,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.exec('-l')).toContain("validate ok");
         
         // Test that headers are not correctly validated when file 3 is not excluded
-        setupFile.validate.copyrightHeaders[0].excludes = [];
+        setupFile.validate.filesContent.copyrightHeaders[0].excludes = [];
         
         utils.saveToSetupFile(setupFile);
         
@@ -373,7 +375,7 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.readSetupFile();
         
-        setup.validate.copyrightHeaders = [
+        setup.validate.filesContent.copyrightHeaders = [
             {
                 "path": "extras/copyright headers/TsFiles-Header.txt",
                 "appliesTo": "src",
@@ -407,7 +409,7 @@ describe('cmd-parameter-validate', function() {
         expect(buildResult).toContain("Must be as defined in extras/copyright headers/TsFiles-Header.txt");
         
         // We now alter the includes pattern to be .ts instead of ts
-        setup.validate.copyrightHeaders = [
+        setup.validate.filesContent.copyrightHeaders = [
             {
                 "path": "extras/copyright headers/TsFiles-Header.txt",
                 "appliesTo": "src",
@@ -974,7 +976,7 @@ describe('cmd-parameter-validate', function() {
         let setup = utils.readSetupFile();
         
         // Disable the namespaces validation
-        setup.validate.phpNamespaces.enabled = false;
+        setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         // Check that the tabsForbidden rule is enabled

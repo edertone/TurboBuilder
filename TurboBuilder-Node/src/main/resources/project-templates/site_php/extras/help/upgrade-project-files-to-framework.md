@@ -3,7 +3,7 @@
 
 1- Make sure turbobuilder is updated to the latest version
 
-2- Update the turbobuilder expected version on this project's turbosite.json file
+2- Update the turbobuilder expected version on this project's turbobuilder.json file
 
 3- Create a tmpfolder and generate a default site_php or server_php project (the same as yours):
 

@@ -21,26 +21,33 @@
                 "enabled": true,
                 "appliesTo": ["src", "extras"],
                 "excludes": [".svg", ".properties"]
-            }
+            },
+            "copyrightHeaders": [
+                {
+                    "path": "path/to/some/CoyprightHeaderFile.txt",
+                    "appliesTo": "src",
+                    "includes": [".js", ".ts", "some-filename-pattern"],
+                    "excludes": ["some-filename-pattern"]
+                }
+            ]
         },
         "styleSheets": {
             "onlyScss": true,
             "noCssHardcodedColors": true
         },
-        "phpNamespaces" : {
-            "enabled": false,
-            "mandatory": true,
-            "mustContain": ["some-php-namespace-string-here-$1-$2"],
-            "excludes": ["some-filename-pattern"]
-        },
-        "copyrightHeaders": [
-            {
-                "path": "path/to/some/CoyprightHeaderFile.txt",
-                "appliesTo": "src",
-                "includes": [".js", ".ts", "some-filename-pattern"],
+        "php": {
+            "coding": {
+                "classNameMustMatchFileName": true,
+                "includes": [".php"],
+                "excludes": ["src/main/libs"]
+            },
+            "namespaces" : {
+                "enabled": false,
+                "mandatory": true,
+                "mustContain": ["some-php-namespace-string-here-$1-$2"],
                 "excludes": ["some-filename-pattern"]
             }
-        ],
+        },
         "javascript": {
             "useStrict": {
                 "enabled": true,

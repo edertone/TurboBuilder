@@ -221,16 +221,11 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     setupContents.metadata.builderVersion = this.getBuilderVersion();
     
     // Customize the validate section
-    setupContents.validate.copyrightHeaders = [];
+    setupContents.validate.filesContent.copyrightHeaders = [];
     
-    if(type !== 'site_php'){
-        
-        delete setupContents.validate['sitePhp'];
-        
-        if(type !== 'lib_php'){
+    if(type !== 'site_php' && type !== 'server_php' && type !== 'lib_php'){
             
-            delete setupContents.validate['phpNamespaces'];
-        }
+        delete setupContents.validate['php'];
     }
     
     // Customize the build section
@@ -254,7 +249,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     
     if(type === 'site_php' || type === 'server_php'){
         
-        setupContents.validate.phpNamespaces = {
+        setupContents.validate.php.namespaces = {
             "enabled": true,
             "mandatory": true,
             "mustContain": [

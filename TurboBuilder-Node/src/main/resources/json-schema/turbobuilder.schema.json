@@ -104,6 +104,45 @@
                                     "description": "A list of strings. Any file inside the appliesTo folders which full path contains any of the provided texts will be ignored"
                                 }
                             }
+                        },
+                        "copyrightHeaders": {
+                            "type": "array",
+                            "description": "Defines the validation rules that apply to copyright headers that must exist on all the files that meet the configured criteria",
+                            "items": {
+                                "type": "object",
+                                "description": "Defines each one of the copyright headers validation items",
+                                "required": [
+                                    "path",
+                                    "appliesTo",
+                                    "includes",
+                                    "excludes"
+                                ],
+                                "additionalProperties": false, 
+                                "properties": {
+                                    "path": {
+                                        "type": "string",
+                                        "description": "Defines a path based on project root that points to a copyright header template that must exist at the beginning of all the files that meet the configured criteria"
+                                    },
+                                    "appliesTo": {
+                                        "type": "string",
+                                        "description": "A folder relative to project root that will be scanned for copyright headers"
+                                    },
+                                    "includes": {
+                                        "type": "array",
+                                        "description": "List of string patterns that will be used to include files or folders into the validation",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "excludes": {
+                                        "type": "array",
+                                        "description": "Any included file which full filesystem path contanis any of the provided strings will be excluded from copyright headers validation",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 },
@@ -122,79 +161,48 @@
                         }
                     }
                 },
-                "phpNamespaces": {
+                "php": {
                     "type": "object",
-                    "description": "Defines the validation of php namespaces for all the php project files",
-                    "required": [
-                        "enabled",
-                        "mandatory",
-                        "mustContain",
-                        "excludes"
-                    ],
+                    "description": "Defines validation rules that apply to PHP code",
                     "additionalProperties": false, 
                     "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "description": "Enables or disables the php namespaces validation"
+                        "coding": {
+                            "type": "object",
+                            "description": "Defines several rules that will apply to how is the php code written on the project files"
                         },
-                        "mandatory": {
-                            "type": "boolean",
-                            "description": "If set to true, all php files on the project (except those which path matches any of the exclude strings) must have a namespace declaration"
-                        },
-                        "mustContain": {
-                            "type": "array",
-                            "description": "A list of strings that must appear on namespaces for all files of the project. Wildcards can be used to customize these strings: $path will be replaced with the php file path relative to src folder (For example: main\\php\\model)",
-                            "items": {
-                                "type": "string",
-                                "description": "A pattern that must appear on all the php files namespaces"
-                            }
-                        },
-                        "excludes": {
-                            "type": "array",
-                            "description": "Any php file which full filesystem path contanis any of the provided strings will be excluded from namespace validation",
-                            "items": {
-                                "type": "string",
-                                "description": "The Items Schema"
-                            }
-                        }
-                    }
-                },
-                "copyrightHeaders": {
-                    "type": "array",
-                    "description": "The Copyrightheaders Schema",
-                    "items": {
-                        "type": "object",
-                        "description": "The Items Schema",
-                        "required": [
-                            "path",
-                            "appliesTo",
-                            "includes",
-                            "excludes"
-                        ],
-                        "additionalProperties": false, 
-                        "properties": {
-                            "path": {
-                                "type": "string",
-                                "description": "The Path Schema"
-                            },
-                            "appliesTo": {
-                                "type": "string",
-                                "description": "The Appliesto Schema"
-                            },
-                            "includes": {
-                                "type": "array",
-                                "description": "The Includes Schema",
-                                "items": {
-                                    "type": "string",
-                                    "description": "List of string patterns that will be used to include files or folders from the validation"
-                                }
-                            },
-                            "excludes": {
-                                "type": "array",
-                                "description": "The Excludes Schema",
-                                "items": {
-                                    "type": "string",
-                                    "description": "List of string patterns that will be used to exclude files or folders from the validation"
+                        "namespaces": {
+                            "type": "object",
+                            "description": "Defines the validation of php namespaces for all the php project files",
+                            "required": [
+                                "enabled",
+                                "mandatory",
+                                "mustContain",
+                                "excludes"
+                            ],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enables or disables the php namespaces validation"
+                                },
+                                "mandatory": {
+                                    "type": "boolean",
+                                    "description": "If set to true, all php files on the project (except those which path matches any of the exclude strings) must have a namespace declaration"
+                                },
+                                "mustContain": {
+                                    "type": "array",
+                                    "description": "A list of strings that must appear on namespaces for all files of the project. Wildcards can be used to customize these strings: $path will be replaced with the php file path relative to src folder (For example: main\\php\\model)",
+                                    "items": {
+                                        "type": "string",
+                                        "description": "A pattern that must appear on all the php files namespaces"
+                                    }
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "Any php file which full filesystem path contanis any of the provided strings will be excluded from namespace validation",
+                                    "items": {
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }
@@ -202,7 +210,7 @@
                 },
                 "javascript": {
                     "type": "object",
-                    "description": "Defines validation rules that apply to javascript files",
+                    "description": "Defines validation rules that apply to javascript code",
                     "additionalProperties": false, 
                     "properties": {
                         "useStrict": {
@@ -221,7 +229,7 @@
                                 },
                                 "includes": {
                                     "type": "array",
-                                    "description": "List of string patterns that will be used to include files or folders from the validation"
+                                    "description": "List of string patterns that will be used to include files or folders into the validation"
                                 },
                                 "excludes": {
                                     "type": "array",

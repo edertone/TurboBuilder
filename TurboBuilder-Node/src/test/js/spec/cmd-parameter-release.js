@@ -269,7 +269,7 @@ describe('cmd-parameter-release', function() {
         
         let setup = utils.readSetupFile(); 
         setup.build.replaceVersion.enabled = true;
-        setup.validate.phpNamespaces.enabled = false;
+        setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-r')).toContain('release ok');
@@ -298,7 +298,7 @@ describe('cmd-parameter-release', function() {
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
         let setup = utils.readSetupFile();
-        setup.validate.phpNamespaces.enabled = false;
+        setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);

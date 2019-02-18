@@ -54,7 +54,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
-        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
         expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
         expect(setup.build.replaceVersion.enabled).toBe(false);
@@ -87,7 +87,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
-        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
         expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
         expect(setup.build.replaceVersion.enabled).toBe(false);
@@ -118,7 +118,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
-        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
         expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
         expect(setup.build.replaceVersion.enabled).toBe(false);
@@ -149,7 +149,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
-        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
         expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
         expect(setup.build.replaceVersion.enabled).toBe(false);
@@ -184,7 +184,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
-        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
         expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
         expect(setup.build.replaceVersion.enabled).toBe(false);
@@ -260,7 +260,7 @@ describe('cmd-parameter-generate', function(){
         let setup = utils.readSetupFile();
         
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
-        expect(setup.validate.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('app_angular')).toBe(true);
         expect(setup.build.hasOwnProperty('optimizePictures')).toBe(false);
         expect(setup.build.hasOwnProperty('generateCodeDocumentation')).toBe(false);
