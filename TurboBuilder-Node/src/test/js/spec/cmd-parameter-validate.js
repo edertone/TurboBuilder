@@ -492,12 +492,37 @@ describe('cmd-parameter-validate', function() {
         let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
         delete turboSiteSetup.globalJs;
         
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
         expect(utils.exec('-l')).toContain('instance requires property "globalJs"');
+    });
+    
+    
+    it('should fail on a site_php project with a turbosite file that has invalid uri values on the api section', function() {
+        
+        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        
+        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
+        
+        turboSiteSetup.api[0].uri = 'aapi/site';
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(utils.exec('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: aapi/site)');
+        
+        turboSiteSetup.api[0].uri = 'api/site';
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        turboSiteSetup.api.push({uri: 'api1/site', namespace: turboSiteSetup.api[0].namespace});
+        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(utils.exec('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: api1/site)');
     });
 
 

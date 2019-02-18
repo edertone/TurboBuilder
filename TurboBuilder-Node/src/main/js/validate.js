@@ -125,16 +125,28 @@ let validateAllJSONSchemas = function () {
         validateJSONSchema(global.runtimePaths.root + fm.dirSep() + 'turbousers.json', 'turbousers.schema.json');
     }
     
-    if(global.setup.build.site_php ||
+    if(global.setup.build.site_php || global.setup.build.server_php ||
        fm.isFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup)){
     
-        validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
+        let turbositeSetup = validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
+        
+        // Validate the api section of the turbosite.json file
+        for (let api of turbositeSetup.api){
+        
+            // All uri properties inside api must start with api/
+            if(api.uri.indexOf('api/') !== 0){
+            
+                errors.push(`All URIs defined inside the api section on ${global.fileNames.turboSiteSetup} must start with api/ (found: ${api.uri})`);
+            }
+        }
     }
 }
 
 
 /**
- * Validates a single json schema given its file name and related schema
+ * Validates a single json schema given its file name and related schema.
+ *
+ * This method returns the parsed json object representing the read schema.
  */
 let validateJSONSchema = function (filePath, schemaFileName) {
     
@@ -154,9 +166,7 @@ let validateJSONSchema = function (filePath, schemaFileName) {
         
     }catch(e){
         
-        errors.push("Corrupted JSON for " + StringUtils.getPathElement(filePath) + ":\n" + e.toString());
-        
-        return;
+        console.error("Corrupted JSON for " + StringUtils.getPathElement(filePath) + ":\n" + e.toString());
     }
     
     let schemaContent = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + schemaFileName));
@@ -167,6 +177,8 @@ let validateJSONSchema = function (filePath, schemaFileName) {
         
         errors.push("Invalid JSON schema for " + StringUtils.getPathElement(filePath) + ":\n" + results.errors[0]);
     }
+    
+    return fileContent;
 }
 
 
@@ -478,11 +490,9 @@ let validateSitePhp = function () {
 
     if(global.setup.build.site_php){
         
-        // Validate the turbosite.json contents
-        // TODO - all uri properties inside api must start with api/ 
-        
-        // Validate services
-        // TODO - any echo or print_r command on a webservice launches warning on build and error on release
+        // TODO - The php classes must be on files with the same exact name as the php class (this validation should be generic to all php projects not only site php ones)
+            
+        // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }
 }
 
