@@ -50,6 +50,9 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.readSetupFile(); 
         
+        // Test that no validate.php section exists
+        expect(setup.validate.hasOwnProperty('php')).toBe(false); 
+        
         setup.build.lib_js.invalidField = 'invalid';
         
         expect(utils.saveToSetupFile(setup)).toBe(true);
