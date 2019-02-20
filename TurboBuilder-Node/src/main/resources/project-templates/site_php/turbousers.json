@@ -2,16 +2,16 @@
 
     "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbousers.schema.json",
     
+    "tokenLength": 175,
+    
+    "tokenLifetime": 60,
+    
     "storage": {
-        "filesystem": {
-            "stores": ["tokens", "rules", "users"],
-            "path": "somepath/turbousers"
-        },
+    
         "turbodepot": {
-            "stores": []
-        },
-        "sqlite": {
-            "stores": []
+            "setup": "turbodepot.json",
+            "source": "source1",
+            "depotName": "depot1"
         }
     }
 }
