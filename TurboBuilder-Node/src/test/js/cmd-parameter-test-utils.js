@@ -11,9 +11,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 require('./../../main/js/globals');
-const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
+const { StringUtils, FilesManager } = require('turbocommons-ts');
 const { execSync } = require('child_process');
-const console = require('./../../main/js/console');
 
 
 let executionDir = path.resolve('./'); 

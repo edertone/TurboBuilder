@@ -7,7 +7,7 @@
  */
 
 
-const utils = require('../test-utils');
+const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
 
 

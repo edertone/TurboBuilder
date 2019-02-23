@@ -7,10 +7,9 @@
  * Tests related to the correct operation of the error management turbosite feature
  */
 
-const utils = require('../test-utils');
+const utils = require('../sitephp-test-utils');
 const path = require('path');
-const { execSync } = require('child_process');
-const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
+const { StringUtils, FilesManager } = require('turbocommons-ts');
 const webdriver = require('selenium-webdriver');
 
 
@@ -49,24 +48,23 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     beforeEach(function() {
 
-        this.turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));
+        let turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));        
         
-        this.turbobuilderSetupPath = this.turbobuilderSetup.sync.destPath + '/site/turbosite.json';
-        this.turbositeSetupString = fm.readFile(this.turbobuilderSetupPath);
-        this.turbositeSetup = JSON.parse(this.turbositeSetupString);
+        this.indexPhpPath = turbobuilderSetup.sync.destPath + '/site/index.php';
+        this.turbositeSetupBackup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
         
-        this.homeViewFilePath = this.turbobuilderSetup.sync.destPath + '/site/view/views/home/home.php';
-        this.homeViewFileContents = fm.readFile(this.homeViewFilePath);
+        this.homeViewFilePath = turbobuilderSetup.sync.destPath + '/site/view/views/home/home.php';
+        this.homeViewFileContentsBackup = fm.readFile(this.homeViewFilePath);
     });
     
     
     afterEach(function() {
 
         // Restore the turbosite setup to the previous value
-        expect(fm.saveFile(this.turbobuilderSetupPath, this.turbositeSetupString)).toBe(true);
+        expect(utils.saveSetupToIndexPhp(this.turbositeSetupBackup, "turbosite", this.indexPhpPath)).toBe(true);
         
         // Restore the home view php file contents to the value it has before test was run
-        expect(fm.saveFile(this.homeViewFilePath, this.homeViewFileContents)).toBe(true);
+        expect(fm.saveFile(this.homeViewFilePath, this.homeViewFileContentsBackup)).toBe(true);
     });
     
     
@@ -80,11 +78,14 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show errors on browser for a site_php project type when errors are enabled on setup', function(done) {
         
-        this.turbositeSetup.errorSetup.exceptionsToBrowser = true;
-        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        let turbositeSetup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
+        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
+
+        turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
+               StringUtils.replace(homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
@@ -110,11 +111,14 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
         
-        this.turbositeSetup.errorSetup.warningsToBrowser = true;
-        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        let turbositeSetup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
+        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
+        
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b;', 1))
+               StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b;', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
@@ -140,12 +144,15 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show both errors and warnings on browser for a site_php project type when errors and warnings are enabled on setup', function(done) {
         
-        this.turbositeSetup.errorSetup.exceptionsToBrowser = true;
-        this.turbositeSetup.errorSetup.warningsToBrowser = true;
-        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        let turbositeSetup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
+        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
+        
+        turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b; nonexistantfunction();', 1))
+               StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b; nonexistantfunction();', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
@@ -177,11 +184,14 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show multiple warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
         
-        this.turbositeSetup.errorSetup.warningsToBrowser = true;
-        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        let turbositeSetup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
+        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
+        
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b; $a=$c; $a=$d;', 1))
+               StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b; $a=$c; $a=$d;', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
@@ -213,11 +223,14 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should not show warnings on browser for a site_php project type when disabled in setup', function(done) {
         
-        this.turbositeSetup.errorSetup.warningsToBrowser = false;
-        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        let turbositeSetup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
+        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
+        
+        turbositeSetup.errorSetup.warningsToBrowser = false;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php $a=$b;', 1))
+               StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b;', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
@@ -243,11 +256,14 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should not show errors on browser for a site_php project type when disabled in setup', function(done) {
 
-        this.turbositeSetup.errorSetup.exceptionsToBrowser = false;
-        expect(fm.saveFile(this.turbobuilderSetupPath, JSON.stringify(this.turbositeSetup))).toBe(true);
+        let turbositeSetup = utils.getTurbositeSetupFromIndexPhp(this.indexPhpPath);
+        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
+        
+        turbositeSetup.errorSetup.exceptionsToBrowser = false;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(this.homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
+               StringUtils.replace(homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");

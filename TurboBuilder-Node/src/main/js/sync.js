@@ -40,7 +40,7 @@ exports.execute = function (verbose = true) {
 
 
 /**
- * Execute the project sync via file system
+ * Calculate the path from where the files will be synced depending on if we are running a build or a release
  */
 let calculateSourcePath = function () {
     
@@ -56,20 +56,7 @@ let calculateSourcePath = function () {
         result += setupModule.getProjectName() + fm.dirSep() + global.setup.sync.sourcePath;
     }
     
-    let sourcePath = StringUtils.formatPath(result, fm.dirSep());
-    
-    // Update the built turbosite.json file by adding the remoteUrl value from the sync setup
-    let turbositePath = sourcePath + fm.dirSep() + 'site' + fm.dirSep() + global.fileNames.turboSiteSetup;
-    
-    if(fm.isFile(turbositePath)){
-        
-        let turboSiteSetup = JSON.parse(fm.readFile(turbositePath));
-        
-        turboSiteSetup.remoteUrl = global.setup.sync.remoteUrl;        
-        fm.saveFile(turbositePath, JSON.stringify(turboSiteSetup, null, 4));
-    }
-
-    return sourcePath;
+    return StringUtils.formatPath(result, fm.dirSep());
 }
 
 

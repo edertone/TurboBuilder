@@ -11,7 +11,7 @@
  * the chromedriver for these tests. 
  */
 
-const utils = require('../test-utils');
+const utils = require('../sitephp-test-utils');
 const path = require('path');
 const { execSync } = require('child_process');
 const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');

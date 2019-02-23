@@ -8,7 +8,7 @@
  */
 
 
-const utils = require('../test-utils');
+const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
 
 

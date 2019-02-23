@@ -7,7 +7,7 @@
  */
 
 
-const utils = require('../test-utils');
+const utils = require('../cmd-parameter-test-utils');
 
 
 describe('cmd-parameter-sync', function(){

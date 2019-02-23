@@ -8,7 +8,7 @@
  * POST and GET parameters
  */
 
-const utils = require('../test-utils');
+const utils = require('../sitephp-test-utils');
 const { HTTPManager, HTTPManagerGetRequest, HTTPManagerPostRequest } = require('turbocommons-ts');
 
 
@@ -69,7 +69,7 @@ describe('web-services-post-requests', function() {
             
                 for(let i = 0; i < expectedTexts.length; i++){
                 
-                    expect(response).toContain(expectedTexts[i]);
+                    expect(response).toContain(expectedTexts[i], 'Checking the service url: ' + request.url);
                 }
             
                 done();

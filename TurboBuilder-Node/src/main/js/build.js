@@ -13,6 +13,7 @@ const validateModule = require('./validate');
 const syncModule = require('./sync');
 const sass = require('node-sass');
 const sharp = require('sharp');
+const sitePhpTestUtils = require('../resources/project-templates/site_php/src/test/js/sitephp-test-utils.js');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
@@ -155,9 +156,18 @@ exports.buildSitePhp = function (destPath) {
     fm.copyFile(destSite + sep + 'htaccess.txt', destDist + sep + '.htaccess');
     fm.deleteFile(destSite + sep + 'htaccess.txt');
     
-    // Generate a random hash to avoid browser caches
+    // Read the turbousers.json file and add its contents to the index php file
+    if(fm.isFile(global.runtimePaths.root + sep + 'turbousers.json')){
+    
+        let turboUsersSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbousers.json'));
+        
+        sitePhpTestUtils.saveSetupToIndexPhp(turboUsersSetup, 'turbousers', destSite + sep + 'index.php');
+    }
+    
+    // Read the turbosite.json file
     let turboSiteSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup));
     
+    // Generate a random hash to avoid browser caches
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
     
     // If the file turbosite.release.json exists at the root of our project, all its setup properties will
@@ -171,8 +181,9 @@ exports.buildSitePhp = function (destPath) {
         ObjectUtils.merge(turboSiteSetup, tsSetupRelease);        
     }
     
-    fm.saveFile(destSite + sep + global.fileNames.turboSiteSetup, JSON.stringify(turboSiteSetup, null, 4));
-    
+    // Save the turbosite setup to the index php file
+    sitePhpTestUtils.saveSetupToIndexPhp(turboSiteSetup, 'turbosite', destSite + sep + 'index.php');
+
     // Fail if errors or warnings are configured to be sent to browser
     if(global.isRelease && (turboSiteSetup.errorSetup.exceptionsToBrowser || turboSiteSetup.errorSetup.warningsToBrowser)){
         
