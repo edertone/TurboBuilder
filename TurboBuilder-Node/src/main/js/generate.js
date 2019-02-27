@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager, StringUtils } = require('turbocommons-ts');
+const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
 const console = require('./console');
 const setupModule = require('./setup');
 
@@ -22,23 +22,18 @@ exports.execute = function (type) {
     
     console.log("\ngenerate " + type + " start");
     
-    createProjectStructure(type);
-   
-    // Generate a custom project setup and save it to file
-    if(!fm.saveFile(global.runtimePaths.setupFile,
-            JSON.stringify(setupModule.customizeSetupTemplateToProjectType(type), null, 4))){
+    if(ObjectUtils.getKeys(global.folderStructures).indexOf(type) >= 0){
+    
+        createFoldersStructure(type);
         
-        console.error('Error creating ' + global.fileNames.setup + ' file');
+        console.success('Generated folders structure ok');
+        
+    } else {
+        
+        createProjectStructure(type);
+        
+        console.success('Generated project structure ok');    
     }
-    
-    console.success('Created ' + global.fileNames.setup + ' file');
-    
-    if(type === 'app_angular'){
-    	
-    	console.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
-    }
-    
-    console.success('Generated project structure ok');
 };
 
 
@@ -47,9 +42,11 @@ exports.execute = function (type) {
  */
 let validate = function (type) {
 
-    if(global.setupBuildTypes.indexOf(type) < 0){
+    let validTypes = global.setupBuildTypes.concat(ObjectUtils.getKeys(global.folderStructures));
+
+    if(validTypes.indexOf(type) < 0){
         
-        console.error("invalid project type. Allowed types: " + global.setupBuildTypes.join(', '));
+        console.error("invalid project type. Allowed types: " + validTypes.join(', '));
     }
     
     let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
@@ -68,6 +65,37 @@ let validate = function (type) {
         
         console.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
+}
+
+
+/**
+ * Generate the requested folders structure
+ */
+let createFoldersStructure = function (type) {
+
+    let sep = fm.dirSep();
+
+    // Generate all the folders and files that are used on a remote location where projects are deployed.
+    if (type === global.folderStructures.struct_deploy) {
+    
+        fm.createDirectory(global.runtimePaths.root + sep + 'trash');
+        fm.createDirectory(global.runtimePaths.root + sep + 'site');
+        fm.createDirectory(global.runtimePaths.root + sep + 'release');
+        fm.createDirectory(global.runtimePaths.root + sep + 'build');
+        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'tmp', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'storage', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'db', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'binary', true);        
+    }
+        
+    // Generate all the folders and files that are used on a customer folder
+    if (type === global.folderStructures.struct_customer) {
+
+        fm.createDirectory(global.runtimePaths.root + sep + 'Documents');
+        fm.createDirectory(global.runtimePaths.root + sep + 'Release');  
+        fm.createDirectory(global.runtimePaths.root + sep + 'Repo');  
+        fm.createDirectory(global.runtimePaths.root + sep + 'Trash');      
+    }  
 }
 
 
@@ -130,6 +158,20 @@ let createProjectStructure = function (type) {
     replaceDependenciesIntoTemplate();
     
     console.success('Generated ' + type + ' structure');
+    
+    // Generate a custom project setup and save it to file
+    if(!fm.saveFile(global.runtimePaths.setupFile,
+            JSON.stringify(setupModule.customizeSetupTemplateToProjectType(type), null, 4))){
+        
+        console.error('Error creating ' + global.fileNames.setup + ' file');
+    }
+    
+    console.success('Created ' + global.fileNames.setup + ' file');
+    
+    if(type === 'app_angular'){
+        
+        console.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
+    }
 }
 
 

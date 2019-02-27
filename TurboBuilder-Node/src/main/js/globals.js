@@ -30,6 +30,13 @@ global.setupBuildTypes = ["site_php",
                           "lib_php", "lib_java", "lib_js", "lib_ts", "lib_angular",
                           "app_angular"];
 
+/**
+ * Defines the list of possible file and folder structures
+ */
+global.folderStructures = {
+    struct_deploy: "struct_deploy",
+    struct_customer: "struct_customer"
+};
 
 /**
  * All the relevant project folder names
