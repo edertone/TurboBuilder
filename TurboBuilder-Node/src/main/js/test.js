@@ -5,11 +5,12 @@
  */
 
 
+require('./globals');
+
 const { FilesManager, ArrayUtils } = require('turbocommons-ts');
 const { spawn } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');
-const buildModule = require('./build');
 const releaseModule = require('./release');
 const opn = require('opn');
 

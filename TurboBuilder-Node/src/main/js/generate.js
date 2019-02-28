@@ -42,7 +42,7 @@ exports.execute = function (type) {
  */
 let validate = function (type) {
 
-    let validTypes = global.setupBuildTypes.concat(ObjectUtils.getKeys(global.folderStructures));
+    let validTypes = ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures));
 
     if(validTypes.indexOf(type) < 0){
         
@@ -108,7 +108,7 @@ let createProjectStructure = function (type) {
     let templatesFolder = global.installationPaths.mainResources + sep + 'project-templates';
     
     // Copy the project type specific files
-    let filesToCopy = templatesFolder + sep + (type === 'server_php' ? 'site_php' : type);
+    let filesToCopy = templatesFolder + sep + (type === global.setupBuildTypes.server_php ? global.setupBuildTypes.site_php : type);
     
     fm.copyDirectory(filesToCopy, global.runtimePaths.root);
     
@@ -121,13 +121,15 @@ let createProjectStructure = function (type) {
     }
     
     // The expected-ftp-structure.md file is not necessary on some project types
-    if(type !== 'site_php' && type !== 'server_php' && type !== 'app_angular'){
+    if(type !== global.setupBuildTypes.site_php &&
+       type !== global.setupBuildTypes.server_php &&
+       type !== global.setupBuildTypes.app_angular){
 
         fm.deleteFile(global.runtimePaths.extras + sep + 'help' + sep + 'expected-ftp-structure.md');
     }
     
     // Server php project is basically a site_php project but with some parts removed
-    if(type === 'server_php'){
+    if(type === global.setupBuildTypes.server_php){
     
         fm.deleteDirectory(global.runtimePaths.main + sep + 'view');
         fm.deleteDirectory(global.runtimePaths.main + sep + 'resources' + sep + 'favicons');
@@ -168,7 +170,7 @@ let createProjectStructure = function (type) {
     
     console.success('Created ' + global.fileNames.setup + ' file');
     
-    if(type === 'app_angular'){
+    if(type === global.setupBuildTypes.app_angular){
         
         console.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
     }

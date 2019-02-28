@@ -25,10 +25,16 @@ global.setup = null;
 /**
  * Defines the list of possible project build setup types
  */
-global.setupBuildTypes = ["site_php",
-                          "server_php",
-                          "lib_php", "lib_java", "lib_js", "lib_ts", "lib_angular",
-                          "app_angular"];
+global.setupBuildTypes = {
+    site_php: "site_php",
+    server_php: "server_php",
+    lib_php: "lib_php",
+    lib_java: "lib_java",
+    lib_js: "lib_js",
+    lib_ts: "lib_ts",
+    lib_angular: "lib_angular",
+    app_angular: "app_angular"
+};
 
 /**
  * Defines the list of possible file and folder structures

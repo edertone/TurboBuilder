@@ -5,6 +5,8 @@
  */
 
 
+require('./globals');
+
 const { FilesManager, ObjectUtils } = require('turbocommons-ts');
 const console = require('./console.js');
 const { execSync } = require('child_process');
@@ -178,12 +180,13 @@ exports.detectProjectTypeFromSetup = function (setup) {
 
     let projectType = '';
     let projectTypesCount = 0;
+    let buildTypes = ObjectUtils.getKeys(global.setupBuildTypes);
     
     if(setup.build){
         
         for (let key of ObjectUtils.getKeys(setup.build)) {
             
-            if(global.setupBuildTypes.indexOf(key) >= 0){
+            if(buildTypes.indexOf(key) >= 0){
                 
                 projectType = key;
                 projectTypesCount ++;
@@ -194,12 +197,12 @@ exports.detectProjectTypeFromSetup = function (setup) {
     if(projectType === ''){
         
         console.error("No valid project type specified. Please enable any of [" + 
-            global.setupBuildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
+            buildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
     }
     
     if(projectTypesCount !== 1){
         
-        console.error("Please specify only one of the following on build setup: " + global.setupBuildTypes.join(","));
+        console.error("Please specify only one of the following on build setup: " + buildTypes.join(","));
     }
     
     return projectType;
@@ -223,7 +226,9 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the validate section
     setupContents.validate.filesContent.copyrightHeaders = [];
     
-    if(type !== 'site_php' && type !== 'server_php' && type !== 'lib_php'){
+    if(type !== global.setupBuildTypes.site_php &&
+       type !== global.setupBuildTypes.server_php &&
+       type !== global.setupBuildTypes.lib_php){
             
         delete setupContents.validate['php'];
     }
@@ -231,14 +236,15 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the build section
     for (let key of ObjectUtils.getKeys(setupContents.build)) {
         
-        if(key !== type && global.setupBuildTypes.indexOf(key) >= 0){
+        if(key !== type && ObjectUtils.getKeys(global.setupBuildTypes).indexOf(key) >= 0){
             
             delete setupContents.build[key]; 
         }
     }
     
     // Customize the release section
-    if(type === 'app_angular' || type === 'lib_angular'){
+    if(type === global.setupBuildTypes.app_angular ||
+       type === global.setupBuildTypes.lib_angular){
         
         delete setupContents.release.optimizePictures;
         delete setupContents.release.generateCodeDocumentation;
@@ -247,7 +253,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the sync section
     delete setupContents.sync;
     
-    if(type === 'site_php' || type === 'server_php'){
+    if(type === global.setupBuildTypes.site_php || type === global.setupBuildTypes.server_php){
         
         setupContents.validate.php.namespaces = {
             "enabled": true,
@@ -279,13 +285,16 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     
     for (let testItem of setupContents.test) {
         
-        if((type === 'server_php' || type === 'lib_php') &&
+        if((type === global.setupBuildTypes.server_php ||
+            type === global.setupBuildTypes.lib_php) &&
             testItem.type === 'phpUnit'){
 
             testArray.push(testItem);
         }
         
-        if((type === 'site_php' || type === 'lib_js' || type === 'lib_ts') &&
+        if((type === global.setupBuildTypes.site_php ||
+            type === global.setupBuildTypes.lib_js ||
+            type === global.setupBuildTypes.lib_ts) &&
             testItem.type === 'jasmine'){
 
             testArray.push(testItem);

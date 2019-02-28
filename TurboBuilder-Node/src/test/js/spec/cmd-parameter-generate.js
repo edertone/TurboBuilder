@@ -8,6 +8,7 @@
 
 
 require('./../../../main/js/globals');
+const { ObjectUtils } = require('turbocommons-ts');
 const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
 
@@ -31,10 +32,12 @@ describe('cmd-parameter-generate', function(){
     it('should fail when -g and --generate arguments are passed without parameters or with wrong parameters', function(){
 
         expect(utils.exec('-g')).toContain("argument missing");
-        expect(utils.exec('-g someinvalidvalue')).toContain("invalid project type. Allowed types: " + global.setupBuildTypes.join(', '));
+        expect(utils.exec('-g someinvalidvalue')).toContain("invalid project type. Allowed types: " +
+            ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '));
 
         expect(utils.exec('--generate')).toContain("argument missing");
-        expect(utils.exec('--generate someinvalidvalue')).toContain("invalid project type. Allowed types: " + global.setupBuildTypes.join(', '));
+        expect(utils.exec('--generate someinvalidvalue')).toContain("invalid project type. Allowed types: " +
+            ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '));
     });
 
 

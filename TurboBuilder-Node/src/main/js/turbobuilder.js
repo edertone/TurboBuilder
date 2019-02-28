@@ -6,10 +6,10 @@
  * This is the main entry point for the turbobuilder command line application
  */
 
+require('./globals');
 
 const program = require('commander');
-const { StringUtils } = require('turbocommons-ts');
-const globalsModule = require('./globals');
+const { ObjectUtils } = require('turbocommons-ts');
 const console = require('./console');
 const setupModule = require('./setup');
 const generateModule = require('./generate');
@@ -28,7 +28,7 @@ const syncModule = require('./sync');
 program
     .alias('tb')
     .version(console.printVersionInfo(), '-v, --version')
-    .option('-g, --generate <type>', 'Create a full project structure on the current directory. Allowed types: ' + global.setupBuildTypes.join(', '))
+    .option('-g, --generate <type>', 'Create a full project or folders structure on the current directory. Allowed types: ' + ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '))
     .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder. If -s is executed at the same time, synced files will be also deleted')
     .option('-b, --build', 'Generate the project development version as configured in ' + global.fileNames.setup)
