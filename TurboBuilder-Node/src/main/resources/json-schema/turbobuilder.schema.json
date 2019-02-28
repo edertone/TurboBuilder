@@ -84,14 +84,14 @@
                             "additionalProperties": false, 
                             "required": [
                                 "enabled",
-                                "appliesTo"
+                                "affectedPaths"
                             ],
                             "properties": {
                                 "enabled": {
                                     "type": "boolean",
                                     "description": "Enables the forbidden tabs validation rule"
                                 },
-                                "appliesTo": {
+                                "affectedPaths": {
                                     "type": "array",
                                     "description": "List of folders relative to project root that will be scanned for tab characters.",
                                     "examples": [
@@ -101,7 +101,7 @@
                                 },
                                 "excludes": {
                                     "type": "array",
-                                    "description": "A list of strings. Any file inside the appliesTo folders which full path contains any of the provided texts will be ignored"
+                                    "description": "A list of strings. Any file inside the affectedPaths folders which full path contains any of the provided texts will be ignored"
                                 }
                             }
                         },
@@ -113,7 +113,7 @@
                                 "description": "Defines each one of the copyright headers validation items",
                                 "required": [
                                     "path",
-                                    "appliesTo",
+                                    "affectedPaths",
                                     "includes",
                                     "excludes"
                                 ],
@@ -123,10 +123,12 @@
                                         "type": "string",
                                         "description": "Defines a path based on project root that points to a copyright header template that must exist at the beginning of all the files that meet the configured criteria"
                                     },
-                                    "appliesTo": {
-                                        "type": "string",
-                                        "description": "A folder relative to project root that will be scanned for copyright headers"
-                                    },
+                                    "affectedPaths": {
+                                        "type": "array",
+                                        "description": "List of folders relative to project root that will be scanned for copyright headers",
+                                        "items": {
+                                            "type": "string"
+                                        }                                    },
                                     "includes": {
                                         "type": "array",
                                         "description": "List of string patterns that will be used to include files or folders into the validation",

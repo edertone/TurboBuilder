@@ -283,7 +283,7 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyrightHeaders = [
                         {
                             "path": "extras/copyright headers/nonexistantfile.txt",
-                            "appliesTo": "src",
+                            "affectedPaths": ["src"],
                             "includes": ["ts"],
                             "excludes": ["file3"]
                         }
@@ -319,7 +319,7 @@ describe('cmd-parameter-validate', function() {
                         copyrightHeaders: [
                             {
                                 "path": "extras/copyright headers/TsFiles-Header.txt",
-                                "appliesTo": "src",
+                                "affectedPaths": ["src"],
                                 "includes": ["ts"],
                                 "excludes": ["file3"]
                             }
@@ -381,7 +381,7 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyrightHeaders = [
             {
                 "path": "extras/copyright headers/TsFiles-Header.txt",
-                "appliesTo": "src",
+                "affectedPaths": ["src"],
                 "includes": ["ts"],
                 "excludes": []
             }
@@ -415,7 +415,7 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyrightHeaders = [
             {
                 "path": "extras/copyright headers/TsFiles-Header.txt",
-                "appliesTo": "src",
+                "affectedPaths": ["src"],
                 "includes": [".ts"],
                 "excludes": []
             }
@@ -984,7 +984,7 @@ describe('cmd-parameter-validate', function() {
         
         // Check that the tabsForbidden rule is enabled
         expect(setup.validate.filesContent.tabsForbidden.enabled).toBe(true);
-        expect(setup.validate.filesContent.tabsForbidden.appliesTo).toEqual(["src", "extras"]);
+        expect(setup.validate.filesContent.tabsForbidden.affectedPaths).toEqual(["src", "extras"]);
         expect(setup.validate.filesContent.tabsForbidden.excludes).toEqual([".svg", ".properties"]);
         
         // Create files with tabs and make sure validation fails
@@ -996,7 +996,7 @@ describe('cmd-parameter-validate', function() {
         expect(validateResult).toContain('test.php');
         expect(validateResult).toContain('test.md');
         
-        setup.validate.filesContent.tabsForbidden.appliesTo = ["src"];        
+        setup.validate.filesContent.tabsForbidden.affectedPaths = ["src"];        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         validateResult = utils.exec('-l');
@@ -1009,7 +1009,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.saveToSetupFile(setup)).toBe(true);
         expect(utils.exec('-l')).toContain('validate ok');
         
-        setup.validate.filesContent.tabsForbidden.appliesTo = [];        
+        setup.validate.filesContent.tabsForbidden.affectedPaths = [];        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         expect(utils.exec('-l')).toContain('validate ok');
         

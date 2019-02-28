@@ -5,7 +5,7 @@
  */
 
 
-const { StringUtils, ObjectUtils, FilesManager } = require('turbocommons-ts');
+const { StringUtils, ObjectUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
 const path = require('path');
 var fs = require('fs');
 const setupModule = require('./setup');
@@ -258,9 +258,9 @@ let validateFilesContent = function () {
         let excludedStrings = global.setup.validate.filesContent.tabsForbidden.excludes
             .concat([".ico", ".jpg", ".png", ".ttf", ".phar", ".woff"]);
     
-        for(let appliesTo of global.setup.validate.filesContent.tabsForbidden.appliesTo){
+        for(let affectedPath of global.setup.validate.filesContent.tabsForbidden.affectedPaths){
         
-            let projectFolder = global.runtimePaths.root + sep + appliesTo;
+            let projectFolder = global.runtimePaths.root + sep + affectedPath;
         
             if(fm.isDirectory(projectFolder)) {
         
@@ -345,13 +345,21 @@ let validateCopyrightHeaders = function () {
     
         let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
         
-        let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + validator.appliesTo, validator.includes);
+        if(!ArrayUtils.isArray(validator.affectedPaths)){
         
-        for (let fileToValidate of filesToValidate){
+            console.error(global.fileNames.setup + " copyrightHeaders affectedPaths must be an array");
+        }
+        
+        for (let affectedPath of validator.affectedPaths) {
+        
+            let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + affectedPath, validator.includes);
             
-            if(!isExcluded(fileToValidate, validator.excludes) && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+            for (let fileToValidate of filesToValidate){
                 
-                errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
+                if(!isExcluded(fileToValidate, validator.excludes) && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+                    
+                    errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
+                }
             }
         }
     }

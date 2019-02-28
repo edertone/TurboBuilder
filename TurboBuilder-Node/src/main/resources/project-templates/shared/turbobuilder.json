@@ -19,13 +19,13 @@
         "filesContent" : {
             "tabsForbidden": {
                 "enabled": true,
-                "appliesTo": ["src", "extras"],
+                "affectedPaths": ["src", "extras"],
                 "excludes": [".svg", ".properties"]
             },
             "copyrightHeaders": [
                 {
                     "path": "path/to/some/CoyprightHeaderFile.txt",
-                    "appliesTo": "src",
+                    "affectedPaths": "src",
                     "includes": [".js", ".ts", "some-filename-pattern"],
                     "excludes": ["some-filename-pattern"]
                 }
