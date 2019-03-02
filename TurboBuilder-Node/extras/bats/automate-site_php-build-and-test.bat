@@ -11,7 +11,7 @@ cd "--Desktop--\site_php-dev"
 
 call tb -g site_php
 
-call npm install
+call npm ci
 
 set currentdir=%cd%
 

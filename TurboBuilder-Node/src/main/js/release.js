@@ -243,7 +243,7 @@ let minifyImages = function (destPath) {
                     progressive: true
                 }),
                 imageminPngquant({
-                    quality: '80-90',
+                    quality: [0.8, 0.9],
                     speed: 1, // The lowest speed of optimization with the highest quality
                     floyd: 1 // Controls level of dithering (0 = none, 1 = full).
                 })

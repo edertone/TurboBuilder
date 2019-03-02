@@ -78,7 +78,7 @@ describe('cmd-parameter-test', function() {
     });
     
     
-    it('should fail when a site_php is generated and no npm install is performed before build and test', function() {
+    it('should fail when a site_php is generated and no npm ci is performed before build and test', function() {
         
         let testsGenerateResult = utils.exec('-g site_php');   
         expect(testsGenerateResult).toContain("Generated site_php structure");
@@ -88,7 +88,7 @@ describe('cmd-parameter-test', function() {
         let testsLaunchResult = utils.exec('-bt');        
         expect(testsLaunchResult).toContain("build start: site_php");
         expect(testsLaunchResult).toContain("test start");
-        expect(testsLaunchResult).toContain("Error: turbocommons-ts module not found. Did you run npm install?");
+        expect(testsLaunchResult).toContain("Error: turbocommons-ts module not found. Did you run npm ci or npm install?");
         expect(testsLaunchResult).toContain('jasmine unit test failures');
     });
     
@@ -116,9 +116,7 @@ describe('cmd-parameter-test', function() {
         turboSiteSetup.baseURL = '';
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
-        let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
-        expect(npmInstallResult).toContain("added");
-        expect(npmInstallResult).toContain("packages in");
+        let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
         expect(npmInstallResult).not.toContain("npm ERR");
         
         let testsLaunchResult = utils.exec('-cbst');        
@@ -162,9 +160,7 @@ describe('cmd-parameter-test', function() {
             expect(utils.fm.createDirectory(setup.sync.destPath)).toBe(true);
         }
         
-        let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
-        expect(npmInstallResult).toContain("added");
-        expect(npmInstallResult).toContain("packages");
+        let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
         expect(npmInstallResult).not.toContain("npm ERR");
         
         // launch selenium tests on root localhost
@@ -209,9 +205,7 @@ describe('cmd-parameter-test', function() {
             expect(utils.fm.createDirectory(setup.sync.destPath, true)).toBe(true);
         }
         
-        let npmInstallResult = execSync('npm install', {stdio : 'pipe'}).toString();        
-        expect(npmInstallResult).toContain("added");
-        expect(npmInstallResult).toContain("packages in");
+        let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
         expect(npmInstallResult).not.toContain("npm ERR");
         
         // launch selenium tests on root localhost

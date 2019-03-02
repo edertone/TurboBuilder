@@ -30,11 +30,11 @@ This project uses libraries and dependencies from a variety of sources. To make 
 
     src/main/resources/project-templates/site_php/package.json
     
-- To check outdated npm libs in the site_php template, you can create an empty project by:
-        
-    creating some temporary folder on your pc
-    running tb -g site_php
-    executing npm install
-    executing npm outdated 
+        - To check outdated npm libs in the site_php template, you can create an empty project by:
+                
+            creating some temporary folder on your pc
+            running tb -g site_php
+            executing npm ci
+            executing npm outdated 
         
 - Run the project tests as explained on help and make sure everything works as expected
