@@ -5,7 +5,8 @@
  */
 
 
-const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const console = require('./console');
 const setupModule = require('./setup');
 
@@ -211,12 +212,17 @@ let replaceDependenciesIntoTemplate = function () {
         
         if(depFile === 'turbocommons-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'TurboCommons-Php-0.7.3.phar', depParent + sep + 'TurboCommons-Php-0.7.3.phar');
+            fm.copyFile(libsPath + sep + 'turbocommons-php-1.0.0.phar', depParent + sep + 'turbocommons-php-1.0.0.phar');
+        }
+        
+        if(depFile === 'turbodepot.tbdependency'){
+            
+            fm.copyFile(libsPath + sep + 'turbodepot-php-0.0.1.phar', depParent + sep + 'turbodepot-php-0.0.1.phar');
         }
         
         if(depFile === 'turbosite.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'turbosite-php-0.3.0.phar', depParent + sep + 'turbosite-php-0.3.0.phar');
+            fm.copyFile(libsPath + sep + 'turbosite-php-1.0.0.phar', depParent + sep + 'turbosite-php-1.0.0.phar');
         }
 
         fm.deleteFile(tbdependency);

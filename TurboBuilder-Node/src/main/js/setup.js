@@ -7,7 +7,8 @@
 
 require('./globals');
 
-const { FilesManager, ObjectUtils } = require('turbocommons-ts');
+const { ObjectUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const console = require('./console.js');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');

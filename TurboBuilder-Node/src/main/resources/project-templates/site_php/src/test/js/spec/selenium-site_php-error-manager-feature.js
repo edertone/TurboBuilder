@@ -9,7 +9,8 @@
 
 const utils = require('../sitephp-test-utils');
 const path = require('path');
-const { StringUtils, FilesManager } = require('turbocommons-ts');
+const { StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const webdriver = require('selenium-webdriver');
 
 

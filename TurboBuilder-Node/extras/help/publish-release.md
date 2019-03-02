@@ -18,7 +18,7 @@
 7 - Commit all changes to repo
 
 8 - Make sure the git tag is updated with the new project version we want to publish
-	(Either in git local and remote repos)
+	(First in remote GIT repo and then in our Local by performing a fetch)
 
 9 - Open a command line inside project folder and run:
 	npm publish

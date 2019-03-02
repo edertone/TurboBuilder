@@ -5,9 +5,8 @@
  */
 
 
-const { StringUtils, ObjectUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
-const path = require('path');
-var fs = require('fs');
+const { StringUtils, ArrayUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const console = require('./console.js');
 let validate = require('jsonschema').validate;

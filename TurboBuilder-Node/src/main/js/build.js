@@ -5,7 +5,8 @@
  */
 
 
-const { FilesManager, StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');

@@ -7,7 +7,8 @@
 
 require('./globals');
 
-const { FilesManager, ArrayUtils } = require('turbocommons-ts');
+const { ArrayUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { spawn } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');
@@ -202,10 +203,8 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
             
             if(testSetup.targets.indexOf(tsTargetObject.folder) >= 0){
                 
-                let jsTarget = tsTargetObject.jsTarget;
                 let testsTarget = destTestsPath + sep + tsTargetObject.folder;
                 
-                // Create current jsTarget folder
                 if(!fm.createDirectory(testsTarget, true)){
                     
                     console.error('Could not create ' + testsTarget);
@@ -242,12 +241,12 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     htmlIndexCode += '<meta charset="utf-8">';
                     htmlIndexCode += '<meta name="viewport" content="width=device-width">';
                     htmlIndexCode += '<title>Tests results</title>';
-                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.7.0.css">';
+                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.9.2.css">';
                     htmlIndexCode += '</head>';
                     htmlIndexCode += '<body>';
                     htmlIndexCode += '<div id="qunit"></div>';
                     htmlIndexCode += '<div id="qunit-fixture"></div>';
-                    htmlIndexCode += '<script src="qunit-2.7.0.js"></script>';
+                    htmlIndexCode += '<script src="qunit-2.9.2.js"></script>';
                     htmlIndexCode += '<script src="source.js"></script>';
                     htmlIndexCode += '<script src="tests.js"></script>';
                     htmlIndexCode += '</body>';

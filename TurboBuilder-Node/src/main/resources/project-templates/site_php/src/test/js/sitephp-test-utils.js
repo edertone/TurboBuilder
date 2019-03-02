@@ -20,7 +20,9 @@ try {
 
 const path = require('path');
 const { execSync } = require('child_process');
-const { StringUtils, FilesManager } = require('turbocommons-ts');
+const { StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
+
 const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 

@@ -4,27 +4,30 @@
 This project uses libraries and dependencies from a variety of sources. To make sure that all of them are up to date, follow this steps:
 
 - Open a cmd at the root of this project folder, and run:
+
     npm outdated
-    Update the package.json versions based on the command result
     
-- Check that all libraries on:
+    Update the package.json versions based on the command result, by running:
+    
+      npm install libraryname@latest
+      
+    For each one of the outdated libraries we want to upgrade  
+    
+- Update all the libraries versions on:
+
     src\main\resources\libs
-    correspond to their latests versions
-
+        
+        - Update the library versions at the site_php index.php file:
+            src/main/resources/project-templates/site_php/src/main/index.php
+    
+        - Check generate.js file contents and update the library versions to match the new ones
+        
     src\test\resources\libs
-    correspond to their latests versions
-    
-- Update the library versions at the site_php index.php file:
-    src/main/resources/project-templates/site_php/src/main/index.php
-    
-- Update the library versions at the server_php index.php file:
-    src/main/resources/project-templates/server_php/src/main/index.php
-
-- Check generate.js file contents and update the library versions to match the new ones
-
-- Check test.js file contents to update the phpUnit and qunit versions used
+        
+        - Check test.js file contents to update the phpUnit and qunit versions used
 
 - Update the dependencies on the site_php template:
+
     src/main/resources/project-templates/site_php/package.json
     
 - To check outdated npm libs in the site_php template, you can create an empty project by:

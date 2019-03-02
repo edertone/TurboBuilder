@@ -13,8 +13,8 @@
 
 const utils = require('../sitephp-test-utils');
 const path = require('path');
-const { execSync } = require('child_process');
-const { StringUtils, FilesManager, ArrayUtils } = require('turbocommons-ts');
+const { ArrayUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const webdriver = require('selenium-webdriver');
 const fm = new FilesManager(require('fs'), require('os'), path, process);
 

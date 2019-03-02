@@ -1,6 +1,6 @@
 {
   "name": "turbobuilder",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
   "files": [
     "src/main",
@@ -19,24 +19,25 @@
     "url": "https://github.com/edertone/TurboBuilder"
   },
   "dependencies": {
-    "commander": "2.19.0",
-    "http-server": "0.11.1",
-    "jasmine": "3.2.0",
-    "node-sass": "4.9.4",
-    "opn": "5.4.0",
-    "selenium-webdriver": "4.0.0-alpha.1",
-    "turbocommons-ts": "0.9.0",
-    "typedoc": "0.13.0",
-    "typescript": "3.1.3",
-    "uglify-es": "3.3.9",
-    "webpack": "3.10.0",
-    "sharp": "0.21.0",
-    "jsonschema": "1.2.4",
     "clean-css": "4.2.1",
+    "commander": "2.19.0",
+    "html-minifier": "3.5.20",
+    "http-server": "0.11.1",
     "imagemin": "6.0.0",
     "imagemin-jpegtran": "5.0.2",
     "imagemin-pngquant": "6.0.0",
-    "html-minifier": "3.5.20"
+    "jasmine": "3.2.0",
+    "jsonschema": "1.2.4",
+    "node-sass": "4.9.4",
+    "opn": "5.4.0",
+    "selenium-webdriver": "4.0.0-alpha.1",
+    "sharp": "0.21.0",
+    "turbocommons-ts": "^1.0.0",
+    "turbodepot-node": "0.0.1",
+    "typedoc": "0.13.0",
+    "typescript": "3.1.3",
+    "uglify-es": "3.3.9",
+    "webpack": "3.10.0"
   },
   "keywords": [
     "project",

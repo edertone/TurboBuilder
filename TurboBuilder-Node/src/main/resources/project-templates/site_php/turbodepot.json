@@ -1,0 +1,38 @@
+{
+
+    "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbodepot.schema.json",
+    
+    "sources": {
+    
+        "fileSystem": [
+            {
+                "name": "source1",
+                "path": "somepath"
+            }
+        ],
+        
+        "mysql": [
+            {
+                "name": "source3"
+            }
+        ],
+        
+        "sqLite": [
+            {
+                "name": "source2"
+            }
+        ]   
+    }
+    
+}
+
+// Tindrem DepotObject, DepotFile, per a diferents usos
+
+
+DepotManager:
+    - Conectar a un source
+    - Llistar depots del source
+    - Crear un depot
+    - Borrar, etc
+    
+    - Poder fer servir labels i folders

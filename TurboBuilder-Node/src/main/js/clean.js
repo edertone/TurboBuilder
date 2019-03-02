@@ -5,7 +5,7 @@
  */
 
 
-const { FilesManager } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const console = require('./console.js');
 const buildModule = require('./build');
 const setupModule = require('./setup');

@@ -8,7 +8,8 @@
 const console = require('./console.js');
 const buildModule = require('./build');
 const setupModule = require('./setup');
-const { StringUtils, FilesManager } = require('turbocommons-ts');
+const { StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);

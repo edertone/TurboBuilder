@@ -7,11 +7,10 @@
  * Methods that help with performing the tests
  */
 
-const fs = require('fs');
-const os = require('os');
 const path = require('path');
 require('./../../main/js/globals');
-const { StringUtils, FilesManager } = require('turbocommons-ts');
+const { StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
 
 
@@ -21,7 +20,7 @@ let executionDir = path.resolve('./');
 /**
  * A files manager object ready to be used by the tests
  */
-exports.fm = new FilesManager(fs, os, path, process);
+exports.fm = new FilesManager(require('fs'), require('os'), require('path'), process);
 
 
 /**
