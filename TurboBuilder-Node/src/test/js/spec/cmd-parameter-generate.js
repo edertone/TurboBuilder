@@ -300,10 +300,14 @@ describe('cmd-parameter-generate', function(){
         expect(utils.exec('-g struct_customer')).toContain("Generated folders structure ok");
 
         expect(utils.fm.isDirectory('./Documents')).toBe(true);
+        expect(utils.fm.isFile('./Documents/Contact.md')).toBe(true);
+        expect(utils.fm.isFile('./Documents/Passwords.md')).toBe(true);
+        expect(utils.fm.getDirectoryList('./Documents').length).toBe(2);
+        
         expect(utils.fm.isDirectory('./Release')).toBe(true);
         expect(utils.fm.isDirectory('./Repo')).toBe(true);
         expect(utils.fm.isDirectory('./Trash')).toBe(true);
-           
+        
         expect(utils.fm.getDirectoryList('./').length).toBe(4);
     });
 });

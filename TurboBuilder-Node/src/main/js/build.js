@@ -611,26 +611,31 @@ exports.buildLibTs = function (destPath) {
         tsExecution += ' --project "' + destMain + sep + 'ts"';                          
         console.exec(tsExecution);
 
-        // Check if the target requires a merged JS file or not
+        // Check if the target requires a merged JS file or not and
+        // Generate it via webpack for the current target       
         if(isMergedFile){
             
-            let mergedFileName = target.mergedFile + '.js';
-            
-            // Generate via webpack the merged JS file for the current target       
-            let webPackExecution = global.installationPaths.webPackBin;
-             
-            webPackExecution += ' "' + compiledFolder + sep + 'index.js"';
-            webPackExecution += ' "' + destDist + sep + target.folder + sep + mergedFileName + '"';
-            webPackExecution += ' --output-library ' + target.globalVar;                            
+            let webPackSetup = {
+                mode: global.isRelease ? "production" : "development",
+                entry: compiledFolder + sep + 'index.js',
+                output: {
+                    library: target.globalVar,
+                    libraryTarget: 'var',
+                    filename: target.mergedFile + '.js',
+                    path: destDist + sep + target.folder
+            	}
+            };
             
             if(global.setup.build.lib_ts.sourceMap){
                 
-                fm.saveFile(compiledFolder + sep + 'webpack.config.js', "module.exports = {devtool: 'source-map'};");
-                
-                webPackExecution += ' --config "' + compiledFolder + sep + 'webpack.config.js"';     
+                webPackSetup.devtool = 'source-map';
             }
-
-            console.exec(webPackExecution, 'Webpack ' + target.jsTarget + ' ok');
+            
+            fm.saveFile(compiledFolder + sep + 'webpack.config.js', "module.exports = " + JSON.stringify(webPackSetup) + ";");
+            
+           	let webPackCmd = global.installationPaths.webPackBin + ' --config "' + compiledFolder + sep + 'webpack.config.js"';
+             
+            console.exec(webPackCmd, 'Webpack ' + target.jsTarget + ' ok');
             
             fm.deleteDirectory(compiledFolder);   
         }

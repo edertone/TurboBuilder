@@ -93,9 +93,12 @@ let createFoldersStructure = function (type) {
     if (type === global.folderStructures.struct_customer) {
 
         fm.createDirectory(global.runtimePaths.root + sep + 'Documents');
+        fm.saveFile(global.runtimePaths.root + sep + 'Documents' + sep + 'Contact.md', '');
+        fm.saveFile(global.runtimePaths.root + sep + 'Documents' + sep + 'Passwords.md', '');
+        
         fm.createDirectory(global.runtimePaths.root + sep + 'Release');  
         fm.createDirectory(global.runtimePaths.root + sep + 'Repo');  
-        fm.createDirectory(global.runtimePaths.root + sep + 'Trash');      
+        fm.createDirectory(global.runtimePaths.root + sep + 'Trash');
     }  
 }
 

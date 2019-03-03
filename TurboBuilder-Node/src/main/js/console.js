@@ -197,7 +197,7 @@ exports.exec = function (shellCommand, successMessage = '', liveOutput = false) 
 
             if(StringUtils.isEmpty(e.stdout.toString())){
                 
-                this.error('Unknown error executing ' + shellCommand);
+                this.error('Unknown error executing ' + shellCommand + '\n' + e.toString());
                 
             }else{
              

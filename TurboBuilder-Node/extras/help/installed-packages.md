@@ -72,4 +72,4 @@ Used to minify and compress js files
 
 ## webpack
 
-Used to merge and create web deployment packages
+Used to merge and create web deployment packages and bundled libraries
