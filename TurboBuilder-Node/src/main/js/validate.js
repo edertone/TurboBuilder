@@ -117,9 +117,9 @@ let validateAllJSONSchemas = function () {
 
     validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.setup, 'turbobuilder.schema.json');
     
-    if(fm.isFile(global.runtimePaths.root + fm.dirSep() + 'turbousers.json')){
+    if(fm.isFile(global.runtimePaths.root + fm.dirSep() + 'turbodepot.json')){
     
-        validateJSONSchema(global.runtimePaths.root + fm.dirSep() + 'turbousers.json', 'turbousers.schema.json');
+        validateJSONSchema(global.runtimePaths.root + fm.dirSep() + 'turbodepot.json', 'turbodepot.schema.json');
     }
     
     if(global.setup.build.site_php || global.setup.build.server_php ||

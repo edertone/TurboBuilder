@@ -157,12 +157,12 @@ exports.buildSitePhp = function (destPath) {
     fm.copyFile(destSite + sep + 'htaccess.txt', destDist + sep + '.htaccess');
     fm.deleteFile(destSite + sep + 'htaccess.txt');
     
-    // Read the turbousers.json file and add its contents to the index php file
-    if(fm.isFile(global.runtimePaths.root + sep + 'turbousers.json')){
+    // Read the turbodepot.json file and add its contents to the index php file
+    if(fm.isFile(global.runtimePaths.root + sep + 'turbodepot.json')){
     
-        let turboUsersSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbousers.json'));
+        let turboDepotSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbodepot.json'));
         
-        sitePhpTestUtils.saveSetupToIndexPhp(turboUsersSetup, 'turbousers', destSite + sep + 'index.php');
+        sitePhpTestUtils.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', destSite + sep + 'index.php');
     }
     
     // Read the turbosite.json file

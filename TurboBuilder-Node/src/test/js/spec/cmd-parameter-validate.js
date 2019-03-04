@@ -1042,6 +1042,50 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+     it('should fail validation when PHP files contain invalid namespace definitions', function() {
+
+        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-l')).toContain('validate ok');
+       
+        let setup = utils.readSetupFile();
+        
+        // Enable the namespaces validation
+        setup.validate.php.namespaces.enabled = true;
+        setup.validate.php.namespaces.mandatory = true;
+        setup.validate.php.namespaces.mustContain = ["org\\libname\\src\\$path"];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let execResult = utils.exec('-l');
+        
+        expect(execResult).toContain('File does not contain a namespace declaration');
+        expect(execResult).toContain('src\\main\\php\\autoloader.php');
+        expect(execResult).not.toContain('Namespace error');
+        expect(execResult).toContain('SomeManager.php');
+        
+        setup.validate.php.namespaces.excludes = ["autoloader.php", "index.php"];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        execResult = utils.exec('-l');
+        
+        expect(execResult).toContain('File does not contain a namespace declaration');
+        expect(execResult).not.toContain('src\\main\\php\\autoloader.php');
+        expect(execResult).not.toContain('Namespace error');
+        expect(execResult).toContain('SomeManager.php');
+        
+        expect(utils.fm.saveFile('./src/main/php/managers/SomeManager.php',
+        	"<?php namespace org\\libname\\src\\main\\php\\managers; class SomeManager {} ?>")).toBe(true);
+        
+        expect(utils.fm.saveFile('./src/main/php/model/SomeClass.php',
+        	"<?php namespace org\\libname\\src\\main\\php\\model; class SomeClass {} ?>")).toBe(true);
+        
+        expect(utils.fm.saveFile('./src/main/php/utils/SomeUtils.php',
+        	"<?php namespace org\\libname\\src\\main\\php\\utils; class SomeUtils {} ?>")).toBe(true);
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+    });
+    
+    
     // TODO - more validation tests related to server_php
     
 });

@@ -13,26 +13,35 @@
         
         "mysql": [
             {
-                "name": "source3"
+                "name": "source2",
+                "host": "db_host",
+                "database": "db_name"
             }
         ],
         
         "sqLite": [
             {
-                "name": "source2"
+                "name": "source3",
+                "path": "somepath"
             }
         ]   
-    }
+    },
     
+    "depots": [
+        
+        {
+            "name": "depot1",
+            "files": {
+                "source": "source1"
+            },
+            "objects": {
+                "source": "source1"
+            },
+            "users": {
+                "source": "source1",
+                "tokenLength": 175,
+                "tokenLifetime": 60
+            }
+        }   
+    ]
 }
-
-// Tindrem DepotObject, DepotFile, per a diferents usos
-
-
-DepotManager:
-    - Conectar a un source
-    - Llistar depots del source
-    - Crear un depot
-    - Borrar, etc
-    
-    - Poder fer servir labels i folders

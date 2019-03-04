@@ -1,0 +1,182 @@
+{
+    "$id": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbodepot.schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "turbodepot.json schema",
+    "required": [
+        "$schema",
+        "sources",
+        "depots"
+    ],
+    "additionalProperties": false, 
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "Url to the json schema definition to validate this file",
+            "enum": ["https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbodepot.schema.json"]
+        },
+        "sources": {
+            "type": "object",
+            "description": "Defines the destinations where the data will be saved and read",
+            "required": [
+                "fileSystem",
+                "mysql",
+                "sqLite"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "fileSystem": {
+                    "type": "array",
+                    "description": "",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "name",
+                            "path"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "path": {
+                                "type": "string",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "mysql": {
+                    "type": "array",
+                    "description": "",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "name",
+                            "host",
+                            "database"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "host": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "database": {
+                                "type": "string",
+                                "description": ""
+                            }
+                        }
+                    }
+                },
+                "sqLite": {
+                    "type": "array",
+                    "description": "",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "name",
+                            "path"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "path": {
+                                "type": "string",
+                                "description": ""
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "depots": {
+            "type": "array",
+            "description": "",
+            "items": {
+                "type": "object",
+                "description": "",
+                "required": [
+                    "name",
+                    "files",
+                    "objects",
+                    "users"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": ""
+                    },
+                    "files": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "source"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "source": {
+                                "type": "string",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "objects": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "source"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "source": {
+                                "type": "string",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "users": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "source",
+                            "tokenLength",
+                            "tokenLifetime"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "source": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "tokenLength": {
+                                "type": "integer",
+                                "description": ""
+                            },
+                            "tokenLifetime": {
+                                "type": "integer",
+                                "description": ""
+                            }
+                        }
+                    },
+                    "database": {
+                        "type": "string",
+                        "description": ""
+                    }
+                }
+            }
+        }
+    }
+}

@@ -86,7 +86,8 @@ let createFoldersStructure = function (type) {
         fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'tmp', true);
         fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'storage', true);
         fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'db', true);
-        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'binary', true);        
+        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'binary', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'logs', true);        
     }
         
     // Generate all the folders and files that are used on a customer folder
@@ -218,12 +219,12 @@ let replaceDependenciesIntoTemplate = function () {
             fm.copyFile(libsPath + sep + 'turbocommons-php-1.0.0.phar', depParent + sep + 'turbocommons-php-1.0.0.phar');
         }
         
-        if(depFile === 'turbodepot.tbdependency'){
+        if(depFile === 'turbodepot-php.tbdependency'){
             
             fm.copyFile(libsPath + sep + 'turbodepot-php-0.0.1.phar', depParent + sep + 'turbodepot-php-0.0.1.phar');
         }
         
-        if(depFile === 'turbosite.tbdependency'){
+        if(depFile === 'turbosite-php.tbdependency'){
             
             fm.copyFile(libsPath + sep + 'turbosite-php-1.0.0.phar', depParent + sep + 'turbosite-php-1.0.0.phar');
         }
