@@ -6,23 +6,25 @@
     
         "fileSystem": [
             {
-                "name": "source1",
+                "name": "fs_source_1",
                 "path": "somepath"
             }
         ],
         
         "mysql": [
             {
-                "name": "source2",
+                "name": "mysql_source_1",
                 "host": "db_host",
-                "database": "db_name"
+                "database": "db_name",
+                "prefix": "tdp_"
             }
         ],
         
         "sqLite": [
             {
-                "name": "source3",
-                "path": "somepath"
+                "name": "sqlite_source_1",
+                "path": "somepath",
+                "prefix": "tdp_"
             }
         ]   
     },
@@ -32,13 +34,13 @@
         {
             "name": "depot1",
             "files": {
-                "source": "source1"
+                "source": "fs_source_1"
             },
             "objects": {
-                "source": "source1"
+                "source": "fs_source_1"
             },
             "users": {
-                "source": "source1",
+                "source": "fs_source_1",
                 "tokenLength": 175,
                 "tokenLifetime": 60
             }

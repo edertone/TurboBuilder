@@ -57,7 +57,8 @@
                         "required": [
                             "name",
                             "host",
-                            "database"
+                            "database",
+                            "prefix"
                         ],
                         "additionalProperties": false,
                         "properties": {
@@ -72,6 +73,10 @@
                             "database": {
                                 "type": "string",
                                 "description": ""
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "description": ""
                             }
                         }
                     }
@@ -84,7 +89,8 @@
                         "description": "",
                         "required": [
                             "name",
-                            "path"
+                            "path",
+                            "prefix"
                         ],
                         "additionalProperties": false,
                         "properties": {
@@ -93,6 +99,10 @@
                                 "description": ""
                             },
                             "path": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "prefix": {
                                 "type": "string",
                                 "description": ""
                             }
