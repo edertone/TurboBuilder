@@ -1,0 +1,54 @@
+{
+
+    "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbobuilder.schema.json",
+
+    "metadata": {
+        "name": "turbobuilder",
+        "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
+        "builderVersion": "1.0.0"
+    },
+    
+    "validate": {
+        "runBeforeBuild": true,
+        "projectStructure" : {                    
+            "readmeFileMandatory": true,
+            "extrasFolderMandatory": true,
+            "extrasSubFoldersMandatory": ["help", "todo"],
+            "extrasTodoExtension": true
+        },
+        "filesContent" : {
+            "tabsForbidden": {
+                "enabled": true,
+                "affectedPaths": ["src", "extras"],
+                "excludes": ["resources/libs"]
+            }
+        },
+        "javascript": {
+            "useStrict": {
+                "enabled": true,
+                "includes": [".js"],
+                "excludes": ["src/main/resources/libs", "src/test/resources/libs"]
+            }
+        }
+    },
+    
+    "build": {
+        "app_node_cmd" : {
+        }
+    },
+    
+    "release": {
+        
+    },
+        
+    "sync": {
+        
+    },
+    
+    "test": [
+       {
+            "type": "jasmine",
+            "jasmineConfig": "src/test/js/jasmine.json"
+        }
+    ]
+}

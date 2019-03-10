@@ -254,7 +254,8 @@
                 {"required": ["lib_js"]},
                 {"required": ["lib_ts"]},
                 {"required": ["lib_angular"]},
-                {"required": ["app_angular"]}
+                {"required": ["app_angular"]},
+                {"required": ["app_node_cmd"]}
             ],
             "additionalProperties": false, 
             "properties": {
@@ -401,6 +402,11 @@
                     "type": "object",
                     "description": "An angular application project type",
                     "additionalProperties": false
+                },
+                "app_node_cmd": {
+                    "type": "object",
+                    "description": "A command line nodejs application project type",
+                    "additionalProperties": false
                 }
             }
         },
@@ -437,6 +443,10 @@
             "type": "object",
             "description": "Defines the parameters for the sync process",
             "anyOf": [
+                {
+                    "type": "object",
+                    "maxProperties": 0
+                },
                 {
                     "type": "object",
                     "minProperties": 7,
@@ -535,7 +545,7 @@
                         "required": ["type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
                         "additionalProperties": false, 
                         "properties": {
-                            "type": {"type": "string"},
+                            "type": {"type": "string", "enum": ["phpUnit"]},
                             "testsRoot": {"type": "string"},
                             "coverageReport": {"type": "boolean"},
                             "coverageReportOpenAfterTests": {"type": "boolean"}
@@ -546,7 +556,7 @@
                         "required": ["type", "jasmineConfig"],
                         "additionalProperties": false, 
                         "properties": {
-                            "type": {"type": "string"},
+                            "type": {"type": "string", "enum": ["jasmine"]},
                             "jasmineConfig": {"type": "string"}
                         }
                     },
@@ -555,7 +565,7 @@
                         "required": ["type", "testsRoot", "httpServerPort", "targets", "browsers"],
                         "additionalProperties": false, 
                         "properties": {
-                            "type": {"type": "string"},
+                            "type": {"type": "string", "enum": ["qunit"]},
                             "testsRoot": {"type": "string"},
                             "httpServerPort": {"type": "string"},
                             "targets": {"type": "array"},

@@ -33,7 +33,8 @@ global.setupBuildTypes = {
     lib_js: "lib_js",
     lib_ts: "lib_ts",
     lib_angular: "lib_angular",
-    app_angular: "app_angular"
+    app_angular: "app_angular",
+    app_node_cmd: "app_node_cmd"
 };
 
 /**

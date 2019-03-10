@@ -57,13 +57,19 @@ exports.execute = function () {
         fm.deleteDirectory(buildFullPath);
     }
     
-    // Copy all the src main files to the target build folder
-    this.copyMainFiles(buildFullPath);
-    
     if(global.setup.validate.runBeforeBuild){
         
         validateModule.execute(false);
     }
+    
+    // Node cmd apps are not built, cause we run them installed globally via npm install -g
+    if(global.setup.build.app_node_cmd){
+        
+        return console.success('build ok (no files affected or created)');
+    }
+    
+    // Copy all the src main files to the target build folder
+    this.copyMainFiles(buildFullPath);
     
     // Perform custom build depending on project type
     if(global.setup.build.site_php || global.setup.build.server_php){
@@ -189,7 +195,7 @@ exports.buildSitePhp = function (destPath) {
     if(global.isRelease && (turboSiteSetup.errorSetup.exceptionsToBrowser || turboSiteSetup.errorSetup.warningsToBrowser)){
         
         console.error("Exceptions or warnings are enabled to be shown on browser. " +
-        		"This is a security problem. Please disable them on " + global.fileNames.turboSiteSetup);
+                "This is a security problem. Please disable them on " + global.fileNames.turboSiteSetup);
     }
     
     // Process all sass scss files to css
@@ -623,7 +629,7 @@ exports.buildLibTs = function (destPath) {
                     libraryTarget: 'var',
                     filename: target.mergedFile + '.js',
                     path: destDist + sep + target.folder
-            	}
+                }
             };
             
             if(global.setup.build.lib_ts.sourceMap){
@@ -633,7 +639,7 @@ exports.buildLibTs = function (destPath) {
             
             fm.saveFile(compiledFolder + sep + 'webpack.config.js', "module.exports = " + JSON.stringify(webPackSetup) + ";");
             
-           	let webPackCmd = global.installationPaths.webPackBin + ' --config "' + compiledFolder + sep + 'webpack.config.js"';
+               let webPackCmd = global.installationPaths.webPackBin + ' --config "' + compiledFolder + sep + 'webpack.config.js"';
              
             console.exec(webPackCmd, 'Webpack ' + target.jsTarget + ' ok');
             

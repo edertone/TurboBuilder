@@ -54,14 +54,14 @@ exports.execute = function (verbose = true) {
     validateJavascript();
     
     // Use angular cli to run the tslint verification for angular projects
-	if(global.setup.build.app_angular || global.setup.build.lib_angular){
+    if(global.setup.build.app_angular || global.setup.build.lib_angular){
     
-	    console.log("\nLaunching ng lint");
+        console.log("\nLaunching ng lint");
         
-	    if(!console.exec('"./node_modules/.bin/ng" lint', '', true)){
-	        
-	        console.error("validate failed");
-	    }	    
+        if(!console.exec('"./node_modules/.bin/ng" lint', '', true)){
+            
+            console.error("validate failed");
+        }        
     }
     
     console.errors(errors);

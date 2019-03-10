@@ -59,7 +59,7 @@ if (program.release){
 //Build and release cannot be launched at the same time
 if (program.build && program.release){
  
-	console.error('build and release cannot be executed at the same time. Please launch separately');
+    console.error('build and release cannot be executed at the same time. Please launch separately');
 }
 
 // Generate the default project files if necessary

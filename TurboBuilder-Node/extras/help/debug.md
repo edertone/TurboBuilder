@@ -5,11 +5,11 @@
 
 To debug the tests:
 
-	npm run test-debug
+    npm run test-debug
 
 To debug the application itself:
 
-	node --inspect-brk "PATH_TO_PROJECT\TurboBuilder-Node\src\main\js\turbobuilder.js"
+    node --inspect-brk "PATH_TO_PROJECT\TurboBuilder-Node\src\main\js\turbobuilder.js"
 
 Application will be paused at the very first line of code
 

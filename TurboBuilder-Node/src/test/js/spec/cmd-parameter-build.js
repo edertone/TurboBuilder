@@ -243,6 +243,22 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.exec('-b')).toContain('build ok');
     });
+    
+    
+    it('should build ok when -b argument is executed on a generated app_node_cmd project', function() {
+        
+        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('server_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.build.hasOwnProperty('app_node_cmd')).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('build ok (no files affected or created)');
+    });
         
     
     it('should replace all wildcard matches with project version on all configured file extensions', function() {

@@ -63,6 +63,12 @@ exports.execute = function () {
         validateModule.execute(false);
     }
     
+    // Node cmd apps are not built, cause we run them installed globally via npm install -g
+    if(global.setup.build.app_node_cmd){
+        
+        return console.success('release ok (no files affected or created)');
+    }
+    
     // Angular apps are compiled exclusively with ng cli
     if(global.setup.build.app_angular){
         
@@ -98,7 +104,7 @@ exports.execute = function () {
             buildModule.buildLibTs(releaseFullPath);
         }
         
-    	minifyJs(releaseFullPath);
+        minifyJs(releaseFullPath);
         minifyCss(releaseFullPath);
         minifyHtaccess(releaseFullPath);
         minifyHtmlFiles(releaseFullPath);

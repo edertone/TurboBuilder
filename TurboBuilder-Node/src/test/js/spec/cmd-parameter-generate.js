@@ -271,6 +271,39 @@ describe('cmd-parameter-generate', function(){
     });
     
     
+    it('should generate app_node_cmd project structure', function(){
+
+        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+
+        expect(utils.exec('-l')).toContain("validate ok");
+
+        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(utils.fm.isFile('./src/main/js/main.js')).toBe(true);
+        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
+        
+        let setup = utils.readSetupFile();
+        expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.validate.filesContent.hasOwnProperty('copyrightHeaders')).toBe(true);
+        expect(setup.validate.hasOwnProperty('styleSheets')).toBe(false);
+        expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
+        expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_js')).toBe(false);
+        expect(setup.build.hasOwnProperty("app_node_cmd")).toBe(true);
+        expect(ObjectUtils.getKeys(setup.release).length).toBe(0);
+        expect(setup.hasOwnProperty('sync')).toBe(false);
+        expect(setup.test.length).toBe(1);
+        expect(setup.test[0].type).toBe("jasmine");
+    });
+    
+    
     it('should generate lib_angular project structure', function() {
         
         // TODO

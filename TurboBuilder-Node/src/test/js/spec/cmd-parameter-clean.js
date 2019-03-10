@@ -69,8 +69,6 @@ describe('cmd-parameter-clean', function(){
         
         expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
         
-        let setup = utils.readSetupFile();
-        
         expect(utils.exec('-b')).toContain('build ok');
         
         expect(utils.fm.isDirectory('./target')).toBe(true);
@@ -87,8 +85,6 @@ describe('cmd-parameter-clean', function(){
         let folderName = StringUtils.getPathElement(this.workdir);
         
         expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
         
         expect(utils.exec('-b')).toContain('build ok');
         
@@ -140,5 +136,13 @@ describe('cmd-parameter-clean', function(){
         
         expect(utils.fm.isDirectory('./target')).toBe(false);
         expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'site' + utils.fm.dirSep() + 'index.php')).toBe(false);
+    });
+    
+    
+    it('should say that cleaning a node cmd application is not necessary', function(){
+
+        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-c')).toContain('Clean is not necessary for node cmd apps');   
     });
 });

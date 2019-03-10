@@ -234,6 +234,11 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         delete setupContents.validate['php'];
     }
     
+    if(type === global.setupBuildTypes.app_node_cmd){
+            
+        delete setupContents.validate['styleSheets'];
+    }
+    
     // Customize the build section
     for (let key of ObjectUtils.getKeys(setupContents.build)) {
         
@@ -249,6 +254,11 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         
         delete setupContents.release.optimizePictures;
         delete setupContents.release.generateCodeDocumentation;
+    }
+    
+    if(type === global.setupBuildTypes.app_node_cmd){
+        
+        setupContents.release = {};
     }
     
     // Customize the sync section
@@ -295,7 +305,8 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         
         if((type === global.setupBuildTypes.site_php ||
             type === global.setupBuildTypes.lib_js ||
-            type === global.setupBuildTypes.lib_ts) &&
+            type === global.setupBuildTypes.lib_ts ||
+            type === global.setupBuildTypes.app_node_cmd) &&
             testItem.type === 'jasmine'){
 
             testArray.push(testItem);

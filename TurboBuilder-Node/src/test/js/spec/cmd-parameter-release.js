@@ -9,7 +9,7 @@
 
 
 require('./../../../main/js/globals');
-const { StringUtils } = require('turbocommons-ts');
+const { ObjectUtils, StringUtils } = require('turbocommons-ts');
 const utils = require('../cmd-parameter-test-utils');
 const sitePhpTestUtils = require('../../../main/resources/project-templates/site_php/src/test/js/sitephp-test-utils.js');
 
@@ -169,7 +169,6 @@ describe('cmd-parameter-release', function() {
         
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
-        let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
         expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
@@ -225,6 +224,24 @@ describe('cmd-parameter-release', function() {
         expect(jsBuildFileSize).toBeGreaterThan(0);
         expect(jsReleaseFileSize).toBeGreaterThan(0);
         expect(jsBuildFileSize).toBeGreaterThan(jsReleaseFileSize);
+    });
+    
+    
+    it('should release ok when -r argument is executed on a generated app_node_cmd project', function() {
+        
+        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+        
+        let setup = utils.readSetupFile();
+        
+        expect(ObjectUtils.getKeys(setup.release).length).toBe(0);
+        
+        expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('site_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('server_php')).toBe(false);
+        expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
+        expect(setup.build.hasOwnProperty('app_node_cmd')).toBe(true);
+        
+        expect(utils.exec('-r')).toContain('release ok (no files affected or created)');
     });
     
     

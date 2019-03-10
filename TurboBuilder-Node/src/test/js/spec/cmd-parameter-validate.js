@@ -61,6 +61,34 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation when an unknown test type is defined on test section at turboduilder.json setup file', function() {
+        
+        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        
+        expect(utils.exec('-l')).toContain("validate ok");
+        
+        // Disable use strict validation on setup and test that it now validates
+        let setup = utils.readSetupFile();
+        
+        expect(setup.test[0].type).toBe("jasmine");
+        
+        setup.test[0].nonexistantProperty = 'somevalue';
+        
+        utils.saveToSetupFile(setup);
+        
+        expect(utils.exec('-l')).toContain("Invalid JSON schema for turbobuilder.json");
+        
+        setup.test = [{
+                "type": "nonexistant",
+                "jasmineConfig": "src/test/js/jasmine.json"
+            }];
+        
+        utils.saveToSetupFile(setup);
+        
+        expect(utils.exec('-l')).toContain("Invalid JSON schema for turbobuilder.json");
+    });
+    
+    
     it('should fail validate for javascript files that do not contain the use strict modifier', function() {
     
         expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
@@ -1074,18 +1102,25 @@ describe('cmd-parameter-validate', function() {
         expect(execResult).toContain('SomeManager.php');
         
         expect(utils.fm.saveFile('./src/main/php/managers/SomeManager.php',
-        	"<?php namespace org\\libname\\src\\main\\php\\managers; class SomeManager {} ?>")).toBe(true);
+            "<?php namespace org\\libname\\src\\main\\php\\managers; class SomeManager {} ?>")).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/php/model/SomeClass.php',
-        	"<?php namespace org\\libname\\src\\main\\php\\model; class SomeClass {} ?>")).toBe(true);
+            "<?php namespace org\\libname\\src\\main\\php\\model; class SomeClass {} ?>")).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/php/utils/SomeUtils.php',
-        	"<?php namespace org\\libname\\src\\main\\php\\utils; class SomeUtils {} ?>")).toBe(true);
+            "<?php namespace org\\libname\\src\\main\\php\\utils; class SomeUtils {} ?>")).toBe(true);
         
         expect(utils.exec('-l')).toContain("validate ok");
     });
     
     
-    // TODO - more validation tests related to server_php
+    it('should validate ok a newly generated app_node_cmd project', function() {
+
+        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+        
+        let buildResult = utils.exec('-l');
+        expect(buildResult).toContain("validate start");
+        expect(buildResult).toContain("validate ok");
+    });
     
 });

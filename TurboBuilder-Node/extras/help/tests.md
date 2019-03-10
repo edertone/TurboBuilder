@@ -4,27 +4,28 @@
 ### via command line
 
 Launch any of the following commands at the root of the project (both do exactly the same):
-	npm test
-	node node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json
-	
+    tb -bt
+    npm test
+    node node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json
+    
 ### via eclipse
 
 Create an external launch configuration:
 
-	- name it Turbobuilder tests ALL
-	- location: C:\Windows\System32\cmd.exe
-	- Working directory: ${workspace_loc:/TurboBuilder-Node}
-	- Arguments: "/c npm test"
-	- Disable Build before launch on build tab
-	
-	
+    - name it Turbobuilder tests ALL
+    - location: C:\Windows\System32\cmd.exe
+    - Working directory: ${workspace_loc:/TurboBuilder-Node}
+    - Arguments: "/c tb -bt"
+    - Disable Build before launch on build tab
+    
+    
 ## How to launch only a subset of the project tests
-	
+    
 Edit the file under: src/test/js/jasmine.json
 
 And modify the "spec_files" section to look only for the spec file or files you want. 
 
-	
+    
 ## OS Environment setup
 
 ### Chrome driver must be available on OS to run selenium tests. Download and help available here:

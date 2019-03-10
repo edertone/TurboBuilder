@@ -21,6 +21,11 @@ exports.execute = function (alsoCleanSync = false) {
     
     console.log("\nclean start");
     
+    if(global.setup.build.app_node_cmd){
+        
+        return console.success('Clean is not necessary for node cmd apps');
+    }
+    
     if(fm.isDirectory(global.runtimePaths.target) &&
             !fm.deleteDirectory(global.runtimePaths.target) &&
             !fm.isDirectoryEmpty(global.runtimePaths.target)){
