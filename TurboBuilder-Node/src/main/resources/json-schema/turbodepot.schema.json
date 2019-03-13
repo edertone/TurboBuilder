@@ -161,9 +161,7 @@
                         "type": "object",
                         "description": "",
                         "required": [
-                            "source",
-                            "tokenLength",
-                            "tokenLifetime"
+                            "source"
                         ],
                         "additionalProperties": false,
                         "properties": {
