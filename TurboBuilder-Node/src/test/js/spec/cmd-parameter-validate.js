@@ -545,15 +545,15 @@ describe('cmd-parameter-validate', function() {
         
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
         
-        turboSiteSetup.api[0].uri = 'aapi/site';
+        turboSiteSetup.webServices.api[0].uri = 'aapi/site';
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         expect(utils.exec('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: aapi/site)');
         
-        turboSiteSetup.api[0].uri = 'api/site';
+        turboSiteSetup.webServices.api[0].uri = 'api/site';
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         expect(utils.exec('-l')).toContain('validate ok');
         
-        turboSiteSetup.api.push({uri: 'api1/site', namespace: turboSiteSetup.api[0].namespace});
+        turboSiteSetup.webServices.api.push({uri: 'api1/site', namespace: turboSiteSetup.webServices.api[0].namespace});
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         expect(utils.exec('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: api1/site)');
     });

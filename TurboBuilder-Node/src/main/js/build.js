@@ -37,6 +37,13 @@ exports.execute = function () {
     
     console.log("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
+    if(global.setup.validate.runBeforeBuild){
+        
+        validateModule.execute(false);
+    }
+    
+    let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
+    
     // Angular libs are built using ng cli and nothing more is necessary
     if(global.setup.build.lib_angular){
         
@@ -46,20 +53,17 @@ exports.execute = function () {
     // Angular apps are built using ng cli and nothing more is necessary
     if(global.setup.build.app_angular){
         
-        return this.buildAppAngular();
-    }
+        this.buildAppAngular(buildFullPath);
     
-    let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
+        console.success('build ok');
+        
+        return;
+    }
     
     // Delete all files inside the target/project name folder
     if(fm.isDirectory(buildFullPath)){
     
         fm.deleteDirectory(buildFullPath);
-    }
-    
-    if(global.setup.validate.runBeforeBuild){
-        
-        validateModule.execute(false);
     }
     
     // Node cmd apps are not built, cause we run them installed globally via npm install -g
@@ -654,11 +658,6 @@ exports.buildLibTs = function (destPath) {
  */
 exports.buildLibAngular = function () {
     
-    if(global.setup.validate.runBeforeBuild){
-        
-        validateModule.execute(false);
-    }
-
     // Use angular cli to compile the project to the target folder
     let angularBuildCommand = 'build ' + setupModule.getProjectName();
     console.log("\nLaunching ng " + angularBuildCommand + "\n");
@@ -675,23 +674,25 @@ exports.buildLibAngular = function () {
 /**
  * Execute the lib_angular build process
  */
-exports.buildAppAngular = function () {
+exports.buildAppAngular = function (destPath) {
     
-    if(global.setup.validate.runBeforeBuild){
-        
-        validateModule.execute(false);
-    }
-
     //Use angular cli to compile the project to the target folder
-    let angularBuildCommand = 'build --output-path=' + global.folderNames.target + fm.dirSep() + setupModule.getProjectName() + fm.dirSep() + 'dist';
+    let prod = global.isRelease ? ' --prod' : '';
+     
+    let angularBuildCommand = `build${prod} --output-path="${destPath + fm.dirSep()}dist"`;
+    
     console.log("\nLaunching ng " + angularBuildCommand + "\n");
 
     if(!console.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, '', true)){
         
-        console.error('build failed');
+        console.error('angular compilation failed: ' + angularBuildCommand);
     }
     
-    console.success('build ok');
+    // Copy htaccess file if it exists to the target folder
+    if(fm.isFile('./src/htaccess.txt')){
+        
+        fm.copyFile('./src/htaccess.txt', destPath + fm.dirSep() + 'dist' + fm.dirSep() + '.htaccess');
+    }
 }
 
 

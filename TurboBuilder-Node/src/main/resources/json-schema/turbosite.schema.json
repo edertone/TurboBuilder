@@ -17,7 +17,7 @@
         "globalComponents",
         "globalHtml",
         "viewComponents",
-        "api"
+        "webServices"
     ],
     "additionalProperties": false, 
     "properties": {
@@ -229,23 +229,39 @@
                 }
             }
         },
-        "api": {
-            "type": "array",
-            "description": "List of API definitions. Each element links a URL services path to the code namespace where the respective webservice classes can be found",
-            "items": {
-                "type": "object",
-                "required": ["uri", "namespace"],
-                "additionalProperties": false,
-                "properties": {
-                    "uri": {
-                        "type": "string",
-                        "description": "A fragment of the URL that calls the services which defines the services API path. Must start with api/ and no ending slash must exist",
-                        "examples": ["api/site"]
-                    },
-                    "namespace": {
-                        "type": "string",
-                        "description": "The namespace where the webservice classes that relate to the specified URI can be found. Namespace must point to the root of the service classes folder that matches the specified URI fragment. No ending slash must exist",
-                        "examples": ["project/src/main/api/site"]
+        "webServices": {
+            "type": "object",
+            "description": "Defines the setup related to the web services exposed by the site at sitedomain.com/api",
+            "required": [
+                "crossOriginCORS",
+                "api"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "crossOriginCORS": {
+                    "type": "string",
+                    "description": "Defines the Cross Origin Resource Sharing policy that applies to all the web services. restrict means only same domain is allowed, subdomains means access is allowed on all subdomains, and all means access is granted from anywhere",
+                    "enum": ["restrict", "subdomains", "all"]
+                },
+                "api": {
+                    "type": "array",
+                    "description": "List of API definitions. Each element links a URL services path to the code namespace where the respective webservice classes can be found",
+                    "items": {
+                        "type": "object",
+                        "required": ["uri", "namespace"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "uri": {
+                                "type": "string",
+                                "description": "A fragment of the URL that calls the services which defines the services API path. Must start with api/ and no ending slash must exist",
+                                "examples": ["api/site"]
+                            },
+                            "namespace": {
+                                "type": "string",
+                                "description": "The namespace where the webservice classes that relate to the specified URI can be found. Namespace must point to the root of the service classes folder that matches the specified URI fragment. No ending slash must exist",
+                                "examples": ["project/src/main/api/site"]
+                            }
+                        }
                     }
                 }
             }

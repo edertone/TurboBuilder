@@ -252,6 +252,7 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./README.md')).toBe(true);
         expect(utils.fm.isFile('./tslint.json')).toBe(true);
         expect(utils.fm.isFile('./turbobuilder.json')).toBe(true);
+        expect(utils.fm.isFile('./src/htaccess.txt')).toBe(true);
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);

@@ -72,50 +72,42 @@ exports.execute = function () {
     // Angular apps are compiled exclusively with ng cli
     if(global.setup.build.app_angular){
         
-        let angularReleaseCommand = 'ng build --prod --output-path=' + global.folderNames.target + fm.dirSep() + this.getReleaseRelativePath() + fm.dirSep() + 'dist';
-        console.log("\nLaunching " + angularReleaseCommand + "\n");
-        
-        if(!console.exec(angularReleaseCommand, '', true)){
-            
-            console.error('release failed');
-        }
+        return buildModule.buildAppAngular(releaseFullPath);  
+    } 
     
-    } else {
+    buildModule.copyMainFiles(releaseFullPath);
     
-        buildModule.copyMainFiles(releaseFullPath);
+    if(global.setup.build.site_php){
         
-        if(global.setup.build.site_php){
-            
-            buildModule.buildSitePhp(releaseFullPath);
-        }
-        
-        if(global.setup.build.lib_php){
-            
-            buildModule.buildLibPhp(releaseFullPath);
-        }
-        
-        if(global.setup.build.lib_js){
-            
-            buildModule.buildLibJs(releaseFullPath);
-        }
-        
-        if(global.setup.build.lib_ts){
-        
-            buildModule.buildLibTs(releaseFullPath);
-        }
-        
-        minifyJs(releaseFullPath);
-        minifyCss(releaseFullPath);
-        minifyHtaccess(releaseFullPath);
-        minifyHtmlFiles(releaseFullPath);
-        minifyPhpFiles(releaseFullPath);
-        
-        if(global.setup.release.optimizePictures){
-        
-            minifyImages(releaseFullPath);
-        }
+        buildModule.buildSitePhp(releaseFullPath);
     }
-         
+    
+    if(global.setup.build.lib_php){
+        
+        buildModule.buildLibPhp(releaseFullPath);
+    }
+    
+    if(global.setup.build.lib_js){
+        
+        buildModule.buildLibJs(releaseFullPath);
+    }
+    
+    if(global.setup.build.lib_ts){
+    
+        buildModule.buildLibTs(releaseFullPath);
+    }
+    
+    minifyJs(releaseFullPath);
+    minifyCss(releaseFullPath);
+    minifyHtaccess(releaseFullPath);
+    minifyHtmlFiles(releaseFullPath);
+    minifyPhpFiles(releaseFullPath);
+    
+    if(global.setup.release.optimizePictures){
+    
+        minifyImages(releaseFullPath);
+    }
+
     // TODO - delete all minified view and component css/js files which are empty (useless), to prevent them from
     // being linked as simply empty js or css files at the views html part.
     

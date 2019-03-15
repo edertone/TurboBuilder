@@ -128,7 +128,7 @@ let validateAllJSONSchemas = function () {
         let turbositeSetup = validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
         
         // Validate the api section of the turbosite.json file
-        for (let api of turbositeSetup.api){
+        for (let api of turbositeSetup.webServices.api){
         
             // All uri properties inside api must start with api/
             if(api.uri.indexOf('api/') !== 0){

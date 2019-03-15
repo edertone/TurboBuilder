@@ -56,10 +56,15 @@
     "viewComponents": [
     ],
     
-    "api": [
-        {
-            "uri": "api/site",
-            "namespace": "project\\src\\main\\services"
-        }
-    ]
+    "webServices": {
+    
+        "crossOriginCORS": "restrict",
+    
+        "api": [
+            {
+                "uri": "api/site",
+                "namespace": "project\\src\\main\\services"
+            }
+        ]
+    }
 }
