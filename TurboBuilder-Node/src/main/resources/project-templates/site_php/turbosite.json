@@ -57,9 +57,7 @@
     ],
     
     "webServices": {
-    
         "crossOriginCORS": "restrict",
-    
         "api": [
             {
                 "uri": "api/site",

@@ -165,6 +165,21 @@ describe('cmd-parameter-release', function() {
     });
     
     
+    it('should correctly create the release version for a newly generated server_php project', function() {
+        
+        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        
+        let launchResult = utils.exec('-cr');
+        expect(launchResult).toContain("clean start");
+        expect(launchResult).toContain("clean ok");
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("minify Js ok");
+        expect(launchResult).toContain("minify .htaccess ok");
+        expect(launchResult).toContain("minify html ok");
+        expect(launchResult).toContain("release ok (");
+    });
+    
+    
     it('should correctly generate release for a lib_js project type when deleteNonMergedJs and deleteNonMergedJs are false', function() {
         
         let sep = utils.fm.dirSep();

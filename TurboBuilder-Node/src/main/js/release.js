@@ -77,7 +77,7 @@ exports.execute = function () {
     
     buildModule.copyMainFiles(releaseFullPath);
     
-    if(global.setup.build.site_php){
+    if(global.setup.build.site_php || global.setup.build.server_php){
         
         buildModule.buildSitePhp(releaseFullPath);
     }

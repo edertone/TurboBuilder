@@ -240,8 +240,8 @@
             "properties": {
                 "crossOriginCORS": {
                     "type": "string",
-                    "description": "Defines the Cross Origin Resource Sharing policy that applies to all the web services. restrict means only same domain is allowed, subdomains means access is allowed on all subdomains, and all means access is granted from anywhere",
-                    "enum": ["restrict", "subdomains", "all"]
+                    "description": "Defines the Cross Origin Resource Sharing policy that applies to all the web services. restrict means only same domain is allowed, and allow means access is granted from anywhere",
+                    "enum": ["restrict", "allow"]
                 },
                 "api": {
                     "type": "array",
