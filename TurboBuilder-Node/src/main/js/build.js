@@ -219,140 +219,8 @@ exports.buildSitePhp = function (destPath) {
         fm.deleteFile(scssFile);
     }
     
-    // Aux method to add the cache hash to a file and rename it
-    let renameFileToAddHash = (filePath) => {
-        
-        let filePathWithHash = filePath.replace(StringUtils.getPathElement(filePath),
-                StringUtils.getPathElementWithoutExt(filePath) + '-' + turboSiteSetup.cacheHash + '.' + StringUtils.getPathExtension(filePath));
-        
-        if(!fm.renameFile(filePath, filePathWithHash)){
-            
-            console.error('Could not rename file with cache hash: ' + filePathWithHash);
-        }
-        
-        return StringUtils.getPathElement(filePathWithHash);
-    }
-    
     // Generate all missing favicons
-    let destFaviconsPath = destSite + sep + 'resources' + sep + 'favicons';
-        
-    if(fm.isDirectory(destFaviconsPath)){
-    
-        let faviconFiles = fm.findDirectoryItems(destFaviconsPath, /^.*\.png$/i, 'name', 'files');
-        
-        // If no favicons are specified, launch a warning
-        if(faviconFiles.length <= 0){
-            
-            console.warning("Warning: No favicons specified");
-        }
-        
-        // List of expected favicon files and sizes, sorted from biggest to smallest
-        let faviconExpectedFiles = [
-                {name: "196x196.png", w: 196, h: 196},
-                {name: "apple-touch-icon-180x180.png", w: 180, h: 180},
-                {name: "apple-touch-icon-precomposed.png", w: 152, h: 152},
-                {name: "apple-touch-icon.png", w: 152, h: 152},
-                {name: "apple-touch-icon-152x152.png", w: 152, h: 152},
-                {name: "apple-touch-icon-144x144.png", w: 144, h: 144},
-                {name: "128x128.png", w: 128, h: 128},
-                {name: "apple-touch-icon-114x114.png", w: 114, h: 114},
-                {name: "96x96.png", w: 96, h: 96},
-                {name: "apple-touch-icon-76x76.png", w: 76, h: 76},
-                {name: "apple-touch-icon-57x57.png", w: 57, h: 57},
-                {name: "32x32.png", w: 32, h: 32},
-                {name: "16x16.png", w: 16, h: 16},
-            ];
-        
-        // Make sure all favicons on the resources folder match any of the expected ones
-        for (let faviconFile of faviconFiles) {
-            
-            let fileNameFound = false;
-            
-            for (let faviconExpectedFile of faviconExpectedFiles) {
-    
-                if(faviconFile === faviconExpectedFile.name){
-                    
-                    fileNameFound = true;
-                    
-                    break;
-                }
-            }
-            
-            if(!fileNameFound){
-                
-                console.error('Unexpected favicon name: ' + faviconFile);
-            }
-        }
-        
-        // Find the biggest favicon that is provided on the project based on the list of expected ones
-        let biggestFound = '';
-        let biggestFoundWithHash = '';
-        
-        for (let faviconExpectedFile of faviconExpectedFiles) {
-    
-            if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
-                
-                biggestFound = faviconExpectedFile.name;
-                biggestFoundWithHash = renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
-            }
-        }
-        
-        // Generate all missing favicon images with the sharp image processing library
-        if(biggestFound !== ''){
-                
-            for (let faviconExpectedFile of faviconExpectedFiles) {
-        
-                if(faviconFiles.indexOf(faviconExpectedFile.name) < 0){
-                    
-                    // Apple touch icons are placed at the root of the site cause they are autodetected by apple devices
-                    if(faviconExpectedFile.name.indexOf("apple-touch-") === 0){
-                        
-                        // Use the amazing sharp lib to resize the image to the missing width and height
-                        sharp(destFaviconsPath + sep + biggestFoundWithHash)
-                            .resize(faviconExpectedFile.w, faviconExpectedFile.h)
-                            .toFile(destSite + sep + faviconExpectedFile.name, function(err) {
-                                
-                                if(err || !fm.isFile(destSite + sep + faviconExpectedFile.name)) {
-                                    
-                                    console.error('Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name + "\n" + err);
-                                }
-                            });
-                        
-                        // Hard block till we are sure the file is created
-                        blockingSleepTill(() => {return fm.isFile(destSite + sep + faviconExpectedFile.name);}, 60000,
-                            'Could not generate favicon : ' + destSite + sep + faviconExpectedFile.name);
-                                            
-                    }else{
-                        
-                        // Add the hash to the expected favicon
-                        let faviconExpectedFileWithHash = StringUtils.getPathElementWithoutExt(faviconExpectedFile.name) + '-' + turboSiteSetup.cacheHash
-                            + '.' + StringUtils.getPathExtension(faviconExpectedFile.name);
-                        
-                        sharp(destFaviconsPath + sep + biggestFoundWithHash)
-                            .resize(faviconExpectedFile.w, faviconExpectedFile.h)
-                            .toFile(destFaviconsPath + sep + faviconExpectedFileWithHash, function(err) {
-                                
-                                if(err || !fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash)) {
-                                    
-                                    console.error('Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name + "\n" + err);
-                                }
-                            });
-                        
-                        // Hard block till we are sure the file is created
-                        blockingSleepTill(() => {return fm.isFile(destFaviconsPath + sep + faviconExpectedFileWithHash);}, 60000,
-                            'Could not generate favicon: ' + destFaviconsPath + sep + faviconExpectedFile.name);
-                    }
-                
-                }else{
-                    
-                    if(biggestFound !== faviconExpectedFile.name){
-                    
-                        renameFileToAddHash(destFaviconsPath + sep + faviconExpectedFile.name);
-                    }
-                }
-            }
-        }
-    }
+    generateFavicons(destSite + sep + 'resources' + sep + 'favicons', destSite, turboSiteSetup.cacheHash);
     
     // Generate the array of css files that will be merged into the global css file
     let globalCssFiles = ObjectUtils.clone(turboSiteSetup.globalCss);
@@ -482,6 +350,167 @@ exports.buildSitePhp = function (destPath) {
                     
                     fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
                 }
+            }
+        }
+    }
+}
+
+
+/**
+ * Process the favicon or favicons from a specified source folder and generate all the favicon files on a destination folder by compressing
+ * and optimizing the input and also generating any missing ones based on the provided source images.
+ */
+let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
+    
+    let sep = fm.dirSep();
+    
+    // Aux method to add the cache hash to a file and rename it
+    let renameFileToAddHash = (filePath, hash) => {
+        
+        if(hash === ''){
+            
+            return StringUtils.getPathElement(filePath);
+        }
+        
+        let filePathWithHash = filePath.replace(StringUtils.getPathElement(filePath),
+                StringUtils.getPathElementWithoutExt(filePath) + '-' + hash + '.' + StringUtils.getPathExtension(filePath));
+        
+        if(!fm.renameFile(filePath, filePathWithHash)){
+            
+            console.error('Could not rename file with cache hash: ' + filePathWithHash);
+        }
+        
+        return StringUtils.getPathElement(filePathWithHash);
+    }
+    
+    if(!fm.isDirectory(faviconsSource) || !fm.isDirectory(faviconsDest)){
+    
+        return;    
+    }
+    
+    let faviconFiles = fm.findDirectoryItems(faviconsSource, /^.*\.png$/i, 'name', 'files');
+    
+    // If no favicons are specified, launch a warning
+    if(faviconFiles.length <= 0){
+        
+        console.warning("Warning: No favicons specified");
+    }
+    
+    // List of expected favicon files and sizes, sorted from biggest to smallest
+    let faviconExpectedFiles = [
+            {name: "196x196.png", w: 196, h: 196},
+            {name: "apple-touch-icon-180x180.png", w: 180, h: 180},
+            {name: "apple-touch-icon-precomposed.png", w: 152, h: 152},
+            {name: "apple-touch-icon.png", w: 152, h: 152},
+            {name: "apple-touch-icon-152x152.png", w: 152, h: 152},
+            {name: "apple-touch-icon-144x144.png", w: 144, h: 144},
+            {name: "128x128.png", w: 128, h: 128},
+            {name: "apple-touch-icon-114x114.png", w: 114, h: 114},
+            {name: "96x96.png", w: 96, h: 96},
+            {name: "apple-touch-icon-76x76.png", w: 76, h: 76},
+            {name: "apple-touch-icon-57x57.png", w: 57, h: 57},
+            {name: "32x32.png", w: 32, h: 32},
+            {name: "16x16.png", w: 16, h: 16},
+        ];
+    
+    // Make sure all favicons on the source folder match any of the expected ones
+    for (let faviconFile of faviconFiles) {
+        
+        let fileNameFound = false;
+        
+        for (let faviconExpectedFile of faviconExpectedFiles) {
+
+            if(faviconFile === faviconExpectedFile.name){
+                
+                fileNameFound = true;
+                
+                // As the favicon file is found, we will copy it to the destination now
+                fm.copyFile(faviconsSource + sep + faviconFile, faviconsDest + sep + faviconFile);
+                
+                break;
+            }
+        }
+        
+        if(!fileNameFound){
+            
+            console.error('Unexpected favicon name: ' + faviconFile);
+        }
+    }
+    
+    // We will now find the biggest favicon on the source path.
+    // To do it, we will look on the list of expected favicons, which is sorted by size from biggest to smallest.
+    // The first one that is found on expected list and source path will be the biggest one.
+    let biggestFound = '';
+    
+    for (let faviconExpectedFile of faviconExpectedFiles) {
+
+        if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
+            
+            biggestFound = faviconExpectedFile.name;
+            renameFileToAddHash(faviconsDest + sep + faviconExpectedFile.name, addHash);
+            
+            break;
+        }
+    }
+    
+    if(biggestFound === ''){
+    
+        return;
+    }
+
+    // Generate all missing favicon images with the sharp image processing library
+    for (let faviconExpectedFile of faviconExpectedFiles) {
+
+        // Check if this expected favicon file exists on the favicons source
+        if(faviconFiles.indexOf(faviconExpectedFile.name) >= 0){
+            
+            if(biggestFound !== faviconExpectedFile.name){
+            
+                renameFileToAddHash(faviconsDest + sep + faviconExpectedFile.name, addHash);
+            }  
+        
+        // The expected favicon does not exist on the favicons source, so we must generate it from the biggest one
+        }else{
+
+            // Apple touch icons are placed at the root of the site cause they are autodetected by apple devices
+            if(faviconExpectedFile.name.indexOf("apple-touch-") === 0){
+                
+                // Use the amazing sharp lib to resize the image to the missing width and height
+                sharp(faviconsSource + sep + biggestFound)
+                    .resize(faviconExpectedFile.w, faviconExpectedFile.h)
+                    .toFile(faviconsDest + sep + faviconExpectedFile.name, function(err) {
+                        
+                        if(err || !fm.isFile(faviconsDest + sep + faviconExpectedFile.name)) {
+                            
+                            console.error('Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
+                        }
+                    });
+                
+                // Hard block till we are sure the file is created
+                blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + faviconExpectedFile.name);}, 60000,
+                    'Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name);
+                                    
+            }else{
+                
+                // Add the hash to the expected favicon
+                let destFaviconWithHash = (addHash === '') ?
+                    faviconExpectedFile.name :
+                    StringUtils.getPathElementWithoutExt(faviconExpectedFile.name) + '-' + addHash
+                        + '.' + StringUtils.getPathExtension(faviconExpectedFile.name);
+                
+                sharp(faviconsSource + sep + biggestFound)
+                    .resize(faviconExpectedFile.w, faviconExpectedFile.h)
+                    .toFile(faviconsDest + sep + destFaviconWithHash, function(err) {
+                        
+                        if(err || !fm.isFile(faviconsDest + sep + destFaviconWithHash)) {
+                            
+                            console.error('Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
+                        }
+                    });
+                
+                // Hard block till we are sure the file is created
+                blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + destFaviconWithHash);}, 60000,
+                    'Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name);
             }
         }
     }
@@ -676,10 +705,12 @@ exports.buildLibAngular = function () {
  */
 exports.buildAppAngular = function (destPath) {
     
+    let sep = fm.dirSep();
+    
     //Use angular cli to compile the project to the target folder
     let prod = global.isRelease ? ' --prod' : '';
      
-    let angularBuildCommand = `build${prod} --output-path="${destPath + fm.dirSep()}dist"`;
+    let angularBuildCommand = `build${prod} --output-path="${destPath + sep}dist"`;
     
     console.log("\nLaunching ng " + angularBuildCommand + "\n");
 
@@ -691,8 +722,25 @@ exports.buildAppAngular = function (destPath) {
     // Copy htaccess file if it exists to the target folder
     if(fm.isFile('./src/htaccess.txt')){
         
-        fm.copyFile('./src/htaccess.txt', destPath + fm.dirSep() + 'dist' + fm.dirSep() + '.htaccess');
+        fm.copyFile('./src/htaccess.txt', destPath + sep + 'dist' + sep + '.htaccess');
     }
+    
+    // Generate favicons
+    generateFavicons('./src/assets/favicons', destPath + sep + 'dist');
+    
+    // Add the html code to referene the favicons on the index.html generated file
+    let indexHtmlCode = fm.readFile(destPath + sep + 'dist' + sep + 'index.html');
+    
+    // Get rid of any existing favicon.ico html code
+    indexHtmlCode = indexHtmlCode.replace(/<.*link.*rel="icon".*href="favicon.ico".*>/, '');
+    
+    let faviconsCode = '<link rel="icon" type="image/png" sizes="16x16" href="16x16.png">' +
+                       '<link rel="icon" type="image/png" sizes="32x32" href="32x32.png">' +
+                       '<link rel="icon" type="image/png" sizes="96x96" href="96x96.png">' +
+                       '<link rel="icon" type="image/png" sizes="128x128" href="128x128.png">' +
+                       '<link rel="icon" type="image/png" sizes="196x196" href="196x196.png">';
+   
+   fm.saveFile(destPath + sep + 'dist' + sep + 'index.html', StringUtils.replace(indexHtmlCode, '</head>', faviconsCode + '</head>', 1));
 }
 
 

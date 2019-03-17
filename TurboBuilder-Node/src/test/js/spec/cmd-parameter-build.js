@@ -11,6 +11,7 @@
 require('./../../../main/js/globals');
 const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
+const sitePhpTestUtils = require('../../../main/resources/project-templates/site_php/src/test/js/sitephp-test-utils.js');
 
 
 describe('cmd-parameter-build', function() {
@@ -206,7 +207,30 @@ describe('cmd-parameter-build', function() {
         expect(setup.build.hasOwnProperty('site_php')).toBe(true);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        let buildResult = utils.exec('-b');
+        
+        expect(buildResult).toContain('build start: site_php');
+        expect(buildResult).toContain('build ok');
+        
+        // Test that generated favicon files are correct
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+        let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
+        let buildSetup = sitePhpTestUtils.getTurbositeSetupFromIndexPhp(buildRoot + sep + 'index.php');
+        
+        expect(utils.fm.isFile(`${buildRoot}${sep}196x196-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-180x180.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-precomposed.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-152x152.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-144x144.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}128x128-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-114x114.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}96x96-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-76x76.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-57x57.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}32x32-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(utils.fm.isFile(`${buildRoot}${sep}16x16-${buildSetup.cacheHash}.png`)).toBe(true);
     });
     
     

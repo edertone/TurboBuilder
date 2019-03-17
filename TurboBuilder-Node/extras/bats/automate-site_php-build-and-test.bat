@@ -25,8 +25,8 @@ call tb -cb
 
 cd %currentdir%
 
-copy "--git-root--\TurboCommons\TurboCommons-Php\target\TurboCommons-Php\dist\*.*" "src\main\libs\turbocommons-php"
-copy "--git-root--\TurboSite\TurboSite-Php\target\TurboSite-Php\dist\*.*" "src\main\libs\turbosite"
+copy "--git-root--\TurboCommons\TurboCommons-Php\target\turbocommons-php\dist\*.*" "src\main\libs\turbocommons-php"
+copy "--git-root--\TurboSite\TurboSite-Php\target\turbosite-php\dist\*.*" "src\main\libs\turbosite-php"
 
 md "C:/turbosite-webserver-symlink/build"
 

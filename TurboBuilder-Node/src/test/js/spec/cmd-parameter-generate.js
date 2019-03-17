@@ -146,6 +146,8 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(utils.fm.isFile('./extras/help/upgrade-dependencies.md')).toBe(true);
+        expect(utils.fm.readFile('./extras/help/upgrade-dependencies.md')).toContain('Update the library versions at the index.php file');
         expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
@@ -253,6 +255,8 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./tslint.json')).toBe(true);
         expect(utils.fm.isFile('./turbobuilder.json')).toBe(true);
         expect(utils.fm.isFile('./src/htaccess.txt')).toBe(true);
+        expect(utils.fm.isFile('./src/assets/favicons/196x196.png')).toBe(true);
+        expect(utils.fm.isFile('./src/assets/favicons/readme.txt')).toBe(true);
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
@@ -279,6 +283,7 @@ describe('cmd-parameter-generate', function(){
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(utils.fm.readFile('./extras/help/debug.md')).toContain('# How to debug a node app with chrome dev tools');
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
         expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);

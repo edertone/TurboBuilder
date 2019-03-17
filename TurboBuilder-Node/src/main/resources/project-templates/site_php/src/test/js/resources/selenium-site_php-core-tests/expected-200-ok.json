@@ -63,11 +63,11 @@
                "This is the site main title", "Here goes a section title", "This is the footer",
              "href=\"$baseURL/en\">english", "href=\"$baseURL/es\">spanish",
               "script src=\"$baseURL/glob-",
-              "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
-              "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
-              "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
-              "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-              "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+              "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
+              "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
+              "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
+              "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/128x128-$cacheHash.png\"",
+              "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/196x196-$cacheHash.png\"",
               "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
               "/libs/jquery/jquery.js"
           ],
@@ -85,11 +85,11 @@
                "Este es el titulo principal de la web", "Aqui va el título de una sección", "Este es el footer",
                "href=\"$baseURL/en\">english", "href=\"$baseURL/es\">spanish",
                "script src=\"$baseURL/glob-",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/128x128-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/196x196-$cacheHash.png\"",
             "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
             "/libs/jquery/jquery.js"
         ],
@@ -106,11 +106,11 @@
                "This is the footer",
                "href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
                "href=\"$baseURL/test%20parameter%201\">english", "href=\"$baseURL/test%20parameter%201\">spanish",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/128x128-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/196x196-$cacheHash.png\"",
             "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
             "/libs/jquery/jquery.js"
         ],
@@ -141,11 +141,11 @@
                "href=\"$baseURL/glob-", "href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
                "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\">english</a>",
                "href=\"$baseURL/es/multi-parameters/parameter%201/parameter%202/parameter%203\">spanish</a>",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/resources/favicons/16x16-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/resources/favicons/32x32-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/resources/favicons/96x96-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/resources/favicons/128x128-$cacheHash.png\"",
-               "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/resources/favicons/196x196-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"$baseURL/128x128-$cacheHash.png\"",
+               "link rel=\"icon\" type=\"image/png\" sizes=\"196x196\" href=\"$baseURL/196x196-$cacheHash.png\"",
             "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
             "/libs/jquery/jquery.js"
         ],
@@ -170,7 +170,7 @@
         "notContains": null
     },
     {
-        "url": "https://$host/resources/favicons/16x16-$cacheHash.png",
+        "url": "https://$host/resources/favicons/196x196.png",
         "title": null,
         "source": null,
         "startWith": null,
@@ -178,7 +178,7 @@
         "notContains": null
     },
     {
-        "url": "https://$host/resources/favicons/32x32-$cacheHash.png",
+        "url": "https://$host/16x16-$cacheHash.png",
         "title": null,
         "source": null,
         "startWith": null,
@@ -186,7 +186,7 @@
         "notContains": null
     },
     {
-        "url": "https://$host/resources/favicons/96x96-$cacheHash.png",
+        "url": "https://$host/32x32-$cacheHash.png",
         "title": null,
         "source": null,
         "startWith": null,
@@ -194,7 +194,7 @@
         "notContains": null
     },
     {
-        "url": "https://$host/resources/favicons/128x128-$cacheHash.png",
+        "url": "https://$host/96x96-$cacheHash.png",
         "title": null,
         "source": null,
         "startWith": null,
@@ -202,7 +202,15 @@
         "notContains": null
     },
     {
-        "url": "https://$host/resources/favicons/196x196-$cacheHash.png",
+        "url": "https://$host/128x128-$cacheHash.png",
+        "title": null,
+        "source": null,
+        "startWith": null,
+        "endWith": null,
+        "notContains": null
+    },
+    {
+        "url": "https://$host/196x196-$cacheHash.png",
         "title": null,
         "source": null,
         "startWith": null,

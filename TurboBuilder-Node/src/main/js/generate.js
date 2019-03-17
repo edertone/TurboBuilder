@@ -112,18 +112,18 @@ let createProjectStructure = function (type) {
     let sep = fm.dirSep();
     let templatesFolder = global.installationPaths.mainResources + sep + 'project-templates';
     
-    // Copy the project type specific files
-    let filesToCopy = templatesFolder + sep + (type === global.setupBuildTypes.server_php ? global.setupBuildTypes.site_php : type);
-    
-    fm.copyDirectory(filesToCopy, global.runtimePaths.root);
-    
     // Copy the extras folder
     fm.createDirectory(global.runtimePaths.extras);
     
-    if(!fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras, false)){
+    if(!fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras)){
     
         console.error('Failed creating: ' + global.runtimePaths.extras);
     }
+    
+    // Copy the project type specific files
+    let filesToCopy = templatesFolder + sep + (type === global.setupBuildTypes.server_php ? global.setupBuildTypes.site_php : type);
+    
+    fm.copyDirectory(filesToCopy, global.runtimePaths.root, false);
     
     // The expected-ftp-structure.md file is not necessary on some project types
     if(type !== global.setupBuildTypes.site_php &&
@@ -176,6 +176,12 @@ let createProjectStructure = function (type) {
     console.success('Created ' + global.fileNames.setup + ' file');
     
     if(type === global.setupBuildTypes.app_angular){
+        
+        // Copy the default favicons from the site_php template
+        fm.createDirectory(`${global.runtimePaths.root}${sep}src${sep}assets${sep}favicons`);
+        
+        fm.copyDirectory(`${templatesFolder}${sep}site_php${sep}src${sep}main${sep}resources${sep}favicons`,
+                         `${global.runtimePaths.root}${sep}src${sep}assets${sep}favicons`);
         
         console.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
     }

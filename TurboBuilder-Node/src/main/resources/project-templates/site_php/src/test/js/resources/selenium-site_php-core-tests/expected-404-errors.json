@@ -48,7 +48,6 @@
     "https://$host/resources/favicons/32x32.png",
     "https://$host/resources/favicons/96x96.png",
     "https://$host/resources/favicons/128x128.png",
-    "https://$host/resources/favicons/196x196.png",
     "https://$host/build/api/site/example",
     "https://$host/build/api/site/example/",
     "https://$host/build/api/site/example/example-service-without-param",
