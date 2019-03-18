@@ -32,7 +32,7 @@
     "opn": "5.4.0",
     "selenium-webdriver": "4.0.0-alpha.1",
     "sharp": "^0.21.3",
-    "turbocommons-ts": "^1.0.0",
+    "turbocommons-ts": "^1.1.0",
     "turbodepot-node": "0.0.1",
     "typedoc": "^0.14.2",
     "typescript": "3.1.3",
