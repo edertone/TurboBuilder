@@ -90,6 +90,9 @@
             ]
         },
         "app_angular": {
+            "preventOldFavicon": true,
+            "forceOverscrollContain": true,
+            "forceMobileWebAppCapable": true
         },
         "app_node_cmd": {
         }
