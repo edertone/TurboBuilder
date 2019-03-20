@@ -240,6 +240,29 @@
                             }
                         }
                     }
+                },
+                "angularApp": {
+                    "type": "object",
+                    "description": "Defines validation rules that apply to angular applications",
+                    "additionalProperties": false,
+                    "properties": {
+                        "noLegacyFavicon": {
+                            "type": "boolean",
+                            "description": "If enabled, the legacy favicon.ico metadata won't be allowed on index.html file"
+                        },                        
+                        "forceOverscrollContain": {
+                            "type": "boolean",
+                            "description": "If enabled, the index.html file must contain style=\"overscroll-behavior: contain\" at the opening body tag, which will prevent the mobile browsers from reloading the application when user performs a scrolldown from top"
+                        },
+                        "forceMobileWebAppCapable": {
+                            "type": "boolean",
+                            "description": "If enabled, the index.html file must contain the <meta name=\"mobile-web-app-capable\" content=\"yes\"> metadata tag, which will inform the mobile browsers to treat the application as a mobile app when being added to the desktop as a link"
+                        },
+                        "forceHttpsWithHtaccess": {
+                            "type": "boolean",
+                            "description": "If enabled, the application must have an src/htaccess.txt file that forces the redirect of the url from http to https"
+                        }
+                    }
                 }
             }
         },
@@ -401,21 +424,7 @@
                 "app_angular": {
                     "type": "object",
                     "description": "An angular application project type",
-                    "additionalProperties": false,
-                    "properties": {
-                        "preventOldFavicon": {
-                            "type": "boolean",
-                            "description": "If enabled, the legacy favicon.ico metadata won't be allowed on index.html file"
-                        },                        
-                        "forceOverscrollContain": {
-                            "type": "boolean",
-                            "description": "If enabled, the index.html file must contain style=\"overscroll-behavior: contain\" at the opening body tag, which will prevent the mobile browsers from reloading the application when user performs a scrolldown from top"
-                        },
-                        "forceMobileWebAppCapable": {
-                            "type": "boolean",
-                            "description": "If enabled, the index.html file must contain the <meta name=\"mobile-web-app-capable\" content=\"yes\"> metadata tag, which will inform the mobile browsers to treat the application as a mobile app when being added to the desktop as a link"
-                        }
-                    }
+                    "additionalProperties": false
                 },
                 "app_node_cmd": {
                     "type": "object",

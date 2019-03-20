@@ -53,6 +53,8 @@ exports.execute = function (verbose = true) {
     
     validateJavascript();
     
+    validateAngularApp();
+    
     // Use angular cli to run the tslint verification for angular projects
     if(global.setup.build.app_angular || global.setup.build.lib_angular){
     
@@ -508,6 +510,47 @@ let validateJavascript = function () {
                 errors.push('File must start with "use strict": ' + file);
             }
         }
+    }
+}
+
+
+/**
+ * Validates angular application
+ */
+let validateAngularApp = function () {
+    
+    if(!global.setup.validate.angularApp){
+    
+        return;
+    }
+    
+    // Get the main index html file for the angular application
+    let indexHtmlCode = fm.readFile(global.runtimePaths.src + fm.dirSep() + 'index.html');
+    
+    if(global.setup.validate.angularApp.noLegacyFavicon &&
+       indexHtmlCode.indexOf('favicon.ico') >= 0){
+        
+        console.error("Deprecated favicon.ico metadata is not allowed. Please remove it from index.html");
+    }
+    
+    if(global.setup.validate.angularApp.forceOverscrollContain &&
+       indexHtmlCode.indexOf('overscroll-behavior: contain') < 0){
+        
+        console.error('style="overscroll-behavior: contain" is mandatory on index.html <body> tag to prevent scroll reloading on mobile browsers');
+    }
+    
+    if(global.setup.validate.angularApp.forceMobileWebAppCapable &&
+       indexHtmlCode.indexOf('name="mobile-web-app-capable" content="yes"') < 0){
+        
+        console.error('<meta name="mobile-web-app-capable" content="yes"> is mandatory on index.html to enable app-like features on mobile browsers');
+    }
+    
+    if(global.setup.validate.angularApp.forceHttpsWithHtaccess &&
+       (!fm.isFile(global.runtimePaths.src + fm.dirSep() + 'htaccess.txt') ||
+        fm.readFile(global.runtimePaths.src + fm.dirSep() + 'htaccess.txt')
+            .indexOf('RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]') < 0)){
+        
+        console.error('src/htaccess.txt must exist and redirect all urls from http to https with the following code:\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]');
     }
 }
 

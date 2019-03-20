@@ -54,6 +54,12 @@
                 "includes": [".js"],
                 "excludes": ["src/main/libs"]
             }
+        },
+        "angularApp": {
+            "noLegacyFavicon": true,
+            "forceOverscrollContain": true,
+            "forceMobileWebAppCapable": true,
+            "forceHttpsWithHtaccess": true
         }
     },
     
@@ -90,9 +96,6 @@
             ]
         },
         "app_angular": {
-            "preventOldFavicon": true,
-            "forceOverscrollContain": true,
-            "forceMobileWebAppCapable": true
         },
         "app_node_cmd": {
         }

@@ -707,10 +707,11 @@ exports.buildAppAngular = function (destPath) {
     
     let sep = fm.dirSep();
     
-    //Use angular cli to compile the project to the target folder
+    // Use angular cli to compile the project to the target folder
+    // Note that we enable --output-hashing=all to prevent browsers from caching the generated files 
     let prod = global.isRelease ? ' --prod' : '';
      
-    let angularBuildCommand = `build${prod} --output-path="${destPath + sep}dist"`;
+    let angularBuildCommand = `build${prod} --output-hashing=all --output-path="${destPath + sep}dist"`;
     
     console.log("\nLaunching ng " + angularBuildCommand + "\n");
 
@@ -725,36 +726,20 @@ exports.buildAppAngular = function (destPath) {
         fm.copyFile('./src/htaccess.txt', destPath + sep + 'dist' + sep + '.htaccess');
     }
     
-    // Generate favicons
-    generateFavicons('./src/assets/favicons', destPath + sep + 'dist');
-    
     // Validate the index html code
     let indexHtmlCode = fm.readFile(destPath + sep + 'dist' + sep + 'index.html');
     
-    if(global.setup.build.app_angular.preventOldFavicon &&
-       indexHtmlCode.indexOf('favicon.ico') >= 0){
-        
-        console.error("Deprecated favicon.ico metadata is not allowed. Please remove it from index.html");
-    }
+    // Generate favicons
+    let faviconsHash = StringUtils.generateRandom(8, 8);
     
-    if(global.setup.build.app_angular.forceOverscrollContain &&
-       indexHtmlCode.indexOf('overscroll-behavior: contain') < 0){
-        
-        console.error('style="overscroll-behavior: contain" is mandatory on index.html <body> tag to prevent scroll reloading on mobile browsers');
-    }
-    
-    if(global.setup.build.app_angular.forceMobileWebAppCapable &&
-       indexHtmlCode.indexOf('name="mobile-web-app-capable" content="yes"') < 0){
-        
-        console.error('<meta name="mobile-web-app-capable" content="yes"> is mandatory on index.html to enable app-like features on mobile browsers');
-    }
+    generateFavicons('./src/assets/favicons', destPath + sep + 'dist', faviconsHash);
     
     // Add the html code to referene the favicons on the index.html generated file
-    let faviconsCode = '<link rel="icon" type="image/png" sizes="16x16" href="16x16.png">' +
-                       '<link rel="icon" type="image/png" sizes="32x32" href="32x32.png">' +
-                       '<link rel="icon" type="image/png" sizes="96x96" href="96x96.png">' +
-                       '<link rel="icon" type="image/png" sizes="128x128" href="128x128.png">' +
-                       '<link rel="icon" type="image/png" sizes="196x196" href="196x196.png">';
+    let faviconsCode = `<link rel="icon" type="image/png" sizes="16x16" href="16x16-${faviconsHash}.png">` +
+                       `<link rel="icon" type="image/png" sizes="32x32" href="32x32-${faviconsHash}.png">` +
+                       `<link rel="icon" type="image/png" sizes="96x96" href="96x96-${faviconsHash}.png">` +
+                       `<link rel="icon" type="image/png" sizes="128x128" href="128x128-${faviconsHash}.png">` +
+                       `<link rel="icon" type="image/png" sizes="196x196" href="196x196-${faviconsHash}.png">`;
    
     fm.saveFile(destPath + sep + 'dist' + sep + 'index.html', StringUtils.replace(indexHtmlCode, '</head>', faviconsCode + '</head>', 1));
 }
