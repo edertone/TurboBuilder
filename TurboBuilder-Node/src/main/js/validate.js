@@ -519,7 +519,7 @@ let validateJavascript = function () {
  */
 let validateAngularApp = function () {
     
-    if(!global.setup.validate.angularApp){
+    if(!global.setup.build.app_angular || !global.setup.validate.angularApp){
     
         return;
     }

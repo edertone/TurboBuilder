@@ -72,7 +72,12 @@ exports.execute = function () {
     // Angular apps are compiled exclusively with ng cli
     if(global.setup.build.app_angular){
         
-        return buildModule.buildAppAngular(releaseFullPath);  
+        buildModule.buildAppAngular(releaseFullPath);
+        minifyHtaccess(releaseFullPath);
+        minifyHtmlFiles(releaseFullPath);
+        minifyImages(releaseFullPath);
+        
+        return;
     } 
     
     buildModule.copyMainFiles(releaseFullPath);
