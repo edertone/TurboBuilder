@@ -2,8 +2,10 @@
 
     "errorSetup": {
         "exceptionsToBrowser": false,
+        "exceptionsToLog": "php_errors",
         "exceptionsToMail": "",
         "warningsToBrowser": false,
+        "warningsToLog": "php_errors",
         "warningsToMail": ""
     },
 

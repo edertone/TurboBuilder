@@ -4,8 +4,10 @@
     
     "errorSetup": {
         "exceptionsToBrowser": true,
+        "exceptionsToLog": "",
         "exceptionsToMail": "",
         "warningsToBrowser": true,
+        "warningsToLog": "",
         "warningsToMail": ""
     },
     
