@@ -36,6 +36,9 @@
             "files": {
                 "source": "fs_source_1"
             },
+            "logs": {
+                "source": "fs_source_1"
+            },
             "objects": {
                 "source": "fs_source_1"
             },

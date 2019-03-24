@@ -31,8 +31,10 @@
             "description": "Defines how errors and warnings are handled by the application",
             "required": [
                 "exceptionsToBrowser",
+                "exceptionsToLog",
                 "exceptionsToMail",
                 "warningsToBrowser",
+                "warningsToLog",
                 "warningsToMail"
             ],
             "additionalProperties": false,
@@ -41,6 +43,10 @@
                     "type": "boolean",
                     "description": "If set to true, all application exceptions information will be written directly to the browser output."
                 },
+                "exceptionsToLog": {
+                    "type": "string",
+                    "description": "A log filename or relative path where the exceptions must be written. If not specified, no log will be output. The filename or relative path must be based on the depot logs setup"
+                },
                 "exceptionsToMail": {
                     "type": "string",
                     "description": "The Exceptionstomail Schema"
@@ -48,6 +54,10 @@
                 "warningsToBrowser": {
                     "type": "boolean",
                     "description": "The Warningstobrowser Schema"
+                },
+                "warningsToLog": {
+                    "type": "string",
+                    "description": "A log filename or relative path where the warnings must be written. If not specified, no log will be output. The filename or relative path must be based on the depot logs setup"
                 },
                 "warningsToMail": {
                     "type": "string",

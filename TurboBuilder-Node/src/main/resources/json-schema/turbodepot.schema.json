@@ -39,11 +39,11 @@
                         "properties": {
                             "name": {
                                 "type": "string",
-                                "description": ""
+                                "description": "A name we want to use as an alias for this file system source"
                             },
                             "path": {
                                 "type": "string",
-                                "description": ""
+                                "description": "An absolute path that points to the root of this file system source. This is where the data will be stored when we use this source alias on our depots"
                             }
                         }
                     }
@@ -140,6 +140,20 @@
                             "source": {
                                 "type": "string",
                                 "description": ""
+                            }
+                        }
+                    },
+                    "logs": {
+                        "type": "object",
+                        "description": "Defines the setup for the storage of logs into this depot instance",
+                        "required": [
+                            "source"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "source": {
+                                "type": "string",
+                                "description": "The name for a source that will be used to store and read the logs"
                             }
                         }
                     },
