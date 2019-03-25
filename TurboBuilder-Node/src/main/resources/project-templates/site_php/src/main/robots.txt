@@ -2,7 +2,7 @@
 User-agent: *
 Disallow: /trash/
 Disallow: /site/
-Disallow: /server/
+Disallow: /api/
 Disallow: /release/
 Disallow: /build/
 Disallow: /data/ 
