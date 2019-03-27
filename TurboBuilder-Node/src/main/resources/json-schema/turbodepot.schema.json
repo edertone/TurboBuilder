@@ -19,9 +19,6 @@
             "type": "object",
             "description": "Defines the destinations where the data will be saved and read",
             "required": [
-                "fileSystem",
-                "mysql",
-                "sqLite"
             ],
             "additionalProperties": false,
             "properties": {
@@ -44,6 +41,39 @@
                             "path": {
                                 "type": "string",
                                 "description": "An absolute path that points to the root of this file system source. This is where the data will be stored when we use this source alias on our depots"
+                            }
+                        }
+                    }
+                },
+                "mariadb": {
+                    "type": "array",
+                    "description": "",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "name",
+                            "host",
+                            "database",
+                            "prefix"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "host": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "database": {
+                                "type": "string",
+                                "description": ""
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "description": ""
                             }
                         }
                     }

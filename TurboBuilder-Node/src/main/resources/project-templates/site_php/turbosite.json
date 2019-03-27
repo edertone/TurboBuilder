@@ -8,7 +8,9 @@
         "exceptionsToMail": "",
         "warningsToBrowser": true,
         "warningsToLog": "",
-        "warningsToMail": ""
+        "warningsToMail": "",
+        "tooMuchTimeWarning": 1000,
+        "tooMuchMemoryWarning": 5000000
     },
     
     "homeView": "home",

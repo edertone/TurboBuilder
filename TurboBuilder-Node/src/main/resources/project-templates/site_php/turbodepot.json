@@ -7,23 +7,26 @@
         "fileSystem": [
             {
                 "name": "fs_source_1",
-                "path": "somepath"
+                "path": ""
+            }
+        ],
+        
+        "mariadb": [
+            {
+                "name": "mariadb_source_1",
+                "host": "",
+                "database": "",
+                "prefix": "tdp_"
             }
         ],
         
         "mysql": [
-            {
-                "name": "mysql_source_1",
-                "host": "db_host",
-                "database": "db_name",
-                "prefix": "tdp_"
-            }
         ],
         
         "sqLite": [
             {
                 "name": "sqlite_source_1",
-                "path": "somepath",
+                "path": "",
                 "prefix": "tdp_"
             }
         ]   
@@ -34,16 +37,16 @@
         {
             "name": "depot1",
             "files": {
-                "source": "fs_source_1"
+                "source": ""
             },
             "logs": {
-                "source": "fs_source_1"
+                "source": ""
             },
             "objects": {
-                "source": "fs_source_1"
+                "source": ""
             },
             "users": {
-                "source": "fs_source_1",
+                "source": "",
                 "tokenLength": 175,
                 "tokenLifetime": 60
             }

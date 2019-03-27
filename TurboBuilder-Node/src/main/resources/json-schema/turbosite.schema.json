@@ -35,7 +35,9 @@
                 "exceptionsToMail",
                 "warningsToBrowser",
                 "warningsToLog",
-                "warningsToMail"
+                "warningsToMail",
+                "tooMuchTimeWarning",
+                "tooMuchMemoryWarning"
             ],
             "additionalProperties": false,
             "properties": {
@@ -62,6 +64,14 @@
                 "warningsToMail": {
                     "type": "string",
                     "description": "The Warningstomail Schema"
+                },
+                "tooMuchTimeWarning": {
+                    "type": "integer",
+                    "description": "When running time on any of the site urls exceeds the number of miliseconds defined here, a warning will be launched. If set to zero, this feature will be disabled"
+                },
+                "tooMuchMemoryWarning": {
+                    "type": "integer",
+                    "description": "When allocated memory on any of the site urls exceeds the number of bytes defined here, a warning will be launched. If set to zero, this feature will be disabled"
                 }
             }
         },
