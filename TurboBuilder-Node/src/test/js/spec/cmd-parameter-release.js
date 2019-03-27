@@ -118,8 +118,8 @@ describe('cmd-parameter-release', function() {
         expect(utils.fm.isDirectory(buildRoot)).toBe(true);
         expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
         
-        let buildSetup = sitePhpTestUtils.getTurbositeSetupFromIndexPhp(buildRoot + sep + 'index.php');
-        let releaseSetup = sitePhpTestUtils.getTurbositeSetupFromIndexPhp(releaseRoot + sep + 'index.php');
+        let buildSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
+        let releaseSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', releaseRoot + sep + 'index.php');
         
         // Check that js files are smaller on release than on build
         let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.js');
@@ -409,7 +409,7 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
-        tsSetup = sitePhpTestUtils.getTurbositeSetupFromIndexPhp('./target/' + folderName + '-0.0.0/dist/site/index.php');
+        tsSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
         expect(tsSetup.baseURL).toBe("build");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
@@ -438,11 +438,16 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
-        let tsSetup = sitePhpTestUtils.getTurbositeSetupFromIndexPhp('./target/' + folderName + '-0.0.0/dist/site/index.php');
+        let tsSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
         
         expect(tsSetup.baseURL).toBe("some custom base url");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(true);
+        expect(tsSetup.errorSetup.exceptionsToLog).toBe("");
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("mycustommail");
+        expect(tsSetup.errorSetup.warningsToBrowser).toBe(true);
+        expect(tsSetup.errorSetup.warningsToLog).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
+        expect(tsSetup.errorSetup.tooMuchTimeWarning).toBe(1000);
+        expect(tsSetup.errorSetup.tooMuchMemoryWarning).toBe(1000);
     });  
 });

@@ -85,7 +85,7 @@ exports.replaceWildCardsOnText = function (text) {
         StringUtils.getPathElement(path.resolve('./')) :
         rootSetup.metadata.name;
     
-    let siteSetup = this.getTurbositeSetupFromIndexPhp('target/' + projectName + '/dist/site/index.php');
+    let siteSetup = this.getSetupFromIndexPhp('turbosite', 'target/' + projectName + '/dist/site/index.php');
     
     let turboBuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));
     
@@ -101,11 +101,11 @@ exports.replaceWildCardsOnText = function (text) {
 
 /**
  * This method is used for tests related to the turbosite projects.
- * It extracts the turbosite setup data (as a javascript object) from a provided index.php file path
+ * It extracts the specified setup data (as a javascript object) from a provided index.php file path
  */
-exports.getTurbositeSetupFromIndexPhp = function (indexPhpPath) {
+exports.getSetupFromIndexPhp = function (setupFileName, indexPhpPath) {
     
-    let setupJson = fm.readFile(indexPhpPath).split('"turbosite.json" => json_decode(\'{')[1].split("}')")[0];
+    let setupJson = fm.readFile(indexPhpPath).split('"' + setupFileName + '.json" => json_decode(\'{')[1].split("}')")[0];
 
     setupJson = setupJson.replace(/\\'/g, "'").replace(/\\\\/g, "\\");
 
@@ -135,7 +135,7 @@ exports.saveSetupToIndexPhp = function (setupObject, setupName, indexPhpPath) {
 
         indexPhpContentModified = indexPhpContent
             .replace(new RegExp('"' + setupName + "\\.json\" => json_decode\\('{.*}'\\)", 'g'),
-                     '"turbosite.json" => json_decode(\'' + setupJson + '\')'); 
+                     '"' + setupName + '.json" => json_decode(\'' + setupJson + '\')'); 
     
     } else {
     

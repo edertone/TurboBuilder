@@ -216,7 +216,7 @@ describe('cmd-parameter-build', function() {
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
-        let buildSetup = sitePhpTestUtils.getTurbositeSetupFromIndexPhp(buildRoot + sep + 'index.php');
+        let buildSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
         
         expect(utils.fm.isFile(`${buildRoot}${sep}196x196-${buildSetup.cacheHash}.png`)).toBe(true);
         expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-180x180.png`)).toBe(true);
