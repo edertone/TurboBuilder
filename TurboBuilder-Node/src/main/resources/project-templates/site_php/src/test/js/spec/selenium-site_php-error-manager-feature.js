@@ -295,22 +295,7 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     });
     
     
-    
-    it('should show errors and warnings on browser for a server_php project type when running a buggy web service and errors are enabled on setup', function(done) {
-    
-        // TODO
-        return done();
-    });
-    
-    
-    it('should show errors on log for a server_php project type when running a buggy web service and log errors are enabled on setup', function(done) {
-       
-        // TODO
-        return done();
-    });
-    
-    
-    it('should show errors on log for a site_php project type when log errors are enabled on setup', function(done) {
+    it('should show errors and warnings on separate log files for a site_php project type when log errors are enabled on setup', function(done) {
         
         // Set the logs source on the turbodepot setup
         let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
@@ -324,22 +309,22 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         turbodepotSetup.depots[0].logs.source = 'logs_source';
         expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
        
-        // Enable exceptions to log on turbosite setup
+        // Enable exceptions and warnings to log on turbosite setup
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        turbositeSetup.errorSetup.warningsToBrowser = true;
         turbositeSetup.errorSetup.exceptionsToLog = 'php_errors';
+        turbositeSetup.errorSetup.warningsToLog = 'php_warnings';
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
        
-        // Make sure the logs folder exists and the log file does not exist
+        // Make sure the logs folder exists and it is empty
         expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
         expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
-        expect(fm.isFile(this.destPath + '/logs/php_errors')).toBe(false);
+        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
        
-        // Generate an exception on home.php file
-        let homeViewFileContents = fm.readFile(this.homeViewFilePath);
-        
+        // Generate a warning and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
-               StringUtils.replace(homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
+               StringUtils.replace(fm.readFile(this.homeViewFilePath), '<?php', '<?php $a = $b; nonexistantfunction();', 1))
               ).toBe(true);
         
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
@@ -347,27 +332,250 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         this.driver.get(url).then(() => {
             
             this.driver.getPageSource().then((source) => {
-                
+
                 expect(StringUtils.countStringOccurences(source, 'turbosite-global-error-manager-problem')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: E_NOTICE')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: b')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: FATAL EXCEPTION')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Call to undefined function nonexistantfunction()')).toBe(1);
                 
-                expect(source)
-                    .toContain('turbosite-global-error-manager-problem', url + ' Expected a php problem: exception to be shown on browser');
-                
-                expect(source)
-                    .toContain('FATAL EXCEPTION', url + ' Expected a php problem: exception to be shown on browser');
-            
-                expect(source)
-                    .toContain('Call to undefined function nonexistantfunction()', url + ' Expected a php problem: exception to be shown on browser');
-            
+                // Verify generated errors log
                 expect(fm.isFile(this.destPath + '/logs/php_errors')).toBe(true);
-           
                 let logContents = fm.readFile(this.destPath + '/logs/php_errors');
-                 
-                expect(logContents).toContain('FATAL EXCEPTION Call to undefined function nonexistantfunction()');
                 expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
-                
-                expect(logContents).toContain('home.php line 1');
                 expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(1);
+                
+                // Verify generated warnings log
+                expect(fm.isFile(this.destPath + '/logs/php_warnings')).toBe(true);
+                logContents = fm.readFile(this.destPath + '/logs/php_warnings');
+                expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: b')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(1);
+                
+                return done();
+            });
+        });
+    });
+    
+    
+    it('should show errors and multiple warnings on the same log file for a site_php project type when log warnings and errors are enabled on setup', function(done) {
+       
+        // Set the logs source on the turbodepot setup
+        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
+           
+        turbodepotSetup.sources.fileSystem = [
+            {
+                "name": "logs_source",
+                "path": this.destPath + '/logs'
+            }
+        ];
+        turbodepotSetup.depots[0].logs.source = 'logs_source';
+        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
+       
+        // Enable exceptions and warnings to log on turbosite setup
+        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        turbositeSetup.errorSetup.exceptionsToBrowser = false;
+        turbositeSetup.errorSetup.warningsToBrowser = false;
+        turbositeSetup.errorSetup.exceptionsToLog = 'php_log';
+        turbositeSetup.errorSetup.warningsToLog = 'php_log';
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+       
+        // Make sure the logs folder exists and it is empty
+        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
+        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
+        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
+       
+        // Generate 3 warnings and an exception on home.php file
+        expect(fm.saveFile(this.homeViewFilePath,
+               StringUtils.replace(fm.readFile(this.homeViewFilePath), '<?php', '<?php $a = $b; $c = $d; $e = $f; nonexistantfunction();', 1))
+              ).toBe(true);
+        
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+
+                expect(StringUtils.countStringOccurences(source, 'turbosite-global-error-manager-problem')).toBe(0);
+                expect(StringUtils.countStringOccurences(source, 'E_NOTICE')).toBe(0);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: b')).toBe(0);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: d')).toBe(0);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: f')).toBe(0);
+                
+                expect(StringUtils.countStringOccurences(source, 'FATAL EXCEPTION')).toBe(0);
+                expect(StringUtils.countStringOccurences(source, 'Call to undefined function nonexistantfunction()')).toBe(0);
+                
+                // Verify generated log
+                expect(fm.isFile(this.destPath + '/logs/php_log')).toBe(true);
+                let logContents = fm.readFile(this.destPath + '/logs/php_log');
+                expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: b')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: d')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: f')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(4);
+                
+                return done();
+            });
+        });
+    });
+    
+    
+    it('should not show errors or warnings on log for a site_php project type when log errors are disabled on setup', function(done) {
+       
+        // Set the logs source on the turbodepot setup
+        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
+           
+        turbodepotSetup.sources.fileSystem = [
+            {
+                "name": "logs_source",
+                "path": this.destPath + '/logs'
+            }
+        ];
+        turbodepotSetup.depots[0].logs.source = 'logs_source';
+        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
+       
+        // Enable exceptions and warnings to log on turbosite setup
+        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        turbositeSetup.errorSetup.exceptionsToLog = '';
+        turbositeSetup.errorSetup.warningsToLog = '';
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+       
+        // Make sure the logs folder exists and it is empty
+        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
+        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
+        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
+       
+        // Generate 3 warnings and an exception on home.php file
+        expect(fm.saveFile(this.homeViewFilePath,
+               StringUtils.replace(fm.readFile(this.homeViewFilePath), '<?php', '<?php $a = $b; $c = $d; $e = $f; nonexistantfunction();', 1))
+              ).toBe(true);
+        
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+
+                expect(StringUtils.countStringOccurences(source, 'turbosite-global-error-manager-problem')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: E_NOTICE')).toBe(3);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: b')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: d')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: f')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: FATAL EXCEPTION')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Call to undefined function nonexistantfunction()')).toBe(1);
+                
+                // Verify no log
+                expect(fm.isFile(this.destPath + '/logs/php_log')).toBe(false);
+                expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
+                
+                return done();
+            });
+        });
+    });
+    
+    
+    it('should show too much time warnings on log for a site_php project when script takes more time than the one defined on setup', function(done) {
+       
+        // Set the logs source on the turbodepot setup
+        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
+           
+        turbodepotSetup.sources.fileSystem = [
+            {
+                "name": "logs_source",
+                "path": this.destPath + '/logs'
+            }
+        ];
+        turbodepotSetup.depots[0].logs.source = 'logs_source';
+        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
+       
+        // Enable too much time warnings to log
+        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        turbositeSetup.errorSetup.exceptionsToBrowser = false;
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        turbositeSetup.errorSetup.exceptionsToLog = '';
+        turbositeSetup.errorSetup.warningsToLog = 'timewarnings';
+        turbositeSetup.errorSetup.tooMuchTimeWarning = 1;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+       
+        // Make sure the logs folder exists and it is empty
+        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
+        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
+        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
+       
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+
+                expect(StringUtils.countStringOccurences(source, 'turbosite-global-error-manager-problem')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: E_WARNING')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Too much time used by script:')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'FATAL EXCEPTION')).toBe(0);
+                
+                // Verify log contains the time warning
+                expect(fm.isFile(this.destPath + '/logs/timewarnings')).toBe(true);
+                let logContents = fm.readFile(this.destPath + '/logs/timewarnings');
+
+                expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION')).toBe(0);
+                expect(StringUtils.countStringOccurences(logContents, 'E_WARNING Too much time used by script:')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'tooMuchTimeWarning setup memory threshold is 1 ms')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, '.php line -')).toBe(1);
+                
+                return done();
+            });
+        });
+    });
+    
+    
+    it('should show too much memory warnings on log for a site_php project when script takes more memory than the one defined on setup', function(done) {
+       
+        // Set the logs source on the turbodepot setup
+        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
+           
+        turbodepotSetup.sources.fileSystem = [
+            {
+                "name": "logs_source",
+                "path": this.destPath + '/logs'
+            }
+        ];
+        turbodepotSetup.depots[0].logs.source = 'logs_source';
+        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
+       
+        // Enable too much memory warnings to log
+        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        turbositeSetup.errorSetup.exceptionsToBrowser = false;
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        turbositeSetup.errorSetup.exceptionsToLog = '';
+        turbositeSetup.errorSetup.warningsToLog = 'timewarnings';
+        turbositeSetup.errorSetup.tooMuchMemoryWarning = 1;
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+       
+        // Make sure the logs folder exists and it is empty
+        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
+        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
+        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
+       
+        let url = utils.replaceWildCardsOnText("https://$host/$locale");
+        
+        this.driver.get(url).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+
+                expect(StringUtils.countStringOccurences(source, 'turbosite-global-error-manager-problem')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: E_WARNING')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Too much memory used by script:')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'FATAL EXCEPTION')).toBe(0);
+                
+                // Verify log contains the time warning
+                expect(fm.isFile(this.destPath + '/logs/timewarnings')).toBe(true);
+                let logContents = fm.readFile(this.destPath + '/logs/timewarnings');
+
+                expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION')).toBe(0);
+                expect(StringUtils.countStringOccurences(logContents, 'E_WARNING Too much memory used by script:')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'tooMuchMemoryWarning setup memory threshold is 1 bytes')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, '.php line -')).toBe(1);
                 
                 return done();
             });

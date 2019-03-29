@@ -448,6 +448,6 @@ describe('cmd-parameter-release', function() {
         expect(tsSetup.errorSetup.warningsToLog).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
         expect(tsSetup.errorSetup.tooMuchTimeWarning).toBe(1000);
-        expect(tsSetup.errorSetup.tooMuchMemoryWarning).toBe(1000);
+        expect(tsSetup.errorSetup.tooMuchMemoryWarning).toBe(5000000);
     });  
 });
