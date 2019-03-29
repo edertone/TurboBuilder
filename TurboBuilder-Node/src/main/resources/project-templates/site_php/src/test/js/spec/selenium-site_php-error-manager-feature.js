@@ -57,16 +57,35 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         
         this.homeViewFilePath = turbobuilderSetup.sync.destPath + '/site/view/views/home/home.php';
         this.homeViewFileContentsBackup = fm.readFile(this.homeViewFilePath);
+        
+        this.serviceWithoutParamsPath = turbobuilderSetup.sync.destPath + '/site/services/example/ExampleServiceWithoutParams.php';
+        this.serviceWithoutParamsContentsBackup = fm.readFile(this.serviceWithoutParamsPath);
+        
+        // Set the logs source on the turbodepot setup
+        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
+           
+        turbodepotSetup.sources.fileSystem = [
+            {
+                "name": "logs_source",
+                "path": this.destPath + '/logs'
+            }
+        ];
+        turbodepotSetup.depots[0].logs.source = 'logs_source';
+        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);        
+       
+        // Make sure the logs folder exists and it is empty
+        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
+        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
+        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
     });
     
     
     afterEach(function() {
 
-        // Restore the whole index.php file to the previous value
+        // Restore all the possibly altered files
         expect(fm.saveFile(this.indexPhpPath, this.indexPhpBackup)).toBe(true);
-        
-        // Restore the home view php file contents to the value it has before test were run
         expect(fm.saveFile(this.homeViewFilePath, this.homeViewFileContentsBackup)).toBe(true);
+        expect(fm.saveFile(this.serviceWithoutParamsPath, this.serviceWithoutParamsContentsBackup)).toBe(true);
         
         // Delete the logs folder if it exists
         if(fm.isDirectory(this.destPath + '/logs')){
@@ -297,18 +316,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show errors and warnings on separate log files for a site_php project type when log errors are enabled on setup', function(done) {
         
-        // Set the logs source on the turbodepot setup
-        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
-           
-        turbodepotSetup.sources.fileSystem = [
-            {
-                "name": "logs_source",
-                "path": this.destPath + '/logs'
-            }
-        ];
-        turbodepotSetup.depots[0].logs.source = 'logs_source';
-        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
-       
         // Enable exceptions and warnings to log on turbosite setup
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
@@ -316,11 +323,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         turbositeSetup.errorSetup.exceptionsToLog = 'php_errors';
         turbositeSetup.errorSetup.warningsToLog = 'php_warnings';
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
-       
-        // Make sure the logs folder exists and it is empty
-        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
-        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
-        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
        
         // Generate a warning and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
@@ -359,18 +361,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show errors and multiple warnings on the same log file for a site_php project type when log warnings and errors are enabled on setup', function(done) {
        
-        // Set the logs source on the turbodepot setup
-        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
-           
-        turbodepotSetup.sources.fileSystem = [
-            {
-                "name": "logs_source",
-                "path": this.destPath + '/logs'
-            }
-        ];
-        turbodepotSetup.depots[0].logs.source = 'logs_source';
-        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
-       
         // Enable exceptions and warnings to log on turbosite setup
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
@@ -378,11 +368,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         turbositeSetup.errorSetup.exceptionsToLog = 'php_log';
         turbositeSetup.errorSetup.warningsToLog = 'php_log';
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
-       
-        // Make sure the logs folder exists and it is empty
-        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
-        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
-        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
        
         // Generate 3 warnings and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
@@ -421,18 +406,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should not show errors or warnings on log for a site_php project type when log errors are disabled on setup', function(done) {
        
-        // Set the logs source on the turbodepot setup
-        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
-           
-        turbodepotSetup.sources.fileSystem = [
-            {
-                "name": "logs_source",
-                "path": this.destPath + '/logs'
-            }
-        ];
-        turbodepotSetup.depots[0].logs.source = 'logs_source';
-        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
-       
         // Enable exceptions and warnings to log on turbosite setup
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
@@ -440,11 +413,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         turbositeSetup.errorSetup.exceptionsToLog = '';
         turbositeSetup.errorSetup.warningsToLog = '';
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
-       
-        // Make sure the logs folder exists and it is empty
-        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
-        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
-        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
        
         // Generate 3 warnings and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
@@ -477,18 +445,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show too much time warnings on log for a site_php project when script takes more time than the one defined on setup', function(done) {
        
-        // Set the logs source on the turbodepot setup
-        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
-           
-        turbodepotSetup.sources.fileSystem = [
-            {
-                "name": "logs_source",
-                "path": this.destPath + '/logs'
-            }
-        ];
-        turbodepotSetup.depots[0].logs.source = 'logs_source';
-        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
-       
         // Enable too much time warnings to log
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
@@ -497,11 +453,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         turbositeSetup.errorSetup.warningsToLog = 'timewarnings';
         turbositeSetup.errorSetup.tooMuchTimeWarning = 1;
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
-       
-        // Make sure the logs folder exists and it is empty
-        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
-        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
-        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
        
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
         
@@ -531,18 +482,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
     
     it('should show too much memory warnings on log for a site_php project when script takes more memory than the one defined on setup', function(done) {
        
-        // Set the logs source on the turbodepot setup
-        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
-           
-        turbodepotSetup.sources.fileSystem = [
-            {
-                "name": "logs_source",
-                "path": this.destPath + '/logs'
-            }
-        ];
-        turbodepotSetup.depots[0].logs.source = 'logs_source';
-        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);
-       
         // Enable too much memory warnings to log
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
@@ -551,11 +490,6 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         turbositeSetup.errorSetup.warningsToLog = 'timewarnings';
         turbositeSetup.errorSetup.tooMuchMemoryWarning = 1;
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
-       
-        // Make sure the logs folder exists and it is empty
-        expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
-        expect(fm.createDirectory(this.destPath + '/logs')).toBe(true);
-        expect(fm.isDirectoryEmpty(this.destPath + '/logs')).toBe(true);
        
         let url = utils.replaceWildCardsOnText("https://$host/$locale");
         
@@ -576,6 +510,50 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                 expect(StringUtils.countStringOccurences(logContents, 'E_WARNING Too much memory used by script:')).toBe(1);
                 expect(StringUtils.countStringOccurences(logContents, 'tooMuchMemoryWarning setup memory threshold is 1 bytes')).toBe(1);
                 expect(StringUtils.countStringOccurences(logContents, '.php line -')).toBe(1);
+                
+                return done();
+            });
+        });
+    });
+        
+    
+    it('should show errors and warnings on browser and log files for a site_php project type when running a buggy web service and errors are enabled on setup', function(done) {
+    
+        let serviceWithoutParamsContents = fm.readFile(this.serviceWithoutParamsPath);
+        
+        // Enable exceptions and warnings to log on turbosite setup
+        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        turbositeSetup.errorSetup.exceptionsToBrowser = true;
+        turbositeSetup.errorSetup.warningsToBrowser = true;
+        turbositeSetup.errorSetup.exceptionsToLog = 'services_log';
+        turbositeSetup.errorSetup.warningsToLog = 'services_log';
+        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        
+        // Add a warning and an exception on the service without parameters
+        expect(fm.saveFile(this.serviceWithoutParamsPath,
+               StringUtils.replace(serviceWithoutParamsContents,
+                    'namespace project\\src\\main\\services\\example;',
+                    'namespace project\\src\\main\\services\\example; $a = $x; \\nonexistantfunction();', 1))
+              ).toBe(true);
+              
+        let url = utils.replaceWildCardsOnText("https://$host/api/site/example/example-service-without-params");
+        
+        this.driver.get(url).then(() => {
+            
+            this.driver.getPageSource().then((source) => {
+                
+                expect(StringUtils.countStringOccurences(source, 'turbosite-global-error-manager-problem')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: E_NOTICE')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Undefined variable: x')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'PHP Problem: FATAL EXCEPTION')).toBe(1);
+                expect(StringUtils.countStringOccurences(source, 'Call to undefined function nonexistantfunction()')).toBe(1);
+                
+                // Verify generated log
+                expect(fm.isFile(this.destPath + '/logs/services_log')).toBe(true);
+                let logContents = fm.readFile(this.destPath + '/logs/services_log');
+                expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: x')).toBe(1);
+                expect(StringUtils.countStringOccurences(logContents, 'line 3')).toBe(2);
                 
                 return done();
             });
