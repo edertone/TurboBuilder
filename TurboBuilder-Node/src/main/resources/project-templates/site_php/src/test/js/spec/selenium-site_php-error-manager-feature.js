@@ -7,11 +7,12 @@
  * Tests related to the correct operation of the error management turbosite feature
  */
 
+const webdriver = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const utils = require('../sitephp-test-utils');
 const path = require('path');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const webdriver = require('selenium-webdriver');
 
 
 let fm = new FilesManager(require('fs'), require('os'), path, process);
@@ -21,19 +22,23 @@ describe('selenium-site_php-error-manager-feature.js', function() {
 
     beforeAll(function() {
         
+        let turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));        
+        
         utils.checkChromeDriverAvailable();
         
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+                
+        let chromeOptions = new chrome.Options();
         
-        // Initialize the chrome driver with english language
-        let chromeCapabilities = webdriver.Capabilities.chrome();
+        // Initialize the chrome driver with english language. Otherwise tests won't work
+        chromeOptions.addArguments(["--lang=en"]);
         
-        let chromeOptions = {
-            "args": ["--lang=en"]
-        };
-        
-        chromeCapabilities.set('chromeOptions', chromeOptions);
+        // Define the files download location to the folder where the site is deployed
+        chromeOptions.setUserPreferences({
+            "download.default_directory": turbobuilderSetup.sync.destPath,
+            "download.prompt_for_download": false
+        });
         
         // Enable logs so the tests can read them
         let loggingPrefs = new webdriver.logging.Preferences();
@@ -41,7 +46,8 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         loggingPrefs.setLevel('driver', webdriver.logging.Level.ALL); 
         
         this.driver = new webdriver.Builder()
-            .withCapabilities(chromeCapabilities)
+            .withCapabilities(webdriver.Capabilities.chrome())
+            .setChromeOptions(chromeOptions)
             .setLoggingPrefs(loggingPrefs)
             .build();
     });

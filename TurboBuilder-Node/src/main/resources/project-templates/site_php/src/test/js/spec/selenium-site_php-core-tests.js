@@ -11,31 +11,36 @@
  * the chromedriver for these tests. 
  */
 
+const webdriver = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const utils = require('../sitephp-test-utils');
 const path = require('path');
-const { ArrayUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const webdriver = require('selenium-webdriver');
 const fm = new FilesManager(require('fs'), require('os'), path, process);
+const { ArrayUtils } = require('turbocommons-ts');
 
 
 describe('selenium-site_php-core-tests', function() {
 
     beforeAll(function() {
         
+        let turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));        
+        
         utils.checkChromeDriverAvailable();
         
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+                
+        let chromeOptions = new chrome.Options();
         
-        // Initialize the chrome driver with english language
-        let chromeCapabilities = webdriver.Capabilities.chrome();
+        // Initialize the chrome driver with english language. Otherwise tests won't work
+        chromeOptions.addArguments(["--lang=en"]);
         
-        let chromeOptions = {
-            "args": ["--lang=en"]
-        };
-        
-        chromeCapabilities.set('chromeOptions', chromeOptions);
+        // Define the files download location to the folder where the site is deployed
+        chromeOptions.setUserPreferences({
+            "download.default_directory": turbobuilderSetup.sync.destPath,
+            "download.prompt_for_download": false
+        });
         
         // Enable logs so the tests can read them
         let loggingPrefs = new webdriver.logging.Preferences();
@@ -43,7 +48,8 @@ describe('selenium-site_php-core-tests', function() {
         loggingPrefs.setLevel('driver', webdriver.logging.Level.ALL); 
         
         this.driver = new webdriver.Builder()
-            .withCapabilities(chromeCapabilities)
+            .withCapabilities(webdriver.Capabilities.chrome())
+            .setChromeOptions(chromeOptions)
             .setLoggingPrefs(loggingPrefs)
             .build();
     });
@@ -54,40 +60,6 @@ describe('selenium-site_php-core-tests', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
         
         this.driver.quit(); 
-    });
-    
-    
-    it('should show 404 errors as defined in expected-404-errors.json', function(done) {
-        
-        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-404-errors.json'));
-        
-        // Fail if list has duplicate values
-        expect(ArrayUtils.hasDuplicateElements(list))
-            .toBe(false, 'duplicate urls: ' + ArrayUtils.getDuplicateElements(list).join(', '));
-        
-        // Load all the urls on the json file and perform a request for each one.
-        let recursiveCaller = (urls, done) => {
-            
-            if(urls.length <= 0){
-                
-                return done();
-            }
-            
-            let url = utils.replaceWildCardsOnText(urls.shift());
-            
-            this.driver.get(url).then(() => {
-                
-                this.driver.getTitle().then((title) => {
-                    
-                    expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
-                        .toBe(true, url + ' should throw 404 error');
-                    
-                    recursiveCaller(urls, done);
-                });
-            });
-        }
-        
-        recursiveCaller(list, done);
     });
     
     
