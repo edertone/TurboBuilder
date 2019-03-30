@@ -474,7 +474,19 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                 expect(StringUtils.countStringOccurences(logContents, 'tooMuchTimeWarning setup memory threshold is 1 ms')).toBe(1);
                 expect(StringUtils.countStringOccurences(logContents, '.php line -')).toBe(1);
                 
-                return done();
+                // Make sure the log file is not accessible via URL
+                let url = utils.replaceWildCardsOnText("https://$host/logs/timewarnings");
+                
+                this.driver.get(url).then(() => {
+                    
+                    this.driver.getTitle().then((title) => {
+                        
+                        expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
+                            .toBe(true, url + ' should throw 404 error');
+                        
+                        return done();
+                    });
+                });
             });
         });
     });
@@ -525,8 +537,8 @@ describe('selenium-site_php-error-manager-feature.js', function() {
         let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
         turbositeSetup.errorSetup.warningsToBrowser = true;
-        turbositeSetup.errorSetup.exceptionsToLog = 'services_log';
-        turbositeSetup.errorSetup.warningsToLog = 'services_log';
+        turbositeSetup.errorSetup.exceptionsToLog = 'services_log.txt';
+        turbositeSetup.errorSetup.warningsToLog = 'services_log.txt';
         expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         // Add a warning and an exception on the service without parameters
@@ -549,13 +561,25 @@ describe('selenium-site_php-error-manager-feature.js', function() {
                 expect(StringUtils.countStringOccurences(source, 'Call to undefined function nonexistantfunction()')).toBe(1);
                 
                 // Verify generated log
-                expect(fm.isFile(this.destPath + '/logs/services_log')).toBe(true);
-                let logContents = fm.readFile(this.destPath + '/logs/services_log');
+                expect(fm.isFile(this.destPath + '/logs/services_log.txt')).toBe(true);
+                let logContents = fm.readFile(this.destPath + '/logs/services_log.txt');
                 expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
                 expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: x')).toBe(1);
                 expect(StringUtils.countStringOccurences(logContents, 'line 3')).toBe(2);
                 
-                return done();
+                // Make sure the log file is not accessible via URL
+                let url = utils.replaceWildCardsOnText("https://$host/logs/services_log.txt");
+                
+                this.driver.get(url).then(() => {
+                    
+                    this.driver.getTitle().then((title) => {
+                        
+                        expect(title.indexOf('404 Not Found') >= 0 || title.indexOf('Error 404 page') >= 0)
+                            .toBe(true, url + ' should throw 404 error');
+                        
+                        return done();
+                    });
+                });
             });
         });
     });

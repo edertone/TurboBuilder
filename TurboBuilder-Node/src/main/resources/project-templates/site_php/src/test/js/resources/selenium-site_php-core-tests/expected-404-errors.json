@@ -57,5 +57,10 @@
     "https://$host/build/api/unexistant",
     "https://$host/build/api/unexistant/service",
     "https://$host/puppy/site/example/example-service-without-params",
-    "https://$host/build/api/site/example/example-service-with-get-arams/param1/param2"
+    "https://$host/build/api/site/example/example-service-with-get-arams/param1/param2",
+    "https://$host/build/data/logs",
+    "https://$host/build/data/logs/php_log",
+    "https://$host/logs",
+    "https://$host/logs/php_log",
+    "https://$host/logs/php_log.txt"
 ]

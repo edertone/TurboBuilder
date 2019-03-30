@@ -1,19 +1,19 @@
 RewriteEngine on
 
-# Redirect 404 errors to the error page
+# Define the error page document for all the 404 errors that are raised by the site
 ErrorDocument 404 /site/error-404.php
 
-# Redirect all allowed static files to the site folder
+# All static files (with an extension between 1 and 5 characters in length) which are not found on
+# the site or data/storage folders, will be redirected to the site/ folder
 RewriteCond %{REQUEST_URI} !site/
-RewriteCond %{REQUEST_URI} !cache/
 RewriteCond %{REQUEST_URI} !data/storage/
 RewriteRule ^(.*)\.(.{1,5})$ site/$1.$2 [L]
 
-# Redirect all executable urls to the index entry point
-RewriteCond %{REQUEST_FILENAME} !-f
+# Redirect all executable urls (any url that ends without a file extension) to the index entry point
+RewriteCond %{REQUEST_URI} !\..{1,5}$
 RewriteRule ^(.*)$ site/index.php?q=$1 [L]
 
-# any php file that is not index will throw a 404 error
+# Throw a 404 error for any php file except for the main index.php entry point and the error-404.php document
 RewriteCond %{REQUEST_URI} !site/index.php [NC]
 RewriteCond %{REQUEST_URI} !/site/error-404.php [NC]
 RewriteRule ^(.*)\.php$ - [L,R=404]
