@@ -162,7 +162,6 @@ let executeJasmineTests = function (testSetup, relativeBuildPaths) {
 
     let jasmineExecCommand = global.installationPaths.jasmineBin + ' --config=' + testSetup.jasmineConfig;
     
-    
     if(!console.exec(jasmineExecCommand, '', true)){
         
         console.error('There are jasmine unit test failures');
