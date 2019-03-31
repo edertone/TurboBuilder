@@ -78,7 +78,7 @@ exports.consoleErrorAndDie = function (msg) {
  * Obtain an object containing all the wildcards that are used by the tests urls and their
  * replacement values
  */
-exports.generateUrlWildcards = function () {
+exports.generateWildcards = function () {
     
     let turboBuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));
    

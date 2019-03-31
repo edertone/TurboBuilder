@@ -28,7 +28,7 @@ exports.execute = function () {
     
     if(!ArrayUtils.isArray(global.setup.test) || global.setup.test.length <= 0){
         
-        console.error("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
+        console.warning("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
     }
     
     // Check which build paths must be tested

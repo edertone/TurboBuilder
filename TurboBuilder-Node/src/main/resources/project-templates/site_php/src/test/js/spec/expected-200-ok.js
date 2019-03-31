@@ -4,7 +4,7 @@
 
 
 /**
- * Tests that check a list of urls that must perform a 301 redirect
+ * Tests that check a list of urls that must load correctly
  */
 
 const utils = require('../sitephp-test-utils');
@@ -17,7 +17,7 @@ const fm = new FilesManager(require('fs'), require('os'), path, process);
 const { AutomatedBrowserManager, ConsoleManager } = require('turbotesting-node');
 
 
-describe('expected-301-redirects', function() {
+describe('expected-200-ok', function() {
 
     beforeAll(function() {
         
@@ -38,11 +38,11 @@ describe('expected-301-redirects', function() {
     });
     
     
-    it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
+    it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-301-redirects.json'));
+        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-200-ok.json'));
         
-        this.automatedBrowserManager.assertUrlsRedirect(list, () => {
+        this.automatedBrowserManager.assertUrlsLoadOk(list, () => {
             
             done();
         });

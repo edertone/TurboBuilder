@@ -12,7 +12,7 @@ const utils = require('../sitephp-test-utils');
 const { HTTPManager, HTTPManagerGetRequest, HTTPManagerPostRequest } = require('turbocommons-ts');
 
 
-describe('web-services-post-requests', function() {
+describe('web-services', function() {
 
 
     beforeAll(function() {
