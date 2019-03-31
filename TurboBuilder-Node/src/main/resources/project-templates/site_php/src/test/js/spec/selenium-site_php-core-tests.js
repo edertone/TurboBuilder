@@ -63,41 +63,6 @@ describe('selenium-site_php-core-tests', function() {
     });
     
     
-    it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
-        
-        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-301-redirects.json'));
-        
-        // Fail if list has duplicate values
-        expect(ArrayUtils.hasDuplicateElements(list.map(l => l.url)))
-            .toBe(false, 'duplicate urls: ' + ArrayUtils.getDuplicateElements(list.map(l => l.url)).join(', '));
-        
-        // Load all the urls on the json file and perform a request for each one.
-        let recursiveCaller = (urls, done) => {
-            
-            if(urls.length <= 0){
-                
-                return done();
-            }
-            
-            let entry = urls.shift();
-            entry.url = utils.replaceWildCardsOnText(entry.url);
-            entry.to = utils.replaceWildCardsOnText(entry.to);
-            
-            this.driver.get(entry.url).then(() => {
-                      
-                this.driver.getCurrentUrl().then((url) => {
-                    
-                    expect(url).toBe(entry.to, 'Coming from url: ' + entry.url);
-                    
-                    recursiveCaller(urls, done);
-                });
-            });
-        }
-        
-        recursiveCaller(list, done);
-    });
-
-    
     it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
         let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-200-ok.json'));

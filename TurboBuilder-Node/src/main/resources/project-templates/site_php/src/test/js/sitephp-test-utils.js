@@ -28,6 +28,7 @@ const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 /**
  * Check that chrome driver is available to use
+ * @deprecated
  */
 exports.checkChromeDriverAvailable = function () {
     
@@ -74,7 +75,33 @@ exports.consoleErrorAndDie = function (msg) {
 
 
 /**
+ * Obtain an object containing all the wildcards that are used by the tests urls and their
+ * replacement values
+ */
+exports.generateUrlWildcards = function () {
+    
+    let turboBuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));
+   
+    // TODO - Projectname fails here if we are testing a release compiled version
+    let projectName = (turboBuilderSetup.metadata.name === '') ?
+        StringUtils.getPathElement(path.resolve('./')) :
+        turboBuilderSetup.metadata.name;
+    
+    let siteSetup = this.getSetupFromIndexPhp('turbosite', 'target/' + projectName + '/dist/site/index.php');
+
+    return {
+        "$host": turboBuilderSetup.sync.remoteUrl.split('://')[1],
+        "$locale": siteSetup.locales[0].split('_')[0],
+        "$homeView": siteSetup.homeView,
+        "$cacheHash": siteSetup.cacheHash,
+        "$baseURL": siteSetup.baseURL === '' ? '' : '/' + siteSetup.baseURL
+    };
+}
+
+
+/**
  * Replaces all wildcards on a provided url with the turbosite setup values
+ * @deprecated
  */
 exports.replaceWildCardsOnText = function (text) {
     
