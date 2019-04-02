@@ -4,7 +4,7 @@
 
 
 /**
- * Contains tests that check urls which must not give a 200 ok result
+ * Executes a standard set of recursive website tests that scan the whole site and all its links
  */
 
 const utils = require('../sitephp-test-utils');
@@ -17,7 +17,7 @@ const fm = new FilesManager(require('fs'), require('os'), path, process);
 const { AutomatedBrowserManager, ConsoleManager } = require('turbotesting-node');
 
 
-describe('expected-404-errors', function() {
+describe('whole-site-recursive-tests', function() {
 
 
     beforeAll(function() {
@@ -56,11 +56,9 @@ describe('expected-404-errors', function() {
     });
     
     
-    it('should correctly execute all the 404 expected error requests', function(done) {
+    it('should pass full website recursive tests', function(done) {
     
-        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-404-errors.json'));
-        
-        this.automatedBrowserManager.assertUrlsFail(list, () => {
+        this.automatedBrowserManager.assertWholeWebsite("https://$host/$locale/en", () => {
             
             done();
         });
