@@ -27,23 +27,6 @@ const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
 /**
- * Check that chrome driver is available to use
- * @deprecated
- */
-exports.checkChromeDriverAvailable = function () {
-    
-    try{
-        
-        execSync('chromedriver -v', {stdio : 'pipe'}).toString();
-                
-    }catch(e){
-        
-        utils.consoleErrorAndDie("Error: Could not initialize selenium chromedriver. Please make sure it is available on OS path");
-    }
-}
-
-
-/**
  * Execute an arbitrary cmd command on the current active dir
  */
 exports.execCmdCommand = function (cmdLine) {
