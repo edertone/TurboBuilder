@@ -72,20 +72,20 @@ if (program.generate){
 // Initialize the builder setup and global variables
 setupModule.init();
 
-// Perform the validation as defined on xml setup, except if it is defined
-// to be performed before build, cause it will be executed there
-if (program.lint && 
-    !(program.build && global.setup.validate.runBeforeBuild === true)){
- 
-    validateModule.execute();
-}
-
 // Perform the project cleanup
 if (program.clean){
  
     cleanModule.execute(program.sync ||
         (program.build && global.setup.sync && global.setup.sync.runAfterBuild) ||
         (program.release && global.setup.sync && global.setup.sync.runAfterBuild));
+}
+
+// Perform the validation as defined on xml setup, except if it is defined
+// to be performed before build, cause it will be executed there
+if (program.lint && 
+    !(program.build && global.setup.validate.runBeforeBuild === true)){
+ 
+    validateModule.execute();
 }
 
 // Perform the build as defined on xml setup

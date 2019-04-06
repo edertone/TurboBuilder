@@ -21,7 +21,19 @@
                 "enabled": true,
                 "affectedPaths": ["src", "extras"],
                 "excludes": ["resources/libs"]
-            }
+            },
+            "copyPasteDetect":[
+                {
+                    "path": "src/main",
+                    "maxPercentErrorLevel": 6.5,
+                    "report": "html"
+                },
+                {
+                    "path": "src/test",
+                    "maxPercentErrorLevel": 20,
+                    "report": "html"
+                }
+            ]
         },
         "javascript": {
             "useStrict": {

@@ -30,6 +30,10 @@ Used to compress image files on release build, including the following extension
 
 A javascript unit tests framework
 
+## jscpd
+
+A copy paste detector tool that supports more than 150 programming languages
+
 ## jsonschema
 
 A library to validate json files agains their respective json schemas

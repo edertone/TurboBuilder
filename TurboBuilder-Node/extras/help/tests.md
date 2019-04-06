@@ -4,9 +4,9 @@
 ### via command line
 
 Launch any of the following commands at the root of the project (both do exactly the same):
-    tb -bt
-    npm test
-    node node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json
+    tb -btl (if we want to launch the tests and also validate the project)
+    npm test (to only launch the tests)
+    node node_modules/jasmine/bin/jasmine --config=src/test/js/jasmine.json (to only launch the tests)
     
 ### via eclipse
 

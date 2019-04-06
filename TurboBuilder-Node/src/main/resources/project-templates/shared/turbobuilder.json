@@ -22,6 +22,18 @@
                 "affectedPaths": ["src", "extras"],
                 "excludes": [".svg", ".properties"]
             },
+            "copyPasteDetect":[
+                {
+                    "path": "src/main",
+                    "maxPercentErrorLevel": 5,
+                    "report": ""
+                },
+                {
+                    "path": "src/test",
+                    "maxPercentErrorLevel": 10,
+                    "report": ""
+                }
+            ],
             "copyrightHeaders": [
                 {
                     "path": "path/to/some/CoyprightHeaderFile.txt",

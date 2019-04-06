@@ -35,6 +35,8 @@ This project uses libraries and dependencies from a variety of sources. To make 
             creating some temporary folder on your pc
             running tb -g site_php
             executing npm ci
-            executing npm outdated 
+            executing npm outdated
+            perform the dependencies update
+            copy package.json and package-lock.json from the generated project to the project-template files
         
 - Run the project tests as explained on help and make sure everything works as expected

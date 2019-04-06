@@ -105,6 +105,34 @@
                                 }
                             }
                         },
+                        "copyPasteDetect": {
+                            "type": "array",
+                            "description": "Contains the setup for the copy paste detection feature that allows us to find duplicate code on several project folders. Each element of the array defines the setup for a specific path relative to the project root",
+                            "items": {
+                                "type": "object",
+                                "description": "Defines each one of the paths where duplicate code will be searched for",
+                                "required": [
+                                    "path",
+                                    "maxPercentErrorLevel",
+                                    "report"
+                                ],
+                                "additionalProperties": false, 
+                                "properties": {
+                                    "path": {
+                                        "type": "string",
+                                        "description": "Defines a path based on project root where duplicate code will be looked for"
+                                    },
+                                    "maxPercentErrorLevel": {
+                                        "type": "number",
+                                        "description": "A numeric value from 0 to 100 that defines the maximum allowed percentage of duplicate code to be found on the specified path that will cause a validation error. If the duplicate code exceeds this values, all builds will fail. Set it to -1 to disable the duplicate code limits for this path"
+                                    },
+                                    "report": {
+                                        "type": "string",
+                                        "description": "if we want the copy paste detector to output a report inside target/project-name/copypaste report, we will set the project type or types on this field, seppared with comas. For example: html,json,xml"
+                                    }
+                                }
+                            }
+                        },
                         "copyrightHeaders": {
                             "type": "array",
                             "description": "Defines the validation rules that apply to copyright headers that must exist on all the files that meet the configured criteria",

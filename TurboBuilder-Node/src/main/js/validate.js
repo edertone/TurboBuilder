@@ -250,6 +250,19 @@ let validateProjectStructure = function () {
  * Validates the content of the project files
  */
 let validateFilesContent = function () {
+    
+    validateNoTabulations();
+    
+    validateCopyPasteDetect();
+     
+    validateCopyrightHeaders();
+}
+
+
+/**
+ * Validates copy pasted code on the project
+ */
+let validateNoTabulations = function () {
 
     let sep = fm.dirSep();
 
@@ -283,8 +296,80 @@ let validateFilesContent = function () {
             }
         }
     }
-     
-    validateCopyrightHeaders();
+}
+
+
+/**
+ * Validates copy pasted code on the project
+ */
+let validateCopyPasteDetect = function () {
+    
+    for (let copyPasteEntry of global.setup.validate.filesContent.copyPasteDetect){
+        
+        if(copyPasteEntry.maxPercentErrorLevel >= 0){
+            
+            console.log('Looking for duplicate code on ' + copyPasteEntry.path);
+            
+            let jscpdExecCommand = global.installationPaths.jscpdBin + ' --silent --reporters console';
+            
+            // Define the report output path if necessary
+            if(copyPasteEntry.report  && copyPasteEntry.report !== ''){
+                
+                let projectName = setupModule.getProjectName();
+                
+                if(global.isRelease){
+                    
+                    projectName += "-" + setupModule.getProjectRepoSemVer(false);
+                }
+                
+                jscpdExecCommand += ',' + copyPasteEntry.report + ' -o "target/' + projectName + '/reports/copypaste/' +
+                    StringUtils.replace(copyPasteEntry.path, ['/', '\\'], '-') + '"';
+            }
+            
+            jscpdExecCommand += ' "' + copyPasteEntry.path + '"';
+            jscpdExecCommand += ' --threshold ' + copyPasteEntry.maxPercentErrorLevel;
+        
+            if(!console.exec(jscpdExecCommand, '', true)){
+                
+                errors.push('Setup the copy paste validation on ' + global.fileNames.setup + ' under validate.filesContent.copyPasteDetect section');
+            } 
+        }
+    }
+}
+
+
+/**
+ * Validates the copyright headers
+ */
+let validateCopyrightHeaders = function () {
+    
+    for (let validator of global.setup.validate.filesContent.copyrightHeaders) {
+    
+        if(!fm.isFile(global.runtimePaths.root + fm.dirSep() + validator.path)){
+        
+            console.error("Copyrhight headers template not found:\n" + global.runtimePaths.root + fm.dirSep() + validator.path);
+        }
+    
+        let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
+        
+        if(!ArrayUtils.isArray(validator.affectedPaths)){
+        
+            console.error(global.fileNames.setup + " copyrightHeaders affectedPaths must be an array");
+        }
+        
+        for (let affectedPath of validator.affectedPaths) {
+        
+            let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + affectedPath, validator.includes);
+            
+            for (let fileToValidate of filesToValidate){
+                
+                if(!isExcluded(fileToValidate, validator.excludes) && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+                    
+                    errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
+                }
+            }
+        }
+    }
 }
 
 
@@ -327,41 +412,6 @@ let validateStyleSheets = function () {
            /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
                 
             errors.push("File contains hardcoded css color: " + cssFile);
-        }
-    }
-}
-
-
-/**
- * Validates the copyright headers
- */
-let validateCopyrightHeaders = function () {
-    
-    for (let validator of global.setup.validate.filesContent.copyrightHeaders) {
-    
-        if(!fm.isFile(global.runtimePaths.root + fm.dirSep() + validator.path)){
-        
-            console.error("Copyrhight headers template not found:\n" + global.runtimePaths.root + fm.dirSep() + validator.path);
-        }
-    
-        let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
-        
-        if(!ArrayUtils.isArray(validator.affectedPaths)){
-        
-            console.error(global.fileNames.setup + " copyrightHeaders affectedPaths must be an array");
-        }
-        
-        for (let affectedPath of validator.affectedPaths) {
-        
-            let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + affectedPath, validator.includes);
-            
-            for (let fileToValidate of filesToValidate){
-                
-                if(!isExcluded(fileToValidate, validator.excludes) && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
-                    
-                    errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
-                }
-            }
         }
     }
 }

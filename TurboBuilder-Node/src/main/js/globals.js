@@ -73,6 +73,7 @@ global.installationPaths = {
     webPackBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/webpack"'),
     httpServerBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/http-server"'),
     jasmineBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/jasmine"'),
+    jscpdBin: '"' + path.resolve(__dirname + '/../../../node_modules/.bin/jscpd"'),
     root: path.resolve(__dirname + '/../../..'),
     setupFile: path.resolve(__dirname + '/../../../' + global.fileNames.setup),
     readmeFile: path.resolve(__dirname + '/../../../' + global.fileNames.readme),
