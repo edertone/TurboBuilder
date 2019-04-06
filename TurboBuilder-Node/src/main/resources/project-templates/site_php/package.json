@@ -10,7 +10,7 @@
         "selenium-webdriver": "4.0.0-alpha.1",
         "turbocommons-ts": "^1.1.0",
         "turbodepot-node": "0.0.1",
-        "turbotesting-node": "^0.2.0",
+        "turbotesting-node": "^0.3.2",
         "xhr2": "0.1.4"
     },
     "author": "",

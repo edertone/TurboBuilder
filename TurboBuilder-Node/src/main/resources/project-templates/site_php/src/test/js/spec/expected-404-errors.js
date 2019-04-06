@@ -33,7 +33,6 @@ describe('expected-404-errors', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
         this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, new ConsoleManager(console, process));     
-        this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = utils.generateWildcards();
     });
 

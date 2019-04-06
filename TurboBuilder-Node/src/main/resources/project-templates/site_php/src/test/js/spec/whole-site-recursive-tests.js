@@ -58,9 +58,9 @@ describe('whole-site-recursive-tests', function() {
     
     it('should pass full website recursive tests', function(done) {
     
-//        this.automatedBrowserManager.assertWholeWebsite("https://$host/$locale/en", () => {
-//            
+        this.automatedBrowserManager.assertWholeWebsite("https://$host/$locale/en", () => {
+            
             done();
-//        });
+        });
     });
 });
