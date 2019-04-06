@@ -38,7 +38,7 @@ describe('cmd-parameter-test', function() {
     
     it('should fail when test is passed as the only parameter', function() {
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         expect(utils.exec('-t')).toContain('--test must be used at the same time as -b --build or -r --release');
         expect(utils.exec('--test')).toContain('--test must be used at the same time as -b --build or -r --release');
@@ -47,9 +47,7 @@ describe('cmd-parameter-test', function() {
     
     it('should fail when no tests are defined on setup', function() {
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
  
         setup.test = [];
         
@@ -61,9 +59,7 @@ describe('cmd-parameter-test', function() {
     
     it('should correctly run php unit tests on a generated lib_php project', function() {
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
  
         setup.test[0].coverageReport = false;
         
@@ -85,6 +81,10 @@ describe('cmd-parameter-test', function() {
         expect(testsGenerateResult).toContain("Created turbobuilder.json file");
         expect(testsGenerateResult).toContain("Generated project structure ok");
         
+        let setup = utils.readSetupFile();  
+        setup.validate.filesContent.copyPasteDetect = [];
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
         let testsLaunchResult = utils.exec('-bt');        
         expect(testsLaunchResult).toContain("build start: site_php");
         expect(testsLaunchResult).toContain("test start");
@@ -97,10 +97,9 @@ describe('cmd-parameter-test', function() {
 
         let sep = utils.fm.dirSep();
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         // Modify the project setup to sync the files to /
-        let setup = utils.readSetupFile();  
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink';         
         setup.sync.remoteUrl = 'https://localhost';          
@@ -135,10 +134,9 @@ describe('cmd-parameter-test', function() {
 
         let sep = utils.fm.dirSep();
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+                
         // Modify the project setup to sync the files to /subfolder
-        let setup = utils.readSetupFile();
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder';        
         setup.sync.remoteUrl = 'https://localhost/subfolder';        
@@ -180,10 +178,9 @@ describe('cmd-parameter-test', function() {
 
         let sep = utils.fm.dirSep();
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         // Modify the project setup to sync the files to /subfolder1/subfolder2
-        let setup = utils.readSetupFile();
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder1/subfolder2';        
         setup.sync.remoteUrl = 'https://localhost/subfolder1/subfolder2';          

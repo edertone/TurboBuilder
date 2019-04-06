@@ -33,15 +33,9 @@ describe('cmd-parameter-sync', function(){
     });
 
 
-    it('should fail when -s and --sync arguments are executed on an empty setup file structure', function(){
+    it('should fail when -s and --sync arguments are executed on an empty setup file build structure', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-
-        let setup = utils.readSetupFile();
-
-        setup.build = {};
-
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', {}, []);
 
         expect(utils.exec('-s')).toContain('No valid project type specified');
         expect(utils.exec('--sync')).toContain('No valid project type specified');
@@ -50,7 +44,7 @@ describe('cmd-parameter-sync', function(){
 
     it('should fail on a generated project that has no target folder', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
         expect(utils.exec('-s')).toContain('Source path does not exist:');
         expect(utils.exec('--sync')).toContain('Source path does not exist:');
@@ -59,7 +53,7 @@ describe('cmd-parameter-sync', function(){
 
     it('should not sync (runAfterBuild) by default when a site_php project is generated', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
         let testsLaunchResult = utils.exec('-b');
         expect(testsLaunchResult).toContain("build start: site_php");
@@ -69,13 +63,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync to another folder when fileSystem sync is enabled', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         setup.sync = {
             "runAfterBuild" : false,
@@ -113,13 +105,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync automatically to another folder when filesystem sync enabled, runAfterBuild is true and -b is called', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         setup.sync = {
             "runAfterBuild" : true,
@@ -140,13 +130,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should not execute filesystem sync two times when runAfterBuild is false and -bs is called via cmd', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         setup.sync = {
             "runAfterBuild" : false,
@@ -169,13 +157,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should not execute filesystem sync two times when runAfterBuild is true and -bs is called via cmd', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         setup.sync = {
             "runAfterBuild" : true,
@@ -198,13 +184,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync release to another folder when fileSystem sync is enabled', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         // Create a raw file on the dest folder, so we can check that it gets removed after sync due to the
         // deleteDestPathContents being enabled
@@ -238,13 +222,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync release to another folder when fileSystem sync is enabled and runAfterBuild is true', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         setup.sync = {
             "runAfterBuild" : true,
@@ -267,14 +249,12 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync release to a folder as overrided by turbobuilder.release.json when filesystem sync is enabled', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder + '-build')).toBe(true);
         expect(utils.fm.createDirectory(destFolder + '-release')).toBe(true);
-
-        let setup = utils.readSetupFile();
 
         setup.sync = {
             "runAfterBuild" : false,

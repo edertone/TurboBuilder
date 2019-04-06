@@ -43,8 +43,8 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate lib_php project structure', function(){
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
@@ -55,7 +55,6 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isDirectory('./src/main/php')).toBe(true);
         expect(utils.fm.isDirectory('./src/test/php')).toBe(true);
 
-        let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
@@ -73,8 +72,8 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate lib_js project structure', function(){
 
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
@@ -88,7 +87,6 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./src/main/js/utils/MyStaticClass.js')).toBe(true);
         expect(utils.fm.isFile('./src/main/js/model/MySingletonClass.js')).toBe(true);
 
-        let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
@@ -108,8 +106,8 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate lib_ts project structure', function(){
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
@@ -119,7 +117,6 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/ts')).toBe(true);
 
-        let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
@@ -137,8 +134,8 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate site_php project structure', function(){
 
-        expect(utils.exec('--generate site_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./turbosite.json')).toBe(true);
@@ -152,7 +149,6 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
 
-        let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
@@ -172,8 +168,8 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate server_php project structure', function(){
 
-        expect(utils.exec('--generate server_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./turbosite.json')).toBe(true);
@@ -187,7 +183,6 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isDirectory('./src/main/resources/fonts')).toBe(false);
         expect(utils.fm.isDirectory('./src/main/view')).toBe(false);
 
-        let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
@@ -207,8 +202,8 @@ describe('cmd-parameter-generate', function(){
 
     it('should fail when generate is called twice on the same folder', function(){
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
-
+        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.exec('--generate lib_php')).toContain('File ' + global.fileNames.setup + ' already exists');
@@ -226,10 +221,8 @@ describe('cmd-parameter-generate', function(){
 
     it('should fail when generated setup builderVersion value is modified with invalid value', function(){
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-
-        let setup = utils.readSetupFile();
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        
         setup.metadata.builderVersion = '';
 
         expect(utils.saveToSetupFile(setup)).toBe(true);
@@ -278,8 +271,8 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate app_node_cmd project structure', function(){
 
-        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
+        
         expect(utils.exec('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
@@ -292,7 +285,6 @@ describe('cmd-parameter-generate', function(){
         expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
         expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
         
-        let setup = utils.readSetupFile();
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.hasOwnProperty('copyrightHeaders')).toBe(true);
         expect(setup.validate.hasOwnProperty('styleSheets')).toBe(false);

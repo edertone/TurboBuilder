@@ -30,7 +30,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated lib_php project', function() {
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
         expect(utils.exec('-l')).toContain("validate ok");
     });
@@ -38,7 +38,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated lib_js project', function() {
 
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         expect(utils.exec('-l')).toContain("validate ok");
     });
@@ -46,9 +46,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a lib_js project with a turbobuilder file with unexpected field', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         // Test that no validate.php section exists
         expect(setup.validate.hasOwnProperty('php')).toBe(false); 
@@ -63,13 +61,11 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when an unknown test type is defined on test section at turboduilder.json setup file', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         expect(utils.exec('-l')).toContain("validate ok");
         
         // Disable use strict validation on setup and test that it now validates
-        let setup = utils.readSetupFile();
-        
         expect(setup.test[0].type).toBe("jasmine");
         
         setup.test[0].nonexistantProperty = 'somevalue';
@@ -91,7 +87,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validate for javascript files that do not contain the use strict modifier', function() {
     
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         expect(utils.exec('-l')).toContain("validate ok");
         
@@ -100,8 +96,6 @@ describe('cmd-parameter-validate', function() {
         expect(utils.exec('-l')).toContain('File must start with "use strict":');
         
         // Disable use strict validation on setup and test that it now validates
-        let setup = utils.readSetupFile();
-        
         setup.validate.javascript.useStrict = {
                 "enabled": false,
                 "includes": [".js"],
@@ -127,7 +121,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated lib_ts project', function() {
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         expect(utils.exec('-l')).toContain("validate ok");
     });
@@ -135,7 +129,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated site_php project', function() {
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         let buildResult = utils.exec('-l');
         expect(buildResult).toContain("validate start");
@@ -145,7 +139,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validaton on a newly generated site_php project with an empty turbobuilder setup', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.saveToSetupFile({})).toBe(true);
         
@@ -155,9 +149,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validaton on a newly generated site_php project with a turbobuilder setup containing only $schema and metadata', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}}))
             .toBe(true);
@@ -168,9 +160,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated site_php project with a turbobuilder setup containing only $schema, metadata and build', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
@@ -187,9 +177,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated lib_php project', function() {
         
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_php: {}}}))
             .toBe(true);
@@ -205,9 +193,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated lib_ts project', function() {
         
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
             .toBe(true);
@@ -224,9 +210,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
@@ -246,9 +230,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should not validate two times if runBeforeBuild is enabled on a generated site_php project and -bl options are passed', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
@@ -286,9 +268,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should not validate before build when disabled in setup', function() {
         
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
@@ -304,9 +284,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation if copyright headers file template is not found', function() {
     
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         setup.validate.filesContent.copyrightHeaders = [
                         {
@@ -328,9 +306,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate copyright headers when enabled in setup and all project files have valid headers except an excluded one', function() {
     
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         let setupFile = {
                 "$schema": setup.$schema,
@@ -402,9 +378,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should corectly detect files that match the includes list on copyrightHeaders setup', function() {
     
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         setup.validate.filesContent.copyrightHeaders = [
             {
@@ -458,7 +432,7 @@ describe('cmd-parameter-validate', function() {
    
     it('should fail on a site_php project with a missing turbobuilder setup file', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.setup)).toBe(true);        
         
@@ -468,9 +442,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a turbobuilder file with unexpected field', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         setup.unexpected = 'unexpected';
         
@@ -482,7 +454,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a missing turbosite setup file', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup)).toBe(true);        
         
@@ -494,7 +466,7 @@ describe('cmd-parameter-validate', function() {
             
         let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));       
         expect(turboSiteSetup.homeView).toBe('home');        
@@ -510,7 +482,7 @@ describe('cmd-parameter-validate', function() {
         
         let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
         delete turboSiteSetup.locales;
         
@@ -524,7 +496,7 @@ describe('cmd-parameter-validate', function() {
         
         let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
         delete turboSiteSetup.globalJs;
@@ -539,7 +511,7 @@ describe('cmd-parameter-validate', function() {
         
         let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");     
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.exec('-l')).toContain("validate ok");
         
@@ -563,7 +535,7 @@ describe('cmd-parameter-validate', function() {
         
         let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));
         turboSiteSetup.unexpectedValue = 'some value';
         
@@ -575,9 +547,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok if replaceVersion is missing on turbosite setup.build for a lib_js project type', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         delete setup.build.replaceVersion;
         
@@ -589,9 +559,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validate if replaceVersion.enabled is missing on turbosite setup.build for a lib_js project type', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         delete setup.build.replaceVersion.enabled;
         
@@ -603,9 +571,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok setup with empty sync property', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();         
         delete setup.sync;       
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
@@ -615,9 +582,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok setup with correct sync filesystem task', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();         
         setup.sync = {
             "runAfterBuild": false,
             "type": "fileSystem",
@@ -635,9 +601,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok setup with correct sync ftp task', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();         
         setup.sync = {
             "runAfterBuild": false,
             "type": "ftp",
@@ -657,9 +622,8 @@ describe('cmd-parameter-validate', function() {
 
     it('should fail validate setup with a wrong sync ftp task', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();         
         setup.sync = {
             "runAfterBuild": false,
             "type": "ftp",
@@ -690,9 +654,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validate setup with a wrong sync filesystem task', function() {
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();         
         setup.sync = {
             "runAfterBuild": false,
             "type": "invalidtype",
@@ -720,7 +683,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when a corrupted turbobuilder.json file exists', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setup, '{ "a": 1, { ')).toBe(true);
         
@@ -731,7 +694,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when a corrupted turbosite.json file exists', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, '{ "a": 1, { }')).toBe(true);
         
@@ -742,9 +705,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbobuilder.json does not contain a $schema property', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         delete setup.$schema;
         
@@ -758,7 +719,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbosite.json does not contain a $schema property', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         let tsSetup = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup));
         
@@ -774,9 +735,7 @@ describe('cmd-parameter-validate', function() {
 
     it('should fail when turbobuilder.json $schema property contains invalid values', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile(); 
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         setup.$schema = 'some invalid value';
         
@@ -790,7 +749,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbosite.json $schema property contains invalid values', function() {
     
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         let tsSetup = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup));
         
@@ -806,9 +765,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok when turbobuilder.json and package.json contain same project name and description on a site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let setup = utils.readSetupFile();        
         setup.metadata.name = 'name';        
         setup.metadata.description = 'description';        
         expect(utils.saveToSetupFile(setup)).toBe(true);
@@ -825,9 +783,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbobuilder.json and package.json contain different project names on a site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let setup = utils.readSetupFile();        
         setup.metadata.name = 'name 1';        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
@@ -844,9 +801,8 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbobuilder.json and package.json contain different project descriptions on a site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let setup = utils.readSetupFile();        
         setup.metadata.description = 'desc 1';        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
@@ -863,9 +819,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate with default values even if projectStructure is missing on turbobuilder.json', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
         
@@ -883,9 +837,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.readmeFileMandatory is enabled and README.md does not exist', function() {
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
         
@@ -905,9 +857,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.extrasFolderMandatory is enabled and extras folder does not exist', function() {
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.extrasFolderMandatory).toBe(true);
         
@@ -928,9 +878,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.extrasSubFoldersMandatory is enabled and extras subfolders do not match', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.createDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'somedir')).toBe(true);        
         expect(utils.exec('-l')).toContain('validate ok');
@@ -950,9 +898,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.extrasTodoExtension is enabled and extras/todo files do not have .todo extension', function() {
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.extrasTodoExtension).toBe(true);
         
@@ -973,12 +919,10 @@ describe('cmd-parameter-validate', function() {
     
     it('should correctly validate when css files exist / not exist and onlyScss validation rule is true / false', function() {
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+         
         expect(utils.exec('-l')).toContain('validate ok');
        
-        let setup = utils.readSetupFile();        
-        
         // Check that the only css rule is enabled
         expect(setup.validate.styleSheets.onlyScss).toBe(true);
         
@@ -1000,12 +944,10 @@ describe('cmd-parameter-validate', function() {
     
     it('should correctly validate when tabulations exist / not exist and tabsForbidden validation rule is true / false', function() {
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.exec('-l')).toContain('validate ok');
        
-        let setup = utils.readSetupFile();
-        
         // Disable the namespaces validation
         setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
@@ -1062,7 +1004,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated server_php project', function() {
 
-        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
         let buildResult = utils.exec('-l');
         expect(buildResult).toContain("validate start");
@@ -1072,12 +1014,10 @@ describe('cmd-parameter-validate', function() {
     
      it('should fail validation when PHP files contain invalid namespace definitions', function() {
 
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
         expect(utils.exec('-l')).toContain('validate ok');
        
-        let setup = utils.readSetupFile();
-        
         // Enable the namespaces validation
         setup.validate.php.namespaces.enabled = true;
         setup.validate.php.namespaces.mandatory = true;
@@ -1116,11 +1056,10 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated app_node_cmd project', function() {
 
-        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
         let buildResult = utils.exec('-l');
         expect(buildResult).toContain("validate start");
         expect(buildResult).toContain("validate ok");
     });
-    
 });

@@ -35,7 +35,7 @@ describe('cmd-parameter-release', function() {
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         let launchResult = utils.exec('-cr');        
         expect(launchResult).toContain("clean start");
@@ -62,7 +62,7 @@ describe('cmd-parameter-release', function() {
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
         expect(utils.execCmdCommand('git init')).toContain("Initialized empty Git repository");
         utils.execCmdCommand('git add .');
@@ -101,7 +101,7 @@ describe('cmd-parameter-release', function() {
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'site';
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         // First launch the build
         let launchResult = utils.exec('-cb');
@@ -167,7 +167,7 @@ describe('cmd-parameter-release', function() {
     
     it('should correctly create the release version for a newly generated server_php project', function() {
         
-        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
         let launchResult = utils.exec('-cr');
         expect(launchResult).toContain("clean start");
@@ -186,9 +186,8 @@ describe('cmd-parameter-release', function() {
         let folderName = StringUtils.getPathElement(this.workdir);
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();
         setup.build.lib_js.deleteNonMergedJs = false;
         setup.build.lib_js.createMergedFile = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
@@ -215,7 +214,7 @@ describe('cmd-parameter-release', function() {
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         // First launch the build
         let launchResult = utils.exec('-cb');
@@ -244,9 +243,7 @@ describe('cmd-parameter-release', function() {
     
     it('should release ok when -r argument is executed on a generated app_node_cmd project', function() {
         
-        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
         expect(ObjectUtils.getKeys(setup.release).length).toBe(0);
         
@@ -265,7 +262,7 @@ describe('cmd-parameter-release', function() {
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         expect(utils.execCmdCommand('git init')).toContain("Initialized empty Git repository");
         utils.execCmdCommand('git add .');
@@ -292,18 +289,17 @@ describe('cmd-parameter-release', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        setup.build.replaceVersion.enabled = true;
+        setup.validate.php.namespaces.enabled = false;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        
-        let setup = utils.readSetupFile(); 
-        setup.build.replaceVersion.enabled = true;
-        setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-r')).toContain('release ok');
         
@@ -328,9 +324,8 @@ describe('cmd-parameter-release', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let setup = utils.readSetupFile();
         setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
@@ -388,8 +383,8 @@ describe('cmd-parameter-release', function() {
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-       
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         let launchResult = utils.exec('-r');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
@@ -423,8 +418,8 @@ describe('cmd-parameter-release', function() {
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
          
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-       
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         let tsRelease = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.release.json')); 
         tsRelease.baseURL = 'some custom base url';
         tsRelease.errorSetup = {};

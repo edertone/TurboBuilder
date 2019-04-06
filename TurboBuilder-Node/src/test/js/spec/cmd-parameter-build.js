@@ -38,13 +38,7 @@ describe('cmd-parameter-build', function() {
     
     it('should fail when -b and --build arguments are executed on an empty setup file structure', function() {
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
-
-        setup.build = {};
-        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {}, []);
         
         expect(utils.exec('-b')).toContain('No valid project type specified');
         expect(utils.exec('--build')).toContain('No valid project type specified');
@@ -52,13 +46,8 @@ describe('cmd-parameter-build', function() {
     
     
     it('should fail when more than one project type are defined on setup file', function() {
-        
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
-        setup.build = {lib_ts: {}, lib_php: {}};
-        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+    
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {lib_ts: {}, lib_php: {}}, []);
 
         expect(utils.exec('-b')).toContain('Please specify only one of the following on build setup');
         expect(utils.exec('--build')).toContain('Please specify only one of the following on build setup');
@@ -66,14 +55,9 @@ describe('cmd-parameter-build', function() {
     
     
     it('should fail with no files to build when build is executed after enabling ts build with no ts files', function() {
+    
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {lib_ts: {}}, []);
         
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
-        setup.build = {lib_ts: {}};
-        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-      
         // Delete the src ts folder
         expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + 'src' + utils.fm.dirSep() + 'main' + utils.fm.dirSep() + 'ts', false)).toBe(true);
 
@@ -86,8 +70,8 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-       
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+               
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
@@ -102,7 +86,7 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         expect(utils.exec('-b')).toContain('build ok');
         
@@ -117,9 +101,8 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();
         setup.build.lib_js.deleteNonMergedJs = false;        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
@@ -138,9 +121,8 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();
         setup.build.lib_js.createMergedFile = false;        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
@@ -157,11 +139,9 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        let setup = utils.readSetupFile();
         setup.build.lib_js.mergedFileName = "SomeMergeFileName";
-        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
@@ -179,9 +159,7 @@ describe('cmd-parameter-build', function() {
     
     it('should create phar file when -b argument is executed after generating a lib_php project structure with some php files', function() {
         
-        expect(utils.exec('-g lib_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(true);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
@@ -199,9 +177,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build ok when -b argument is executed on a generated site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(true);
@@ -236,7 +212,7 @@ describe('cmd-parameter-build', function() {
     
     it('should show a warning when no favicons are defined on a site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.deleteFile('./src/main/resources/favicons/196x196.png')).toBe(true);
         
@@ -246,7 +222,7 @@ describe('cmd-parameter-build', function() {
     
     it('should fail when a non expected favicon is found on a site_php project', function() {
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
         
@@ -256,9 +232,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build ok when -b argument is executed on a generated server_php project', function() {
         
-        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
@@ -271,9 +245,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build ok when -b argument is executed on a generated app_node_cmd project', function() {
         
-        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
-        
-        let setup = utils.readSetupFile();
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
@@ -289,17 +261,16 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        setup.build.replaceVersion.enabled = true;
+        setup.validate.php.namespaces.enabled = false;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        
-        let setup = utils.readSetupFile(); 
-        setup.build.replaceVersion.enabled = true;
-        setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.exec('-b')).toContain('build ok');
         
@@ -314,9 +285,8 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let setup = utils.readSetupFile();
         setup.validate.php.namespaces.enabled = false;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         

@@ -31,8 +31,8 @@ describe('cmd-parameter-clean', function(){
 
         let folderName = StringUtils.getPathElement(this.workdir);
 
-        expect(utils.exec('-g lib_ts')).toContain("Generated project structure ok");
-
+        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
 
         expect(utils.exec('-b')).toContain('build ok');
@@ -50,8 +50,8 @@ describe('cmd-parameter-clean', function(){
 
         let folderName = StringUtils.getPathElement(this.workdir);
 
-        expect(utils.exec('-g lib_js')).toContain("Generated project structure ok");
-
+        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        
         expect(utils.exec('-b')).toContain('build ok');
 
         expect(utils.fm.isDirectory('./target')).toBe(true);
@@ -67,7 +67,7 @@ describe('cmd-parameter-clean', function(){
 
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.exec('-b')).toContain('build ok');
         
@@ -84,7 +84,7 @@ describe('cmd-parameter-clean', function(){
 
         let folderName = StringUtils.getPathElement(this.workdir);
         
-        expect(utils.exec('-g server_php')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
         expect(utils.exec('-b')).toContain('build ok');
         
@@ -99,14 +99,12 @@ describe('cmd-parameter-clean', function(){
 
     it('should correctly clean a filesystem synced site_php and keep the synced folder data when -c is called but delete it if -cs is called', function(){
 
-        expect(utils.exec('-g site_php')).toContain("Generated project structure ok");
-
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
         let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
-
-        let setup = utils.readSetupFile();
-
+        
         setup.sync = {
             "runAfterBuild" : true,
             "type" : "fileSystem",
@@ -141,7 +139,7 @@ describe('cmd-parameter-clean', function(){
     
     it('should say that cleaning a node cmd application is not necessary', function(){
 
-        expect(utils.exec('-g app_node_cmd')).toContain("Generated project structure ok");
+        utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
         expect(utils.exec('-c')).toContain('Clean is not necessary for node cmd apps');   
     });

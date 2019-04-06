@@ -53,6 +53,36 @@ exports.createAndSwitchToTempFolder = function (dirName) {
 
 
 /**
+ * Generates the specified project type on the current  work dir and modifies all the specified
+ * values for the given common properties.
+ * The modified setup is saved and also returned in case we want to further modify it.
+ * All setup values that we pass as null won't be altered
+ */
+exports.generateProjectAndSetTurbobuilderSetup = function (projectType,
+    build = null,
+    copyPasteDetect = null) {
+  
+    expect(this.exec('-g ' + projectType)).toContain("Generated project structure ok");
+        
+    let setup = this.readSetupFile();
+    
+    if(build !== null){
+        
+        setup.build = build;
+    }
+    
+    if(copyPasteDetect !== null){
+        
+        setup.validate.filesContent.copyPasteDetect = copyPasteDetect;
+    }
+    
+    expect(this.saveToSetupFile(setup)).toBe(true);
+    
+    return setup;
+};
+
+
+/**
  * Execute the project via cmd with the specified cmd arguments
  */
 exports.exec = function (options) {
