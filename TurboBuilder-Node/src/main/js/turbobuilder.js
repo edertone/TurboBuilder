@@ -83,7 +83,8 @@ if (program.clean){
 // Perform the validation as defined on xml setup, except if it is defined
 // to be performed before build, cause it will be executed there
 if (program.lint && 
-    !(program.build && global.setup.validate.runBeforeBuild === true)){
+    !(program.build && global.setup.validate.runBeforeBuild === true) &&
+    !(program.release && global.setup.validate.runBeforeBuild === true)){
  
     validateModule.execute();
 }

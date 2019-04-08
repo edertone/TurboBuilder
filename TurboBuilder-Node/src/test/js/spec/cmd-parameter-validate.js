@@ -10,6 +10,7 @@
 
 const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
+const { StringUtils } = require('turbocommons-ts');
 
 
 describe('cmd-parameter-validate', function() {
@@ -1061,5 +1062,187 @@ describe('cmd-parameter-validate', function() {
         let buildResult = utils.exec('-l');
         expect(buildResult).toContain("validate start");
         expect(buildResult).toContain("validate ok");
+    });
+    
+    
+    it('should correctly validate a newly generated site_php project without duplicate code verification', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(0);
+        
+        let lintResult = utils.exec('-l');
+        
+        expect(lintResult).not.toContain("Looking for duplicate code");
+        expect(lintResult).toContain("validate ok");
+    });
+    
+    
+    it('should correctly validate a newly generated site_php project without duplicate code exceeding the threshold. Report must be generated if configured, and not if not configured', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, null);
+        
+        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
+        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(5);
+        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(10);
+        
+        let lintResult = utils.exec('-l');
+        
+        expect(lintResult).toContain("Looking for duplicate code on src/main");
+        expect(lintResult).toContain("Looking for duplicate code on src/test");
+        expect(lintResult).toContain("validate ok");
+        
+        expect(utils.fm.isDirectory('./src')).toBe(true);
+        expect(utils.fm.isDirectory('./target')).toBe(false);
+        
+        // Enable the copy paste report generation
+        
+        setup.validate.filesContent.copyPasteDetect[0].report = 'html';
+        setup.validate.filesContent.copyPasteDetect[1].report = 'html';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        lintResult = utils.exec('-l');
+        
+        expect(lintResult).toContain("Looking for duplicate code on src/main");
+        expect(lintResult).toContain("Looking for duplicate code on src/test");
+        expect(lintResult).toContain("src-main");
+        expect(lintResult).toContain("src-test");
+        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
+        expect(lintResult).toContain("validate ok");
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+    });
+    
+    
+    it('should fail validation for a newly generated lib_js project containing duplicate code. Report must be generated if configured, and not if not configured', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, null);
+        
+        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
+        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(5);
+        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(10);
+        
+        let lintResult = utils.exec('-l');
+        
+        expect(lintResult).toContain("Looking for duplicate code on src/main");
+        expect(lintResult).toContain("Looking for duplicate code on src/test");
+        expect(lintResult).toContain("validate ok");
+        
+        // Duplicate a js file and run validation again
+        
+        expect(utils.fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
+        
+        lintResult = utils.exec('-l');
+
+        expect(lintResult).toContain("ERROR: jscpd found too many duplicates over threshold");
+        
+        expect(utils.fm.isDirectory('./src')).toBe(true);
+        expect(utils.fm.isDirectory('./target')).toBe(false);
+        
+        // Enable the copy paste report generation
+        
+        setup.validate.filesContent.copyPasteDetect[0].report = 'html';
+        setup.validate.filesContent.copyPasteDetect[1].report = 'html';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        lintResult = utils.exec('-l');
+        
+        expect(lintResult).toContain("ERROR: jscpd found too many duplicates over threshold");
+         
+        let folderName = StringUtils.getPathElement(this.workdir);
+
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+    });
+    
+    
+    it('should generate duplicate code reports for a newly generated lib_php project when clean and validation are performed at the same time', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, null);
+        
+        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
+        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(5);
+        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(10);
+        
+        // Enable the copy paste report generation
+        
+        setup.validate.filesContent.copyPasteDetect[0].report = 'html';
+        setup.validate.filesContent.copyPasteDetect[1].report = 'html';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let lintResult = utils.exec('-cl');
+        
+        expect(lintResult).toContain("clean ok");
+        expect(lintResult).toContain("Looking for duplicate code");
+        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
+        expect(lintResult).toContain("validate ok");
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+    });
+    
+    
+    it('should generate duplicate code reports for a newly generated lib_ts project when clean, build and validation are performed', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, null);
+        
+        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
+        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
+        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
+        
+        // Enable the copy paste report generation
+        
+        setup.validate.filesContent.copyPasteDetect[0].report = 'html';
+        setup.validate.filesContent.copyPasteDetect[1].report = 'html';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let lintResult = utils.exec('-cbl');
+        
+        expect(lintResult).toContain("clean ok");
+        expect(lintResult).toContain("build ok");
+        expect(lintResult).toContain("validate ok");
+        expect(lintResult).toContain("Looking for duplicate code");
+        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+    });
+    
+    
+    it('should generate duplicate code reports for a newly generated lib_ts project when clean, release and validation are performed', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, null);
+        
+        // Enable the copy paste report generation
+        
+        setup.validate.filesContent.copyPasteDetect[0].report = 'html';
+        setup.validate.filesContent.copyPasteDetect[1].report = 'html';
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let lintResult = utils.exec('-crl');
+        
+        expect(lintResult).toContain("clean ok");
+        expect(lintResult).toContain("release ok");
+        expect(lintResult).toContain("validate ok");
+        expect(lintResult).toContain("Looking for duplicate code");
+        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+
+        expect(utils.fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
     });
 });

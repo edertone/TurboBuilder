@@ -37,12 +37,18 @@ exports.execute = function () {
     
     console.log("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
+    let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
+    
+    // Delete all files inside the target/project name folder
+    if(fm.isDirectory(buildFullPath)){
+    
+        fm.deleteDirectory(buildFullPath);
+    }
+    
     if(global.setup.validate.runBeforeBuild){
         
         validateModule.execute(false);
     }
-    
-    let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
     
     // Angular libs are built using ng cli and nothing more is necessary
     if(global.setup.build.lib_angular){
@@ -58,12 +64,6 @@ exports.execute = function () {
         console.success('build ok');
         
         return;
-    }
-    
-    // Delete all files inside the target/project name folder
-    if(fm.isDirectory(buildFullPath)){
-    
-        fm.deleteDirectory(buildFullPath);
     }
     
     // Node cmd apps are not built, cause we run them installed globally via npm install -g

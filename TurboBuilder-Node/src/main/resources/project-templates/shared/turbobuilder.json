@@ -37,7 +37,7 @@
             "copyrightHeaders": [
                 {
                     "path": "path/to/some/CoyprightHeaderFile.txt",
-                    "affectedPaths": "src",
+                    "affectedPaths": ["src"],
                     "includes": [".js", ".ts", "some-filename-pattern"],
                     "excludes": ["some-filename-pattern"]
                 }
