@@ -335,6 +335,12 @@ let validateCopyPasteDetect = function () {
             } 
         }
     }
+    
+    // Make sure the .jscpd folder does not exist
+    if(fm.isDirectory('./.jscpd') && !fm.deleteDirectory('./.jscpd')){
+        
+        console.error('The .jscpd folder could not be deleted. Please delete it manually');
+    }
 }
 
 
