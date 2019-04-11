@@ -5,7 +5,12 @@
  */
 
 
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const crypto = require('crypto');
 const { StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { TurboSiteProjectManager } = require('turbotesting-node');
 const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
 const console = require('./console');
@@ -14,10 +19,10 @@ const validateModule = require('./validate');
 const syncModule = require('./sync');
 const sass = require('node-sass');
 const sharp = require('sharp');
-const sitePhpTestUtils = require('../resources/project-templates/site_php/src/test/js/sitephp-test-utils.js');
 
 
-let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+const fm = new FilesManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
 
 
 /**
@@ -172,7 +177,7 @@ exports.buildSitePhp = function (destPath) {
     
         let turboDepotSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbodepot.json'));
         
-        sitePhpTestUtils.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', destSite + sep + 'index.php');
+        tsm.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', destSite + sep + 'index.php');
     }
     
     // Read the turbosite.json file
@@ -193,7 +198,7 @@ exports.buildSitePhp = function (destPath) {
     }
     
     // Save the turbosite setup to the index php file
-    sitePhpTestUtils.saveSetupToIndexPhp(turboSiteSetup, 'turbosite', destSite + sep + 'index.php');
+    tsm.saveSetupToIndexPhp(turboSiteSetup, 'turbosite', destSite + sep + 'index.php');
 
     // Fail if errors or warnings are configured to be sent to browser
     if(global.isRelease && (turboSiteSetup.errorSetup.exceptionsToBrowser || turboSiteSetup.errorSetup.warningsToBrowser)){

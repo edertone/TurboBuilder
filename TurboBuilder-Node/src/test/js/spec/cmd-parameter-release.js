@@ -9,9 +9,17 @@
 
 
 require('./../../../main/js/globals');
-const { ObjectUtils, StringUtils } = require('turbocommons-ts');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const crypto = require('crypto');
+const { execSync } = require('child_process');
 const utils = require('../cmd-parameter-test-utils');
-const sitePhpTestUtils = require('../../../main/resources/project-templates/site_php/src/test/js/sitephp-test-utils.js');
+const { ObjectUtils, StringUtils } = require('turbocommons-ts');
+const { TurboSiteProjectManager, TerminalManager } = require('turbotesting-node');
+
+const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
+const terminalManager = new TerminalManager(execSync);
 
 
 describe('cmd-parameter-release', function() {
@@ -64,16 +72,16 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(utils.execCmdCommand('git init')).toContain("Initialized empty Git repository");
-        utils.execCmdCommand('git add .');
-        utils.execCmdCommand('git commit -m "test commit"');
-        utils.execCmdCommand('git tag 0.1.0');
+        expect(terminalManager.exec('git init')).toContain("Initialized empty Git repository");
+        terminalManager.exec('git add .');
+        terminalManager.exec('git commit -m "test commit"');
+        terminalManager.exec('git tag 0.1.0');
         
         utils.fm.saveFile('.' + sep + 'test.txt');
-        utils.execCmdCommand('git add .');
-        utils.execCmdCommand('git commit -m "test commit 2"');
+        terminalManager.exec('git add .');
+        terminalManager.exec('git commit -m "test commit 2"');
         
-        utils.execCmdCommand('git tag 0.4.0');
+        terminalManager.exec('git tag 0.4.0');
         
         let launchResult = utils.exec('-cr');        
         expect(launchResult).toContain("clean start");
@@ -118,8 +126,8 @@ describe('cmd-parameter-release', function() {
         expect(utils.fm.isDirectory(buildRoot)).toBe(true);
         expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
         
-        let buildSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
-        let releaseSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', releaseRoot + sep + 'index.php');
+        let buildSetup = tsm.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
+        let releaseSetup = tsm.getSetupFromIndexPhp('turbosite', releaseRoot + sep + 'index.php');
         
         // Check that js files are smaller on release than on build
         let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.js');
@@ -264,16 +272,16 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.execCmdCommand('git init')).toContain("Initialized empty Git repository");
-        utils.execCmdCommand('git add .');
-        utils.execCmdCommand('git commit -m "test commit"');
-        utils.execCmdCommand('git tag 0.1.0');
+        expect(terminalManager.exec('git init')).toContain("Initialized empty Git repository");
+        terminalManager.exec('git add .');
+        terminalManager.exec('git commit -m "test commit"');
+        terminalManager.exec('git tag 0.1.0');
         
         utils.fm.saveFile('.' + sep + 'test.txt');
-        utils.execCmdCommand('git add .');
-        utils.execCmdCommand('git commit -m "test commit 2"');
+        terminalManager.exec('git add .');
+        terminalManager.exec('git commit -m "test commit 2"');
         
-        utils.execCmdCommand('git tag 0.4.0');
+        terminalManager.exec('git tag 0.4.0');
         
         let launchResult = utils.exec('-cr');
         expect(launchResult).toContain("0.4.0");
@@ -404,7 +412,7 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
-        tsSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
+        tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
         expect(tsSetup.baseURL).toBe("build");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
@@ -433,7 +441,7 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
-        let tsSetup = sitePhpTestUtils.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
+        let tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
         
         expect(tsSetup.baseURL).toBe("some custom base url");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(true);

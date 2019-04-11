@@ -14,7 +14,7 @@ const chrome = require('selenium-webdriver/chrome');
 const path = require('path');
 const { FilesManager } = require('turbodepot-node');
 const fm = new FilesManager(require('fs'), require('os'), path, process);
-const { AutomatedBrowserManager, ConsoleManager } = require('turbotesting-node');
+const { AutomatedBrowserManager } = require('turbotesting-node');
 
 
 describe('whole-site-recursive-tests', function() {
@@ -32,7 +32,7 @@ describe('whole-site-recursive-tests', function() {
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
-        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, new ConsoleManager(console, process));     
+        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, console, process);     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = utils.generateWildcards();
     });

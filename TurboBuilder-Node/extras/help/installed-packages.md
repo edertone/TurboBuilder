@@ -62,6 +62,10 @@ General purpose JS library
 
 General purpose ORM library
 
+## turbotesting-node
+
+General purpose testing library
+
 ## typedoc
 
 Used to generate the typescript documentation

@@ -7,15 +7,20 @@
  * Tests related to the correct operation of the error management turbosite feature
  */
 
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const crypto = require('crypto');
 const utils = require('../sitephp-test-utils');
 const { execSync } = require('child_process');
 const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const path = require('path');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
+const { AutomatedBrowserManager, TurboSiteProjectManager } = require('turbotesting-node');
+
 const fm = new FilesManager(require('fs'), require('os'), path, process);
-const { AutomatedBrowserManager, ConsoleManager } = require('turbotesting-node');
+const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
 
 
 describe('error-management-and-logging', function() {
@@ -25,7 +30,7 @@ describe('error-management-and-logging', function() {
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
-        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, new ConsoleManager(console, process));     
+        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, console, process);     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = utils.generateWildcards();
     });
@@ -46,7 +51,7 @@ describe('error-management-and-logging', function() {
         this.serviceWithoutParamsContentsBackup = fm.readFile(this.serviceWithoutParamsPath);
         
         // Set the logs source on the turbodepot setup
-        let turbodepotSetup = utils.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
+        let turbodepotSetup = tsm.getSetupFromIndexPhp('turbodepot', this.indexPhpPath);
            
         turbodepotSetup.sources.fileSystem = [
             {
@@ -55,7 +60,7 @@ describe('error-management-and-logging', function() {
             }
         ];
         turbodepotSetup.depots[0].logs.source = 'logs_source';
-        expect(utils.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);        
+        expect(tsm.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.indexPhpPath)).toBe(true);        
        
         // Make sure the logs folder exists and it is empty
         expect(fm.isDirectory(this.destPath + '/logs')).toBe(false);
@@ -89,11 +94,11 @@ describe('error-management-and-logging', function() {
     
     it('should show errors on browser for a site_php project type when errors are enabled on setup', function(done) {
         
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         let homeViewFileContents = fm.readFile(this.homeViewFilePath);
 
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
@@ -119,11 +124,11 @@ describe('error-management-and-logging', function() {
     
     it('should show warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
         
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         let homeViewFileContents = fm.readFile(this.homeViewFilePath);
         
         turbositeSetup.errorSetup.warningsToBrowser = true;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b;', 1))
@@ -148,12 +153,12 @@ describe('error-management-and-logging', function() {
     
     it('should show both errors and warnings on browser for a site_php project type when errors and warnings are enabled on setup', function(done) {
         
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         let homeViewFileContents = fm.readFile(this.homeViewFilePath);
         
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
         turbositeSetup.errorSetup.warningsToBrowser = true;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b; nonexistantfunction();', 1))
@@ -181,11 +186,11 @@ describe('error-management-and-logging', function() {
     
     it('should show multiple warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
         
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         let homeViewFileContents = fm.readFile(this.homeViewFilePath);
         
         turbositeSetup.errorSetup.warningsToBrowser = true;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b; $a=$c; $a=$d;', 1))
@@ -212,11 +217,11 @@ describe('error-management-and-logging', function() {
     
     it('should not show warnings on browser for a site_php project type when disabled in setup', function(done) {
         
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         let homeViewFileContents = fm.readFile(this.homeViewFilePath);
         
         turbositeSetup.errorSetup.warningsToBrowser = false;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(homeViewFileContents, '<?php', '<?php $a=$b;', 1))
@@ -241,11 +246,11 @@ describe('error-management-and-logging', function() {
     
     it('should not show errors on browser for a site_php project type when disabled in setup', function(done) {
 
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         let homeViewFileContents = fm.readFile(this.homeViewFilePath);
         
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         expect(fm.saveFile(this.homeViewFilePath,
                StringUtils.replace(homeViewFileContents, '<?php', '<?php nonexistantfunction();', 1))
@@ -272,12 +277,12 @@ describe('error-management-and-logging', function() {
     it('should show errors and warnings on separate log files for a site_php project type when log errors are enabled on setup', function(done) {
         
         // Enable exceptions and warnings to log on turbosite setup
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
         turbositeSetup.errorSetup.warningsToBrowser = true;
         turbositeSetup.errorSetup.exceptionsToLog = 'php_errors';
         turbositeSetup.errorSetup.warningsToLog = 'php_warnings';
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
        
         // Generate a warning and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
@@ -312,12 +317,12 @@ describe('error-management-and-logging', function() {
     it('should show errors and multiple warnings on the same log file for a site_php project type when log warnings and errors are enabled on setup', function(done) {
        
         // Enable exceptions and warnings to log on turbosite setup
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
         turbositeSetup.errorSetup.warningsToBrowser = false;
         turbositeSetup.errorSetup.exceptionsToLog = 'php_log';
         turbositeSetup.errorSetup.warningsToLog = 'php_log';
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
        
         // Generate 3 warnings and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
@@ -352,12 +357,12 @@ describe('error-management-and-logging', function() {
     it('should not show errors or warnings on log for a site_php project type when log errors are disabled on setup', function(done) {
        
         // Enable exceptions and warnings to log on turbosite setup
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
         turbositeSetup.errorSetup.warningsToBrowser = true;
         turbositeSetup.errorSetup.exceptionsToLog = '';
         turbositeSetup.errorSetup.warningsToLog = '';
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
        
         // Generate 3 warnings and an exception on home.php file
         expect(fm.saveFile(this.homeViewFilePath,
@@ -386,13 +391,13 @@ describe('error-management-and-logging', function() {
     it('should show too much time warnings on log for a site_php project when script takes more time than the one defined on setup', function(done) {
        
         // Enable too much time warnings to log
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
         turbositeSetup.errorSetup.warningsToBrowser = true;
         turbositeSetup.errorSetup.exceptionsToLog = '';
         turbositeSetup.errorSetup.warningsToLog = 'timewarnings';
         turbositeSetup.errorSetup.tooMuchTimeWarning = 1;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
        
         this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
             
@@ -425,13 +430,13 @@ describe('error-management-and-logging', function() {
     it('should show too much memory warnings on log for a site_php project when script takes more memory than the one defined on setup', function(done) {
        
         // Enable too much memory warnings to log
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = false;
         turbositeSetup.errorSetup.warningsToBrowser = true;
         turbositeSetup.errorSetup.exceptionsToLog = '';
         turbositeSetup.errorSetup.warningsToLog = 'timewarnings';
         turbositeSetup.errorSetup.tooMuchMemoryWarning = 1;
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
        
         this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
             
@@ -459,12 +464,12 @@ describe('error-management-and-logging', function() {
         let serviceWithoutParamsContents = fm.readFile(this.serviceWithoutParamsPath);
         
         // Enable exceptions and warnings to log on turbosite setup
-        let turbositeSetup = utils.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let turbositeSetup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
         turbositeSetup.errorSetup.exceptionsToBrowser = true;
         turbositeSetup.errorSetup.warningsToBrowser = true;
         turbositeSetup.errorSetup.exceptionsToLog = 'services_log.txt';
         turbositeSetup.errorSetup.warningsToLog = 'services_log.txt';
-        expect(utils.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
+        expect(tsm.saveSetupToIndexPhp(turbositeSetup, "turbosite", this.indexPhpPath)).toBe(true);
         
         // Add a warning and an exception on the service without parameters
         expect(fm.saveFile(this.serviceWithoutParamsPath,

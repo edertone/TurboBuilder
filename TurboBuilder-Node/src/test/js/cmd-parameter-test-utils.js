@@ -7,20 +7,23 @@
  * Methods that help with performing the tests
  */
 
-const path = require('path');
 require('./../../main/js/globals');
-const { StringUtils } = require('turbocommons-ts');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const crypto = require('crypto');
 const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
+const { TerminalManager } = require('turbotesting-node');
 
 
-let executionDir = path.resolve('./'); 
-
+const executionDir = path.resolve('./'); 
+const terminalManager = new TerminalManager(execSync);
 
 /**
  * A files manager object ready to be used by the tests
  */
-exports.fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+exports.fm = new FilesManager(fs, os, path, process);
 
 
 /**
@@ -31,6 +34,7 @@ exports.pathToExecutable = 'node "' + path.resolve(__dirname + '/../../main/js/t
 
 /**
  * Switch the work directory back to the execution dir
+ * @deprecated
  */
 exports.switchToExecutionDir = function () {
   
@@ -41,6 +45,7 @@ exports.switchToExecutionDir = function () {
 /**
  * Move the work directory to the specified folder inside the main temp folder.
  * If folder does not exist, it will be created
+ * @deprecated
  */
 exports.createAndSwitchToTempFolder = function (dirName) {
   
@@ -87,29 +92,8 @@ exports.generateProjectAndSetTurbobuilderSetup = function (projectType,
  */
 exports.exec = function (options) {
     
-    return this.execCmdCommand(this.pathToExecutable + ' ' + options);
+    return terminalManager.exec(this.pathToExecutable + ' ' + options);
 };
-
-
-/**
- * Execute an arbitrary cmd command on the current active dir
- */
-exports.execCmdCommand = function (cmdLine) {
-    
-    try{
-        
-        return execSync(cmdLine, {stdio : 'pipe'}).toString();
-        
-    }catch(e){
-        
-        if(!StringUtils.isEmpty(e.stderr.toString())){
-            
-            return e.stderr.toString();
-        }
-        
-        return e.stdout.toString();
-    }  
-}
 
 
 /**
