@@ -5,14 +5,17 @@
  */
 
 
-const { StringUtils, ArrayUtils } = require('turbocommons-ts');
+const { StringUtils, ArrayUtils, NumericUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const console = require('./console.js');
 let validate = require('jsonschema').validate;
+const { execSync } = require('child_process');
+const { TerminalManager } = require('turbodepot-node');
 
 
 let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+const terminalManager = new TerminalManager(execSync);
 
 
 /**
@@ -304,13 +307,22 @@ let validateNoTabulations = function () {
  */
 let validateCopyPasteDetect = function () {
     
+    // Aux method to clean the .jscpd folder if it exists
+    let cleanJscpdFolder = () => {
+        
+        if(fm.isDirectory('./.jscpd') && !fm.deleteDirectory('./.jscpd')){
+            
+            console.error('The .jscpd folder could not be deleted. Please delete it manually');
+        }       
+    };
+    
     for (let copyPasteEntry of global.setup.validate.filesContent.copyPasteDetect){
         
         if(copyPasteEntry.maxPercentErrorLevel >= 0){
             
             console.log('Looking for duplicate code on ' + copyPasteEntry.path);
             
-            let jscpdExecCommand = global.installationPaths.jscpdBin + ' --silent --reporters console';
+            let jscpdExecCommand = global.installationPaths.jscpdBin + ' --reporters console';
             
             // Define the report output path if necessary
             if(copyPasteEntry.report  && copyPasteEntry.report !== ''){
@@ -329,18 +341,40 @@ let validateCopyPasteDetect = function () {
             jscpdExecCommand += ' "' + copyPasteEntry.path + '"';
             jscpdExecCommand += ' --threshold ' + copyPasteEntry.maxPercentErrorLevel;
         
-            if(!console.exec(jscpdExecCommand, '', true)){
+            let jscpdResult = terminalManager.exec(jscpdExecCommand + ' --silent');
                 
-                errors.push('Setup the copy paste validation on ' + global.fileNames.setup + ' under validate.filesContent.copyPasteDetect section');
-            } 
+            if(jscpdResult.indexOf('ERROR') >= 0){
+                
+                console.error(`Found too much duplicate code. Generating report...`, false);
+                
+                terminalManager.execLive(jscpdExecCommand);
+                
+                cleanJscpdFolder();
+                
+                console.error('Setup the copy paste validation on ' + global.fileNames.setup + ' under validate.filesContent.copyPasteDetect section');
+            
+            }else{
+                
+                let realCodePercentage = Number(jscpdResult.substring(jscpdResult.indexOf('(') + 1, jscpdResult.indexOf('%)')));
+                                                
+                console.success(`Percentage of duplicate code: ${realCodePercentage} (maximum allowed: ${copyPasteEntry.maxPercentErrorLevel})`);
+                
+                if(copyPasteEntry.maxPercentErrorDifference >= 0){
+                    
+                    if(Math.abs(realCodePercentage - copyPasteEntry.maxPercentErrorLevel) > copyPasteEntry.maxPercentErrorDifference){
+                        
+                        cleanJscpdFolder();
+                        
+                        console.error(`The percentage of duplicate code on the project is ${realCodePercentage} which is too below from ` +
+                            `the maxPercentErrorLevel of ${copyPasteEntry.maxPercentErrorLevel} (max expected difference is ` +
+                            `${copyPasteEntry.maxPercentErrorDifference}). Please lower the maxPercentErrorLevel value to make it closer to the real one`);
+                    }
+                }
+            }            
         }
     }
     
-    // Make sure the .jscpd folder does not exist
-    if(fm.isDirectory('./.jscpd') && !fm.deleteDirectory('./.jscpd')){
-        
-        console.error('The .jscpd folder could not be deleted. Please delete it manually');
-    }
+    cleanJscpdFolder();
 }
 
 

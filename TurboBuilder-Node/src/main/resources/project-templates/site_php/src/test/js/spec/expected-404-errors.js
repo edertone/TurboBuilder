@@ -9,12 +9,12 @@
 
 const utils = require('../sitephp-test-utils');
 const { execSync } = require('child_process');
-const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const webdriver = require('selenium-webdriver');
 const path = require('path');
 const { FilesManager } = require('turbodepot-node');
-const fm = new FilesManager(require('fs'), require('os'), path, process);
 const { AutomatedBrowserManager } = require('turbotesting-node');
+const fm = new FilesManager(require('fs'), require('os'), path, process);
 
 
 describe('expected-404-errors', function() {
@@ -42,16 +42,6 @@ describe('expected-404-errors', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
         
         this.automatedBrowserManager.quit();
-    });
-    
-    
-    beforeEach(function() {
-
-    });
-    
-    
-    afterEach(function() {
-
     });
     
     

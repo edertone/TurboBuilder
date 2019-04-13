@@ -5,17 +5,16 @@ use org\turbosite\src\main\php\model\WebViewSetup;
 
 $ws = WebSiteManager::getInstance();
 
+$ws->loadBundles(['multi-parameters']);
+$ws->metaTitle = $ws->getLoc('META_TITLE');
+$ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
+
 $webViewSetup = new WebViewSetup();
 
 $webViewSetup->enabledParams = 3;
 $webViewSetup->defaultParameters = ['default-param1', 'default-param2', 'default-param3'];
 
 $ws->initializeView($webViewSetup);
-
-$ws->loadBundles(['multi-parameters']);
-
-$ws->metaTitle = $ws->getLoc('META_TITLE');
-$ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 
 ?>
 <!doctype html>
@@ -26,6 +25,8 @@ $ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 </head>
 
 <body>
+
+    <!-- TODO: Adapt this multi parameters view template to your needs -->
 
     <?php $ws->includeComponent('view/components/main-menu/main-menu') ?>
 

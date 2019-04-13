@@ -16,6 +16,7 @@ let fm = new FilesManager(require('fs'), require('os'), require('path'), process
 
 /**
  * Show a standard message to the user
+ * @deprecated
  */
 exports.log = function (message) {
     
@@ -26,6 +27,7 @@ exports.log = function (message) {
 /**
  * Show a success to the user
  * If quit parameter is true, the application will also exit with success code 0
+ * @deprecated
  */
 exports.success = function (message, quit = false) {
     
@@ -41,6 +43,7 @@ exports.success = function (message, quit = false) {
 /**
  * Show a warning to the user
  * If quit parameter is true, the application will also exit with error code 1
+ * @deprecated
  */
 exports.warning = function (message, quit = false) {
     
@@ -56,6 +59,7 @@ exports.warning = function (message, quit = false) {
 /**
  * Show a multiple list of warnings to the user
  * If quit parameter is true, the application will also exit with error code 1 after all errors are output
+ * @deprecated
  */
 exports.warnings = function (messages, quit = false) {
     
@@ -77,6 +81,7 @@ exports.warnings = function (messages, quit = false) {
 /**
  * Show an error to the user
  * If quit parameter is true, the application will also exit with error code 1
+ * @deprecated
  */
 exports.error = function (message, quit = true) {
     
@@ -91,6 +96,7 @@ exports.error = function (message, quit = true) {
 /**
  * Show a multiple list of errors to the user
  * If quit parameter is true, the application will also exit with error code 1 after all errors are output
+ * @deprecated
  */
 exports.errors = function (messages, quit = true) {
     
@@ -151,7 +157,7 @@ exports.printVersionInfo = function () {
 
 /**
  * Execute the specified cmd command and show the result on the console
- * 
+ * @deprecated 
  * @param shellCommand The command to execute
  * @param successMessage Message to show when command finishes ok in case the command output is not defined
  * @param liveOutput Set it to true to show the exec stdout in real time to the console

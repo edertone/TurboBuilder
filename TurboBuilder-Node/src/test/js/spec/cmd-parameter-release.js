@@ -16,9 +16,10 @@ const crypto = require('crypto');
 const { execSync } = require('child_process');
 const utils = require('../cmd-parameter-test-utils');
 const { ObjectUtils, StringUtils } = require('turbocommons-ts');
-const { TurboSiteProjectManager, TerminalManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
+const { TerminalManager } = require('turbodepot-node');
 
-const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
 const terminalManager = new TerminalManager(execSync);
 
 

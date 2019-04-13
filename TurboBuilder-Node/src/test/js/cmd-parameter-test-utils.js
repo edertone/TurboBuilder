@@ -14,7 +14,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
-const { TerminalManager } = require('turbotesting-node');
+const { TerminalManager } = require('turbodepot-node');
 
 
 const executionDir = path.resolve('./'); 
@@ -23,7 +23,7 @@ const terminalManager = new TerminalManager(execSync);
 /**
  * A files manager object ready to be used by the tests
  */
-exports.fm = new FilesManager(fs, os, path, process);
+exports.fm = new FilesManager(fs, os, path, process, crypto);
 
 
 /**

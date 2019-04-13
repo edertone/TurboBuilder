@@ -24,10 +24,10 @@ const path = require('path');
 const crypto = require('crypto');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const { TurboSiteProjectManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager(fs, os, path, process, crypto);
-const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
 
 
 /**

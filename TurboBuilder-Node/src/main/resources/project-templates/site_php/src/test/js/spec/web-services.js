@@ -426,7 +426,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional',
             postParameters: {
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":""}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}']
         }], done);
     });
     
@@ -437,13 +437,13 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1',
             postParameters: {
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":""}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"param1","received-GET-param-1-value":"","received-GET-param-2-value":""}']
         },
         {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1/param2',
             postParameters: {
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":"","received-POST-param-data":""}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":""}']
         }], done);
     });
     
@@ -465,7 +465,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":"some arbitrary string"}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"some arbitrary string","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}']
         }], done);
     });
     
@@ -491,7 +491,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":"","received-POST-param-data":"some arbitrary string"}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"some arbitrary string","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":""}']
         }], done);
     });
     
@@ -511,9 +511,9 @@ describe('web-services', function() {
                        'ExampleServiceWithPostAndGetParams called. Result:',
                        '{"info":"this object is returned as a json string with the received GET and POST parameters values","received-GET-param-0-value":"param0","received-GET-param-1-value":"param1","received-POST-params":"data from constructor"}',
                        'ExampleServiceWithPostAndGetParamsOptional called. Result:',
-                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":"","received-POST-param-data":""}',
+                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}',
                        'ExampleServiceWithPostAndGetParamsOptional called 2. Result:',
-                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":"","received-POST-param-data":"datavalue"}']
+                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"datavalue","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":""}']
         }], done);
     });
 });

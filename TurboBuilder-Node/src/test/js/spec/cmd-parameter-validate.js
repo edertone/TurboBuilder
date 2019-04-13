@@ -11,9 +11,28 @@
 const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
 const { StringUtils } = require('turbocommons-ts');
+const { StringTestsManager } = require('turbotesting-node');
+
+
+const stringTestsManager = new StringTestsManager(console, process);
 
 
 describe('cmd-parameter-validate', function() {
+    
+    
+    beforeAll(function() {
+        
+        // Aux function to generate the POST requests used by tests
+        this.testCopyPasteDetectSetupIsValid = (setup) => {
+        
+            expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
+            expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
+            expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(0);
+            expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
+            expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(0);
+        };
+    });
+    
     
     beforeEach(function() {
         
@@ -169,7 +188,8 @@ describe('cmd-parameter-validate', function() {
                 description: '',
                 builderVersion: setupModule.getBuilderVersion()
             },
-            build: {site_php: {}}}))
+            build: {site_php: {}},
+            validate: {filesContent: {copyPasteDetect: []}}}))
                 .toBe(true);
         
         expect(utils.exec('-l')).toContain("validate ok");  
@@ -178,17 +198,9 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated lib_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_php: {}}}))
-            .toBe(true);
-        
-        expect(utils.fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
-
-        let buildResult = utils.exec('-b');
-        
-        expect(buildResult).toContain("validate ok");
-        expect(buildResult).toContain("build ok");
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-b'), ["validate ok", "build ok"])).toBe(true);
     });
 
     
@@ -219,7 +231,8 @@ describe('cmd-parameter-validate', function() {
                 description: '',
                 builderVersion: setupModule.getBuilderVersion()
             },
-            build: {site_php: {}}}))
+            build: {site_php: {}},
+            validate: {filesContent: {copyPasteDetect: []}}}))
                 .toBe(true);
         
         let buildResult = utils.exec('-b');
@@ -231,16 +244,9 @@ describe('cmd-parameter-validate', function() {
     
     it('should not validate two times if runBeforeBuild is enabled on a generated site_php project and -bl options are passed', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', {site_php: {}}, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, 
-            metadata: {
-                name: '',
-                description: '',
-                builderVersion: setupModule.getBuilderVersion()
-            },
-            build: {site_php: {}}}))
-                .toBe(true);
+        expect(setup.validate.runBeforeBuild).toBe(true);
         
         let buildResult = utils.exec('-bl');
         
@@ -309,31 +315,18 @@ describe('cmd-parameter-validate', function() {
     
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        let setupFile = {
-                "$schema": setup.$schema,
-                metadata: {
-                    builderVersion: setupModule.getBuilderVersion()
-                }, 
-                build: {
-                    lib_ts: {
-                    }
-                },
-                validate: {
-                    runBeforeBuild: false,
-                    filesContent: {
-                        copyrightHeaders: [
+        setup.validate.runBeforeBuild = false;
+        
+        setup.validate.filesContent.copyrightHeaders = [
                             {
                                 "path": "extras/copyright headers/TsFiles-Header.txt",
                                 "affectedPaths": ["src"],
                                 "includes": ["ts"],
                                 "excludes": ["file3"]
                             }
-                        ]
-                    }
-                }
-            };
-        
-        utils.saveToSetupFile(setupFile);
+                        ];
+                
+        utils.saveToSetupFile(setup);
         
         // Create the copyright header template
         expect(utils.fm.createDirectory('./extras/copyright headers')).toBe(true);
@@ -357,9 +350,9 @@ describe('cmd-parameter-validate', function() {
         expect(utils.exec('-l')).toContain("validate ok");
         
         // Test that headers are not correctly validated when file 3 is not excluded
-        setupFile.validate.filesContent.copyrightHeaders[0].excludes = [];
+        setup.validate.filesContent.copyrightHeaders[0].excludes = [];
         
-        utils.saveToSetupFile(setupFile);
+        utils.saveToSetupFile(setup);
         
         let buildResult = utils.exec('-l');
             
@@ -996,10 +989,6 @@ describe('cmd-parameter-validate', function() {
         delete setup.validate.filesContent.tabsForbidden;        
         expect(utils.saveToSetupFile(setup)).toBe(true);
         expect(utils.exec('-l')).toContain('File contains tabulations');
-        
-        delete setup.validate.filesContent;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('File contains tabulations');
     });
     
     
@@ -1082,18 +1071,15 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, null);
         
-        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
-        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(5);
-        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(10);
+        this.testCopyPasteDetectSetupIsValid(setup);
         
-        let lintResult = utils.exec('-l');
-        
-        expect(lintResult).toContain("Looking for duplicate code on src/main");
-        expect(lintResult).toContain("Looking for duplicate code on src/test");
-        expect(lintResult).toContain("validate ok");
-        
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+            ["Looking for duplicate code on",
+             "Percentage of duplicate code: 0 (maximum allowed: 0)",
+             "Percentage of duplicate code: 0 (maximum allowed: 0)",
+             "validate ok"]))
+                .toBe(true);
+                
         expect(utils.fm.isDirectory('./src')).toBe(true);
         expect(utils.fm.isDirectory('./target')).toBe(false);
         
@@ -1103,19 +1089,27 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        lintResult = utils.exec('-l');
-        
-        expect(lintResult).toContain("Looking for duplicate code on src/main");
-        expect(lintResult).toContain("Looking for duplicate code on src/test");
-        expect(lintResult).toContain("src-main");
-        expect(lintResult).toContain("src-test");
-        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
-        expect(lintResult).toContain("validate ok");
-        
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+            ["Looking for duplicate code on",
+             "Percentage of duplicate code: 0 (maximum allowed: 0)",
+             "Percentage of duplicate code: 0 (maximum allowed: 0)",
+             "validate ok"]))
+                .toBe(true);
+                
         let folderName = StringUtils.getPathElement(this.workdir);
 
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        
+        setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel = 4;
+        setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel = 10;
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+            ["Looking for duplicate code on",
+             "Percentage of duplicate code: 0 (maximum allowed: 4)",
+             "The percentage of duplicate code on the project is 0 which is too below from"]))
+                .toBe(true);
     });
     
     
@@ -1123,25 +1117,21 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, null);
         
-        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
-        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(5);
-        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(10);
+        this.testCopyPasteDetectSetupIsValid(setup);
         
-        let lintResult = utils.exec('-l');
-        
-        expect(lintResult).toContain("Looking for duplicate code on src/main");
-        expect(lintResult).toContain("Looking for duplicate code on src/test");
-        expect(lintResult).toContain("validate ok");
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+            "Looking for duplicate code on",
+            "Percentage of duplicate code: 0 (maximum allowed: 0)",
+            "validate ok"]))
+                .toBe(true);
         
         // Duplicate a js file and run validation again
         
         expect(utils.fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
         
-        lintResult = utils.exec('-l');
-
-        expect(lintResult).toContain("ERROR: jscpd found too many duplicates over threshold");
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+            "ERROR: jscpd found too many duplicates over threshold"]))
+                .toBe(true);
         
         expect(utils.fm.isDirectory('./src')).toBe(true);
         expect(utils.fm.isDirectory('./target')).toBe(false);
@@ -1152,14 +1142,14 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        lintResult = utils.exec('-l');
-        
-        expect(lintResult).toContain("ERROR: jscpd found too many duplicates over threshold");
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+            "ERROR: jscpd found too many duplicates over threshold"]))
+                .toBe(true);
          
         let folderName = StringUtils.getPathElement(this.workdir);
 
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(false);
     });
     
     
@@ -1167,24 +1157,19 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, null);
         
-        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
-        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel).toBe(5);
-        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel).toBe(10);
+        this.testCopyPasteDetectSetupIsValid(setup);
         
-        // Enable the copy paste report generation
-        
+        // Enable the copy paste html report generation
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        let lintResult = utils.exec('-cl');
-        
-        expect(lintResult).toContain("clean ok");
-        expect(lintResult).toContain("Looking for duplicate code");
-        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
-        expect(lintResult).toContain("validate ok");
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-cl'),
+            ["clean ok",
+             "Looking for duplicate code",
+             "Percentage of duplicate code: 0 (maximum allowed: 0)",
+             "validate ok"]))
+                .toBe(true);
         
         let folderName = StringUtils.getPathElement(this.workdir);
 
@@ -1197,9 +1182,7 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, null);
         
-        expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);
-        expect(setup.validate.filesContent.copyPasteDetect[0].report).toBe('');
-        expect(setup.validate.filesContent.copyPasteDetect[1].report).toBe('');
+        this.testCopyPasteDetectSetupIsValid(setup);
         
         // Enable the copy paste report generation
         
@@ -1207,13 +1190,13 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        let lintResult = utils.exec('-cbl');
-        
-        expect(lintResult).toContain("clean ok");
-        expect(lintResult).toContain("build ok");
-        expect(lintResult).toContain("validate ok");
-        expect(lintResult).toContain("Looking for duplicate code");
-        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-cbl'), [
+            "clean ok",
+            "Looking for duplicate code",
+            "Percentage of duplicate code: 0 (maximum allowed: 0)",
+            "validate ok",
+            "build ok"]))
+                .toBe(true);
         
         let folderName = StringUtils.getPathElement(this.workdir);
 
@@ -1226,19 +1209,21 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, null);
         
+        this.testCopyPasteDetectSetupIsValid(setup);
+        
         // Enable the copy paste report generation
         
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        let lintResult = utils.exec('-crl');
-        
-        expect(lintResult).toContain("clean ok");
-        expect(lintResult).toContain("release ok");
-        expect(lintResult).toContain("validate ok");
-        expect(lintResult).toContain("Looking for duplicate code");
-        expect(StringUtils.countStringOccurences(lintResult, "HTML report saved to target")).toBe(2);
+        expect(stringTestsManager.assertTextContainsAll(utils.exec('-crl'), [
+            "clean ok",
+            "Looking for duplicate code",
+            "Percentage of duplicate code: 0 (maximum allowed: 0)",
+            "validate ok",
+            "release ok"]))
+                .toBe(true);
         
         let folderName = StringUtils.getPathElement(this.workdir);
 

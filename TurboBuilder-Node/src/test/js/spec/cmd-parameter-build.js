@@ -15,9 +15,9 @@ const path = require('path');
 const crypto = require('crypto');
 const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
-const { TurboSiteProjectManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
 
-const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
 
 
 describe('cmd-parameter-build', function() {

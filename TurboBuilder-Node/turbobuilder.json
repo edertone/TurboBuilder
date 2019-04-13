@@ -25,12 +25,14 @@
             "copyPasteDetect":[
                 {
                     "path": "src/main",
-                    "maxPercentErrorLevel": 6.5,
+                    "maxPercentErrorLevel": 4,
+                    "maxPercentErrorDifference": 1,
                     "report": "html"
                 },
                 {
                     "path": "src/test",
                     "maxPercentErrorLevel": 20,
+                    "maxPercentErrorDifference": 1,
                     "report": "html"
                 }
             ]

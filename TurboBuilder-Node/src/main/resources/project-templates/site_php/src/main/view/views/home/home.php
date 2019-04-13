@@ -4,12 +4,11 @@ use org\turbosite\src\main\php\managers\WebSiteManager;
 
 $ws = WebSiteManager::getInstance();
 
-$ws->initializeView();
-
 $ws->loadBundles(['home']);
-
 $ws->metaTitle = $ws->getLoc('META_TITLE');
 $ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
+
+$ws->initializeView();
 
 ?>
 <!doctype html>

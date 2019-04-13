@@ -11,8 +11,8 @@ const utils = require('../sitephp-test-utils');
 const { execSync } = require('child_process');
 const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const path = require('path');
 const { FilesManager } = require('turbodepot-node');
+const path = require('path');
 const fm = new FilesManager(require('fs'), require('os'), path, process);
 const { AutomatedBrowserManager } = require('turbotesting-node');
 
@@ -21,12 +21,12 @@ describe('expected-200-ok', function() {
 
     beforeAll(function() {
         
-        this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
-        
         this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, console, process);     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = utils.generateWildcards();
+        
+        this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
     });
 
     

@@ -17,10 +17,10 @@ const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const { AutomatedBrowserManager, TurboSiteProjectManager } = require('turbotesting-node');
+const { AutomatedBrowserManager, TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager(require('fs'), require('os'), path, process);
-const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
 
 
 describe('error-management-and-logging', function() {
@@ -168,10 +168,10 @@ describe('error-management-and-logging', function() {
             "url": "https://$host/$locale",
             "title": null,
             "source": ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION',
-                       'Call to undefined function nonexistantfunction()',
                        'E_NOTICE',
-                       'Undefined variable: b'],
+                       'Undefined variable: b',
+                       'FATAL EXCEPTION',
+                       'Call to undefined function nonexistantfunction()'],
             "skipLogsTest": true,
             "startWith": null,
             "endWith": null,

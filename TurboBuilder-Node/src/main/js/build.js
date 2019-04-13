@@ -10,7 +10,7 @@ const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
 const { StringUtils, ObjectUtils } = require('turbocommons-ts');
-const { TurboSiteProjectManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
 const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
 const console = require('./console');
@@ -22,7 +22,7 @@ const sharp = require('sharp');
 
 
 const fm = new FilesManager(fs, os, path, process, crypto);
-const tsm = new TurboSiteProjectManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
 
 
 /**

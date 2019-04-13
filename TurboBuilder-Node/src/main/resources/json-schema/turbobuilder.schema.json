@@ -76,6 +76,9 @@
                 "filesContent": {
                     "type": "object",
                     "description": "Defines validations related to the content of the project files",
+                    "required": [
+                        "copyPasteDetect"
+                    ],
                     "additionalProperties": false, 
                     "properties": {
                         "tabsForbidden": {
@@ -114,6 +117,7 @@
                                 "required": [
                                     "path",
                                     "maxPercentErrorLevel",
+                                    "maxPercentErrorDifference",
                                     "report"
                                 ],
                                 "additionalProperties": false, 
@@ -125,6 +129,10 @@
                                     "maxPercentErrorLevel": {
                                         "type": "number",
                                         "description": "A numeric value from 0 to 100 that defines the maximum allowed percentage of duplicate code to be found on the specified path that will cause a validation error. If the duplicate code exceeds this values, all builds will fail. Set it to -1 to disable the duplicate code limits for this path"
+                                    },
+                                    "maxPercentErrorDifference": {
+                                        "type": "number",
+                                        "description": "A numeric value from 0 to 100 that defines the maximum difference between the real percentage of copy pasted code on the specified path and the maxPercentErrorLevel value. If the difference is bigger that the number specified here, validation will fail. This is used to make sure we keep lowering the maxPercentErrorLevel value after we reduce the effective duplicate code in our project. Set it to -1 to disable this"
                                     },
                                     "report": {
                                         "type": "string",
