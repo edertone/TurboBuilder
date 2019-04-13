@@ -33,6 +33,7 @@ const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
 /**
  * Obtain an object containing all the wildcards that are used by the tests urls and their
  * replacement values
+ * @deprecated
  */
 exports.generateWildcards = function () {
     
