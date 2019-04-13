@@ -92,7 +92,7 @@ exports.generateProjectAndSetTurbobuilderSetup = function (projectType,
  */
 exports.exec = function (options) {
     
-    return terminalManager.exec(this.pathToExecutable + ' ' + options);
+    return terminalManager.exec(this.pathToExecutable + ' ' + options).output;
 };
 
 

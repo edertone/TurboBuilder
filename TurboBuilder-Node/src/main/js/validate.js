@@ -341,13 +341,13 @@ let validateCopyPasteDetect = function () {
             jscpdExecCommand += ' "' + copyPasteEntry.path + '"';
             jscpdExecCommand += ' --threshold ' + copyPasteEntry.maxPercentErrorLevel;
         
-            let jscpdResult = terminalManager.exec(jscpdExecCommand + ' --silent');
-                
+            let jscpdResult = terminalManager.exec(jscpdExecCommand + ' --silent').output;
+
             if(jscpdResult.indexOf('ERROR') >= 0){
                 
                 console.error(`Found too much duplicate code. Generating report...`, false);
                 
-                terminalManager.execLive(jscpdExecCommand);
+                terminalManager.exec(jscpdExecCommand, true);
                 
                 cleanJscpdFolder();
                 

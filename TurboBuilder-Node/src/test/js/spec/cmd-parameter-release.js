@@ -73,7 +73,7 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(terminalManager.exec('git init')).toContain("Initialized empty Git repository");
+        expect(terminalManager.exec('git init').output).toContain("Initialized empty Git repository");
         terminalManager.exec('git add .');
         terminalManager.exec('git commit -m "test commit"');
         terminalManager.exec('git tag 0.1.0');
@@ -273,7 +273,7 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(terminalManager.exec('git init')).toContain("Initialized empty Git repository");
+        expect(terminalManager.exec('git init').output).toContain("Initialized empty Git repository");
         terminalManager.exec('git add .');
         terminalManager.exec('git commit -m "test commit"');
         terminalManager.exec('git tag 0.1.0');
