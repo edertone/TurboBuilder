@@ -19,7 +19,7 @@ const { ObjectUtils, StringUtils } = require('turbocommons-ts');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 const { TerminalManager } = require('turbodepot-node');
 
-const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
 const terminalManager = new TerminalManager(execSync);
 
 

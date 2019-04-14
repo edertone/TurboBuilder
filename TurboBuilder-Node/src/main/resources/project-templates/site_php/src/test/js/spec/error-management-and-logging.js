@@ -19,8 +19,8 @@ const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager, TurboSiteTestsManager } = require('turbotesting-node');
 
-const fm = new FilesManager(require('fs'), require('os'), path, process);
-const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
+const fm = new FilesManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
 
 
 describe('error-management-and-logging', function() {
@@ -38,7 +38,7 @@ describe('error-management-and-logging', function() {
     
     beforeEach(function() {
 
-        let turbobuilderSetup = JSON.parse(fm.readFile('turbobuilder.json'));        
+        let turbobuilderSetup = tsm.getSetup('turbobuilder');        
         
         this.destPath = turbobuilderSetup.sync.destPath;
         this.indexPhpPath = turbobuilderSetup.sync.destPath + '/site/index.php';

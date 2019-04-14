@@ -71,7 +71,7 @@
               "/libs/jquery/jquery.js",
               "script src=\"$baseURL/glob-"
           ],
-        "startWith": "<!DOCTYPE",
+        "startWith": "<html lang=\"en\">",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
     },
@@ -93,7 +93,7 @@
                "/libs/jquery/jquery.js",
                "script src=\"$baseURL/glob-"
         ],
-        "startWith": "<!DOCTYPE",
+        "startWith": "<html lang=\"es\">",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
     },
@@ -115,7 +115,7 @@
                "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
                "/libs/jquery/jquery.js"
         ],
-        "startWith": "<!DOCTYPE",
+        "startWith": "<html lang=\"en\">",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
     },
@@ -131,7 +131,7 @@
                 "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
                 "/libs/jquery/jquery.js"
         ],
-        "startWith": "<!DOCTYPE",
+        "startWith": "<html lang=\"en\">",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
     },
@@ -150,7 +150,7 @@
                "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
                "/libs/jquery/jquery.js"
         ],
-        "startWith": "<!DOCTYPE",
+        "startWith": "<html lang=\"en\">",
         "endWith": "</html>",
         "notContains": "turbosite-global-error-manager-problem"
     },

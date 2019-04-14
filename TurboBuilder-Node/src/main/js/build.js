@@ -22,7 +22,7 @@ const sharp = require('sharp');
 
 
 const fm = new FilesManager(fs, os, path, process, crypto);
-const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
 
 
 /**

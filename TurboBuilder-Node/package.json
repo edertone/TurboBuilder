@@ -35,7 +35,7 @@
     "sharp": "^0.22.0",
     "turbocommons-ts": "^1.1.0",
     "turbodepot-node": "^1.0.0",
-    "turbotesting-node": "^2.0.0",
+    "turbotesting-node": "^3.0.0",
     "typedoc": "^0.14.2",
     "typescript": "3.1.3",
     "uglify-es": "3.3.9"

@@ -27,7 +27,7 @@ const { FilesManager } = require('turbodepot-node');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager(fs, os, path, process, crypto);
-const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
+const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
 
 
 /**

@@ -13,18 +13,21 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
+const { execSync } = require('child_process');
 const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
+const { TerminalManager } = require('turbodepot-node');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 
-const tsm = new TurboSiteTestsManager(fs, os, path, process, crypto);
+const terminalManager = new TerminalManager(execSync, process, fs, os, path, crypto);
+const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
 
 
 describe('cmd-parameter-build', function() {
     
     beforeEach(function() {
         
-        this.workdir = utils.createAndSwitchToTempFolder('test-build');
+        this.workdir = terminalManager.createTempDirectory('test-build');
     });
 
     
