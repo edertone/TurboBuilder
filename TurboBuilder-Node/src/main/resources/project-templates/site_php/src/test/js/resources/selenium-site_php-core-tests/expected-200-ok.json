@@ -3,7 +3,7 @@
         "url": "https://$host/robots.txt",
         "title": null,
         "source": "User-agent:",
-        "skipLogsTest": true,
+        "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -12,7 +12,7 @@
         "url": "https://$host/robots.txt?p=1",
         "title": null,
         "source": "User-agent:",
-        "skipLogsTest": true,
+        "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -21,7 +21,7 @@
         "url": "https://$host/robots.txt?p=1&q=2",
         "title": null,
         "source": "User-agent:",
-        "skipLogsTest": true,
+        "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -30,7 +30,7 @@
         "url": "https://$host/glob-$cacheHash.css",
         "title": null,
         "source": ["html", "body", "display: block;", "font-size: 2em;", "2px solid #0e0e0e"],
-        "skipLogsTest": true,
+        "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -39,7 +39,7 @@
         "url": "https://$host/glob-$cacheHash.js",
         "title": null,
         "source": "\"use strict\"",
-        "skipLogsTest": true,
+        "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
         "startWith": null,
         "endWith": null,
         "notContains": null
@@ -48,7 +48,7 @@
         "url": "https://$host/resources/fonts/readme.txt",
         "title": null,
         "source": "This folder contains all the project fonts in several formats",
-        "skipLogsTest": true,
+        "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
         "startWith": null,
         "endWith": null,
         "notContains": null

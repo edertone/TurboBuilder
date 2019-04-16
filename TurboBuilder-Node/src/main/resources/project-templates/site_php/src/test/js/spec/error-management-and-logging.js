@@ -110,7 +110,7 @@ describe('error-management-and-logging', function() {
             "source": ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION',
                        'Call to undefined function nonexistantfunction()'],
-            "skipLogsTest": true,
+            "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
             "startWith": null,
             "endWith": null,
             "notContains": null
@@ -172,7 +172,7 @@ describe('error-management-and-logging', function() {
                        'Undefined variable: b',
                        'FATAL EXCEPTION',
                        'Call to undefined function nonexistantfunction()'],
-            "skipLogsTest": true,
+            "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
             "startWith": null,
             "endWith": null,
             "notContains": null
@@ -260,7 +260,7 @@ describe('error-management-and-logging', function() {
             "url": "https://$host/$locale",
             "title": null,
             "source": null,
-            "skipLogsTest": true,
+            "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
             "startWith": null,
             "endWith": null,
             "notContains": ["turbosite-global-error-manager-problem",
