@@ -11,7 +11,7 @@
 const utils = require('../sitephp-test-utils');
 const { HTTPTestsManager } = require('turbotesting-node');
 
-const httpTestsManager = new HTTPTestsManager(console, process);
+const httpTestsManager = new HTTPTestsManager();
 
 
 describe('web-services', function() {

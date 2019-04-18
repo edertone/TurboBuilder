@@ -109,10 +109,29 @@ if (program.test){
     
     if (!program.build && !program.release){
     
-        console.error('--test must be used at the same time as -b --build or -r --release');
+        let readline = require('readline');
+        
+        var rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout
+        });
+        
+        console.warning('\n--test SHOULD be used at the same time with -b --build or -r --release.\n\nIF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT, RESULTS MAY NOT BE ACCURATE.', false);  
+        
+        rl.question('\nDo you still want to run the tests (Y/N)?', (answer) => {
+        
+            rl.close();
+          
+            if(answer.toLowerCase() === 'y'){
+                
+                testModule.execute();
+            }
+        });
+        
+    }else{
+        
+        testModule.execute();
     }
-    
-    testModule.execute();
 }
 
 // Print the todo folder contents on console if necessary

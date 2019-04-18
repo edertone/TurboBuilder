@@ -10,6 +10,10 @@
 
 const utils = require('../cmd-parameter-test-utils');
 const { execSync } = require('child_process');
+const { StringTestsManager } = require('turbotesting-node');
+
+
+const stringTestsManager = new StringTestsManager();
 
 
 describe('cmd-parameter-test', function() {
@@ -40,8 +44,15 @@ describe('cmd-parameter-test', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(utils.exec('-t')).toContain('--test must be used at the same time as -b --build or -r --release');
-        expect(utils.exec('--test')).toContain('--test must be used at the same time as -b --build or -r --release');
+        stringTestsManager.assertTextContainsAll(utils.exec('-t'),
+            ['--test SHOULD be used at the same time with -b --build or -r --release.',
+             'IF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT',
+             'Do you still want to run the tests (Y/N)?']);
+            
+        stringTestsManager.assertTextContainsAll(utils.exec('--test'),
+            ['--test SHOULD be used at the same time with -b --build or -r --release.',
+             'IF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT',
+             'Do you still want to run the tests (Y/N)?']);
     });
     
     

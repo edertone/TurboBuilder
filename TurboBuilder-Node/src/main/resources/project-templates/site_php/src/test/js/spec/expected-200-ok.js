@@ -21,7 +21,7 @@ describe('expected-200-ok', function() {
 
     beforeAll(function() {
         
-        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome, console, process);     
+        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome);     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = utils.generateWildcards();
         
@@ -42,9 +42,6 @@ describe('expected-200-ok', function() {
         
         let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-200-ok.json'));
         
-        this.automatedBrowserManager.assertUrlsLoadOk(list, () => {
-            
-            done();
-        });
+        this.automatedBrowserManager.assertUrlsLoadOk(list, done);
     });
 });

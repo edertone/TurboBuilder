@@ -14,7 +14,7 @@ const { StringUtils } = require('turbocommons-ts');
 const { StringTestsManager } = require('turbotesting-node');
 
 
-const stringTestsManager = new StringTestsManager(console, process);
+const stringTestsManager = new StringTestsManager();
 
 
 describe('cmd-parameter-validate', function() {
@@ -200,7 +200,7 @@ describe('cmd-parameter-validate', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-b'), ["validate ok", "build ok"])).toBe(true);
+        stringTestsManager.assertTextContainsAll(utils.exec('-b'), ["validate ok", "build ok"]);
     });
 
     
@@ -1073,12 +1073,11 @@ describe('cmd-parameter-validate', function() {
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+        stringTestsManager.assertTextContainsAll(utils.exec('-l'),
             ["Looking for duplicate code on",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
-             "validate ok"]))
-                .toBe(true);
+             "validate ok"]);
                 
         expect(utils.fm.isDirectory('./src')).toBe(true);
         expect(utils.fm.isDirectory('./target')).toBe(false);
@@ -1089,12 +1088,11 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+        stringTestsManager.assertTextContainsAll(utils.exec('-l'),
             ["Looking for duplicate code on",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
-             "validate ok"]))
-                .toBe(true);
+             "validate ok"]);
                 
         let folderName = StringUtils.getPathElement(this.workdir);
 
@@ -1105,11 +1103,10 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel = 10;
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+        stringTestsManager.assertTextContainsAll(utils.exec('-l'),
             ["Looking for duplicate code on",
              "Percentage of duplicate code: 0 (maximum allowed: 4)",
-             "The percentage of duplicate code on the project is 0 which is too below from"]))
-                .toBe(true);
+             "The percentage of duplicate code on the project is 0 which is too below from"]);
     });
     
     
@@ -1119,19 +1116,17 @@ describe('cmd-parameter-validate', function() {
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+        stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
             "Looking for duplicate code on",
             "Percentage of duplicate code: 0 (maximum allowed: 0)",
-            "validate ok"]))
-                .toBe(true);
+            "validate ok"]);
         
         // Duplicate a js file and run validation again
         
         expect(utils.fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
-            "ERROR: jscpd found too many duplicates over threshold"]))
-                .toBe(true);
+        stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+            "ERROR: jscpd found too many duplicates over threshold"]);
         
         expect(utils.fm.isDirectory('./src')).toBe(true);
         expect(utils.fm.isDirectory('./target')).toBe(false);
@@ -1142,9 +1137,8 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
-            "ERROR: jscpd found too many duplicates over threshold"]))
-                .toBe(true);
+        stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+            "ERROR: jscpd found too many duplicates over threshold"]);
          
         let folderName = StringUtils.getPathElement(this.workdir);
 
@@ -1164,12 +1158,11 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-cl'),
+        stringTestsManager.assertTextContainsAll(utils.exec('-cl'),
             ["clean ok",
              "Looking for duplicate code",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
-             "validate ok"]))
-                .toBe(true);
+             "validate ok"]);
         
         let folderName = StringUtils.getPathElement(this.workdir);
 
@@ -1190,13 +1183,12 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-cbl'), [
+        stringTestsManager.assertTextContainsAll(utils.exec('-cbl'), [
             "clean ok",
             "Looking for duplicate code",
             "Percentage of duplicate code: 0 (maximum allowed: 0)",
             "validate ok",
-            "build ok"]))
-                .toBe(true);
+            "build ok"]);
         
         let folderName = StringUtils.getPathElement(this.workdir);
 
@@ -1217,13 +1209,12 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(utils.saveToSetupFile(setup)).toBe(true);
         
-        expect(stringTestsManager.assertTextContainsAll(utils.exec('-crl'), [
+        stringTestsManager.assertTextContainsAll(utils.exec('-crl'), [
             "clean ok",
             "Looking for duplicate code",
             "Percentage of duplicate code: 0 (maximum allowed: 0)",
             "validate ok",
-            "release ok"]))
-                .toBe(true);
+            "release ok"]);
         
         let folderName = StringUtils.getPathElement(this.workdir);
 

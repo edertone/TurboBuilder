@@ -1,62 +1,62 @@
 [
     {
         "url": "https://$host/robots.txt",
-        "title": null,
-        "source": "User-agent:",
+        "titleContains": null,
+        "htmlContains": "User-agent:",
         "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/robots.txt?p=1",
-        "title": null,
-        "source": "User-agent:",
+        "titleContains": null,
+        "htmlContains": "User-agent:",
         "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/robots.txt?p=1&q=2",
-        "title": null,
-        "source": "User-agent:",
+        "titleContains": null,
+        "htmlContains": "User-agent:",
         "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/glob-$cacheHash.css",
-        "title": null,
-        "source": ["html", "body", "display: block;", "font-size: 2em;", "2px solid #0e0e0e"],
+        "titleContains": null,
+        "htmlContains": ["html", "body", "display: block;", "font-size: 2em;", "2px solid #0e0e0e"],
         "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/glob-$cacheHash.js",
-        "title": null,
-        "source": "\"use strict\"",
+        "titleContains": null,
+        "htmlContains": "\"use strict\"",
         "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/resources/fonts/readme.txt",
-        "title": null,
-        "source": "This folder contains all the project fonts in several formats",
+        "titleContains": null,
+        "htmlContains": "This folder contains all the project fonts in several formats",
         "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/en",
-        "title": "Home page",
-        "source": ["lang=\"en\"", "Home", "not to exceed 500 characters",
+        "titleContains": "Home page",
+        "htmlContains": ["lang=\"en\"", "Home", "not to exceed 500 characters",
               "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
               "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
               "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
@@ -71,14 +71,14 @@
               "/libs/jquery/jquery.js",
               "script src=\"$baseURL/glob-"
           ],
-        "startWith": "<html lang=\"en\">",
-        "endWith": "</html>",
-        "notContains": "turbosite-global-error-manager-problem"
+        "htmlStartsWith": "<html lang=\"en\">",
+        "htmlEndsWith": "</html>",
+        "htmlNotContains": "turbosite-global-error-manager-problem"
     },
     {
         "url": "https://$host/es",
-        "title": "Página principal",
-        "source": ["lang=\"es\"", "intentando no exceder 500 caracteres",
+        "titleContains": "Página principal",
+        "htmlContains": ["lang=\"es\"", "intentando no exceder 500 caracteres",
                "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
@@ -93,14 +93,14 @@
                "/libs/jquery/jquery.js",
                "script src=\"$baseURL/glob-"
         ],
-        "startWith": "<html lang=\"es\">",
-        "endWith": "</html>",
-        "notContains": "turbosite-global-error-manager-problem"
+        "htmlStartsWith": "<html lang=\"es\">",
+        "htmlEndsWith": "</html>",
+        "htmlNotContains": "turbosite-global-error-manager-problem"
     },
     {
         "url": "https://$host/test%20parameter%201",
-        "title": "test parameter 1",
-        "source": ["lang=\"en\"",
+        "titleContains": "test parameter 1",
+        "htmlContains": ["lang=\"en\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
@@ -115,14 +115,14 @@
                "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
                "/libs/jquery/jquery.js"
         ],
-        "startWith": "<html lang=\"en\">",
-        "endWith": "</html>",
-        "notContains": "turbosite-global-error-manager-problem"
+        "htmlStartsWith": "<html lang=\"en\">",
+        "htmlEndsWith": "</html>",
+        "htmlNotContains": "turbosite-global-error-manager-problem"
     },
     {
         "url": "https://$host/testparameter2",
-        "title": "testparameter2",
-        "source": ["lang=\"en\"", "Menu title",
+        "titleContains": "testparameter2",
+        "htmlContains": ["lang=\"en\"", "Menu title",
                 "href=\"$baseURL/en\"", "href=\"$baseURL/test%20parameter%201\"", "href=\"$baseURL/en/multi-parameters/parameter%201/parameter%202/parameter%203\"",
                 "This is the single parameter view", 
                 "You passed the following parameter value: testparameter2",
@@ -131,14 +131,14 @@
                 "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
                 "/libs/jquery/jquery.js"
         ],
-        "startWith": "<html lang=\"en\">",
-        "endWith": "</html>",
-        "notContains": "turbosite-global-error-manager-problem"
+        "htmlStartsWith": "<html lang=\"en\">",
+        "htmlEndsWith": "</html>",
+        "htmlNotContains": "turbosite-global-error-manager-problem"
     },
     {
         "url": "https://$host/en/multi-parameters/parameter%201/parameter%202/parameter%203",
-        "title": "Multi parameters view",
-        "source": ["Place here the home page description trying not to exceed 500 characters",
+        "titleContains": "Multi parameters view",
+        "htmlContains": ["Place here the home page description trying not to exceed 500 characters",
                "link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"$baseURL/16x16-$cacheHash.png\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"$baseURL/32x32-$cacheHash.png\"",
                "link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"$baseURL/96x96-$cacheHash.png\"",
@@ -150,192 +150,192 @@
                "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js",
                "/libs/jquery/jquery.js"
         ],
-        "startWith": "<html lang=\"en\">",
-        "endWith": "</html>",
-        "notContains": "turbosite-global-error-manager-problem"
+        "htmlStartsWith": "<html lang=\"en\">",
+        "htmlEndsWith": "</html>",
+        "htmlNotContains": "turbosite-global-error-manager-problem"
     },
     {
         "url": "https://$host/view-view-views-home-$cacheHash.css",
-        "title": null,
-        "source": "header img",
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": "header img",
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/view/views/home/home-logo.svg",
-        "title": null,
-        "source": "M7.47 21.49C4.2 19.93 1.86 16.76 1.5 13H0c.5",
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": "M7.47 21.49C4.2 19.93 1.86 16.76 1.5 13H0c.5",
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/resources/favicons/196x196.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/16x16-$cacheHash.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/32x32-$cacheHash.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/96x96-$cacheHash.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/128x128-$cacheHash.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/196x196-$cacheHash.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/apple-touch-icon-57x57.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/apple-touch-icon-76x76.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/apple-touch-icon-114x114.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/apple-touch-icon-144x144.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/apple-touch-icon-152x152.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/apple-touch-icon-180x180.png",
-        "title": null,
-        "source": null,
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": null,
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/libs/jquery/jquery.js",
-        "title": null,
-        "source": "jQuery",
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": "jQuery",
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-without-params",
-        "title": null,
-        "source": "Any value can be output by the service as a string (json or xml data, plain text, etc..)",
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": "Any value can be output by the service as a string (json or xml data, plain text, etc..)",
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-without-params/unexpected-param",
-        "title": null,
-        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 1 but expected 0"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 1 but expected 0"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-without-params/unexpected-param1/unexpected-param2",
-        "title": null,
-        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 2 but expected 0"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 2 but expected 0"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-with-get-params",
-        "title": null,
-        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 0 but expected 2"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 0 but expected 2"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-with-get-params/param1",
-        "title": null,
-        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 1 but expected 2"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 1 but expected 2"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2",
-        "title": null,
-        "source": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"param1\",\"received-param-1-value\":\"param2\"}"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"param1\",\"received-param-1-value\":\"param2\"}"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-with-get-params/0-1-2-3-4-5-6/FFF9900022",
-        "title": null,
-        "source": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"0-1-2-3-4-5-6\",\"received-param-1-value\":\"FFF9900022\"}"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"0-1-2-3-4-5-6\",\"received-param-1-value\":\"FFF9900022\"}"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     },
     {
         "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2/param3",
-        "title": null,
-        "source": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 3 but expected 2"],
-        "startWith": null,
-        "endWith": null,
-        "notContains": null
+        "titleContains": null,
+        "htmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 3 but expected 2"],
+        "htmlStartsWith": null,
+        "htmlEndsWith": null,
+        "htmlNotContains": null
     }
 ]
