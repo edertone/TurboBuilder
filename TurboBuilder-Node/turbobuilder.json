@@ -5,7 +5,7 @@
     "metadata": {
         "name": "turbobuilder",
         "description": "Cross language and cross IDE project builder for the most common development needs: build your project, run unit tests, generate docs, upload to ftp, compress images, and many more features",
-        "builderVersion": "1.0.0"
+        "builderVersion": "2.0.0"
     },
     
     "validate": {

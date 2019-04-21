@@ -4,7 +4,7 @@ use org\turbosite\src\main\php\managers\WebSiteManager;
 
 $ws = WebSiteManager::getInstance();
 
-$ws->loadBundles(['home']);
+$ws->loadBundles('resources', ['home']);
 $ws->metaTitle = $ws->getLoc('META_TITLE');
 $ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
 

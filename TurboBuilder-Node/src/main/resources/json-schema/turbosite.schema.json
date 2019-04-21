@@ -10,7 +10,7 @@
         "baseURL",
         "singleParameterView",
         "locales",
-        "resourceBundles",
+        "translationLocations",
         "globalCDNS",
         "globalJs",
         "globalCss",
@@ -98,14 +98,19 @@
                 "type": "string"
             }
         },
-        "resourceBundles": {
+        "translationLocations": {
             "type": "array",
-            "description": "List of locations where the resource bundles containing the site translation are located. Each array item must be an object with two properties: path and bundles.",
+            "description": "List of locations where the resource bundles containing the site translation are located. Each array item must be an object with three properties: label, path and bundles.",
             "items": {
                 "type": "object",
-                "required": ["path", "bundles"],
+                "required": ["label", "path", "bundles"],
                 "additionalProperties": false,
                 "properties": {
+                    "label": {
+                        "type": "string",
+                        "description": "The name that is used to define the translations location, so it can be referenced when requesting a translation",
+                        "examples": ["resources-locales"]
+                    },
                     "path": {
                         "type": "string",
                         "description": "A path relative to src/main that defines the file structure to reach the translation files inside a folder. Wilcards must be used for $bundle and $locale",

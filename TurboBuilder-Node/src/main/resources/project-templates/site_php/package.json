@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "selenium-webdriver": "4.0.0-alpha.1",
-        "turbocommons-ts": "^1.1.0",
+        "turbocommons-ts": "^2.0.0",
         "turbodepot-node": "^1.0.0",
         "turbotesting-node": "^5.0.1",
         "xhr2": "0.1.4"

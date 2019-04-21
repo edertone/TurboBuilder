@@ -7,3 +7,5 @@ This project is deprecated and no longer mantained.
 Node version is the way to go
 
 thanks
+
+## THIS PROJECT IS DEPRECATED

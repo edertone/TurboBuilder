@@ -4,7 +4,7 @@ use org\turbosite\src\main\php\managers\WebSiteManager;
 
 $ws = WebSiteManager::getInstance();
 
-$ws->loadBundles(['main-menu']);
+$ws->loadBundles('resources', ['main-menu']);
 
 ?>
 
