@@ -11,10 +11,10 @@ if(file_exists('cache/hash')){
     die();
 }
 
-require 'phar://libs/turbosite-php/turbosite-php-2.0.0.phar/php/autoloader-project.php';
-require 'libs/turbocommons-php/turbocommons-php-2.0.0.phar';
+require 'phar://libs/turbosite-php/turbosite-php-2.1.0.phar/php/autoloader-project.php';
+require 'libs/turbocommons-php/turbocommons-php-2.1.0.phar';
 require 'libs/turbodepot-php/turbodepot-php-1.0.0.phar';
-require 'libs/turbosite-php/turbosite-php-2.0.0.phar';
+require 'libs/turbosite-php/turbosite-php-2.1.0.phar';
 
 $ws = org\turbosite\src\main\php\managers\WebSiteManager::getInstance();
 

@@ -68,10 +68,10 @@
     "https://$host/logs",
     "https://$host/logs/php_log",
     "https://$host/logs/php_log.txt",
-    "https://$host/libs/turbocommons-php/turbocommons-php-2.0.0.phar",
-    "https://$host/site/libs/turbocommons-php/turbocommons-php-2.0.0.phar",
+    "https://$host/libs/turbocommons-php/turbocommons-php-2.1.0.phar",
+    "https://$host/site/libs/turbocommons-php/turbocommons-php-2.1.0.phar",
     "https://$host/libs/turbodepot-php/turbodepot-php-1.0.0.phar",
     "https://$host/site/libs/turbodepot-php/turbodepot-php-1.0.0.phar",
-    "https://$host/libs/turbosite-php/turbosite-php-2.0.0.phar",
-    "https://$host/site/libs/turbosite-php/turbosite-php-2.0.0.phar"
+    "https://$host/libs/turbosite-php/turbosite-php-2.1.0.phar",
+    "https://$host/site/libs/turbosite-php/turbosite-php-2.1.0.phar"
 ]
