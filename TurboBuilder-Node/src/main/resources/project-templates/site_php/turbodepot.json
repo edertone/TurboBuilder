@@ -36,7 +36,7 @@
         
         {
             "name": "depot1",
-            "files": {
+            "tmpFiles": {
                 "source": ""
             },
             "logs": {

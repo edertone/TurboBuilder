@@ -79,15 +79,15 @@ let createFoldersStructure = function (type) {
     // Generate all the folders and files that are used on a remote location where projects are deployed.
     if (type === global.folderStructures.struct_deploy) {
     
-        fm.createDirectory(global.runtimePaths.root + sep + 'trash');
+        fm.createDirectory(global.runtimePaths.root + sep + '_dev');
+        fm.createDirectory(global.runtimePaths.root + sep + '_trash');
         fm.createDirectory(global.runtimePaths.root + sep + 'site');
-        fm.createDirectory(global.runtimePaths.root + sep + 'release');
-        fm.createDirectory(global.runtimePaths.root + sep + 'build');
-        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'tmp', true);
-        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'storage', true);
-        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'db', true);
-        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'binary', true);
-        fm.createDirectory(global.runtimePaths.root + sep + 'data' + sep + 'logs', true);        
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'cache', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'custom', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'db', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'executable', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'logs', true);        
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'tmp', true);
     }
         
     // Generate all the folders and files that are used on a customer folder

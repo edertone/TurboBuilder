@@ -149,7 +149,8 @@
                 "description": "",
                 "required": [
                     "name",
-                    "files",
+                    "tmpFiles",
+                    "logs",
                     "objects",
                     "users"
                 ],
@@ -159,9 +160,9 @@
                         "type": "string",
                         "description": ""
                     },
-                    "files": {
+                    "tmpFiles": {
                         "type": "object",
-                        "description": "",
+                        "description": "Defines the setup for the storage of temporary files into this depot instance",
                         "required": [
                             "source"
                         ],
@@ -169,7 +170,7 @@
                         "properties": {
                             "source": {
                                 "type": "string",
-                                "description": ""
+                                "description": "The name for a source that will be used to store and read the temporary files"
                             }
                         }
                     },

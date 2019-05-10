@@ -4,9 +4,9 @@ RewriteEngine on
 ErrorDocument 404 /site/error-404.php
 
 # All static files (with an extension between 1 and 5 characters in length) which are not found on
-# the site or data/storage folders, will be redirected to the site/ folder
+# the site or storage/custom folders, will be redirected to the site/ folder
 RewriteCond %{REQUEST_URI} !site/
-RewriteCond %{REQUEST_URI} !data/storage/
+RewriteCond %{REQUEST_URI} !storage/custom/
 RewriteRule ^(.*)\.(.{1,5})$ site/$1.$2 [L]
 
 # Redirect all executable urls (any url that ends without a file extension) to the index entry point

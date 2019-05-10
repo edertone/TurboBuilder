@@ -15,7 +15,7 @@
     
     "homeView": "home",
      
-    "baseURL": "build",
+    "baseURL": "_dev",
      
     "singleParameterView": "single-parameter",
     

@@ -312,18 +312,18 @@ describe('cmd-parameter-generate', function(){
         
         expect(utils.exec('-g struct_deploy')).toContain("Generated folders structure ok");
 
-        expect(utils.fm.isDirectory('./trash')).toBe(true);
+        expect(utils.fm.isDirectory('./_dev')).toBe(true);
+        expect(utils.fm.isDirectory('./_trash')).toBe(true);
         expect(utils.fm.isDirectory('./site')).toBe(true);
-        expect(utils.fm.isDirectory('./release')).toBe(true);
-        expect(utils.fm.isDirectory('./build')).toBe(true);
-        expect(utils.fm.isDirectory('./data/tmp')).toBe(true);
-        expect(utils.fm.isDirectory('./data/storage')).toBe(true);
-        expect(utils.fm.isDirectory('./data/db')).toBe(true);
-        expect(utils.fm.isDirectory('./data/binary')).toBe(true);
-        expect(utils.fm.isDirectory('./data/logs')).toBe(true);
+        expect(utils.fm.isDirectory('./storage/cache')).toBe(true);
+        expect(utils.fm.isDirectory('./storage/custom')).toBe(true);
+        expect(utils.fm.isDirectory('./storage/db')).toBe(true);
+        expect(utils.fm.isDirectory('./storage/executable')).toBe(true);
+        expect(utils.fm.isDirectory('./storage/logs')).toBe(true);
+        expect(utils.fm.isDirectory('./storage/tmp')).toBe(true);
            
-        expect(utils.fm.getDirectoryList('./').length).toBe(5);
-        expect(utils.fm.getDirectoryList('./data').length).toBe(5);
+        expect(utils.fm.getDirectoryList('./').length).toBe(4);
+        expect(utils.fm.getDirectoryList('./storage').length).toBe(6);
     });
     
     
