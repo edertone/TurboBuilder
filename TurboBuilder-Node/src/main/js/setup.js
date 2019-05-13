@@ -16,7 +16,7 @@ const validateModule = require('./validate');
 const buildModule = require('./build');
 
 
-let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+let fm = new FilesManager();
 
 
 /**
@@ -285,8 +285,8 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             "type": "fileSystem",
             "excludes": [],
             "sourcePath": "dist/",
-            "destPath": "C:/turbosite-webserver-symlink/build",
-            "remoteUrl": "https://localhost/build",
+            "destPath": "C:/turbosite-webserver-symlink/_dev",
+            "remoteUrl": "https://localhost/_dev",
             "deleteDestPathContents": true
         };
     }

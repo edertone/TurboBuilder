@@ -18,16 +18,13 @@ try {
     process.exit(1);
 }
 
-const fs = require('fs');
-const os = require('os');
 const path = require('path');
-const crypto = require('crypto');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 
-const fm = new FilesManager(fs, os, path, process, crypto);
-const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
+const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 
 
 /**

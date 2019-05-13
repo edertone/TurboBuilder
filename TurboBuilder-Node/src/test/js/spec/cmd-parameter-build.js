@@ -19,8 +19,8 @@ const { StringUtils } = require('turbocommons-ts');
 const { TerminalManager } = require('turbodepot-node');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 
-const terminalManager = new TerminalManager(execSync, process, fs, os, path, crypto);
-const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
+const terminalManager = new TerminalManager();
+const tsm = new TurboSiteTestsManager('./');
 
 
 describe('cmd-parameter-build', function() {

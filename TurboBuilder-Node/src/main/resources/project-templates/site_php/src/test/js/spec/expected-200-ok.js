@@ -12,9 +12,8 @@ const { execSync } = require('child_process');
 const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const { FilesManager } = require('turbodepot-node');
-const path = require('path');
-const fm = new FilesManager(require('fs'), require('os'), path, process);
 const { AutomatedBrowserManager } = require('turbotesting-node');
+const fm = new FilesManager();
 
 
 describe('expected-200-ok', function() {
@@ -40,7 +39,7 @@ describe('expected-200-ok', function() {
     
     it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-200-ok.json'));
+        let list = JSON.parse(fm.readFile('src/test/js/resources/expected-200-ok.json'));
         
         this.automatedBrowserManager.assertUrlsLoadOk(list, done);
     });

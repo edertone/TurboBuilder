@@ -19,13 +19,6 @@ describe('web-services', function() {
 
     beforeAll(function() {
 
-        // HTTPManager class requires XMLHttpRequest which is only available on browser but not on node.
-        // The xhr2 library emulates this class so it can be used on nodejs projects. We declare it globally here
-        global.XMLHttpRequest = require('xhr2');
-        
-        // This value is set to disable the ssl bad certificate errors on nodejs
-        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-        
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
         this.baseUrl = "https://$host/api/site/example/";

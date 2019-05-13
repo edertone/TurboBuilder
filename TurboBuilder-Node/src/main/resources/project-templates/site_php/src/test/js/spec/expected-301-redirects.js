@@ -11,9 +11,8 @@ const utils = require('../sitephp-test-utils');
 const { execSync } = require('child_process');
 const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const path = require('path');
 const { FilesManager } = require('turbodepot-node');
-const fm = new FilesManager(require('fs'), require('os'), path, process);
+const fm = new FilesManager();
 const { AutomatedBrowserManager } = require('turbotesting-node');
 
 
@@ -40,7 +39,7 @@ describe('expected-301-redirects', function() {
     
     it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/selenium-site_php-core-tests/expected-301-redirects.json'));
+        let list = JSON.parse(fm.readFile('src/test/js/resources/expected-301-redirects.json'));
         
         this.automatedBrowserManager.assertUrlsRedirect(list, () => {
             

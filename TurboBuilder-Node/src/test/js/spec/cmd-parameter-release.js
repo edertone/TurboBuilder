@@ -19,8 +19,8 @@ const { ObjectUtils, StringUtils } = require('turbocommons-ts');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 const { TerminalManager } = require('turbodepot-node');
 
-const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
-const terminalManager = new TerminalManager(execSync);
+const tsm = new TurboSiteTestsManager('./');
+const terminalManager = new TerminalManager();
 
 
 describe('cmd-parameter-release', function() {
@@ -415,7 +415,7 @@ describe('cmd-parameter-release', function() {
         
         tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
-        expect(tsSetup.baseURL).toBe("build");
+        expect(tsSetup.baseURL).toBe("_dev");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");

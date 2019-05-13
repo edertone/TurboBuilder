@@ -8,22 +8,18 @@
  */
 
 require('./../../main/js/globals');
-const fs = require('fs');
-const os = require('os');
 const path = require('path');
-const crypto = require('crypto');
 const { FilesManager } = require('turbodepot-node');
-const { execSync } = require('child_process');
 const { TerminalManager } = require('turbodepot-node');
 
 
 const executionDir = path.resolve('./'); 
-const terminalManager = new TerminalManager(execSync);
+const terminalManager = new TerminalManager();
 
 /**
  * A files manager object ready to be used by the tests
  */
-exports.fm = new FilesManager(fs, os, path, process, crypto);
+exports.fm = new FilesManager();
 
 
 /**

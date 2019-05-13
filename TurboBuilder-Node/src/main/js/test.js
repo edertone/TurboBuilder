@@ -16,7 +16,7 @@ const releaseModule = require('./release');
 const opn = require('opn');
 
 
-let fm = new FilesManager(require('fs'), require('os'), require('path'), process); 
+let fm = new FilesManager(); 
 
 
 /**

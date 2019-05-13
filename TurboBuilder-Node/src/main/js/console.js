@@ -11,7 +11,7 @@ const { execSync } = require('child_process');
 const setupModule = require('./setup');
 
 
-let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
+let fm = new FilesManager();
 
 
 /**

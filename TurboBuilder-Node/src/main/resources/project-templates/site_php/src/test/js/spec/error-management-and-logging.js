@@ -7,10 +7,6 @@
  * Tests related to the correct operation of the error management turbosite feature
  */
 
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const crypto = require('crypto');
 const utils = require('../sitephp-test-utils');
 const { execSync } = require('child_process');
 const webdriver = require('selenium-webdriver');
@@ -19,8 +15,8 @@ const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager, TurboSiteTestsManager } = require('turbotesting-node');
 
-const fm = new FilesManager(fs, os, path, process, crypto);
-const tsm = new TurboSiteTestsManager('./', fs, os, path, process, crypto);
+const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 
 
 describe('error-management-and-logging', function() {

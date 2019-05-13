@@ -10,12 +10,11 @@ const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const console = require('./console.js');
 let validate = require('jsonschema').validate;
-const { execSync } = require('child_process');
 const { TerminalManager } = require('turbodepot-node');
 
 
-let fm = new FilesManager(require('fs'), require('os'), require('path'), process);
-const terminalManager = new TerminalManager(execSync);
+let fm = new FilesManager();
+const terminalManager = new TerminalManager();
 
 
 /**
