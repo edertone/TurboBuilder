@@ -22,7 +22,7 @@ describe('cmd-parameter-validate', function() {
     
     beforeAll(function() {
         
-        // Aux function to generate the POST requests used by tests
+        // Aux function to validate the copypaste detector setup
         this.testCopyPasteDetectSetupIsValid = (setup) => {
         
             expect(setup.validate.filesContent.copyPasteDetect.length).toBe(2);

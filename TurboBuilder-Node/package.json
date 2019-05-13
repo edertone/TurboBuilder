@@ -27,12 +27,12 @@
     "imagemin-jpegtran": "^6.0.0",
     "imagemin-pngquant": "^7.0.0",
     "jasmine": "^3.4.0",
-    "jscpd": "^2.0.14",
+    "jscpd": "^2.0.15",
     "jsonschema": "1.2.4",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "opn": "^6.0.0",
     "selenium-webdriver": "4.0.0-alpha.1",
-    "sharp": "^0.22.0",
+    "sharp": "^0.22.1",
     "turbocommons-ts": "^2.1.0",
     "turbodepot-node": "^2.0.0",
     "turbotesting-node": "^6.0.0",
@@ -41,8 +41,8 @@
     "uglify-es": "3.3.9"
   },
   "devDependencies": {
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.1"
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2"
   },
   "keywords": [
     "project",

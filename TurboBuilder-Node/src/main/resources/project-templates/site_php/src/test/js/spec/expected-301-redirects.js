@@ -18,10 +18,11 @@ const { AutomatedBrowserManager } = require('turbotesting-node');
 
 describe('expected-301-redirects', function() {
 
+
     beforeAll(function() {
         
         this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25001;
         
         this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome);
         this.automatedBrowserManager.wildcards = utils.generateWildcards();     
