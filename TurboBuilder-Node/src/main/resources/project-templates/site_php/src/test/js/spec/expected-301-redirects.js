@@ -8,12 +8,10 @@
  */
 
 const utils = require('../sitephp-test-utils');
-const { execSync } = require('child_process');
-const webdriver = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
 const { FilesManager } = require('turbodepot-node');
-const fm = new FilesManager();
 const { AutomatedBrowserManager } = require('turbotesting-node');
+
+const fm = new FilesManager();
 
 
 describe('expected-301-redirects', function() {
@@ -21,10 +19,9 @@ describe('expected-301-redirects', function() {
 
     beforeAll(function() {
         
-        this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25001;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
-        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome);
+        this.automatedBrowserManager = new AutomatedBrowserManager();
         this.automatedBrowserManager.wildcards = utils.generateWildcards();     
         this.automatedBrowserManager.initializeChrome();
     });
@@ -32,8 +29,6 @@ describe('expected-301-redirects', function() {
     
     afterAll(function() {
 
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
-        
         this.automatedBrowserManager.quit();
     });
     

@@ -8,9 +8,6 @@
  */
 
 const utils = require('../sitephp-test-utils');
-const { execSync } = require('child_process');
-const chrome = require('selenium-webdriver/chrome');
-const webdriver = require('selenium-webdriver');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager } = require('turbotesting-node');
 const fm = new FilesManager();
@@ -21,18 +18,15 @@ describe('expected-404-errors', function() {
 
     beforeAll(function() {
 
-        this.originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
-        this.automatedBrowserManager = new AutomatedBrowserManager(execSync, webdriver, chrome);     
+        this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.wildcards = utils.generateWildcards();
     });
 
     
     afterAll(function() {
 
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
-        
         this.automatedBrowserManager.quit();
     });
     

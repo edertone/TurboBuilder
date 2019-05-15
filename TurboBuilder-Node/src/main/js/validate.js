@@ -360,7 +360,8 @@ let validateCopyPasteDetect = function () {
                 
                 if(copyPasteEntry.maxPercentErrorDifference >= 0){
                     
-                    if(Math.abs(realCodePercentage - copyPasteEntry.maxPercentErrorLevel) > copyPasteEntry.maxPercentErrorDifference){
+                    if(realCodePercentage < copyPasteEntry.maxPercentErrorLevel &&
+                       Math.abs(realCodePercentage - copyPasteEntry.maxPercentErrorLevel) > copyPasteEntry.maxPercentErrorDifference){
                         
                         cleanJscpdFolder();
                         
