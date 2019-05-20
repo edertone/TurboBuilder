@@ -2,6 +2,34 @@
 
     "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbodepot.schema.json",
     
+    "depots": [
+        
+        {
+            "name": "depot1",
+            
+            "tmpFiles": {
+                "source": ""
+            },
+            "localizedFiles": {
+                "source": "",
+                "locales": [],
+                "locations": [],
+                "failIfKeyNotFound": false
+            },
+            "logs": {
+                "source": ""
+            },
+            "objects": {
+                "source": ""
+            },
+            "users": {
+                "source": "",
+                "tokenLength": 175,
+                "tokenLifetime": 60
+            }
+        }   
+    ],
+    
     "sources": {
     
         "fileSystem": [
@@ -30,26 +58,5 @@
                 "prefix": "tdp_"
             }
         ]   
-    },
-    
-    "depots": [
-        
-        {
-            "name": "depot1",
-            "tmpFiles": {
-                "source": ""
-            },
-            "logs": {
-                "source": ""
-            },
-            "objects": {
-                "source": ""
-            },
-            "users": {
-                "source": "",
-                "tokenLength": 175,
-                "tokenLifetime": 60
-            }
-        }   
-    ]
+    }
 }
