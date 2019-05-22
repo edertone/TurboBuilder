@@ -27,7 +27,7 @@ const tsm = new TurboSiteTestsManager('./');
  */
 process.on('exit', () => {
 
-    this.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName());
+    this.removeUnusedTargetFiles(global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName());
 });
 
 
@@ -39,12 +39,6 @@ exports.execute = function () {
     console.log("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
-    
-    // Delete all files inside the target/project name folder
-    if(fm.isDirectory(buildFullPath)){
-    
-        fm.deleteDirectory(buildFullPath);
-    }
     
     if(global.setup.validate.runBeforeBuild){
         
@@ -127,7 +121,7 @@ exports.copyMainFiles = function (destPath) {
     // Delete all the following files: thumbs.db .svn .git
     // TODO let filesToDelete = fm.findDirectoryItems(global.runtimePaths.main, /^(?!.*(thumbs\.db|\.svn|\.git)$)/i, 'absolute', 'files');
     
-    fm.copyDirectory(global.runtimePaths.main, destMain);
+    fm.mirrorDirectory(global.runtimePaths.main, destMain);
     
     console.success('copy main files ok');
     
@@ -142,7 +136,7 @@ exports.buildSitePhp = function (destPath) {
     
     let sep = fm.dirSep();
     let destMain = destPath + sep + 'main';
-    let destDist = destPath + sep + 'dist';
+    let destDist = destPath + sep + 'dist-tmp';
     let destSite = destDist + sep + 'site';
     
     // Validate turbosite setup exists
@@ -157,7 +151,7 @@ exports.buildSitePhp = function (destPath) {
         console.error('Could not create ' + destDist);
     }
     
-    if(!fm.createDirectory(destSite)){
+    if(!fm.isDirectory(destSite) && !fm.createDirectory(destSite)){
         
         console.error('Could not create ' + destSite);
     }
@@ -333,7 +327,6 @@ exports.buildSitePhp = function (destPath) {
                                 console.error('Missing component file ' + component + '.js');
                             }
                         }
-                        
                     }
                 }
                 
@@ -354,6 +347,16 @@ exports.buildSitePhp = function (destPath) {
             }
         }
     }
+    
+    // Mirror the generated tmp site to the previous one
+    let finalDestDist = destPath + sep + 'dist';
+    
+    if(!fm.isDirectory(finalDestDist) && !fm.createDirectory(finalDestDist)){
+        
+        console.error('Could not create ' + finalDestDist);
+    }
+    
+    fm.mirrorDirectory(destDist, finalDestDist);
 }
 
 
@@ -481,7 +484,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                     .resize(faviconExpectedFile.w, faviconExpectedFile.h)
                     .toFile(faviconsDest + sep + faviconExpectedFile.name, function(err) {
                         
-                        if(err || !fm.isFile(faviconsDest + sep + faviconExpectedFile.name)) {
+                        if(err) {
                             
                             console.error('Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
                         }
@@ -503,7 +506,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                     .resize(faviconExpectedFile.w, faviconExpectedFile.h)
                     .toFile(faviconsDest + sep + destFaviconWithHash, function(err) {
                         
-                        if(err || !fm.isFile(faviconsDest + sep + destFaviconWithHash)) {
+                        if(err) {
                             
                             console.error('Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
                         }
@@ -857,7 +860,7 @@ let mergeFilesFromArray = function (array, basePath, deleteFiles = false) {
 /**
  * Delete all the src main files that exist on target folder
  */
-exports.removeUnpackedSrcFiles = function (destPath) {
+exports.removeUnusedTargetFiles = function (destPath) {
 
     // Angular apps are exclusively compiled with ng cli, so we won't alter in any way the result of its
     // compilation
@@ -873,6 +876,14 @@ exports.removeUnpackedSrcFiles = function (destPath) {
     if(fm.isDirectory(destMain) && !fm.deleteDirectory(destMain)){
         
         console.error('Could not delete unpacked src files from ' + destMain);
+    }
+    
+    // Delete dist-tmp folder if it exists
+    let destDist = destPath + fm.dirSep() + 'dist-tmp';
+    
+    if(fm.isDirectory(destDist) && !fm.deleteDirectory(destDist)){
+        
+        console.error('Could not delete folder: ' + destDist);
     }
 }
 

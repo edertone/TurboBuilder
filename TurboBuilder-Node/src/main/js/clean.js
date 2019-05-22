@@ -40,10 +40,10 @@ exports.execute = function (alsoCleanSync = false) {
         cleanSyncDests(setupModule.loadSetupFromDisk());
                 
         // Load the release setup and execute the clean for it
-         if(fm.isFile(global.runtimePaths.setupReleaseFile)){
+        if(fm.isFile(global.runtimePaths.setupReleaseFile)){
              
-             cleanSyncDests(setupModule.loadReleaseSetupFromDisk());
-         }
+            cleanSyncDests(setupModule.loadReleaseSetupFromDisk());
+        }
     }
     
     console.success("clean ok");

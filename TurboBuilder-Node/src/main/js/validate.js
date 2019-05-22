@@ -321,7 +321,9 @@ let validateCopyPasteDetect = function () {
             
             console.log('Looking for duplicate code on ' + copyPasteEntry.path);
             
-            let jscpdExecCommand = global.installationPaths.jscpdBin + ' --reporters console';
+            let jscpdExecIgnore = ' --ignore "**/*.phar,**/*.min.js,**/*.map,**/libs/**"';
+            let jscpdExecMaxLimits = ' --max-size 250kb --max-lines 8000';
+            let jscpdExecCommand = global.installationPaths.jscpdBin + jscpdExecIgnore + jscpdExecMaxLimits + ' --reporters console';
             
             // Define the report output path if necessary
             if(copyPasteEntry.report  && copyPasteEntry.report !== ''){

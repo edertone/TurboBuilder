@@ -31,7 +31,7 @@ let releaseRelativePath = '';
  */
 process.on('exit', () => {
  
-    buildModule.removeUnpackedSrcFiles(global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath());
+    buildModule.removeUnusedTargetFiles(global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath());
 });
 
 

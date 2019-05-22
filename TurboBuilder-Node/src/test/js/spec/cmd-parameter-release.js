@@ -442,13 +442,23 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
+        expect(utils.fm.isDirectoryEmpty('./target/' + folderName + '-0.0.0')).toBe(true);
+        
+        tsRelease.errorSetup.exceptionsToBrowser = false;
+        tsRelease.errorSetup.warningsToBrowser = false;
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
+        
+        launchResult = utils.exec('-cr');
+        expect(launchResult).toContain("release start");
+        expect(launchResult).toContain("release ok");
+        
         let tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
         
         expect(tsSetup.baseURL).toBe("some custom base url");
-        expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(true);
+        expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.exceptionsToLog).toBe("");
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("mycustommail");
-        expect(tsSetup.errorSetup.warningsToBrowser).toBe(true);
+        expect(tsSetup.errorSetup.warningsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.warningsToLog).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
         expect(tsSetup.errorSetup.tooMuchTimeWarning).toBe(1000);
