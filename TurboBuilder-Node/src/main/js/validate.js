@@ -262,13 +262,12 @@ let validateFilesContent = function () {
 
 
 /**
- * Validates copy pasted code on the project
+ * Validates that no tabulations exist on the project
  */
 let validateNoTabulations = function () {
 
     let sep = fm.dirSep();
 
-    // Validate that no tabulations exist
     if(global.setup.validate.filesContent.tabsForbidden.enabled){
     
         let excludedStrings = global.setup.validate.filesContent.tabsForbidden.excludes
@@ -280,7 +279,7 @@ let validateNoTabulations = function () {
         
             if(fm.isDirectory(projectFolder)) {
         
-                let files = fm.findDirectoryItems(projectFolder, /^.*\.*$/i, 'absolute', 'files');
+                let files = fm.findDirectoryItems(projectFolder, /^.*\.*$/i, 'absolute', 'files', -1, /libs(\/|\\)/);
                 
                 for (let file of files){
                     
@@ -464,34 +463,36 @@ let validateStyleSheets = function () {
  */
 let validatePhp = function () {
     
-    // Auxiliary function to perform namespace validations
-    function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
+    // Obtain the list of files to validate, excluding any existing libs folder
+    let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main , /.*\.php$/i, 'absolute', 'files', -1, /libs(\/|\\)/);
         
-        if(mustContainList.length > 0){
-            
-            let fileRelativePath = fileAbsolutePath.split('src' + fm.dirSep())[1];
-            let pathToReplace = StringUtils.replace(fileRelativePath, fm.dirSep() + StringUtils.getPathElement(fileRelativePath), '');
-            
-            for (let mustContain of mustContainList){
-                
-                // Replace the wildcards on the mustContain
-                mustContain = mustContain.replace('$path', pathToReplace);
-                
-                if(namespaceToCheck.indexOf(mustContain) < 0){
-                    
-                    return mustContain;
-                }
-            }
-        }
-            
-        return '';
-    }
-    
+    // Perform the php namespaces validation
     if(global.setup.validate.php &&
        global.setup.validate.php.namespaces &&
        global.setup.validate.php.namespaces.enabled){
         
-        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main , /.*\.php$/i, 'absolute', 'files');
+        // Auxiliary function to perform namespace validations
+        function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
+            
+            if(mustContainList.length > 0){
+                
+                let fileRelativePath = fileAbsolutePath.split('src' + fm.dirSep())[1];
+                let pathToReplace = StringUtils.replace(fileRelativePath, fm.dirSep() + StringUtils.getPathElement(fileRelativePath), '');
+                
+                for (let mustContain of mustContainList){
+                    
+                    // Replace the wildcards on the mustContain
+                    mustContain = mustContain.replace('$path', pathToReplace);
+                    
+                    if(namespaceToCheck.indexOf(mustContain) < 0){
+                        
+                        return mustContain;
+                    }
+                }
+            }
+                
+            return '';
+        }
         
         for (let fileToValidate of filesToValidate){
             
