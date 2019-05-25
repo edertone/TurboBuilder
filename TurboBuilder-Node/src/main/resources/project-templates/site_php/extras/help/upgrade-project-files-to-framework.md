@@ -22,8 +22,10 @@
 
 6- Overwrite all the libraries found at src/main/libs/ with the ones on tmpfolder
 
-7- Review that turbosite.json and turbobuilder.json are valid compared to the generated ones
+7 - Compare the package.json file at the root of this project with the one on tmpfolder. Make sure the dependencies section is the same. If not, update this one, delete the node_modules folder and perform an npm install.
 
-7- Review extras folder for outdated documentation
+8- Review that turbosite.json and turbobuilder.json are valid compared to the generated ones
 
-8- Review any other files that may be worth comparing for update
+9- Review extras folder for outdated documentation
+
+10- Review any other files that may be worth comparing for update
