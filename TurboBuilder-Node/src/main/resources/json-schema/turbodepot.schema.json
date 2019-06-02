@@ -23,6 +23,7 @@
                 "description": "",
                 "required": [
                     "name",
+                    "storageFolderPath",
                     "tmpFiles",
                     "localizedFiles",
                     "logs",
@@ -34,6 +35,10 @@
                     "name": {
                         "type": "string",
                         "description": ""
+                    },
+                    "storageFolderPath": {
+                        "type": "string",
+                        "description": "The full file system path to the root of the storage folder (if used)"
                     },
                     "tmpFiles": {
                         "type": "object",

@@ -227,7 +227,7 @@ let replaceDependenciesIntoTemplate = function () {
         
         if(depFile === 'turbodepot-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'turbodepot-php-3.0.0.phar', depParent + sep + 'turbodepot-php-3.0.0.phar');
+            fm.copyFile(libsPath + sep + 'turbodepot-php-3.2.0.phar', depParent + sep + 'turbodepot-php-3.2.0.phar');
         }
         
         if(depFile === 'turbosite-php.tbdependency'){
