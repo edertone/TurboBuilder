@@ -5,8 +5,8 @@ use org\turbosite\src\main\php\managers\WebSiteManager;
 $ws = WebSiteManager::getInstance();
 
 $ws->loadBundles(['home']);
-$ws->metaTitle = $ws->getLoc('META_TITLE');
-$ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
+$ws->metaTitle = $ws->getText('META_TITLE');
+$ws->metaDescription = $ws->getText('META_DESCRIPTION');
 
 $ws->initializeView();
 
@@ -26,9 +26,9 @@ $ws->initializeView();
 
         <img alt="" src="view/views/home/home-logo.svg">
 
-        <h1><?php $ws->echoLoc('TITLE', 'home') ?></h1>
+        <h1><?php $ws->echoText('TITLE', 'home') ?></h1>
 
-        <h2><?php $ws->echoLoc('SUBTITLE') ?></h2>
+        <h2><?php $ws->echoText('SUBTITLE') ?></h2>
 
     </header>
 
@@ -36,15 +36,15 @@ $ws->initializeView();
 
         <section>
 
-            <h1><?php $ws->echoLoc('SECTION_TITLE') ?></h1>
+            <h1><?php $ws->echoText('SECTION_TITLE') ?></h1>
 
-            <h4><?php $ws->echoLoc('SECTION_CONTENT') ?></h4>
+            <h4><?php $ws->echoText('SECTION_CONTENT') ?></h4>
 
             <hr>
 
-            <h1><?php $ws->echoLoc('SECTION_TITLE') ?></h1>
+            <h1><?php $ws->echoText('SECTION_TITLE') ?></h1>
 
-            <h4><?php $ws->echoLoc('SECTION_CONTENT') ?></h4>
+            <h4><?php $ws->echoText('SECTION_CONTENT') ?></h4>
 
         </section>
 

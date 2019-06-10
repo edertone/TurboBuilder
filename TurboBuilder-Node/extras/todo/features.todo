@@ -8,6 +8,8 @@ Sorted by priority:
     All php class files inside a site_php project must have a namespace that starts with "site/php". (are components excluded from this rule or not?)
     .. more ideas?
 
+- Turbobuilder uses the jscpd library to validate copy pasted code on projects. For now it is being called via CMD, but it has a javascript api. We should use the api instead of calling the cmd commands. 
+
 - Create the turbo builder website.
 
 - Save all the turbobuilder CLI application console output into a txt file on target when executing build or release 

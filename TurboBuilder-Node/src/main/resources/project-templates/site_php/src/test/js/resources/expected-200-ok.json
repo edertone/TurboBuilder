@@ -152,7 +152,7 @@
         ],
         "htmlStartsWith": "<!doctype html>",
         "htmlEndsWith": "</html>",
-        "htmlNotContains": "turbosite-global-error-manager-problem"
+        "htmlNotContains": ["turbosite-global-error-manager-problem", "Document generated in {", "Document generated in  seconds"]
     },
     {
         "url": "https://$host/view-view-views-home-$cacheHash.css",

@@ -24,12 +24,18 @@
             "objects": {
                 "source": ""
             },
+            "googleDrive": {
+                "apiClientRoot": "",
+                "cacheRootPath": "",
+                "cacheZone": "google-drive",
+                "cacheZoneTimeToLive": -1
+            },
             "users": {
                 "source": "",
                 "tokenLength": 175,
                 "tokenLifetime": 60
             }
-        }   
+        }
     ],
     
     "sources": {

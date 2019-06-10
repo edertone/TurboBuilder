@@ -28,6 +28,7 @@
                     "localizedFiles",
                     "logs",
                     "objects",
+                    "googleDrive",
                     "users"
                 ],
                 "additionalProperties": false,
@@ -105,6 +106,35 @@
                             "source": {
                                 "type": "string",
                                 "description": ""
+                            }
+                        }
+                    },
+                    "googleDrive": {
+                        "type": "object",
+                        "description": "Defines the setup for the google drive client",
+                        "required": [
+                            "apiClientRoot",
+                            "cacheRootPath",
+                            "cacheZone",
+                            "cacheZoneTimeToLive"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "apiClientRoot": {
+                                "type": "string",
+                                "description": "A full file system path to the root of the google-api-php-client library. See GoogleDriveManager class for more info"
+                            },
+                            "cacheRootPath": {
+                                "type": "string",
+                                "description": "A full file system path to the root of the folder where the cached google drive files will be stored. See GoogleDriveManager class for more info"
+                            },
+                            "cacheZone": {
+                                "type": "string",
+                                "description": "The name for the cache zone where the google drive cached files will be stored. See GoogleDriveManager class for more info"
+                            },
+                            "cacheZoneTimeToLive": {
+                                "type": "integer",
+                                "description": "Defines the number of seconds after which the whole zone cache data will be deleted. Set it to -1 to disable automatic cache expiration"
                             }
                         }
                     },

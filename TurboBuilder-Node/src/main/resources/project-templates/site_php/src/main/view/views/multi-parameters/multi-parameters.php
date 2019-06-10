@@ -6,8 +6,8 @@ use org\turbosite\src\main\php\model\WebViewSetup;
 $ws = WebSiteManager::getInstance();
 
 $ws->loadBundles(['multi-parameters']);
-$ws->metaTitle = $ws->getLoc('META_TITLE');
-$ws->metaDescription = $ws->getLoc('META_DESCRIPTION');
+$ws->metaTitle = $ws->getText('META_TITLE');
+$ws->metaDescription = $ws->getText('META_DESCRIPTION');
 
 $webViewSetup = new WebViewSetup();
 

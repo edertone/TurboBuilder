@@ -10,10 +10,9 @@ $ws->loadBundles(['footer']);
 
 <footer>
 
-    <h4><?php $ws->echoLoc('TITLE') ?></h4>
+    <h4><?php $ws->echoText('TITLE') ?></h4>
 
-    <p><?php $ws->echoLoc('DOC_GENERATED_IN_N_SECS',
-            ['bundle' => 'footer', 'wildcards' => '$N', 'replace' => $ws->getRunningTime()]) ?></p>
+    <p><?php $ws->echoText('DOC_GENERATED_IN_N_SECS', ['bundle' => 'footer', 'toReplace' => $ws->getRunningTime()]) ?></p>
 
     <p>
         <a href="<?php $ws->echoUrlToChangeLocale('en_US') ?>">english</a>
