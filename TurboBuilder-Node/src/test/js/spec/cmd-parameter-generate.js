@@ -25,7 +25,7 @@ describe('cmd-parameter-generate', function(){
 
         utils.switchToExecutionDir();
 
-        expect(utils.fm.deleteDirectory(this.workdir)).toBe(true);
+        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
 
 

@@ -124,15 +124,7 @@ let createProjectStructure = function (type) {
     let filesToCopy = templatesFolder + sep + (type === global.setupBuildTypes.server_php ? global.setupBuildTypes.site_php : type);
     
     fm.copyDirectory(filesToCopy, global.runtimePaths.root, false);
-    
-    // The expected-ftp-structure.md file is not necessary on some project types
-    if(type !== global.setupBuildTypes.site_php &&
-       type !== global.setupBuildTypes.server_php &&
-       type !== global.setupBuildTypes.app_angular){
-
-        fm.deleteFile(global.runtimePaths.extras + sep + 'help' + sep + 'expected-ftp-structure.md');
-    }
-    
+        
     // Server php project is basically a site_php project but with some parts removed
     if(type === global.setupBuildTypes.server_php){
     
@@ -167,8 +159,12 @@ let createProjectStructure = function (type) {
     console.success('Generated ' + type + ' structure');
     
     // Generate a custom project setup and save it to file
-    if(!fm.saveFile(global.runtimePaths.setupFile,
-            JSON.stringify(setupModule.customizeSetupTemplateToProjectType(type), null, 4))){
+    try{
+        
+        fm.saveFile(global.runtimePaths.setupFile,
+            JSON.stringify(setupModule.customizeSetupTemplateToProjectType(type), null, 4));
+            
+    }catch(e){
         
         console.error('Error creating ' + global.fileNames.setup + ' file');
     }

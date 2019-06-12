@@ -48,7 +48,7 @@ describe('error-management-and-logging', function() {
             // Delete the logs folder if it exists
             if(fm.isDirectory(this.destPath + '/logs')){
                 
-                expect(fm.deleteDirectory(this.destPath + '/logs', true)).toBe(true);
+                expect(fm.deleteDirectory(this.destPath + '/logs', true)).toBeGreaterThan(-1);
             }
         };
         

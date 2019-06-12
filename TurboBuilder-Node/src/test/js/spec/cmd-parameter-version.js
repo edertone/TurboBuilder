@@ -24,7 +24,7 @@ describe('cmd-parameter-version', function() {
   
         utils.switchToExecutionDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBe(true);
+        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
 
     

@@ -626,10 +626,16 @@ exports.buildLibTs = function (destPath) {
     let tsConfig = destMain + sep + 'ts' + sep + 'tsconfig.json';
     
     // Create a default tsconfig file if there's no specific one
-    if (!fm.isFile(tsConfig) &&
-        !fm.saveFile(tsConfig, '{"compilerOptions":{"target": "es5"}}')) {
+    if (!fm.isFile(tsConfig)) {
         
-        console.error('Could not create ' + tsConfig);
+        try{
+            
+            fm.saveFile(tsConfig, '{"compilerOptions":{"target": "es5"}}');
+            
+        }catch(e){
+            
+            console.error('Could not create ' + tsConfig);
+        }        
     }
     
     for (let target of global.setup.build.lib_ts.targets) {
@@ -873,17 +879,31 @@ exports.removeUnusedTargetFiles = function (destPath) {
     let destMain = destPath + fm.dirSep() + 'main';
     
     // Delete the files
-    if(fm.isDirectory(destMain) && !fm.deleteDirectory(destMain)){
+    if(fm.isDirectory(destMain)){
         
-        console.error('Could not delete unpacked src files from ' + destMain);
+        try{
+            
+            fm.deleteDirectory(destMain);
+            
+        }catch(e){
+            
+            console.error('Could not delete unpacked src files from ' + destMain);
+        }        
     }
     
     // Delete dist-tmp folder if it exists
     let destDist = destPath + fm.dirSep() + 'dist-tmp';
     
-    if(fm.isDirectory(destDist) && !fm.deleteDirectory(destDist)){
+    if(fm.isDirectory(destDist)){
         
-        console.error('Could not delete folder: ' + destDist);
+        try{
+            
+            fm.deleteDirectory(destDist);
+            
+        }catch(e){
+            
+            console.error('Could not delete folder: ' + destDist);
+        }
     }
 }
 

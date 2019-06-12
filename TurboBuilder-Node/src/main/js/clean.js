@@ -21,20 +21,23 @@ exports.execute = function (alsoCleanSync = false) {
     
     console.log("\nclean start");
     
-    if(global.setup.build.app_node_cmd){
+    if(fm.isDirectory(global.runtimePaths.target)){
         
-        return console.success('Clean is not necessary for node cmd apps');
-    }
-    
-    if(fm.isDirectory(global.runtimePaths.target) &&
-            !fm.deleteDirectory(global.runtimePaths.target) &&
-            !fm.isDirectoryEmpty(global.runtimePaths.target)){
-        
-        console.error('could not delete ' + global.runtimePaths.target);
+        try{
+            
+            fm.deleteDirectory(global.runtimePaths.target);
+            
+        }catch(e){
+            
+            if(!fm.isDirectoryEmpty(global.runtimePaths.target)){
+                
+                console.error('could not clean ' + global.runtimePaths.target);
+            }        
+        }
     }
     
     // Delete all synced files if necessary
-    if(alsoCleanSync){
+    if(!global.setup.build.app_node_cmd && alsoCleanSync){
         
         // Load the non release setup and execute the clean for it
         cleanSyncDests(setupModule.loadSetupFromDisk());
@@ -56,10 +59,16 @@ exports.execute = function (alsoCleanSync = false) {
 let cleanSyncDests = function (setup) {
     
     if(setup.sync && setup.sync.type === "fileSystem" &&
-        fm.isDirectory(setup.sync.destPath) &&
-        !fm.deleteDirectory(setup.sync.destPath, false)){
-         
-         console.error("could not delete contents of " + setup.sync.destPath);
+       fm.isDirectory(setup.sync.destPath)){
+
+        try{
+            
+            fm.deleteDirectory(setup.sync.destPath, false);
+        
+        }catch(e){
+            
+            console.error("could not delete contents of " + setup.sync.destPath);
+        }
      }
      
      if(setup.sync && setup.sync.type === "ftp"){

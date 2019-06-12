@@ -23,7 +23,7 @@ describe('cmd-parameter-clean', function(){
 
         utils.switchToExecutionDir();
 
-        expect(utils.fm.deleteDirectory(this.workdir)).toBe(true);
+        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
 
 
@@ -137,10 +137,10 @@ describe('cmd-parameter-clean', function(){
     });
     
     
-    it('should say that cleaning a node cmd application is not necessary', function(){
+    it('should correctly clean a node cmd application', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
-        expect(utils.exec('-c')).toContain('Clean is not necessary for node cmd apps');   
+        expect(utils.exec('-c')).toContain('clean ok');   
     });
 });

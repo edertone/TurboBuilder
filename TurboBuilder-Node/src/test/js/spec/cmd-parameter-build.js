@@ -35,7 +35,7 @@ describe('cmd-parameter-build', function() {
   
         utils.switchToExecutionDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBe(true);
+        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
     
     it('should fail when -b and --build arguments are executed on an empty folder', function() {
@@ -68,7 +68,8 @@ describe('cmd-parameter-build', function() {
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {lib_ts: {}}, []);
         
         // Delete the src ts folder
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + 'src' + utils.fm.dirSep() + 'main' + utils.fm.dirSep() + 'ts', false)).toBe(true);
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + 'src' + utils.fm.dirSep() + 'main' + utils.fm.dirSep() + 'ts', false))
+            .toBeGreaterThan(0);
 
         expect(utils.exec('-b')).toContain('no files to build');
         expect(utils.exec('--build')).toContain('no files to build');

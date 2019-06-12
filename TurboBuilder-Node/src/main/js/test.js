@@ -251,7 +251,11 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     htmlIndexCode += '</body>';
                     htmlIndexCode += '</html>';
                     
-                    if(!fm.saveFile(testsTarget + sep + 'index.html', htmlIndexCode)){
+                    try{
+                        
+                        fm.saveFile(testsTarget + sep + 'index.html', htmlIndexCode);
+                        
+                    }catch(e){
                         
                         console.error('Could not create ' + testsTarget + sep + 'index.html');
                     }

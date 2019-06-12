@@ -308,9 +308,16 @@ let validateCopyPasteDetect = function () {
     // Aux method to clean the .jscpd folder if it exists
     let cleanJscpdFolder = () => {
         
-        if(fm.isDirectory('./.jscpd') && !fm.deleteDirectory('./.jscpd')){
+        if(fm.isDirectory('./.jscpd')){
             
-            console.error('The .jscpd folder could not be deleted. Please delete it manually');
+            try{
+               
+               fm.deleteDirectory('./.jscpd', true, 45);
+                
+            }catch(e){
+                
+                console.error('The .jscpd folder could not be deleted. Please delete it manually');
+            }            
         }       
     };
     

@@ -22,7 +22,7 @@ describe('cmd-parameter-sync', function(){
 
         utils.switchToExecutionDir();
 
-        expect(utils.fm.deleteDirectory(this.workdir)).toBe(true);
+        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
 
 
@@ -85,7 +85,7 @@ describe('cmd-parameter-sync', function(){
 
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
 
-        expect(utils.fm.deleteDirectory(destFolder, false)).toBe(true);
+        expect(utils.fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
 
         expect(utils.exec('--build --sync')).toContain('sync ok to fs');
 
@@ -212,7 +212,7 @@ describe('cmd-parameter-sync', function(){
         expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(false);
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
 
-        expect(utils.fm.deleteDirectory(destFolder, false)).toBe(true);
+        expect(utils.fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
 
         expect(utils.exec('--release --sync')).toContain('sync ok to fs');
 

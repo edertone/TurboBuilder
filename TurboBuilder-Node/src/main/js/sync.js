@@ -80,10 +80,16 @@ let syncFileSystem = function () {
     
     // TODO - apply excludes option
     
-    if(global.setup.sync.deleteDestPathContents &&
-       !fm.deleteDirectory(global.setup.sync.destPath, false)){
+    if(global.setup.sync.deleteDestPathContents){
         
-        console.error('Could not delete destination: ' + global.setup.sync.destPath);
+        try{
+            
+            fm.deleteDirectory(global.setup.sync.destPath, false);
+            
+        }catch(e) {
+            
+            console.error('Could not delete destination: ' + global.setup.sync.destPath + '\n' + e.toString());
+        }        
     }
     
     if(!fm.isDirectoryEmpty(global.setup.sync.destPath)){

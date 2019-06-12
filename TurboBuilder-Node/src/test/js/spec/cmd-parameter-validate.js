@@ -44,7 +44,7 @@ describe('cmd-parameter-validate', function() {
   
         utils.switchToExecutionDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBe(true);
+        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
 
     
@@ -824,7 +824,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
         expect(utils.exec('-l')).toContain('README.md does not exist');
         
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBe(true);        
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);       
         expect(utils.exec('-l')).toContain('extras does not exist');
     });
     
@@ -855,7 +855,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(setup.validate.projectStructure.extrasFolderMandatory).toBe(true);
         
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBe(true);        
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);        
         
         expect(utils.exec('-l')).toContain('extras does not exist');
         
@@ -877,7 +877,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.createDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'somedir')).toBe(true);        
         expect(utils.exec('-l')).toContain('validate ok');
         
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'help')).toBe(true);        
+        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'help')).toBeGreaterThan(-1);        
         expect(utils.exec('-l')).toContain('help does not exist');
         
         setup.validate.projectStructure.extrasSubFoldersMandatory = [];        
