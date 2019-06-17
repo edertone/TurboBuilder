@@ -471,62 +471,64 @@ let validateStyleSheets = function () {
 let validatePhp = function () {
     
     // Obtain the list of files to validate, excluding any existing libs folder
-    let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main , /.*\.php$/i, 'absolute', 'files', -1, /libs(\/|\\)/);
-        
-    // Perform the php namespaces validation
-    if(global.setup.validate.php &&
-       global.setup.validate.php.namespaces &&
-       global.setup.validate.php.namespaces.enabled){
-        
-        // Auxiliary function to perform namespace validations
-        function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
+    if(global.setup.validate.php){
             
-            if(mustContainList.length > 0){
+        let filesToValidate = fm.findDirectoryItems(global.runtimePaths.main , /.*\.php$/i, 'absolute', 'files', -1, /libs(\/|\\)/);
+            
+        // Perform the php namespaces validation
+        if(global.setup.validate.php.namespaces &&
+           global.setup.validate.php.namespaces.enabled){
+        
+            // Auxiliary function to perform namespace validations
+            function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
                 
-                let fileRelativePath = fileAbsolutePath.split('src' + fm.dirSep())[1];
-                let pathToReplace = StringUtils.replace(fileRelativePath, fm.dirSep() + StringUtils.getPathElement(fileRelativePath), '');
-                
-                for (let mustContain of mustContainList){
+                if(mustContainList.length > 0){
                     
-                    // Replace the wildcards on the mustContain
-                    mustContain = mustContain.replace('$path', pathToReplace);
+                    let fileRelativePath = fileAbsolutePath.split('src' + fm.dirSep())[1];
+                    let pathToReplace = StringUtils.replace(fileRelativePath, fm.dirSep() + StringUtils.getPathElement(fileRelativePath), '');
                     
-                    if(namespaceToCheck.indexOf(mustContain) < 0){
+                    for (let mustContain of mustContainList){
                         
-                        return mustContain;
+                        // Replace the wildcards on the mustContain
+                        mustContain = mustContain.replace('$path', pathToReplace);
+                        
+                        if(namespaceToCheck.indexOf(mustContain) < 0){
+                            
+                            return mustContain;
+                        }
+                    }
+                }
+                    
+                return '';
+            }
+            
+            for (let fileToValidate of filesToValidate){
+                
+                if(!isExcluded(fileToValidate, global.setup.validate.php.namespaces.excludes)){
+                    
+                    var fileContents = fm.readFile(fileToValidate);
+                    
+                    if(fileContents.indexOf("namespace") >= 0){
+        
+                        var namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
+                        
+                        var validateNamespace = validate(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
+                        
+                        if(validateNamespace !== ''){
+                        
+                            errors.push('Namespace error: "' + namespace + '" Must contain "' + validateNamespace + '" on file:\n' + fileToValidate);
+                        }   
+                        
+                    }else{
+                        
+                        if(global.setup.validate.php.namespaces.mandatory){
+                        
+                            errors.push("File does not contain a namespace declaration: " + fileToValidate);
+                        }           
                     }
                 }
             }
-                
-            return '';
-        }
-        
-        for (let fileToValidate of filesToValidate){
-            
-            if(!isExcluded(fileToValidate, global.setup.validate.php.namespaces.excludes)){
-                
-                var fileContents = fm.readFile(fileToValidate);
-                
-                if(fileContents.indexOf("namespace") >= 0){
-    
-                    var namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
-                    
-                    var validateNamespace = validate(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
-                    
-                    if(validateNamespace !== ''){
-                    
-                        errors.push('Namespace error: "' + namespace + '" Must contain "' + validateNamespace + '" on file:\n' + fileToValidate);
-                    }   
-                    
-                }else{
-                    
-                    if(global.setup.validate.php.namespaces.mandatory){
-                    
-                        errors.push("File does not contain a namespace declaration: " + fileToValidate);
-                    }           
-                }
-            }
-        }       
+        }      
     }
     
     // TODO - The php classes must be on files with the same exact name as the php class (this validation should be generic to all php projects not only site php ones)
