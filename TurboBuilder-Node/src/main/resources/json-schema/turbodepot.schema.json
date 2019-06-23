@@ -134,7 +134,7 @@
                             },
                             "cacheZoneTimeToLive": {
                                 "type": "integer",
-                                "description": "Defines the number of seconds after which the whole zone cache data will be deleted. Set it to -1 to disable automatic cache expiration"
+                                "description": "Defines the number of seconds after which the whole zone cache data will be deleted. Set it to -1 to disable automatic cache expiration. (1 hour = 3600 seconds, 1 day = 86400 seconds)"
                             }
                         }
                     },
