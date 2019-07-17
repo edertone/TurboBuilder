@@ -107,7 +107,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
     
         let destPath = global.runtimePaths.target + sep + relativeBuildPath;
         let destTestsPath = destPath + sep + 'test' + sep + 'php';
-        let coverageReportPath = destPath + sep + 'coverage' + sep + 'php';
+        let coverageReportPath = destPath + sep + 'reports'  + sep + 'coverage' + sep + 'php';
         
         fm.createDirectory(destTestsPath, true);
         

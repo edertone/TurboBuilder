@@ -338,7 +338,7 @@ let validateCopyPasteDetect = function () {
                 
                 if(global.isRelease){
                     
-                    projectName += "-" + setupModule.getProjectRepoSemVer(false);
+                    projectName += "-" + setupModule.getProjectRepoSemVer(true);
                 }
                 
                 jscpdExecCommand += ',' + copyPasteEntry.report + ' -o "target/' + projectName + '/reports/copypaste/' +

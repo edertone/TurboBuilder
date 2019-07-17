@@ -11,6 +11,7 @@
 const utils = require('../cmd-parameter-test-utils');
 const { execSync } = require('child_process');
 const { StringTestsManager } = require('turbotesting-node');
+const { StringUtils } = require('turbocommons-ts');
 
 
 const stringTestsManager = new StringTestsManager();
@@ -82,6 +83,29 @@ describe('cmd-parameter-test', function() {
         expect(testResult).toContain('(100%)');
         expect(testResult).toContain('OK, but incomplete, skipped, or risky tests!');
         expect(testResult).toContain('test done');
+    });
+    
+    
+    it('should correctly generate coverage report with php unit tests on a generated lib_php project', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+ 
+        setup.test[0].coverageReport = true;
+        setup.test[0].coverageReportOpenAfterTests = false;
+        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        
+        let testResult = utils.exec('-bt');
+        
+        expect(testResult).toContain('launching phpunit tests');
+        expect(testResult).toContain('(100%)');
+        expect(testResult).toContain('OK, but incomplete, skipped, or risky tests!');
+        expect(testResult).toContain('Generating code coverage report in HTML format');
+        expect(testResult).toContain('test done');
+        
+        let folderName = StringUtils.getPathElement(this.workdir);
+        
+        expect(utils.fm.isFile('./target/' + folderName + '/reports/coverage/php/index.html')).toBe(true);
     });
     
     

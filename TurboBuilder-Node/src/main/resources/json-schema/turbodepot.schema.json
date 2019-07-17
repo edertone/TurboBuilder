@@ -113,28 +113,38 @@
                         "type": "object",
                         "description": "Defines the setup for the google drive client",
                         "required": [
+                            "accountCredentialsPath",
                             "apiClientRoot",
                             "cacheRootPath",
                             "cacheZone",
-                            "cacheZoneTimeToLive"
+                            "listsTimeToLive",
+                            "filesTimeToLive"
                         ],
                         "additionalProperties": false,
                         "properties": {
+                            "accountCredentialsPath": {
+                                "type": "string",
+                                "description": "A full file system path to the file that contains the service account credentials that will be used to authenticate with the google drive API"
+                            },
                             "apiClientRoot": {
                                 "type": "string",
                                 "description": "A full file system path to the root of the google-api-php-client library. See GoogleDriveManager class for more info"
                             },
                             "cacheRootPath": {
                                 "type": "string",
-                                "description": "A full file system path to the root of the folder where the cached google drive files will be stored. See GoogleDriveManager class for more info"
+                                "description": "A full file system path to the root of the folder where the cached google drive files will be stored. Set it to empty string to disable local cache. See GoogleDriveManager class for more info"
                             },
                             "cacheZone": {
                                 "type": "string",
                                 "description": "The name for the cache zone where the google drive cached files will be stored. See GoogleDriveManager class for more info"
                             },
-                            "cacheZoneTimeToLive": {
+                            "listsTimeToLive": {
                                 "type": "integer",
-                                "description": "Defines the number of seconds after which the whole zone cache data will be deleted. Set it to -1 to disable automatic cache expiration. (1 hour = 3600 seconds, 1 day = 86400 seconds)"
+                                "description": "Defines the number of seconds after which the operations related to listing files and folder cache data will be deleted. Set it to 0 to for an infinite time. (1 hour = 3600 seconds, 1 day = 86400 seconds)"
+                            },
+                            "filesTimeToLive": {
+                                "type": "integer",
+                                "description": "Defines the number of seconds after which the operations related to getting files content cache data will be deleted. Set it to 0 to for an infinite time. (1 hour = 3600 seconds, 1 day = 86400 seconds)"
                             }
                         }
                     },
