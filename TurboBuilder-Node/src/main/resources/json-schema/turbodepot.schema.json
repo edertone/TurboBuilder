@@ -140,11 +140,11 @@
                             },
                             "listsTimeToLive": {
                                 "type": "integer",
-                                "description": "Defines the number of seconds after which the operations related to listing files and folder cache data will be deleted. Set it to 0 to for an infinite time. (1 hour = 3600 seconds, 1 day = 86400 seconds)"
+                                "description": "Defines the number of seconds after which the operations related to listing files and folder cache data will be deleted. Set it to 0 to for an infinite time. (1 hour = 3600 seconds, 1 day = 86400 seconds, 1 month = 2592000, 1 year = 31536000)"
                             },
                             "filesTimeToLive": {
                                 "type": "integer",
-                                "description": "Defines the number of seconds after which the operations related to getting files content cache data will be deleted. Set it to 0 to for an infinite time. (1 hour = 3600 seconds, 1 day = 86400 seconds)"
+                                "description": "Defines the number of seconds after which the operations related to getting files content cache data will be deleted. Set it to 0 to for an infinite time. (1 hour = 3600 seconds, 1 day = 86400 seconds, 1 month = 2592000, 1 year = 31536000)"
                             }
                         }
                     },
