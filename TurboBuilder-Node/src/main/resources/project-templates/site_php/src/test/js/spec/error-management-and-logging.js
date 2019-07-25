@@ -150,13 +150,13 @@ describe('error-management-and-logging', function() {
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
-            "htmlContains": ['turbosite-global-error-manager-problem',
+            "sourceHtmlContains": ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION',
                        'Call to undefined function nonexistantfunction()'],
             "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-            "htmlStartsWith": null,
-            "htmlEndsWith": null,
-            "htmlNotContains": null
+            "sourceHtmlStartsWith": null,
+            "sourceHtmlEndsWith": null,
+            "sourceHtmlNotContains": null
         
         }], done);
     });
@@ -171,12 +171,12 @@ describe('error-management-and-logging', function() {
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
-            "htmlContains": ['turbosite-global-error-manager-problem',
+            "sourceHtmlContains": ['turbosite-global-error-manager-problem',
                        'E_NOTICE',
                        'Undefined variable: b'],
-            "htmlStartsWith": null,
-            "htmlEndsWith": null,
-            "htmlNotContains": null
+            "sourceHtmlStartsWith": null,
+            "sourceHtmlEndsWith": null,
+            "sourceHtmlNotContains": null
         
         }], done);
     });
@@ -191,15 +191,15 @@ describe('error-management-and-logging', function() {
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
-            "htmlContains": ['turbosite-global-error-manager-problem',
+            "sourceHtmlContains": ['turbosite-global-error-manager-problem',
                        'E_NOTICE',
                        'Undefined variable: b',
                        'FATAL EXCEPTION',
                        'Call to undefined function nonexistantfunction()'],
             "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-            "htmlStartsWith": null,
-            "htmlEndsWith": null,
-            "htmlNotContains": null
+            "sourceHtmlStartsWith": null,
+            "sourceHtmlEndsWith": null,
+            "sourceHtmlNotContains": null
         
         }], done);
     });
@@ -214,14 +214,14 @@ describe('error-management-and-logging', function() {
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
-            "htmlContains": ['turbosite-global-error-manager-problem',
+            "sourceHtmlContains": ['turbosite-global-error-manager-problem',
                        'E_NOTICE',
                        'Undefined variable: b',
                        'Undefined variable: c',
                        'Undefined variable: d'],
-            "htmlStartsWith": null,
-            "htmlEndsWith": null,
-            "htmlNotContains": null
+            "sourceHtmlStartsWith": null,
+            "sourceHtmlEndsWith": null,
+            "sourceHtmlNotContains": null
         
         }], done);
     });
@@ -236,10 +236,10 @@ describe('error-management-and-logging', function() {
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
-            "htmlContains": null,
-            "htmlStartsWith": null,
-            "htmlEndsWith": null,
-            "htmlNotContains": ["turbosite-global-error-manager-problem",
+            "sourceHtmlContains": null,
+            "sourceHtmlStartsWith": null,
+            "sourceHtmlEndsWith": null,
+            "sourceHtmlNotContains": ["turbosite-global-error-manager-problem",
                             "E_NOTICE",
                             "Undefined variable: b"]
         
@@ -256,11 +256,11 @@ describe('error-management-and-logging', function() {
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
-            "htmlContains": null,
+            "sourceHtmlContains": null,
             "ignoreConsoleErrors": ["favicon.ico - Failed to load resource"],
-            "htmlStartsWith": null,
-            "htmlEndsWith": null,
-            "htmlNotContains": ["turbosite-global-error-manager-problem",
+            "sourceHtmlStartsWith": null,
+            "sourceHtmlEndsWith": null,
+            "sourceHtmlNotContains": ["turbosite-global-error-manager-problem",
                             "FATAL EXCEPTION",
                             "Call to undefined function nonexistantfunction()"]
         

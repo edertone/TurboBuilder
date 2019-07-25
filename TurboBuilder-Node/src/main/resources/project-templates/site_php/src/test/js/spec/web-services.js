@@ -47,7 +47,7 @@ describe('web-services', function() {
         httpTestsManager.assertHttpRequests([{
             url: this.baseUrl + 'example-service-without-params',
             contains: ['Any value can be output by the service as a string (json or xml data, plain text, etc..)']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -57,7 +57,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-without-params/param0/param1',
             contains: ['turbosite-global-error-manager-problem',
                        'Invalid number of GET parameters passed to service. Received 2 but expected 0']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -67,7 +67,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-without-params/&& &&   /&&&  /-----???',
             contains: ['turbosite-global-error-manager-problem',
                        'Invalid number of GET parameters passed to service. Received 3 but expected 0']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -80,7 +80,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -94,7 +94,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -104,7 +104,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-get-params',
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -113,7 +113,7 @@ describe('web-services', function() {
         httpTestsManager.assertHttpRequests([{
             url: this.baseUrl + 'example-service-with-get-params/param1/param2',
             contains: ['{"info":"this object is returned as a json string with the received GET parameters values","received-param-0-value":"param1","received-param-1-value":"param2"}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -123,7 +123,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-get-params/param1/param2/param3/param4',
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -136,7 +136,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -151,7 +151,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -164,7 +164,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -173,7 +173,7 @@ describe('web-services', function() {
         httpTestsManager.assertHttpRequests([{
             url: this.baseUrl + 'example-service-with-get-params-optional',
             contains: ['{"info":"this object is returned as a json string with the optionally received GET parameters values","received-param-0-value":"","received-param-1-value":"","received-param-2-value":"","received-param-3-value":""}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -194,7 +194,7 @@ describe('web-services', function() {
         {
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2/param3/param4',
             contains: ['{"info":"this object is returned as a json string with the optionally received GET parameters values","received-param-0-value":"param1","received-param-1-value":"param2","received-param-2-value":"param3","received-param-3-value":"param4"}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -209,7 +209,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2/param3/param4/param5/param6/param7',
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 7 but expected 4']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -222,7 +222,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -237,7 +237,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -250,7 +250,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -262,7 +262,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>This service expects POST data']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -274,7 +274,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 2 but expected 0']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -286,7 +286,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 0']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -307,7 +307,7 @@ describe('web-services', function() {
                 "param2": "param 2 value"
             },
             contains: ['{"info":"this object is returned as a json string with the received POST parameters","received-param1":"some arbitrary string","received-param2":"param 2 value"}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -321,7 +321,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Unexpected POST variables received']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -334,7 +334,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 2 but expected 0']
-        }], done);
+        }], (responses) => { done() });
     });
         
     
@@ -346,7 +346,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -358,7 +358,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>This service expects POST data']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -370,7 +370,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -383,7 +383,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -397,7 +397,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -409,7 +409,7 @@ describe('web-services', function() {
                 "data": "some arbitrary string"
             },
             contains: ['{"info":"this object is returned as a json string with the received GET and POST parameters values","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-POST-params":"some arbitrary string"}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -420,7 +420,7 @@ describe('web-services', function() {
             postParameters: {
             },
             contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -437,7 +437,7 @@ describe('web-services', function() {
             postParameters: {
             },
             contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":""}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -447,7 +447,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1/param2/param3/param4/param5',
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 5 but expected 3']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -459,7 +459,7 @@ describe('web-services', function() {
                 "data": "some arbitrary string"
             },
             contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"some arbitrary string","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -473,7 +473,7 @@ describe('web-services', function() {
             },
             contains: ['turbosite-global-error-manager-problem',
                        'FATAL EXCEPTION<br>Unexpected POST variables received']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -485,7 +485,7 @@ describe('web-services', function() {
                 "data": "some arbitrary string"
             },
             contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"some arbitrary string","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":""}']
-        }], done);
+        }], (responses) => { done() });
     });
     
     
@@ -507,6 +507,6 @@ describe('web-services', function() {
                        '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}',
                        'ExampleServiceWithPostAndGetParamsOptional called 2. Result:',
                        '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"datavalue","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":""}']
-        }], done);
+        }], (responses) => { done() });
     });
 });

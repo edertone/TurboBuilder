@@ -8,8 +8,8 @@
     },
     "dependencies": {
         "turbocommons-ts": "^2.1.1",
-        "turbodepot-node": "^4.0.2",
-        "turbotesting-node": "^6.2.0"
+        "turbodepot-node": "^5.0.1",
+        "turbotesting-node": "^7.0.0"
     },
     "author": "",
     "license": ""
