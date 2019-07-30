@@ -13,7 +13,7 @@ const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const syncModule = require('./sync');
-const sass = require('node-sass');
+const sass = require('sass');
 const sharp = require('sharp');
 
 
