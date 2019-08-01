@@ -489,6 +489,26 @@ describe('web-services', function() {
     });
     
     
+    it('should correctly load the ExampleServiceThatThrows400BadRequest with a 400 bad request response and the proper text on the body', function(done) {
+    
+        httpTestsManager.assertUrlsFail([{
+            url: this.baseUrl + 'example-service-that-throws-400-bad-request',
+            responseCode: 400,
+            contains: ['This is a bad request example', 'And this is the error message']
+        }], done);
+    });
+    
+    
+    it('should correctly load the ExampleServiceThatThrows500UnhandledException with a 500 error response and the proper text on the body', function(done) {
+    
+        httpTestsManager.assertUrlsFail([{
+            url: this.baseUrl + 'example-service-that-throws-500-unhandled-exception',
+            responseCode: 500,
+            contains: ['Unhandled exception', 'This exception inside the run method is not being correctly handled (catched)']
+        }], done);
+    });
+    
+    
     it('should correctly load the ExampleServiceThatCallsAnotherOne', function(done) {
     
         httpTestsManager.assertHttpRequests([{
@@ -506,7 +526,19 @@ describe('web-services', function() {
                        'ExampleServiceWithPostAndGetParamsOptional called. Result:',
                        '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}',
                        'ExampleServiceWithPostAndGetParamsOptional called 2. Result:',
-                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"datavalue","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":""}']
+                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"datavalue","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":""}',
+                       'ExampleServiceThatThrows400BadRequest called. Result:',
+                       '{"code":400,"title":"This is a bad request example","message":"And this is the error message","trace":""}']
         }], (responses) => { done() });
+    });
+    
+    
+    it('should show a 404 error when trying to load a non existing web service', function(done) {
+    
+        httpTestsManager.assertUrlsFail([{
+            url: this.baseUrl + 'this-service-does-not-exist',
+            responseCode: 404,
+            contains: ['Error 404 page not found']
+        }], done);
     });
 });

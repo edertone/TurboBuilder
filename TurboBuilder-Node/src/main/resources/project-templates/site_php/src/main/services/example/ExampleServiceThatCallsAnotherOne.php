@@ -61,6 +61,12 @@ class ExampleServiceThatCallsAnotherOne extends WebService{
 
         $result .= "ExampleServiceWithPostAndGetParamsOptional called 2. Result:\n";
         $result .= json_encode($exampleServiceWithPostAndGetParamsOptional->run());
+        $result .= "\n\n";
+
+        $exampleServiceThatThrows400BadRequest = new ExampleServiceThatThrows400BadRequest();
+
+        $result .= "ExampleServiceThatThrows400BadRequest called. Result:\n";
+        $result .= json_encode($exampleServiceThatThrows400BadRequest->run());
 
         return $result."\n";
     }
