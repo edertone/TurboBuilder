@@ -40,12 +40,12 @@ exports.execute = function (alsoCleanSync = false) {
     if(!global.setup.build.app_node_cmd && alsoCleanSync){
         
         // Load the non release setup and execute the clean for it
-        cleanSyncDests(setupModule.loadSetupFromDisk());
+        cleanSyncDests(JSON.parse(fm.readFile(global.runtimePaths.setupFile)));
                 
         // Load the release setup and execute the clean for it
         if(fm.isFile(global.runtimePaths.setupReleaseFile)){
              
-            cleanSyncDests(setupModule.loadReleaseSetupFromDisk());
+            cleanSyncDests(JSON.parse(fm.readFile(global.runtimePaths.setupReleaseFile)));
         }
     }
     

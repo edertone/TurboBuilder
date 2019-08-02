@@ -162,30 +162,18 @@ exports.buildSitePhp = function (destPath) {
     fm.copyFile(destSite + sep + 'htaccess.txt', destDist + sep + '.htaccess');
     fm.deleteFile(destSite + sep + 'htaccess.txt');
     
-    // Read the turbodepot.json file and add its contents to the index php file
+    // Read the turbodepot.json file if exists and add its contents to the index php file
     if(fm.isFile(global.runtimePaths.root + sep + 'turbodepot.json')){
     
-        let turboDepotSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + 'turbodepot.json'));
+        let turboDepotSetup = setupModule.loadSetupFromDisk('turbodepot.json');
         
         tsm.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', destSite + sep + 'index.php');
     }
     
-    // Read the turbosite.json file
-    let turboSiteSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup));
+    let turboSiteSetup = setupModule.loadSetupFromDisk(global.fileNames.turboSiteSetup);
     
     // Generate a random hash to avoid browser caches
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
-    
-    // If the file turbosite.release.json exists at the root of our project, all its setup properties will
-    // override the turbosite.json if the release process is being executed
-    let tsReleasePath = global.runtimePaths.root + sep + 'turbosite.release.json';
-    
-    if(fm.isFile(tsReleasePath) && global.isRelease){
-        
-        let tsSetupRelease = JSON.parse(fm.readFile(tsReleasePath));
-        
-        ObjectUtils.merge(turboSiteSetup, tsSetupRelease);        
-    }
     
     // Save the turbosite setup to the index php file
     tsm.saveSetupToIndexPhp(turboSiteSetup, 'turbosite', destSite + sep + 'index.php');

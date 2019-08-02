@@ -24,7 +24,7 @@ let fm = new FilesManager();
  */
 exports.init = function () {
     
-    global.setup = global.isRelease ? this.loadReleaseSetupFromDisk() : this.loadSetupFromDisk();
+    global.setup = this.loadSetupFromDisk(global.fileNames.setup);
 
     validateModule.validateBuilderVersion();
 }
@@ -118,55 +118,50 @@ exports.countCommitsSinceLatestTag = function () {
 
 
 /**
- * Read the json setup file from the current project
+ * Read the specified json setup file from the project root and return a valid parsed object that represents it.
+ * If we are in release mode and a .release.json setup file also exists, it will be merged with the base one.
  */
-exports.loadSetupFromDisk = function () {
+exports.loadSetupFromDisk = function (setupFile) {
 
-    if (!fm.isFile(global.runtimePaths.setupFile)) {
+    // Read the specified setup data from disk
+    let sep = fm.dirSep();
+    let setup = {};
     
-        console.error(global.fileNames.setup + ' setup file not found');
+    if (!fm.isFile(global.runtimePaths.root + sep + setupFile)) {
+    
+        console.error(setupFile + ' setup file not found');
     }
-    
-    let projectSetup = '';
-    
+
     try{
         
-        projectSetup = JSON.parse(fm.readFile(global.runtimePaths.setupFile));
+        setup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + setupFile));
+        
+        if(setupFile === global.fileNames.setup){
+        
+            // read the base template setup for this project
+            setup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(setup));
+            
+            // Merge the project setup into the template one
+            setup = ObjectUtils.merge(setup, JSON.parse(fm.readFile(global.runtimePaths.setupFile)));
+        }
         
     }catch(e){
         
         console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
     }
     
-    // Load the template setup
-    let templateSetup = this.customizeSetupTemplateToProjectType(this.detectProjectTypeFromSetup(projectSetup));
-    
-    // Merge the project setup into the template one
-    ObjectUtils.merge(templateSetup, projectSetup);
-    
-    return templateSetup;
-};
-
-
-/**
- * Read the json setup file from the current project and override it with the release setup if it exists
- */
-exports.loadReleaseSetupFromDisk = function () {
-    
-    let setup = module.exports.loadSetupFromDisk();
-    
-    // Check if turbobuilder.release.json must be also merged into the setup
-    if(fm.isFile(global.runtimePaths.setupReleaseFile)){
+    // Check if .release.json must be also merged into the setup
+    let releaseSetupPath = global.runtimePaths.root + sep + StringUtils.getPathElementWithoutExt(setupFile) + '.release.json';
+        
+    if(global.isRelease && fm.isFile(releaseSetupPath)){
 
         try{
             
-            let projectReleaseSetup = JSON.parse(fm.readFile(global.runtimePaths.setupReleaseFile));
-            
-            ObjectUtils.merge(setup, projectReleaseSetup);
+            ObjectUtils.merge(setup, JSON.parse(fm.readFile(releaseSetupPath)));
             
         }catch(e){
             
-            console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
+            console.error("Corrupted JSON for " + releaseSetupPath + ":\n" + e.toString());
         }
     }
     

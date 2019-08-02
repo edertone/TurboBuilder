@@ -419,10 +419,10 @@ describe('cmd-parameter-release', function() {
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
-    }); 
+    });
     
     
-    it('should override turbosite.json with turbosite.release.json values on release target folder', function() {
+    it('should override turbosite.json with turbosite.release.json values on site_php release target folder', function() {
         
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
@@ -463,5 +463,52 @@ describe('cmd-parameter-release', function() {
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
         expect(tsSetup.errorSetup.tooMuchTimeWarning).toBe(1000);
         expect(tsSetup.errorSetup.tooMuchMemoryWarning).toBe(5000000);
-    });  
+    });
+    
+    
+    it('should override turbodepot.json with turbodepot.release.json values on site_php release target folder', function() {
+    
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+         
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        let tdToOverride = {
+            "sources": {
+                "mariadb": [
+                    {
+                        "name": "overriden_name",
+                        "host": "overriden_host",
+                        "database": "overriden_database",
+                        "prefix": "overriden_prefix"
+                    }
+                ] 
+            }
+        };
+        
+        expect(utils.fm.saveFile('.' + sep + 'turbodepot.release.json', JSON.stringify(tdToOverride))).toBe(true);
+        
+        expect(utils.exec('-b')).toContain('build ok');
+        
+        let tdSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '/dist/site/index.php');
+
+        expect(tdSetup.sources.fileSystem[0].name).toBe("fs_source_1");
+        expect(tdSetup.sources.fileSystem[0].path).toBe("");
+        expect(tdSetup.sources.mariadb[0].name).toBe("mariadb_source_1");
+        expect(tdSetup.sources.mariadb[0].host).toBe("");
+        expect(tdSetup.sources.mariadb[0].database).toBe("");
+        expect(tdSetup.sources.mariadb[0].prefix).toBe("tdp_");
+        
+        let launchResult = utils.exec('-r');
+        expect(launchResult).toContain("release ok");
+         
+        let tdReleaseSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '-0.0.0/dist/site/index.php');
+
+        expect(tdSetup.sources.fileSystem[0].name).toBe("fs_source_1");
+        expect(tdSetup.sources.fileSystem[0].path).toBe("");
+        expect(tdReleaseSetup.sources.mariadb[0].name).toBe("overriden_name");
+        expect(tdReleaseSetup.sources.mariadb[0].host).toBe("overriden_host");
+        expect(tdReleaseSetup.sources.mariadb[0].database).toBe("overriden_database");
+        expect(tdReleaseSetup.sources.mariadb[0].prefix).toBe("overriden_prefix");
+    }); 
 });
