@@ -291,7 +291,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should NOT replace wildcard matches on configured file extensions when wildcard is set to empty string', function() {
+    it('should NOT replace wildcard matches with project version on configured file extensions when wildcard is set to empty string', function() {
         
         let folderName = StringUtils.getPathElement(this.workdir);
         
@@ -340,4 +340,83 @@ describe('cmd-parameter-build', function() {
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
     });
+    
+    
+    it('should replace wildcards with their BUILD value on the turbobuilder.json setup when a build is performed', function() {
+    
+        // The turbobuilder.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // This test checks that this works ok
+        
+        // TODO - This test is a bit more complex so we leave it pending      
+    });
+    
+    
+    it('should replace wildcards with their BUILD value on the turbodepot.json setup when a build is performed', function() {
+    
+        // The turbodepot.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // This test checks that this works ok
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+         
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbodepot.json'));
+        
+        setup.wildCards = [
+            {
+                "name": "$somewildcard",
+                "build": "wildcard-build-value",
+                "release": "wildcard-release-value"
+            }
+        ];
+        
+        setup.depots[0].name = "$somewildcard";
+        setup.sources.fileSystem[0].name = "$somewildcard";
+        
+        expect(utils.fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
+        
+        expect(utils.exec('-b')).toContain("build ok");
+        
+        let indexPhpSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '/dist/site/index.php');
+
+        expect(indexPhpSetup.depots[0].name).toBe("wildcard-build-value");
+        expect(indexPhpSetup.sources.fileSystem[0].name).toBe("wildcard-build-value");
+        expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);  
+    }); 
+    
+    
+    it('should replace wildcards with their BUILD value on the turbosite.json setup when a build is performed', function() {
+    
+        // The turbosite.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // This test checks that this works ok
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+         
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        
+        setup.wildCards = [
+            {
+                "name": "$somewildcard",
+                "build": "wildcard-build-value",
+                "release": "wildcard-release-value"
+            }
+        ];
+        
+        setup.baseURL = "$somewildcard";
+        setup.locales[0] = "$somewildcard";
+        
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        
+        expect(utils.exec('-b')).toContain("build ok");
+        
+        let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '/dist/site/index.php');
+
+        expect(indexPhpSetup.baseURL).toBe("wildcard-build-value");
+        expect(indexPhpSetup.locales[0]).toBe("wildcard-build-value");
+        expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);  
+    });     
 });

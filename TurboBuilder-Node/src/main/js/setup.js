@@ -134,7 +134,22 @@ exports.loadSetupFromDisk = function (setupFile) {
 
     try{
         
-        setup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + setupFile));
+        let setupContents = fm.readFile(global.runtimePaths.root + sep + setupFile);
+        
+        // Replace all the setup wildcards if they exist
+        if(JSON.parse(setupContents).hasOwnProperty('wildCards')){
+        
+            let wildCards = JSON.parse(setupContents).wildCards;
+            
+            for(let wildCard of wildCards){
+
+                setupContents = StringUtils.replace(setupContents, wildCard.name, (global.isRelease ? wildCard.release : wildCard.build));
+            }
+        }
+        
+        setup = JSON.parse(setupContents);
+        
+        delete setup.wildCards;
         
         if(setupFile === global.fileNames.setup){
         
@@ -249,6 +264,10 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         
         delete setupContents.release.optimizePictures;
         delete setupContents.release.generateCodeDocumentation;
+    
+    }else{
+        
+        delete setupContents.validate.angularApp;
     }
     
     if(type === global.setupBuildTypes.app_node_cmd){

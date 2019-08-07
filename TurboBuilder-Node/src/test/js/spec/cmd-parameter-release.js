@@ -510,5 +510,99 @@ describe('cmd-parameter-release', function() {
         expect(tdReleaseSetup.sources.mariadb[0].host).toBe("overriden_host");
         expect(tdReleaseSetup.sources.mariadb[0].database).toBe("overriden_database");
         expect(tdReleaseSetup.sources.mariadb[0].prefix).toBe("overriden_prefix");
+    });
+    
+    
+    it('should replace wildcards with their RELEASE value on the turbobuilder.json setup when a release is performed', function() {
+    
+        // The turbobuilder.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // This test checks that this works ok
+        
+        // TODO - This test is a bit more complex so we leave it pending 
+    });
+    
+    
+    it('should replace wildcards with their RELEASE value on the turbodepot.json setup when a release is performed', function() {
+    
+        // The turbodepot.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // This test checks that this works ok
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbodepot.json'));
+        
+        setup.wildCards = [
+            {
+                "name": "$somewildcard",
+                "build": "wildcard-build-value",
+                "release": "wildcard-release-value"
+            }
+        ];
+        
+        setup.depots[0].name = "$somewildcard";
+        setup.sources.fileSystem[0].name = "$somewildcard";
+        
+        expect(utils.fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
+        
+        expect(utils.exec('-r')).toContain("release ok");
+        
+        let indexPhpSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '-0.0.0/dist/site/index.php');
+
+        expect(indexPhpSetup.depots[0].name).toBe("wildcard-release-value");
+        expect(indexPhpSetup.sources.fileSystem[0].name).toBe("wildcard-release-value");
+        expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);  
     }); 
+    
+    
+    it('should replace wildcards with their RELEASE value on the turbosite.json setup when a release is performed', function() {
+    
+        // The turbosite.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // This test checks that this works ok
+        
+        let sep = utils.fm.dirSep();
+        let folderName = StringUtils.getPathElement(this.workdir);
+         
+        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        
+        setup.wildCards = [
+            {
+                "name": "$somewildcard",
+                "build": "wildcard-build-value",
+                "release": "wildcard-release-value"
+            }
+        ];
+        
+        setup.baseURL = "$somewildcard";
+        setup.locales[0] = "$somewildcard";
+        
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        
+        expect(utils.exec('-r')).toContain("release ok");
+        
+        let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
+
+        expect(indexPhpSetup.baseURL).toBe("");
+        expect(indexPhpSetup.locales[0]).toBe("wildcard-release-value");
+        expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);
+        
+        // The turbosite.release.json file is overriding the baseUrl value, so we will delete it to see that it was correctly replaced
+        expect(utils.fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
+        
+        setup.errorSetup.exceptionsToBrowser = false;
+        setup.errorSetup.warningsToBrowser = false;
+        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        
+        expect(utils.exec('-r')).toContain("release ok");
+        
+        indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
+
+        expect(indexPhpSetup.baseURL).toBe("wildcard-release-value");
+        expect(indexPhpSetup.locales[0]).toBe("wildcard-release-value");  
+        expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);   
+    });     
 });

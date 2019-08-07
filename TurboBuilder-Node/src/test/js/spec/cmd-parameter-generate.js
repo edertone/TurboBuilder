@@ -89,6 +89,7 @@ describe('cmd-parameter-generate', function(){
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
+        expect(setup.validate.hasOwnProperty('angularApp')).toBe(false);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
         expect(setup.build.hasOwnProperty('replaceVersion')).toBe(true);
         expect(setup.build.replaceVersion.enabled).toBe(false);
