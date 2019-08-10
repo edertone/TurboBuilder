@@ -67,6 +67,10 @@
             {
                 "uri": "api/site",
                 "namespace": "project\\src\\main\\services"
+            },
+            {
+                "uri": "api/chain",
+                "namespace": "org\\turbosite\\src\\main\\php\\services\\chain"
             }
         ]
     }

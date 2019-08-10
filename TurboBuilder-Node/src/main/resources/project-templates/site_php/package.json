@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-        "turbocommons-ts": "^3.0.0",
+        "turbocommons-ts": "^3.0.1",
         "turbodepot-node": "^5.0.1",
         "turbotesting-node": "^7.1.0"
     },

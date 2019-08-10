@@ -33,7 +33,7 @@
     "sass": "^1.22.9",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "sharp": "^0.22.1",
-    "turbocommons-ts": "^3.0.0",
+    "turbocommons-ts": "^3.0.1",
     "turbodepot-node": "^5.0.1",
     "turbotesting-node": "^7.1.0",
     "typedoc": "^0.15.0",
@@ -41,7 +41,7 @@
     "uglify-es": "3.3.9"
   },
   "devDependencies": {
-    "webpack": "^4.39.0",
+    "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"
   },
   "keywords": [

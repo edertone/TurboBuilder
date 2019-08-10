@@ -283,38 +283,6 @@
         "sourceHtmlNotContains": null
     },
     {
-        "url": "https://$host/api/site/example/example-service-without-params/unexpected-param",
-        "titleContains": null,
-        "sourceHtmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 1 but expected 0"],
-        "sourceHtmlStartsWith": null,
-        "sourceHtmlEndsWith": null,
-        "sourceHtmlNotContains": null
-    },
-    {
-        "url": "https://$host/api/site/example/example-service-without-params/unexpected-param1/unexpected-param2",
-        "titleContains": null,
-        "sourceHtmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 2 but expected 0"],
-        "sourceHtmlStartsWith": null,
-        "sourceHtmlEndsWith": null,
-        "sourceHtmlNotContains": null
-    },
-    {
-        "url": "https://$host/api/site/example/example-service-with-get-params",
-        "titleContains": null,
-        "sourceHtmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 0 but expected 2"],
-        "sourceHtmlStartsWith": null,
-        "sourceHtmlEndsWith": null,
-        "sourceHtmlNotContains": null
-    },
-    {
-        "url": "https://$host/api/site/example/example-service-with-get-params/param1",
-        "titleContains": null,
-        "sourceHtmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 1 but expected 2"],
-        "sourceHtmlStartsWith": null,
-        "sourceHtmlEndsWith": null,
-        "sourceHtmlNotContains": null
-    },
-    {
         "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2",
         "titleContains": null,
         "sourceHtmlContains": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"param1\",\"received-param-1-value\":\"param2\"}"],
@@ -326,14 +294,6 @@
         "url": "https://$host/api/site/example/example-service-with-get-params/0-1-2-3-4-5-6/FFF9900022",
         "titleContains": null,
         "sourceHtmlContains": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"0-1-2-3-4-5-6\",\"received-param-1-value\":\"FFF9900022\"}"],
-        "sourceHtmlStartsWith": null,
-        "sourceHtmlEndsWith": null,
-        "sourceHtmlNotContains": null
-    },
-    {
-        "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2/param3",
-        "titleContains": null,
-        "sourceHtmlContains": ["PHP Problem: FATAL EXCEPTION", "Invalid number of GET parameters passed to service. Received 3 but expected 2"],
         "sourceHtmlStartsWith": null,
         "sourceHtmlEndsWith": null,
         "sourceHtmlNotContains": null

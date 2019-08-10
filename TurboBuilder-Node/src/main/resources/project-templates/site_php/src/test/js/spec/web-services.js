@@ -53,58 +53,83 @@ describe('web-services', function() {
     
     it('should fail the ExampleServiceWithoutParams when GET parameters are passed', function(done) {
 
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-without-params/param0/param1',
-            contains: ['turbosite-global-error-manager-problem',
-                       'Invalid number of GET parameters passed to service. Received 2 but expected 0']
-        }], (responses) => { done() });
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithoutParams when WRONG GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
+            url: this.baseUrl + 'example-service-without-params/unexpected-param',
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 1 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        },{
+            url: this.baseUrl + 'example-service-without-params/unexpected-param1/unexpected-param2',
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        },{
             url: this.baseUrl + 'example-service-without-params/&& &&   /&&&  /-----???',
-            contains: ['turbosite-global-error-manager-problem',
-                       'Invalid number of GET parameters passed to service. Received 3 but expected 0']
-        }], (responses) => { done() });
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 3 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithoutParams when POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-without-params',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithoutParams when WRONG POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-without-params',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string",
                 "extravariable": "some extra value"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParams when no parameters are passed', function(done) {
-    
-        httpTestsManager.assertHttpRequests([{
+        
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params',
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], (responses) => { done() });
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        },{
+            url: this.baseUrl + 'example-service-with-get-params/param1',
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 1 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        },{
+            url: this.baseUrl + 'example-service-with-get-params/param1/param2/param3',
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 3 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
@@ -119,52 +144,56 @@ describe('web-services', function() {
     
     it('should fail the ExampleServiceWithGetParams when WRONG GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params/param1/param2/param3/param4',
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 2']
-        }], (responses) => { done() });
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 4 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParams when POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParams when WRONG POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params/param1/param2',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string",
                 "extradata": "some extra value",
                 "more extra data": "&&--!!..."
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParams when GET and POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params/param1/param2',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
@@ -200,93 +229,101 @@ describe('web-services', function() {
     
     it('should fail the ExampleServiceWithGetParamsOptional when WRONG GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2/param3/param4/param5',
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 5 but expected 4']
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 5 but expected 4'],
+            notContains: ['turbosite-global-error-manager-problem']
         },
         {
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2/param3/param4/param5/param6/param7',
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 7 but expected 4']
-        }], (responses) => { done() });
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 7 but expected 4'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParamsOptional when POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params-optional',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParamsOptional when WRONG POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params-optional',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string",
                 "extradata": "some extra value",
                 "more extra data": "&&--!!..."
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithGetParamsOptional when GET and POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Received POST variables but POST not enabled on service']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostParams when no parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-params',
+            responseCode: 500,
             postParameters: {
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>This service expects POST data']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'This service expects POST data'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostParams when GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-params/param1/param2',
+            responseCode: 500,
             postParameters: {
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 2 but expected 0']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostParams when WRONG GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-params/param1/param2/===$$$$!!!!!!/   ---',
+            responseCode: 500,
             postParameters: {
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 0']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 4 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
@@ -313,91 +350,98 @@ describe('web-services', function() {
     
     it('should fail the ExampleServiceWithPostParams when WRONG POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-params',
+            responseCode: 500,
             postParameters: {
                 "param1": "some arbitrary string",
                 "extradata": "some extra value"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Unexpected POST variables received']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Unexpected POST variables received'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostParams when GET and POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-params/param1/param2',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 2 but expected 0']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
         
     
     it('should fail the ExampleServiceWithPostAndGetParams when no parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params',
+            responseCode: 500,
             postParameters: {
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostAndGetParams when GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params/param1/param2',
+            responseCode: 500,
             postParameters: {
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>This service expects POST data']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'This service expects POST data'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostAndGetParams when WRONG GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params/param1/param2/param3/param4',
+            responseCode: 500,
             postParameters: {
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 4 but expected 2']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 4 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostAndGetParams when POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
     it('should fail the ExampleServiceWithPostAndGetParams when WRONG POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string",
                 "data2": "more data"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 0 but expected 2']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
@@ -443,11 +487,12 @@ describe('web-services', function() {
     
     it('should fail the ExampleServiceWithPostAndGetParamsOptional when WRONG GET parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1/param2/param3/param4/param5',
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Invalid number of GET parameters passed to service. Received 5 but expected 3']
-        }], (responses) => { done() });
+            responseCode: 500,
+            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 5 but expected 3'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
@@ -465,15 +510,16 @@ describe('web-services', function() {
     
     it('should fail the ExampleServiceWithPostAndGetParamsOptional when WRONG POST parameters are passed', function(done) {
     
-        httpTestsManager.assertHttpRequests([{
+        httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional',
+            responseCode: 500,
             postParameters: {
                 "data": "some arbitrary string",
                 "extradata": "some more data"
             },
-            contains: ['turbosite-global-error-manager-problem',
-                       'FATAL EXCEPTION<br>Unexpected POST variables received']
-        }], (responses) => { done() });
+            contains: ['"code":500', 'Unexpected POST variables received'],
+            notContains: ['turbosite-global-error-manager-problem']
+        }], done);
     });
     
     
@@ -539,6 +585,89 @@ describe('web-services', function() {
             url: this.baseUrl + 'this-service-does-not-exist',
             responseCode: 404,
             contains: ['Error 404 page not found']
+        }], done);
+    });
+    
+    
+    it('should return an empty result when no services are passed to the chain-services service', function(done) {
+    
+        httpTestsManager.assertHttpRequests([{
+            url: 'https://$host/api/chain/chain-services',
+            postParameters: {
+                services: []
+            },
+            contains: ['[]']
+        }], (responses) => { done() });
+    });
+    
+    
+    it('should return the result of one service: ExampleServiceWithoutParams if executed via the chain-services service with services being an encoded json array string', function(done) {
+    
+        httpTestsManager.assertHttpRequests([{
+            url: 'https://$host/api/chain/chain-services',
+            postParameters: {
+                services: '[{ "uri": "api/site/example/example-service-without-params" }]'
+            },
+            contains: ['["Any value can be output by the service as a string (json or xml data, plain text, etc..)"]']
+        }], (responses) => { done() });
+    });
+    
+    
+    it('should return the result of one service: ExampleServiceWithoutParams if executed via the chain-services service with services being a javascript array with objects', function(done) {
+    
+        httpTestsManager.assertHttpRequests([{
+            url: 'https://$host/api/chain/chain-services',
+            postParameters: {
+                services: [{ "uri": "api/site/example/example-service-without-params" }]
+            },
+            contains: ['["Any value can be output by the service as a string (json or xml data, plain text, etc..)"]']
+        }], (responses) => { done() });
+    });
+    
+    
+    it('should return the result of two services: ExampleServiceWithoutParams and ExampleServiceWithGetParams if executed via the chain-services service', function(done) {
+    
+        httpTestsManager.assertHttpRequests([{
+            url: 'https://$host/api/chain/chain-services',
+            postParameters: {
+                services: [{ "uri": "api/site/example/example-service-without-params" },
+                           { "uri": "api/site/example/example-service-with-get-params", "getParameters": ["1", "2"] }]
+            },
+            contains: ['Any value can be output by the service as a string (json or xml data, plain text, etc..)',
+                       'this object is returned as a json string with the received GET parameters values',
+                       '"received-param-0-value":"1"',
+                       '"received-param-1-value":"2"']
+        }], (responses) => { done() });
+    });
+    
+    
+    it('should return the result of three services: ExampleServiceWithoutParams, ExampleServiceWithGetParams and ExampleServiceWithPostParams if executed via the chain-services service', function(done) {
+    
+        httpTestsManager.assertHttpRequests([{
+            url: 'https://$host/api/chain/chain-services',
+            postParameters: {
+                services: [{ "uri": "api/site/example/example-service-without-params" },
+                           { "uri": "api/site/example/example-service-with-get-params", "getParameters": ["1", "2"] },
+                           { "uri": "api/site/example/example-service-with-post-params", "postParameters": {"param1": 1, "param2": 2} }]
+            },
+            contains: ['Any value can be output by the service as a string (json or xml data, plain text, etc..)',
+                       'this object is returned as a json string with the received GET parameters values',
+                       '"received-param-0-value":"1"',
+                       '"received-param-1-value":"2"',
+                       'this object is returned as a json string with the received POST parameters',
+                       '"received-param1":"1"',
+                       '"received-param2":"2"']
+        }], (responses) => { done() });
+    });
+    
+    
+    it('should fail with 500 error if chain-services is called without post parameters', function(done) {
+    
+        httpTestsManager.assertUrlsFail([{
+            url: 'https://$host/api/chain/chain-services',
+            responseCode: 500,
+            contains: ['"code":500', 'This service expects POST data'],
+            notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
 });
