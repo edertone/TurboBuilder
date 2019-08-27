@@ -1,6 +1,6 @@
 {
   "name": "turbobuilder",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, and many more features",
   "files": [
     "src/main",
