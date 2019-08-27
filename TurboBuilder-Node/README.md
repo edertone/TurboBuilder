@@ -36,8 +36,8 @@ The following validations can be customized via the turbobuilder.json setup file
 
 - Automatic project structure and conventions validation
 - Prevent the existence of tabulation characters on the project files
-- Detect copy pasted code on the project and launch build warnings of build errors if necessary
-- Verify that all project source code files have the same copyright header based on a template
+- Detect copy pasted code on the project and launch build warnings or build errors if necessary
+- Verify that all project source code files have all the same copyright header based on a template
 - Perform extra validation rules to css style sheets as part of the build process
 - Namespace validation for the languages that support it (Make sure all the declared namespaces follow the same rules)
 - Force use strict on all javascript files
@@ -69,7 +69,7 @@ TurboBuilder is based on nodejs but you only need basic terminal command line ex
 
 1. Install the latest NodeJs version on your computer
 
-2. Open a terminal and run **npm install turbobuilder** to get the latest version 
+2. Open a terminal and run **npm install -g turbobuilder** to get the latest version 
 
 ### Generate a new empty project
 
