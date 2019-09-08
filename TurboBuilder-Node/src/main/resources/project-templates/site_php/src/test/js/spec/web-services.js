@@ -344,6 +344,22 @@ describe('web-services', function() {
                 "param2": "param 2 value"
             },
             contains: ['{"info":"this object is returned as a json string with the received POST parameters","received-param1":"some arbitrary string","received-param2":"param 2 value"}']
+        },
+        {
+            url: this.baseUrl + 'example-service-with-post-params',
+            postParameters: {
+                "param1": "some arbitrary string",
+                "param2": ["this post parameter is sent as a javascript array that needs to be json encoded", "someString", 10]
+            },
+            contains: ['{"info":"this object is returned as a json string with the received POST parameters","received-param1":"some arbitrary string","received-param2":"[\\"this post parameter is sent as a javascript array that needs to be json encoded\\",\\"someString\\",10]"}']
+        },
+        {
+            url: this.baseUrl + 'example-service-with-post-params',
+            postParameters: {
+                "param1": "some arbitrary string",
+                "param2": {a: "this post parameter is sent as a javascript object that needs to be json encoded", b: "someString", c: 10}
+            },
+            contains: ['{"info":"this object is returned as a json string with the received POST parameters","received-param1":"some arbitrary string","received-param2":"{\\"a\\":\\"this post parameter is sent as a javascript object that needs to be json encoded\\",\\"b\\":\\"someString\\",\\"c\\":10}"}']
         }], (responses) => { done() });
     });
     

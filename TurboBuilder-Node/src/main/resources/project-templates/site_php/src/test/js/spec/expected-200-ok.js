@@ -33,7 +33,7 @@ describe('expected-200-ok', function() {
     
     it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/expected-200-ok.json'));
+        let list = JSON.parse(fm.readFile('src/test/resources/expected-200-ok.json'));
         
         this.automatedBrowserManager.assertUrlsLoadOk(list, done);
     });

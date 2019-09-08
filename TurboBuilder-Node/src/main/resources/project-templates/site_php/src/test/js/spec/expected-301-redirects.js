@@ -35,7 +35,7 @@ describe('expected-301-redirects', function() {
     
     it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
         
-        let list = JSON.parse(fm.readFile('src/test/js/resources/expected-301-redirects.json'));
+        let list = JSON.parse(fm.readFile('src/test/resources/expected-301-redirects.json'));
         
         this.automatedBrowserManager.assertUrlsRedirect(list, () => {
             

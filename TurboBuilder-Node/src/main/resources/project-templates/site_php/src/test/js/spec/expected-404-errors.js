@@ -33,7 +33,7 @@ describe('expected-404-errors', function() {
     
     it('should correctly execute all the 404 expected error requests', function(done) {
     
-        let list = JSON.parse(fm.readFile('src/test/js/resources/expected-404-errors.json'));
+        let list = JSON.parse(fm.readFile('src/test/resources/expected-404-errors.json'));
         
         this.automatedBrowserManager.assertUrlsFail(list, () => {
             
