@@ -98,6 +98,48 @@
                         "extrasTodoExtension": {
                             "type": "boolean",
                             "description": "If set to true, all files inside the extras/todo folder must have a .todo extension"
+                        },
+                        "strictSrcFolders": {
+                            "type": "object",
+                            "description": "Defines several rules that will be applied to all the folders contained by the src folder: libs and resources will be only allowed at the root of src/main and src/test",
+                            "required": [
+                                "enabled",
+                                "excludes"
+                            ],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enables or disables the strictSrcFolders validation"
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "A list of strings. Any file inside the affectedPaths folders which full path contains any of the provided texts will be ignored"
+                                }
+                            }
+                        },
+                        "strictFileExtensionCase": {
+                            "type": "object",
+                            "description": "Defines which project files must have lower case extension",
+                            "required": [
+                                "affectedPaths",
+                                "excludes"
+                            ],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "affectedPaths": {
+                                    "type": "array",
+                                    "description": "List of folders relative to project root that will be scanned for file extension case",
+                                    "examples": [
+                                        "src",
+                                        "extras"
+                                    ]
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "A list of strings. Any file inside the affectedPaths folders which full path contains any of the provided texts will be ignored"
+                                }
+                            }
                         }
                     }
                 },
