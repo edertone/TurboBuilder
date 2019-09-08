@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "364753bc-43a5-412f-9e68-58464052d9df",
+		"name": "SitePhp debug",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ChainServices",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "services",
+							"value": "[{ \"uri\": \"api/site/example/example-service-without-params\" },\n                           { \"uri\": \"api/site/example/example-service-with-get-params/p1/p2\" }]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost/_dev/api/chain/chain-services",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"_dev",
+						"api",
+						"chain",
+						"chain-services"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "example-service-with-post-params",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "param1",
+							"value": "\"some arbitrary string\"",
+							"type": "text"
+						},
+						{
+							"key": "param2",
+							"value": "[\"this post parameter is sent as a javascript array that needs to be json encoded\", \"someString\", 10]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost/_dev/api/site/example/example-service-with-post-params",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"_dev",
+						"api",
+						"site",
+						"example",
+						"example-service-with-post-params"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
