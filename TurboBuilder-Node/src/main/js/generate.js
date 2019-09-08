@@ -191,7 +191,7 @@ let createProjectStructure = function (type) {
 let replaceDependenciesIntoTemplate = function () {
     
     let sep = fm.dirSep();
-    let libsPath = global.installationPaths.mainResources + sep + 'libs';
+    let libsPath = global.installationPaths.main + sep + 'libs';
 
     let tbdependencies = fm.findDirectoryItems(global.runtimePaths.root, /^.*\.tbdependency$/, 'absolute');
     
