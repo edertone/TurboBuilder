@@ -5,7 +5,7 @@
     "metadata": {
         "name": "turbobuilder",
         "description": "Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, and many more features",
-        "builderVersion": "2.1.0"
+        "builderVersion": "2.2.0"
     },
     
     "validate": {
@@ -14,13 +14,17 @@
             "readmeFileMandatory": true,
             "extrasFolderMandatory": true,
             "extrasSubFoldersMandatory": ["help", "todo"],
-            "extrasTodoExtension": true
+            "extrasTodoExtension": true,
+            "strictSrcFolders": {
+                "enabled": true,
+                "excludes": ["project-templates"]
+            }
         },
         "filesContent" : {
             "tabsForbidden": {
                 "enabled": true,
                 "affectedPaths": ["src", "extras"],
-                "excludes": ["resources/libs"]
+                "excludes": ["src/main/libs", "src/test/libs", "postman_collection.json"]
             },
             "copyPasteDetect":[
                 {
@@ -47,7 +51,7 @@
             "useStrict": {
                 "enabled": true,
                 "includes": [".js"],
-                "excludes": ["src/main/resources/libs", "src/test/resources/libs"]
+                "excludes": ["src/main/libs", "src/test/libs"]
             }
         }
     },

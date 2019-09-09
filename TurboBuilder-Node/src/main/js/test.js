@@ -9,6 +9,7 @@ require('./globals');
 
 const { ArrayUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
+const { TerminalManager } = require('turbodepot-node');
 const { spawn } = require('child_process');
 const console = require('./console');
 const setupModule = require('./setup');
@@ -17,6 +18,7 @@ const opn = require('opn');
 
 
 let fm = new FilesManager(); 
+const terminalManager = new TerminalManager();
 
 
 /**
@@ -106,13 +108,27 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
     for (let relativeBuildPath of relativeBuildPaths) {
     
         let destPath = global.runtimePaths.target + sep + relativeBuildPath;
-        let destTestsPath = destPath + sep + 'test' + sep + 'php';
+        let destTestsPath = destPath + sep + 'test';
         let coverageReportPath = destPath + sep + 'reports'  + sep + 'coverage' + sep + 'php';
         
         fm.createDirectory(destTestsPath, true);
         
+        // Verify testsRoot value is correct
+        if(!fm.isDirectory(global.runtimePaths.root + sep + testSetup.testsRoot + sep + 'php')){
+                    
+            console.error('testsRoot setup value (' + testSetup.testsRoot + ') is incorrect on ' + global.fileNames.setup);            
+        }
+        
         // Copy all tests source code
         fm.copyDirectory(global.runtimePaths.root + sep + testSetup.testsRoot, destTestsPath);
+        
+        // Verify Php unit setup exists on target for tests
+        let phpUnitSetupPath = destTestsPath + sep + 'php' + sep + 'PhpUnitSetup.xml';
+        
+        if(!fm.isFile(phpUnitSetupPath)){
+                    
+            console.error('Php setup file not found on target for tests:\n' + phpUnitSetupPath);            
+        }
         
         console.success("launching phpunit tests at:\n");
         console.success(destTestsPath + "\n");
@@ -120,7 +136,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         // Launch unit tests via php executable
         let phpExecCommand = 'php';
         
-        phpExecCommand += ' "' + global.installationPaths.testResources + sep + 'libs' + sep + 'phpunit-7.4.0.phar"';
+        phpExecCommand += ' "' + global.installationPaths.test + sep + 'libs' + sep + 'phpunit-7.5.15.phar"';
         
         if(testSetup.coverageReport){
             
@@ -128,23 +144,23 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
             
             phpExecCommand += ' --coverage-html "' + coverageReportPath + '"';                           
         }
-        
-        phpExecCommand += ' --configuration "' + destTestsPath + sep + 'PhpUnitSetup.xml"';     
+                
+        phpExecCommand += ' --configuration "' + phpUnitSetupPath + '"';     
         phpExecCommand += ' "' + destPath + '/"';
         
-        let testsResult = console.exec(phpExecCommand, '', true);
-                    
+        let testsResult = terminalManager.exec(phpExecCommand, true);
+        
+        if(testsResult.failed){
+    
+            console.error('There are PHP unit test failures\n\n' + testsResult.output);
+        }
+        
         // Open the coverage report if necessary
         if(testSetup.coverageReport && testSetup.coverageReportOpenAfterTests){
         
-            // opn is a node module that opens resources in a cross os manner
+            // opn is a node module that opens resources in a cross OS manner
             opn(coverageReportPath + sep + 'index.html', {wait: false});
-        }  
-        
-        if(!testsResult){
-    
-            console.error('There are PHP unit test failures');
-        }   
+        }           
     }
 }
 
@@ -162,7 +178,7 @@ let executeJasmineTests = function (testSetup, relativeBuildPaths) {
 
     let jasmineExecCommand = global.installationPaths.jasmineBin + ' --config=' + testSetup.jasmineConfig;
     
-    if(!console.exec(jasmineExecCommand, '', true)){
+    if(terminalManager.exec(jasmineExecCommand, true).failed){
         
         console.error('There are jasmine unit test failures');
     } 
@@ -197,6 +213,12 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
         
         fm.createDirectory(destTestsPath, true);
         
+        // Verify testsRoot value is correct
+        if(!fm.isDirectory(global.runtimePaths.root + sep + testSetup.testsRoot + sep + 'js')){
+                    
+            console.error('testsRoot setup value (' + testSetup.testsRoot + ') is incorrect on ' + global.fileNames.setup);            
+        }
+        
         // Generate all the files to launch the tests
         for (let tsTargetObject of global.setup.build.lib_ts.targets) {
             
@@ -222,7 +244,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                         testsTarget + sep + 'source.js', "\n\n");
         
                 // Copy qunit library
-                if(!fm.copyDirectory(global.installationPaths.testResources + sep + 'libs' + sep + 'qunit', testsTarget, false)){
+                if(!fm.copyDirectory(global.installationPaths.test + sep + 'libs' + sep + 'qunit', testsTarget, false)){
                     
                     console.error('Could not copy qunit library');
                 }

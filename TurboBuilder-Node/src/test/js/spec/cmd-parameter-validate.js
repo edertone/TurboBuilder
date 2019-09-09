@@ -911,6 +911,108 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation when projectStructure.strictSrcFolders is enabled and libs or resources folders are found outside the root of src/main and src/test', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        
+        expect(setup.validate.projectStructure.strictSrcFolders.enabled).toBe(true);
+        
+        // Validate should be ok by default
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Add a libs folder on an incorrect place an test that validate fails
+        expect(utils.fm.createDirectory('./src/main/php/utils/libs', true)).toBe(true);  
+        expect(utils.exec('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
+        
+        // Set strictfolders to false and make sure it now passes validation
+        setup.validate.projectStructure.strictSrcFolders.enabled = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Enable again and test it fails
+        setup.validate.projectStructure.strictSrcFolders.enabled = true;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
+        
+        // Delete the invalid libs folder and test it passes
+        expect(utils.fm.deleteDirectory('./src/main/php/utils/libs')).toBeGreaterThan(-1);  
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Add a resources folder on an incorrect place an test that validate fails
+        expect(utils.fm.createDirectory('./src/main/php/managers/resources', true)).toBe(true);  
+        expect(utils.exec('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');
+        
+        // Set strictfolders to false and make sure it now passes validation
+        setup.validate.projectStructure.strictSrcFolders.enabled = false;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');        
+        
+        // Enable again and test it fails
+        setup.validate.projectStructure.strictSrcFolders.enabled = true;        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
+        
+        // Exclude the invalid resources folder location and make sure it passes      
+        setup.validate.projectStructure.strictSrcFolders.excludes = ['php\\managers'];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Set a raw value to the excludes list and make sure validation fails again
+        setup.validate.projectStructure.strictSrcFolders.excludes = ['some-raw-value'];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
+        
+        // Delete the invalid resources folder and test it passes
+        expect(utils.fm.deleteDirectory('./src/main/php/managers/resources')).toBeGreaterThan(-1);  
+        expect(utils.exec('-l')).toContain('validate ok');        
+    });
+    
+    
+    it('should fail validation when projectStructure.strictFileExtensionCase is enabled and a file with an extension containing upper case is found anywhere on the affected paths', function() {
+
+        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        
+        expect(setup.validate.projectStructure.strictFileExtensionCase.affectedPaths).toEqual(['']);
+        
+        // Validate should be ok by default
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Add a file with invalid case anywhere and test that validate fails
+        expect(utils.fm.saveFile('./src/main/php/model/file.Php', 'somedata')).toBe(true);
+        let validateResult = utils.exec('-l');
+        expect(validateResult).toContain('Expected lower case file extension');
+        expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
+        
+        // Set strictFileExtensionCase.affectedPaths to empty array and make sure it now passes validation
+        setup.validate.projectStructure.strictFileExtensionCase.affectedPaths = [];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+        
+        // Enable again and test it fails
+        setup.validate.projectStructure.strictFileExtensionCase.affectedPaths = ['src/main'];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        validateResult = utils.exec('-l');
+        expect(validateResult).toContain('Expected lower case file extension');
+        expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
+        
+        // Exclude the invalid file location and make sure it passes
+        setup.validate.projectStructure.strictFileExtensionCase.excludes = ['php\\model\\'];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(utils.exec('-l')).toContain('validate ok');
+
+        // Set a raw value to the excludes list and make sure validation fails again
+        setup.validate.projectStructure.strictFileExtensionCase.excludes = ['some-raw-value'];        
+        expect(utils.saveToSetupFile(setup)).toBe(true);
+        validateResult = utils.exec('-l');
+        expect(validateResult).toContain('Expected lower case file extension');
+        expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
+        
+        // Delete invalid file and test it passes
+        expect(utils.fm.deleteFile('./src/main/php/model/file.Php')).toBe(true);  
+        expect(utils.exec('-l')).toContain('validate ok');       
+    });
+    
+    
     it('should correctly validate when css files exist / not exist and onlyScss validation rule is true / false', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);

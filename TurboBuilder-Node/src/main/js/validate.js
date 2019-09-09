@@ -95,26 +95,6 @@ exports.validateBuilderVersion = function () {
 
 
 /**
- * Auxiliary method to validate that only the allowed contents exist on the specified folders
- */
-let validateAllowedFolders = function (foldersToInspect, allowedContents){
-    
-    for(let i = 0; i < foldersToInspect.length; i++){
-        
-        var inspectedList = getFoldersList(foldersToInspect[i]);
-        
-        for(let j = 0; j < inspectedList.length; j++){
-            
-            if(!inArray(inspectedList[j], allowedContents)){
-                    
-                errors.push(inspectedList[j] + " is not allowed inside " + foldersToInspect[i]);
-            }                       
-        }
-    }
-}
-
-
-/**
  * Validates all the possible existing JSON Schemas
  */
 let validateAllJSONSchemas = function () {
@@ -237,14 +217,48 @@ let validateProjectStructure = function () {
         }
     }
     
-    // TODO - Validate that all folders inside src/main are the expected.
+    // Strictly validate folders inside src
+    if(global.setup.validate.projectStructure.strictSrcFolders.enabled){
+        
+        // Validate libs and resources folders inside src are only allowed at the root of src/main and src/test
+        let folders = fm.findDirectoryItems(global.runtimePaths.src, /libs/i, 'relative', 'folders');
+        
+        folders = folders.concat(fm.findDirectoryItems(global.runtimePaths.src, /resources/i, 'relative', 'folders'));
+
+        for (let folder of folders){
+
+            if(!isExcluded(folder, global.setup.validate.projectStructure.strictSrcFolders.excludes) &&
+               StringUtils.getPath(folder, 1, '/') !== 'main' &&
+               StringUtils.getPath(folder, 1, '/') !== 'test'){
+                
+                errors.push(folder +
+                    " folder is only allowed at src/main and src/test");
+            }
+        }
+    }
     
-    // TODO - validate the case for all the files and folders
-    
-    // TODO - validate that gitIgnore file structure is correct
-    
+    // Validate the case for all the configured file extensions
+    if(global.setup.validate.projectStructure.strictFileExtensionCase){
+        
+        for (let affectedPath of global.setup.validate.projectStructure.strictFileExtensionCase.affectedPaths) {
+        
+            // Note that we are here excluding target and node_modules folders from the search to improve performance
+            let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + affectedPath, /.*/, 'absolute', 'files', -1, /target(\/|\\)|node_modules(\/|\\)/);
+            
+            for (let fileToValidate of filesToValidate){
+                
+                if(!isExcluded(fileToValidate, global.setup.validate.projectStructure.strictFileExtensionCase.excludes) &&
+                   StringUtils.getPathExtension(fileToValidate).toLowerCase() !== StringUtils.getPathExtension(fileToValidate)){
+                    
+                    errors.push("Expected lower case file extension:\n" + fileToValidate);
+                }
+            }
+        }
+    }
+   
+    // TODO - validate the case for all the files and folders    
+    // TODO - validate that gitIgnore file structure is correct    
     // TODO - Check that no strange files or folders exist
-    //validateAllowedFolders([global.runtimePaths.main, global.runtimePaths.test], ["css", "js", "ts", "php", "java", "resources"]);
 }
 
 
