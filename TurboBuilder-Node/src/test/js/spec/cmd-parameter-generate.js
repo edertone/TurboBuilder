@@ -11,19 +11,23 @@ require('./../../../main/js/globals');
 const { ObjectUtils } = require('turbocommons-ts');
 const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
+const { TerminalManager } = require('turbodepot-node');
+
+
+const terminalManager = new TerminalManager();
 
 
 describe('cmd-parameter-generate', function(){
 
     beforeEach(function(){
 
-        this.workdir = utils.createAndSwitchToTempFolder('test-generate');
+        this.workdir = terminalManager.createTempDirectory('test-generate');
     });
 
 
     afterEach(function(){
 
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
 
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });

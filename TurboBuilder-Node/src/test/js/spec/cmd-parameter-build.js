@@ -33,7 +33,7 @@ describe('cmd-parameter-build', function() {
     
     afterEach(function() {
   
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
         
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });

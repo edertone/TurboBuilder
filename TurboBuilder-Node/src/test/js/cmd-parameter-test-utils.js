@@ -12,45 +12,13 @@ const path = require('path');
 const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
-
-const executionDir = path.resolve('./'); 
+ 
 const terminalManager = new TerminalManager();
 
 /**
  * A files manager object ready to be used by the tests
  */
 exports.fm = new FilesManager();
-
-
-/**
- * The path to the turbobuilder executable to test
- */
-exports.pathToExecutable = 'node "' + path.resolve(__dirname + '/../../main/js/turbobuilder.js') + '"';
-
-
-/**
- * Switch the work directory back to the execution dir
- * @deprecated
- */
-exports.switchToExecutionDir = function () {
-  
-    process.chdir(executionDir);
-};
-
-
-/**
- * Move the work directory to the specified folder inside the main temp folder.
- * If folder does not exist, it will be created
- * @deprecated
- */
-exports.createAndSwitchToTempFolder = function (dirName) {
-  
-    let tmp = this.fm.createTempDirectory(dirName);
-        
-    process.chdir(tmp);
-    
-    return tmp;
-};
 
 
 /**
@@ -88,7 +56,9 @@ exports.generateProjectAndSetTurbobuilderSetup = function (projectType,
  */
 exports.exec = function (options) {
     
-    return terminalManager.exec(this.pathToExecutable + ' ' + options).output;
+    let pathToExecutable = 'node "' + path.resolve(__dirname + '/../../main/js/turbobuilder.js') + '"';
+    
+    return terminalManager.exec(pathToExecutable + ' ' + options).output;
 };
 
 

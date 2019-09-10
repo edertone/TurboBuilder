@@ -10,19 +10,23 @@
 
 const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
+const { TerminalManager } = require('turbodepot-node');
+
+
+const terminalManager = new TerminalManager();
 
 
 describe('cmd-parameter-version', function() {
     
     beforeEach(function() {
         
-        this.workdir = utils.createAndSwitchToTempFolder('test-version');
+        this.workdir = terminalManager.createTempDirectory('test-version');
     });
 
     
     afterEach(function() {
   
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
         
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });

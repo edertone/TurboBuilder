@@ -9,19 +9,23 @@
 
 const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
+const { TerminalManager } = require('turbodepot-node');
+
+
+const terminalManager = new TerminalManager();
 
 
 describe('cmd-parameter-clean', function(){
 
     beforeEach(function(){
 
-        this.workdir = utils.createAndSwitchToTempFolder('test-clean');
+        this.workdir = terminalManager.createTempDirectory('test-clean');
     });
 
 
     afterEach(function(){
 
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
 
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });

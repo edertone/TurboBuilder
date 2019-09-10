@@ -12,8 +12,10 @@ const utils = require('../cmd-parameter-test-utils');
 const { execSync } = require('child_process');
 const { StringTestsManager } = require('turbotesting-node');
 const { StringUtils } = require('turbocommons-ts');
+const { TerminalManager } = require('turbodepot-node');
 
 
+const terminalManager = new TerminalManager();
 const stringTestsManager = new StringTestsManager();
 
 
@@ -21,13 +23,13 @@ describe('cmd-parameter-test', function() {
     
     beforeEach(function() {
         
-        this.workdir = utils.createAndSwitchToTempFolder('test-test');
+        this.workdir = terminalManager.createTempDirectory('test-test');
     });
 
     
     afterEach(function() {
   
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
         
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });

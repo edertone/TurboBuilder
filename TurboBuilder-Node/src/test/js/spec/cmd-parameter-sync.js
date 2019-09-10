@@ -8,19 +8,23 @@
 
 
 const utils = require('../cmd-parameter-test-utils');
+const { TerminalManager } = require('turbodepot-node');
+
+
+const terminalManager = new TerminalManager();
 
 
 describe('cmd-parameter-sync', function(){
 
     beforeEach(function(){
 
-        this.workdir = utils.createAndSwitchToTempFolder('test-sync');
+        this.workdir = terminalManager.createTempDirectory('test-sync');
     });
 
 
     afterEach(function(){
 
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
 
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });

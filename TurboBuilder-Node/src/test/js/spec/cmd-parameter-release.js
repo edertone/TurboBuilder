@@ -27,13 +27,13 @@ describe('cmd-parameter-release', function() {
     
     beforeEach(function() {
         
-        this.workdir = utils.createAndSwitchToTempFolder('test-release');
+        this.workdir = terminalManager.createTempDirectory('test-release');
     });
 
     
     afterEach(function() {
   
-        utils.switchToExecutionDir();
+        switchToExecutionDir();
         
         expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
     });
