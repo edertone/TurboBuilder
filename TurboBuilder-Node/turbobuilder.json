@@ -24,7 +24,7 @@
             "tabsForbidden": {
                 "enabled": true,
                 "affectedPaths": ["src", "extras"],
-                "excludes": ["src/main/libs", "src/test/libs", "postman_collection.json"]
+                "excludes": ["src/main/libs", "src/test/libs", "extras/postman"]
             },
             "copyPasteDetect":[
                 {

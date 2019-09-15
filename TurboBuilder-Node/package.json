@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "clean-css": "4.2.1",
-    "commander": "^2.20.0",
+    "commander": "^3.0.1",
     "html-minifier": "^4.0.0",
     "http-server": "0.11.1",
     "imagemin": "^6.1.0",
@@ -32,7 +32,7 @@
     "opn": "^6.0.0",
     "sass": "^1.22.12",
     "selenium-webdriver": "^4.0.0-alpha.5",
-    "sharp": "^0.22.1",
+    "sharp": "^0.23.0",
     "turbocommons-ts": "^3.0.1",
     "turbodepot-node": "^6.0.0",
     "turbotesting-node": "^7.1.0",
