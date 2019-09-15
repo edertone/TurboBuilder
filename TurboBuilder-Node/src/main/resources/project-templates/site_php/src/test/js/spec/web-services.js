@@ -608,7 +608,7 @@ describe('web-services', function() {
     it('should return an empty result when no services are passed to the chain-services service', function(done) {
     
         httpTestsManager.assertHttpRequests([{
-            url: 'https://$host/api/chain/chain-services',
+            url: 'https://$host/api/turbosite/chain/chain-services',
             postParameters: {
                 services: []
             },
@@ -620,7 +620,7 @@ describe('web-services', function() {
     it('should return the result of one service: ExampleServiceWithoutParams if executed via the chain-services service with services being an encoded json array string', function(done) {
     
         httpTestsManager.assertHttpRequests([{
-            url: 'https://$host/api/chain/chain-services',
+            url: 'https://$host/api/turbosite/chain/chain-services',
             postParameters: {
                 services: '[{ "uri": "api/site/example/example-service-without-params" }]'
             },
@@ -632,7 +632,7 @@ describe('web-services', function() {
     it('should return the result of one service: ExampleServiceWithoutParams if executed via the chain-services service with services being a javascript array with objects', function(done) {
     
         httpTestsManager.assertHttpRequests([{
-            url: 'https://$host/api/chain/chain-services',
+            url: 'https://$host/api/turbosite/chain/chain-services',
             postParameters: {
                 services: [{ "uri": "api/site/example/example-service-without-params" }]
             },
@@ -644,7 +644,7 @@ describe('web-services', function() {
     it('should return the result of two services: ExampleServiceWithoutParams and ExampleServiceWithGetParams if executed via the chain-services service', function(done) {
     
         httpTestsManager.assertHttpRequests([{
-            url: 'https://$host/api/chain/chain-services',
+            url: 'https://$host/api/turbosite/chain/chain-services',
             postParameters: {
                 services: [{ "uri": "api/site/example/example-service-without-params" },
                            { "uri": "api/site/example/example-service-with-get-params", "getParameters": ["1", "2"] }]
@@ -660,7 +660,7 @@ describe('web-services', function() {
     it('should return the result of three services: ExampleServiceWithoutParams, ExampleServiceWithGetParams and ExampleServiceWithPostParams if executed via the chain-services service', function(done) {
     
         httpTestsManager.assertHttpRequests([{
-            url: 'https://$host/api/chain/chain-services',
+            url: 'https://$host/api/turbosite/chain/chain-services',
             postParameters: {
                 services: [{ "uri": "api/site/example/example-service-without-params" },
                            { "uri": "api/site/example/example-service-with-get-params", "getParameters": ["1", "2"] },
@@ -680,7 +680,7 @@ describe('web-services', function() {
     it('should fail with 500 error if chain-services is called without post parameters', function(done) {
     
         httpTestsManager.assertUrlsFail([{
-            url: 'https://$host/api/chain/chain-services',
+            url: 'https://$host/api/turbosite/chain/chain-services',
             responseCode: 500,
             contains: ['"code":500', 'This service expects POST data'],
             notContains: ['turbosite-global-error-manager-problem']

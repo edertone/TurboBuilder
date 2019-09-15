@@ -400,7 +400,7 @@ let generateCodeDocumentation = function (destPath) {
         
         let phpDocExec = 'php';
         
-        phpDocExec += ' "' + global.installationPaths.mainResources + sep + 'libs' + sep + 'phpDocumentor.phar"';
+        phpDocExec += ' "' + global.installationPaths.main + sep + 'libs' + sep + 'phpDocumentor.phar"';
         phpDocExec += ' --template="responsive-twig"';
         phpDocExec += ' --visibility="public"';
         phpDocExec += ' --title="' + setupModule.getProjectName() + "-" + setupModule.getProjectRepoSemVer() + '"';

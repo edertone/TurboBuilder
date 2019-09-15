@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "turbocommons-ts": "^3.0.1",
-        "turbodepot-node": "^5.0.1",
+        "turbodepot-node": "^6.0.0",
         "turbotesting-node": "^7.1.0"
     },
     "author": "",
