@@ -21,7 +21,7 @@
 					]
 				},
 				"url": {
-					"raw": "https://localhost/_dev/api/chain/chain-services",
+					"raw": "https://localhost/_dev/api/turbosite/chain/chain-services",
 					"protocol": "https",
 					"host": [
 						"localhost"
