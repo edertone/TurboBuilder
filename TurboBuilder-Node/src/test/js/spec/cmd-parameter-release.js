@@ -107,10 +107,17 @@ describe('cmd-parameter-release', function() {
         
         let sep = utils.fm.dirSep();
         let folderName = StringUtils.getPathElement(this.workdir);
+        let projectResourcesRoot = '.' + sep + 'src' + sep + 'main' + sep + 'resources';
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'site';
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        
+        // Copy a non optimized jpg image to the src/main/resources folder
+        utils.fm.createDirectory(projectResourcesRoot + sep + 'pics');
+        
+        utils.fm.copyFile(global.installationPaths.testResources + sep + 'cmd-parameter-release' + sep + 'non-optimized-jpg-image.jpg',
+            projectResourcesRoot + sep + 'non-optimized-jpg-image.jpg');
         
         // First launch the build
         let launchResult = utils.exec('-cb');
@@ -168,9 +175,18 @@ describe('cmd-parameter-release', function() {
         
         expect(imgBuildFileSize).toBeGreaterThan(0);
         expect(imgReleaseFileSize).toBeGreaterThan(0);
-        expect(imgBuildFileSize).toBeGreaterThan(imgReleaseFileSize);
+        expect(imgBuildFileSize * 0.7).toBeGreaterThan(imgReleaseFileSize);
         
-        // TODO We must also test that jpg files are reduced in size
+        // We must also test that jpg files are reduced in size
+        expect(utils.fm.isFile(projectResourcesRoot + sep + 'non-optimized-jpg-image.jpg')).toBe(true);
+        expect(utils.fm.isFile(releaseRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg')).toBe(true);
+        
+        imgBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg');
+        imgReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg');
+        
+        expect(imgBuildFileSize).toBeGreaterThan(0);
+        expect(imgReleaseFileSize).toBeGreaterThan(0);
+        expect(imgBuildFileSize * 0.97).toBeGreaterThan(imgReleaseFileSize);      
     });
     
     
