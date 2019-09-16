@@ -478,7 +478,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                         }
                     });
                 
-                // Hard block till we are sure the file is created
+                // Hard block: wait till we are sure the file is created
                 blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + faviconExpectedFile.name);}, 60000,
                     'Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name);
                                     
@@ -500,7 +500,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                         }
                     });
                 
-                // Hard block till we are sure the file is created
+                // Hard block: wait till we are sure the file is created
                 blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + destFaviconWithHash);}, 60000,
                     'Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name);
             }
@@ -965,24 +965,4 @@ exports.checkPhpAvailable = function () {
             console.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
         }
     }
-}
-
-
-/**
- * This is a function that performs a hardblock of the current execution till the provided function returns a true value or
- * the provided number of miliseconds is complete
- */
-let blockingSleepTill = function (verificationFun, maxTimeMs, timeExceededErrorMessage) {
-
-    let currentTime = Date.now();
-    
-    while(Date.now() < currentTime + maxTimeMs){
-        
-        if(verificationFun()){
-        
-            return;
-        }
-    }
-    
-    console.error(timeExceededErrorMessage);
 }

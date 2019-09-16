@@ -104,3 +104,25 @@ global.runtimePaths = {
     mainResources: path.resolve('./src/main/resources'),
     target: path.resolve('./' + global.folderNames.target)
 };
+
+
+/**
+ * This is a function that performs a hardblock of the current execution till the provided function returns a true value or
+ * the provided number of miliseconds is complete
+ *
+ * TODO - move it to some global lib or similar
+ */
+global.blockingSleepTill = function (verificationFun, maxTimeMs, timeExceededErrorMessage) {
+
+    let currentTime = Date.now();
+    
+    while(Date.now() < currentTime + maxTimeMs){
+        
+        if(verificationFun()){
+        
+            return;
+        }
+    }
+    
+    console.error(timeExceededErrorMessage);
+}
