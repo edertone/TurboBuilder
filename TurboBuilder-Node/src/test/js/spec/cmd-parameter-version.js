@@ -34,8 +34,8 @@ describe('cmd-parameter-version', function() {
     
     it('should show application version when -v and --version arguments are passed', function() {
         
-        expect(testsGlobalHelper.execTurboBuilder('-v')).toContain(setupModule.getBuilderVersion());
-        expect(testsGlobalHelper.execTurboBuilder('--version')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTbCmd('-v')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTbCmd('--version')).toContain(setupModule.getBuilderVersion());
     });
     
     
@@ -43,7 +43,7 @@ describe('cmd-parameter-version', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(testsGlobalHelper.execTurboBuilder('-v')).toContain(setupModule.getBuilderVersion());
-        expect(testsGlobalHelper.execTurboBuilder('--version')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTbCmd('-v')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTbCmd('--version')).toContain(setupModule.getBuilderVersion());
     }); 
 });

@@ -54,7 +54,7 @@ describe('cmd-parameter-validate', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -62,7 +62,7 @@ describe('cmd-parameter-validate', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -75,9 +75,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.build.lib_js.invalidField = 'invalid';
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain('additionalProperty "invalidField" exists in instance when not allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "invalidField" exists in instance when not allowed');
     });
     
     
@@ -85,25 +85,25 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         // Disable use strict validation on setup and test that it now validates
         expect(setup.test[0].type).toBe("jasmine");
         
         setup.test[0].nonexistantProperty = 'somevalue';
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
-        expect(utils.exec('-l')).toContain("Invalid JSON schema for turbobuilder.json");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema for turbobuilder.json");
         
         setup.test = [{
                 "type": "nonexistant",
                 "jasmineConfig": "src/test/js/jasmine.json"
             }];
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
-        expect(utils.exec('-l')).toContain("Invalid JSON schema for turbobuilder.json");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema for turbobuilder.json");
     });
     
     
@@ -111,11 +111,11 @@ describe('cmd-parameter-validate', function() {
     
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         expect(utils.fm.saveFile('./src/main/test.js', "does not begin with use strict")).toBe(true);
          
-        expect(utils.exec('-l')).toContain('File must start with "use strict":');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('File must start with "use strict":');
         
         // Disable use strict validation on setup and test that it now validates
         setup.validate.javascript.useStrict = {
@@ -124,9 +124,9 @@ describe('cmd-parameter-validate', function() {
                 "excludes": ["src/main/libs"]
             };
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         // Enable again the use strict validation on setup but ignore the bad file
         setup.validate.javascript.useStrict = {
@@ -135,9 +135,9 @@ describe('cmd-parameter-validate', function() {
                 "excludes": ["test.js"]
             };
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
 
     
@@ -145,7 +145,7 @@ describe('cmd-parameter-validate', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -153,7 +153,7 @@ describe('cmd-parameter-validate', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let buildResult = utils.exec('-l');
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
         expect(buildResult).toContain("validate ok");
     });
@@ -163,9 +163,9 @@ describe('cmd-parameter-validate', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.saveToSetupFile({})).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile({})).toBe(true);
         
-        expect(utils.exec('-l')).toContain("No valid project type specified. Please enable any of");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("No valid project type specified. Please enable any of");
     });
     
     
@@ -173,10 +173,10 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}}))
+        expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}}))
             .toBe(true);
         
-        expect(utils.exec('-l')).toContain("No valid project type specified. Please enable any of");    
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("No valid project type specified. Please enable any of");    
     });
 
     
@@ -184,7 +184,7 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, 
+        expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
                 name: '',
                 description: '',
@@ -194,7 +194,7 @@ describe('cmd-parameter-validate', function() {
             validate: {filesContent: {copyPasteDetect: []}}}))
                 .toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");  
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");  
     });
     
     
@@ -202,7 +202,7 @@ describe('cmd-parameter-validate', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-b'), ["validate ok", "build ok"]);
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-b'), ["validate ok", "build ok"]);
     });
 
     
@@ -210,12 +210,12 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
+        expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
             .toBe(true);
         
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
 
-        let buildResult = utils.exec('-b');
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
         
         expect(buildResult).toContain("validate ok");
         expect(buildResult).toContain("Webpack ES5 ok");
@@ -227,7 +227,7 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, 
+        expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
                 name: '',
                 description: '',
@@ -237,7 +237,7 @@ describe('cmd-parameter-validate', function() {
             validate: {filesContent: {copyPasteDetect: []}}}))
                 .toBe(true);
         
-        let buildResult = utils.exec('-b');
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
         
         expect(buildResult).toContain("validate ok");
         expect(buildResult).toContain("build ok");
@@ -250,13 +250,13 @@ describe('cmd-parameter-validate', function() {
         
         expect(setup.validate.runBeforeBuild).toBe(true);
         
-        let buildResult = utils.exec('-bl');
+        let buildResult = testsGlobalHelper.execTbCmd('-bl');
         
         expect(buildResult).not.toContain("validate start");
         expect(buildResult).toContain("validate ok");
         expect(buildResult).toContain("build ok");
         
-        let buildResult2 = utils.exec('-lb');
+        let buildResult2 = testsGlobalHelper.execTbCmd('-lb');
         
         expect(buildResult2).not.toContain("validate start");
         expect(buildResult2).toContain("validate ok");
@@ -266,12 +266,12 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail if only a setup file exists on the folder', function() {
         
-        expect(utils.saveToSetupFile({"$schema": "", metadata: {builderVersion: setupModule.getBuilderVersion()}, 
+        expect(testsGlobalHelper.saveToSetupFile({"$schema": "", metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
 
-        expect(utils.exec('-b')).toContain("no files to build");
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain("no files to build");
     });
     
     
@@ -279,12 +279,12 @@ describe('cmd-parameter-validate', function() {
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(utils.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, 
+        expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
 
-        let buildResult = utils.exec('-b');
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
         
         expect(buildResult).toContain("build ok");
         expect(buildResult).not.toContain("validate ok");
@@ -304,9 +304,9 @@ describe('cmd-parameter-validate', function() {
                         }
                     ];
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
-        let execResult = utils.exec('-l');
+        let execResult = testsGlobalHelper.execTbCmd('-l');
         
         expect(execResult).toContain("Copyrhight headers template not found");
         expect(execResult).toContain("nonexistantfile.txt");
@@ -328,7 +328,7 @@ describe('cmd-parameter-validate', function() {
                             }
                         ];
                 
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
         // Create the copyright header template
         expect(utils.fm.createDirectory('./extras/copyright headers')).toBe(true);
@@ -349,14 +349,14 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.saveFile('./src/main/ts/file3.ts', "/* this header is not correct */\n\n\neven more text")).toBe(true);
    
         // Test that headers are correctly validated
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         // Test that headers are not correctly validated when file 3 is not excluded
         setup.validate.filesContent.copyrightHeaders[0].excludes = [];
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
-        let buildResult = utils.exec('-l');
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
             
         expect(buildResult).toContain("Bad copyright header:");
         expect(buildResult).toContain("file3.ts");
@@ -368,7 +368,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.saveFile('./src/main/ts/somefolder/file4.ts', "/* this heade1r is correct */\n\n\neven more text")).toBe(true);
       
         // Test that headers are correctly validated
-        expect(utils.exec('-l')).toContain("file4.ts");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("file4.ts");
     });
     
     
@@ -385,7 +385,7 @@ describe('cmd-parameter-validate', function() {
             }
         ];
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
     
         // Create the copyright header template
         expect(utils.fm.createDirectory('./extras/copyright headers')).toBe(true);
@@ -399,12 +399,12 @@ describe('cmd-parameter-validate', function() {
             expect(utils.fm.saveFile(tsFile, "/* this header is correct */\n\n\nand some more text")).toBe(true);
         }
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         // Create a file that ends with ts but is not a .ts file. This must currently fail cause we have included all files which end with ts
         expect(utils.fm.saveFile('./src/main/ts/ThisIsNotAts', "invalid header")).toBe(true);
         
-        let buildResult = utils.exec('-l');
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("Bad copyright header");
         expect(buildResult).toContain("ThisIsNotAts");
         expect(buildResult).toContain("Must be as defined in extras/copyright headers/TsFiles-Header.txt");
@@ -419,10 +419,10 @@ describe('cmd-parameter-validate', function() {
             }
         ];
         
-        utils.saveToSetupFile(setup);
+        testsGlobalHelper.saveToSetupFile(setup);
         
         // The ThisIsNotAts file is now ignored
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
    
@@ -432,7 +432,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.setup)).toBe(true);        
         
-        expect(utils.exec('-l')).toContain(global.fileNames.setup + ' setup file not found');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain(global.fileNames.setup + ' setup file not found');
     });
     
     
@@ -442,9 +442,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.unexpected = 'unexpected';
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain('additionalProperty "unexpected" exists in instance when not allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "unexpected" exists in instance when not allowed');
     });
 
     
@@ -454,7 +454,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup)).toBe(true);        
         
-        expect(utils.exec('-l')).toContain("Could not find " + global.fileNames.turboSiteSetup + " at ");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Could not find " + global.fileNames.turboSiteSetup + " at ");
     });
 
     
@@ -470,7 +470,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
-        expect(utils.exec('-l')).toContain('instance requires property "homeView"');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance requires property "homeView"');
     });
     
     
@@ -484,7 +484,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
-        expect(utils.exec('-l')).toContain('instance requires property "locales"');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance requires property "locales"');
     });
     
     
@@ -499,7 +499,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
-        expect(utils.exec('-l')).toContain('instance requires property "globalJs"');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance requires property "globalJs"');
     });
     
     
@@ -509,21 +509,21 @@ describe('cmd-parameter-validate', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
         
         turboSiteSetup.webServices.api[0].uri = 'aapi/site';
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
-        expect(utils.exec('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: aapi/site)');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: aapi/site)');
         
         turboSiteSetup.webServices.api[0].uri = 'api/site';
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         turboSiteSetup.webServices.api.push({uri: 'api1/site', namespace: turboSiteSetup.webServices.api[0].namespace});
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
-        expect(utils.exec('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: api1/site)');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: api1/site)');
     });
 
 
@@ -537,7 +537,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
-        expect(utils.exec('-l')).toContain('additionalProperty "unexpectedValue" exists in instance when not allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "unexpectedValue" exists in instance when not allowed');
     });
     
     
@@ -547,9 +547,9 @@ describe('cmd-parameter-validate', function() {
         
         delete setup.build.replaceVersion;
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -559,9 +559,9 @@ describe('cmd-parameter-validate', function() {
         
         delete setup.build.replaceVersion.enabled;
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("instance.build.replaceVersion requires property \"enabled\"");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("instance.build.replaceVersion requires property \"enabled\"");
     });
     
     
@@ -570,9 +570,9 @@ describe('cmd-parameter-validate', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         delete setup.sync;       
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -589,9 +589,9 @@ describe('cmd-parameter-validate', function() {
             "remoteUrl" : "http://localhost",
             "deleteDestPathContents": true
         };
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -610,9 +610,9 @@ describe('cmd-parameter-validate', function() {
             "user": "serverUser",
             "psw": "serverpsw"
         };
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
 
@@ -632,19 +632,19 @@ describe('cmd-parameter-validate', function() {
             "user": "serverUser",
             "psw": "serverpsw"
         };
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema");
         
         delete setup.sync.someinvalid;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         setup.sync.nonexistant = 'somevalue';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema");
     });
     
     
@@ -661,19 +661,19 @@ describe('cmd-parameter-validate', function() {
             "remoteUrl" : "http://localhost",
             "deleteDestPathContents": true
         };
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema");
         
         setup.sync.type = 'fileSystem';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         setup.sync.destPath = 1;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain("Invalid JSON schema");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema");
     });
     
     
@@ -683,7 +683,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setup, '{ "a": 1, { ')).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Corrupted JSON for');
     });
     
@@ -694,7 +694,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, '{ "a": 1, { }')).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Corrupted JSON for');
     });
 
@@ -705,9 +705,9 @@ describe('cmd-parameter-validate', function() {
         
         delete setup.$schema;
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Invalid JSON schema for turbobuilder.json');
         expect(lintResult).toContain('instance requires property "$schema"');  
     });
@@ -723,7 +723,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
         expect(lintResult).toContain('instance requires property "$schema"');
     });
@@ -735,9 +735,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.$schema = 'some invalid value';
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Invalid JSON schema for turbobuilder.json');
         expect(lintResult).toContain('instance.$schema is not one of enum values'); 
     });
@@ -753,7 +753,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
         expect(lintResult).toContain('instance.$schema is not one of enum values');
     });
@@ -765,14 +765,14 @@ describe('cmd-parameter-validate', function() {
         
         setup.metadata.name = 'name';        
         setup.metadata.description = 'description';        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
         packageJson.name = 'name';        
         packageJson.description = 'description';         
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('validate ok');
     });
     
@@ -782,13 +782,13 @@ describe('cmd-parameter-validate', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         setup.metadata.name = 'name 1';        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
         packageJson.name = 'name 2';        
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Name and description must match between the following files');
         expect(lintResult).toContain('package.json');
         expect(lintResult).toContain('turbobuilder.json');
@@ -800,13 +800,13 @@ describe('cmd-parameter-validate', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         setup.metadata.description = 'desc 1';        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
         packageJson.description = 'desc 2';        
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Name and description must match between the following files');
         expect(lintResult).toContain('package.json');
         expect(lintResult).toContain('turbobuilder.json');
@@ -820,14 +820,14 @@ describe('cmd-parameter-validate', function() {
         expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
         
         delete setup.validate.projectStructure;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
-        expect(utils.exec('-l')).toContain('README.md does not exist');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('README.md does not exist');
         
         expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);       
-        expect(utils.exec('-l')).toContain('extras does not exist');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('extras does not exist');
     });
     
     
@@ -839,15 +839,15 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
         
-        expect(utils.exec('-l')).toContain('README.md does not exist');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('README.md does not exist');
         
         setup.validate.projectStructure.readmeFileMandatory = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         delete setup.validate.projectStructure.readmeFileMandatory;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('README.md does not exist');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('README.md does not exist');
     });
     
     
@@ -859,16 +859,16 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);        
         
-        expect(utils.exec('-l')).toContain('extras does not exist');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('extras does not exist');
         
         setup.validate.projectStructure.extrasSubFoldersMandatory = [];        
         setup.validate.projectStructure.extrasFolderMandatory = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         delete setup.validate.projectStructure.extrasFolderMandatory;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('extras does not exist');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('extras does not exist');
     });
     
     
@@ -877,18 +877,18 @@ describe('cmd-parameter-validate', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         expect(utils.fm.createDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'somedir')).toBe(true);        
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'help')).toBeGreaterThan(-1);        
-        expect(utils.exec('-l')).toContain('help does not exist');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('help does not exist');
         
         setup.validate.projectStructure.extrasSubFoldersMandatory = [];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         delete setup.validate.projectStructure.extrasSubFoldersMandatory;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('help does not exist');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('help does not exist');
     });
     
     
@@ -901,15 +901,15 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() +
                 'todo' + utils.fm.dirSep() + 'test.txt', 'txt')).toBe(true);        
         
-        expect(utils.exec('-l')).toContain('test.txt must have .todo extension');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('test.txt must have .todo extension');
         
         setup.validate.projectStructure.extrasTodoExtension = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
                 
         delete setup.validate.projectStructure.extrasTodoExtension;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('test.txt must have .todo extension');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('test.txt must have .todo extension');
     });
     
     
@@ -920,53 +920,53 @@ describe('cmd-parameter-validate', function() {
         expect(setup.validate.projectStructure.strictSrcFolders.enabled).toBe(true);
         
         // Validate should be ok by default
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Add a libs folder on an incorrect place an test that validate fails
         expect(utils.fm.createDirectory('./src/main/php/utils/libs', true)).toBe(true);  
-        expect(utils.exec('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
         
         // Set strictfolders to false and make sure it now passes validation
         setup.validate.projectStructure.strictSrcFolders.enabled = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Enable again and test it fails
         setup.validate.projectStructure.strictSrcFolders.enabled = true;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
         
         // Delete the invalid libs folder and test it passes
         expect(utils.fm.deleteDirectory('./src/main/php/utils/libs')).toBeGreaterThan(-1);  
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Add a resources folder on an incorrect place an test that validate fails
         expect(utils.fm.createDirectory('./src/main/php/managers/resources', true)).toBe(true);  
-        expect(utils.exec('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');
         
         // Set strictfolders to false and make sure it now passes validation
         setup.validate.projectStructure.strictSrcFolders.enabled = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');        
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');        
         
         // Enable again and test it fails
         setup.validate.projectStructure.strictSrcFolders.enabled = true;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
         
         // Exclude the invalid resources folder location and make sure it passes      
         setup.validate.projectStructure.strictSrcFolders.excludes = ['php\\managers'];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Set a raw value to the excludes list and make sure validation fails again
         setup.validate.projectStructure.strictSrcFolders.excludes = ['some-raw-value'];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
         
         // Delete the invalid resources folder and test it passes
         expect(utils.fm.deleteDirectory('./src/main/php/managers/resources')).toBeGreaterThan(-1);  
-        expect(utils.exec('-l')).toContain('validate ok');        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');        
     });
     
     
@@ -977,41 +977,41 @@ describe('cmd-parameter-validate', function() {
         expect(setup.validate.projectStructure.strictFileExtensionCase.affectedPaths).toEqual(['']);
         
         // Validate should be ok by default
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Add a file with invalid case anywhere and test that validate fails
         expect(utils.fm.saveFile('./src/main/php/model/file.Php', 'somedata')).toBe(true);
-        let validateResult = utils.exec('-l');
+        let validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('Expected lower case file extension');
         expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
         
         // Set strictFileExtensionCase.affectedPaths to empty array and make sure it now passes validation
         setup.validate.projectStructure.strictFileExtensionCase.affectedPaths = [];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Enable again and test it fails
         setup.validate.projectStructure.strictFileExtensionCase.affectedPaths = ['src/main'];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        validateResult = utils.exec('-l');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('Expected lower case file extension');
         expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
         
         // Exclude the invalid file location and make sure it passes
         setup.validate.projectStructure.strictFileExtensionCase.excludes = ['php\\model\\'];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
 
         // Set a raw value to the excludes list and make sure validation fails again
         setup.validate.projectStructure.strictFileExtensionCase.excludes = ['some-raw-value'];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        validateResult = utils.exec('-l');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('Expected lower case file extension');
         expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
         
         // Delete invalid file and test it passes
         expect(utils.fm.deleteFile('./src/main/php/model/file.Php')).toBe(true);  
-        expect(utils.exec('-l')).toContain('validate ok');       
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');       
     });
     
     
@@ -1019,24 +1019,24 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
          
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
        
         // Check that the only css rule is enabled
         expect(setup.validate.styleSheets.onlyScss).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/view/css/test.css', "")).toBe(true);
 
-        expect(utils.exec('-l')).toContain('only scss files are allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('only scss files are allowed');
         
         // Disable the only css rule
         setup.validate.styleSheets.onlyScss = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         expect(utils.fm.deleteFile('./src/main/view/css/test.css')).toBe(true);
         
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
     });
     
     
@@ -1044,11 +1044,11 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
        
         // Disable the namespaces validation
         setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Check that the tabsForbidden rule is enabled
         expect(setup.validate.filesContent.tabsForbidden.enabled).toBe(true);
@@ -1059,40 +1059,40 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.saveFile('./src/main/test.php', "contains\ttabs")).toBe(true);
         expect(utils.fm.saveFile('./extras/help/test.md', "contains\ttabs")).toBe(true);
         
-        let validateResult = utils.exec('-l');
+        let validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('File contains tabulations');
         expect(validateResult).toContain('test.php');
         expect(validateResult).toContain('test.md');
         
         setup.validate.filesContent.tabsForbidden.affectedPaths = ["src"];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        validateResult = utils.exec('-l');
+        validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('File contains tabulations');
         expect(validateResult).toContain('test.php');
         expect(validateResult).not.toContain('test.md');
         
         // Disable validation and make sure it now validates ok
         setup.validate.filesContent.tabsForbidden.enabled = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         setup.validate.filesContent.tabsForbidden.affectedPaths = [];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         setup.validate.filesContent.tabsForbidden.excludes = [];        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Delete the validation rule and make sure it now fails
         delete setup.validate.filesContent.tabsForbidden.enabled;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('filesContent.tabsForbidden requires property "enabled"');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('filesContent.tabsForbidden requires property "enabled"');
         
         delete setup.validate.filesContent.tabsForbidden;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
-        expect(utils.exec('-l')).toContain('File contains tabulations');
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('File contains tabulations');
     });
     
     
@@ -1100,7 +1100,7 @@ describe('cmd-parameter-validate', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
-        let buildResult = utils.exec('-l');
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
         expect(buildResult).toContain("validate ok");
     });
@@ -1110,15 +1110,15 @@ describe('cmd-parameter-validate', function() {
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(utils.exec('-l')).toContain('validate ok');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
        
         // Enable the namespaces validation
         setup.validate.php.namespaces.enabled = true;
         setup.validate.php.namespaces.mandatory = true;
         setup.validate.php.namespaces.mustContain = ["org\\libname\\src\\$path"];
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let execResult = utils.exec('-l');
+        let execResult = testsGlobalHelper.execTbCmd('-l');
         
         expect(execResult).toContain('File does not contain a namespace declaration');
         expect(execResult).toContain('src\\main\\php\\autoloader.php');
@@ -1126,9 +1126,9 @@ describe('cmd-parameter-validate', function() {
         expect(execResult).toContain('SomeManager.php');
         
         setup.validate.php.namespaces.excludes = ["autoloader.php", "index.php"];
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        execResult = utils.exec('-l');
+        execResult = testsGlobalHelper.execTbCmd('-l');
         
         expect(execResult).toContain('File does not contain a namespace declaration');
         expect(execResult).not.toContain('src\\main\\php\\autoloader.php');
@@ -1144,7 +1144,7 @@ describe('cmd-parameter-validate', function() {
         expect(utils.fm.saveFile('./src/main/php/utils/SomeUtils.php',
             "<?php namespace org\\libname\\src\\main\\php\\utils; class SomeUtils {} ?>")).toBe(true);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
     
     
@@ -1152,7 +1152,7 @@ describe('cmd-parameter-validate', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
-        let buildResult = utils.exec('-l');
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
         expect(buildResult).toContain("validate ok");
     });
@@ -1164,7 +1164,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(setup.validate.filesContent.copyPasteDetect.length).toBe(0);
         
-        let lintResult = utils.exec('-l');
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
         
         expect(lintResult).not.toContain("Looking for duplicate code");
         expect(lintResult).toContain("validate ok");
@@ -1177,7 +1177,7 @@ describe('cmd-parameter-validate', function() {
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'),
             ["Looking for duplicate code on",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
@@ -1190,9 +1190,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'),
             ["Looking for duplicate code on",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
@@ -1205,9 +1205,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel = 4;
         setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel = 10;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-l'),
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'),
             ["Looking for duplicate code on",
              "Percentage of duplicate code: 0 (maximum allowed: 4)",
              "The percentage of duplicate code on the project is 0 which is too below from"]);
@@ -1220,7 +1220,7 @@ describe('cmd-parameter-validate', function() {
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), [
             "Looking for duplicate code on",
             "Percentage of duplicate code: 0 (maximum allowed: 0)",
             "validate ok"]);
@@ -1229,7 +1229,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(utils.fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), [
             "ERROR: jscpd found too many duplicates over threshold"]);
         
         expect(utils.fm.isDirectory('./src')).toBe(true);
@@ -1239,9 +1239,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), [
             "ERROR: jscpd found too many duplicates over threshold"]);
          
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
@@ -1260,9 +1260,9 @@ describe('cmd-parameter-validate', function() {
         // Enable the copy paste html report generation
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-cl'),
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-cl'),
             ["clean ok",
              "Looking for duplicate code",
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
@@ -1285,9 +1285,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-cbl'), [
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-cbl'), [
             "clean ok",
             "Looking for duplicate code",
             "Percentage of duplicate code: 0 (maximum allowed: 0)",
@@ -1311,9 +1311,9 @@ describe('cmd-parameter-validate', function() {
         
         setup.validate.filesContent.copyPasteDetect[0].report = 'html';
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-crl'), [
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-crl'), [
             "clean ok",
             "Looking for duplicate code",
             "Percentage of duplicate code: 0 (maximum allowed: 0)",

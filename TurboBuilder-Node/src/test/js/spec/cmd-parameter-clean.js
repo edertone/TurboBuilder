@@ -39,12 +39,12 @@ describe('cmd-parameter-clean', function(){
         
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
 
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
 
         expect(utils.fm.isDirectory('./target')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/dist/es5/PackedJsFileName-ES5.js')).toBe(true);
 
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
 
         expect(utils.fm.isDirectory('./target')).toBe(false);
     });
@@ -56,12 +56,12 @@ describe('cmd-parameter-clean', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
 
         expect(utils.fm.isDirectory('./target')).toBe(true);
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
 
         expect(utils.fm.isDirectory('./target')).toBe(false);
     });
@@ -73,12 +73,12 @@ describe('cmd-parameter-clean', function(){
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isDirectory('./target')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/dist/.htaccess')).toBe(true);
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
 
         expect(utils.fm.isDirectory('./target')).toBe(false);        
     });
@@ -90,12 +90,12 @@ describe('cmd-parameter-clean', function(){
         
         utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isDirectory('./target')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/dist/.htaccess')).toBe(true);
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
 
         expect(utils.fm.isDirectory('./target')).toBe(false);        
     });
@@ -119,22 +119,22 @@ describe('cmd-parameter-clean', function(){
             "deleteDestPathContents" : true
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(utils.exec('-b')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('sync ok to fs');
 
         expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'site' + utils.fm.dirSep() + 'index.php')).toBe(true);
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
         
         expect(utils.fm.isDirectory('./target')).toBe(false);
         expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'site' + utils.fm.dirSep() + 'index.php')).toBe(true);
 
-        expect(utils.exec('-b')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('sync ok to fs');
 
         expect(utils.fm.isDirectory('./target')).toBe(true);
         
-        expect(utils.exec('-cs')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-cs')).toContain("clean ok");
         
         expect(utils.fm.isDirectory('./target')).toBe(false);
         expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'site' + utils.fm.dirSep() + 'index.php')).toBe(false);
@@ -145,6 +145,6 @@ describe('cmd-parameter-clean', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
-        expect(utils.exec('-c')).toContain('clean ok');   
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain('clean ok');   
     });
 });

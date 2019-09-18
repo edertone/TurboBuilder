@@ -35,12 +35,12 @@ describe('cmd-parameter-generate', function(){
 
     it('should fail when -g and --generate arguments are passed without parameters or with wrong parameters', function(){
 
-        expect(utils.exec('-g')).toContain("argument missing");
-        expect(utils.exec('-g someinvalidvalue')).toContain("invalid project type. Allowed types: " +
+        expect(testsGlobalHelper.execTbCmd('-g')).toContain("argument missing");
+        expect(testsGlobalHelper.execTbCmd('-g someinvalidvalue')).toContain("invalid project type. Allowed types: " +
             ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '));
 
-        expect(utils.exec('--generate')).toContain("argument missing");
-        expect(utils.exec('--generate someinvalidvalue')).toContain("invalid project type. Allowed types: " +
+        expect(testsGlobalHelper.execTbCmd('--generate')).toContain("argument missing");
+        expect(testsGlobalHelper.execTbCmd('--generate someinvalidvalue')).toContain("invalid project type. Allowed types: " +
             ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '));
     });
 
@@ -49,7 +49,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
@@ -78,7 +78,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
@@ -113,7 +113,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
@@ -141,7 +141,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./turbosite.json')).toBe(true);
         expect(utils.fm.isFile('./turbosite.release.json')).toBe(true);
@@ -175,7 +175,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./turbosite.json')).toBe(true);
         expect(utils.fm.isFile('./turbosite.release.json')).toBe(true);
@@ -209,9 +209,9 @@ describe('cmd-parameter-generate', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.exec('--generate lib_php')).toContain('File ' + global.fileNames.setup + ' already exists');
+        expect(testsGlobalHelper.execTbCmd('--generate lib_php')).toContain('File ' + global.fileNames.setup + ' already exists');
     });
 
 
@@ -219,8 +219,8 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.fm.saveFile('./someFile.txt', 'file contents')).toBe(true);
 
-        expect(utils.exec('-g lib_php')).toContain('Current folder is not empty! :');
-        expect(utils.exec('--generate lib_php')).toContain('Current folder is not empty! :');
+        expect(testsGlobalHelper.execTbCmd('-g lib_php')).toContain('Current folder is not empty! :');
+        expect(testsGlobalHelper.execTbCmd('--generate lib_php')).toContain('Current folder is not empty! :');
     });
 
 
@@ -230,21 +230,21 @@ describe('cmd-parameter-generate', function(){
         
         setup.metadata.builderVersion = '';
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(utils.exec('-l')).toContain("metadata.builderVersion not specified on");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("metadata.builderVersion not specified on");
 
         setup.metadata.builderVersion = setupModule.getBuilderVersion() + '.9';
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(utils.exec('-l')).toContain("Warning: Current turbobuilder version");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Warning: Current turbobuilder version");
     });
     
     
     it('should generate app_angular project structure', function() {
 
-        let generateResult = utils.exec('--generate app_angular');
+        let generateResult = testsGlobalHelper.execTbCmd('--generate app_angular');
         expect(generateResult).toContain("NOT FINISHED YET! - Remember to follow the instructions on TODO.md");
         expect(generateResult).toContain("Generated project structure ok");
         
@@ -263,7 +263,7 @@ describe('cmd-parameter-generate', function(){
 
         expect(utils.fm.readFile('./tslint.json')).toContain('"extends": "./tslint-angular.json"');
 
-        let setup = utils.readSetupFile();
+        let setup = testsGlobalHelper.readSetupFile();
         
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -278,7 +278,7 @@ describe('cmd-parameter-generate', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
         
-        expect(utils.exec('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
         expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(utils.fm.readFile('./extras/help/debug.md')).toContain('# How to debug a node app with chrome dev tools');
@@ -315,7 +315,7 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate struct_deploy folders structure', function() {
         
-        expect(utils.exec('-g struct_deploy')).toContain("Generated folders structure ok");
+        expect(testsGlobalHelper.execTbCmd('-g struct_deploy')).toContain("Generated folders structure ok");
 
         expect(utils.fm.isDirectory('./_dev')).toBe(true);
         expect(utils.fm.isDirectory('./_trash')).toBe(true);
@@ -334,7 +334,7 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate struct_customer folders structure', function() {
         
-        expect(utils.exec('-g struct_customer')).toContain("Generated folders structure ok");
+        expect(testsGlobalHelper.execTbCmd('-g struct_customer')).toContain("Generated folders structure ok");
 
         expect(utils.fm.isDirectory('./Documents')).toBe(true);
         expect(utils.fm.isFile('./Documents/Contact.md')).toBe(true);

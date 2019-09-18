@@ -32,8 +32,8 @@ describe('cmd-parameter-sync', function(){
 
     it('should fail when -s and --sync arguments are executed on an empty folder', function(){
 
-        expect(utils.exec('-s')).toContain(global.fileNames.setup + ' setup file not found');
-        expect(utils.exec('--sync')).toContain(global.fileNames.setup + ' setup file not found');
+        expect(testsGlobalHelper.execTbCmd('-s')).toContain(global.fileNames.setup + ' setup file not found');
+        expect(testsGlobalHelper.execTbCmd('--sync')).toContain(global.fileNames.setup + ' setup file not found');
     });
 
 
@@ -41,8 +41,8 @@ describe('cmd-parameter-sync', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('site_php', {}, []);
 
-        expect(utils.exec('-s')).toContain('No valid project type specified');
-        expect(utils.exec('--sync')).toContain('No valid project type specified');
+        expect(testsGlobalHelper.execTbCmd('-s')).toContain('No valid project type specified');
+        expect(testsGlobalHelper.execTbCmd('--sync')).toContain('No valid project type specified');
     });
 
 
@@ -50,8 +50,8 @@ describe('cmd-parameter-sync', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
-        expect(utils.exec('-s')).toContain('Source path does not exist:');
-        expect(utils.exec('--sync')).toContain('Source path does not exist:');
+        expect(testsGlobalHelper.execTbCmd('-s')).toContain('Source path does not exist:');
+        expect(testsGlobalHelper.execTbCmd('--sync')).toContain('Source path does not exist:');
     });
 
 
@@ -59,7 +59,7 @@ describe('cmd-parameter-sync', function(){
 
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
-        let testsLaunchResult = utils.exec('-b');
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-b');
         expect(testsLaunchResult).toContain("build start: site_php");
         expect(testsLaunchResult).not.toContain("sync ok to fs");
     });
@@ -83,26 +83,26 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : false
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(utils.exec('-bs')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('-bs')).toContain('sync ok to fs');
 
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
 
         expect(utils.fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
 
-        expect(utils.exec('--build --sync')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('--build --sync')).toContain('sync ok to fs');
 
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
 
         // Sync must fail the second time due to a non empty destination folder
-        expect(utils.exec('-s')).toContain('Destination path is not empty');
+        expect(testsGlobalHelper.execTbCmd('-s')).toContain('Destination path is not empty');
 
         // Modify setup to allow delete dest path and try again
         setup.sync.deleteDestPathContents = true;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(utils.exec('-s')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('-s')).toContain('sync ok to fs');
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
     });
 
@@ -125,9 +125,9 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : false
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        let testsLaunchResult = utils.exec('-b');
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-b');
         expect(testsLaunchResult).toContain("sync ok to fs");
     });
 
@@ -150,9 +150,9 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : false
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        let testsLaunchResult = utils.exec('-bs');
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-bs');
         expect(testsLaunchResult).toContain("sync ok to fs");
         expect(testsLaunchResult).toContain("sync start");
         expect(testsLaunchResult.split("sync ok to fs").length - 1).toBe(1);
@@ -177,9 +177,9 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : false
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        let testsLaunchResult = utils.exec('-bs');
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-bs');
         expect(testsLaunchResult).toContain("sync ok to fs");
         expect(testsLaunchResult).not.toContain("sync start");
         expect(testsLaunchResult.split("sync ok to fs").length - 1).toBe(1);
@@ -209,16 +209,16 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : true
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(utils.exec('-rs')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('-rs')).toContain('sync ok to fs');
 
         expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(false);
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
 
         expect(utils.fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
 
-        expect(utils.exec('--release --sync')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('--release --sync')).toContain('sync ok to fs');
 
         expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
     });
@@ -242,9 +242,9 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : false
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        let testsLaunchResult = utils.exec('-r');
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-r');
         expect(testsLaunchResult).toContain("sync ok to fs");
         expect(testsLaunchResult).not.toContain("sync start");
         expect(testsLaunchResult.split("sync ok to fs").length - 1).toBe(1);
@@ -270,7 +270,7 @@ describe('cmd-parameter-sync', function(){
             "deleteDestPathContents" : true
         };
 
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
         // Create a setup file that overrides the destpath to a different location
         utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setupRelease, JSON.stringify({
@@ -280,7 +280,7 @@ describe('cmd-parameter-sync', function(){
         }));
 
         // Verify that release generates the files into the -release folder
-        expect(utils.exec('-rs')).toContain('sync ok to fs');
+        expect(testsGlobalHelper.execTbCmd('-rs')).toContain('sync ok to fs');
 
         expect(utils.fm.isDirectoryEmpty(destFolder + '-build')).toBe(true);
         expect(utils.fm.isDirectoryEmpty(destFolder + '-release')).toBe(false);

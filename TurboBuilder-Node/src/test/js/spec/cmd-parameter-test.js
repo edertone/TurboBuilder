@@ -37,9 +37,9 @@ describe('cmd-parameter-test', function() {
     
     it('should fail on empty project', function() {
 
-        expect(utils.exec('-t')).toContain("setup file not found");
+        expect(testsGlobalHelper.execTbCmd('-t')).toContain("setup file not found");
         
-        expect(utils.exec('--test')).toContain("setup file not found");
+        expect(testsGlobalHelper.execTbCmd('--test')).toContain("setup file not found");
     });
 
     
@@ -47,12 +47,12 @@ describe('cmd-parameter-test', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        stringTestsManager.assertTextContainsAll(utils.exec('-t'),
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-t'),
             ['--test SHOULD be used at the same time with -b --build or -r --release.',
              'IF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT',
              'Do you still want to run the tests (Y/N)?']);
             
-        stringTestsManager.assertTextContainsAll(utils.exec('--test'),
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('--test'),
             ['--test SHOULD be used at the same time with -b --build or -r --release.',
              'IF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT',
              'Do you still want to run the tests (Y/N)?']);
@@ -65,9 +65,9 @@ describe('cmd-parameter-test', function() {
  
         setup.test = [];
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-bt')).toContain('Nothing to test. Please setup some tests on test section');
+        expect(testsGlobalHelper.execTbCmd('-bt')).toContain('Nothing to test. Please setup some tests on test section');
     });
     
     
@@ -77,9 +77,9 @@ describe('cmd-parameter-test', function() {
  
         setup.test[0].coverageReport = false;
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let testResult = utils.exec('-bt');
+        let testResult = testsGlobalHelper.execTbCmd('-bt');
         
         expect(testResult).toContain('launching phpunit tests');
         expect(testResult).toContain('(100%)');
@@ -95,9 +95,9 @@ describe('cmd-parameter-test', function() {
         setup.test[0].coverageReport = true;
         setup.test[0].coverageReportOpenAfterTests = false;
         
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let testResult = utils.exec('-bt');
+        let testResult = testsGlobalHelper.execTbCmd('-bt');
         
         expect(testResult).toContain('launching phpunit tests');
         expect(testResult).toContain('(100%)');
@@ -113,16 +113,16 @@ describe('cmd-parameter-test', function() {
     
     it('should fail when a site_php is generated and no npm ci is performed before build and test', function() {
         
-        let testsGenerateResult = utils.exec('-g site_php');   
+        let testsGenerateResult = testsGlobalHelper.execTbCmd('-g site_php');   
         expect(testsGenerateResult).toContain("Generated site_php structure");
         expect(testsGenerateResult).toContain("Created turbobuilder.json file");
         expect(testsGenerateResult).toContain("Generated project structure ok");
         
-        let setup = utils.readSetupFile();  
+        let setup = testsGlobalHelper.readSetupFile();  
         setup.validate.filesContent.copyPasteDetect = [];
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let testsLaunchResult = utils.exec('-bt');        
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-bt');        
         expect(testsLaunchResult).toContain("build start: site_php");
         expect(testsLaunchResult).toContain("test start");
         expect(testsLaunchResult).toContain("Error: turbocommons-ts module not found. Did you run npm ci or npm install?");
@@ -140,7 +140,7 @@ describe('cmd-parameter-test', function() {
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink';         
         setup.sync.remoteUrl = 'https://localhost';          
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Add the project name to the package.json file
         let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
@@ -155,7 +155,7 @@ describe('cmd-parameter-test', function() {
         let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
         expect(npmInstallResult).not.toContain("npm ERR");
         
-        let testsLaunchResult = utils.exec('-cbst');        
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-cbst');        
         expect(testsLaunchResult).toContain("clean start");
         expect(testsLaunchResult).toContain("build start");
         expect(testsLaunchResult).toContain("sync start");
@@ -163,7 +163,7 @@ describe('cmd-parameter-test', function() {
         expect(testsLaunchResult).toContain("0 failures");
         expect(testsLaunchResult).not.toContain('jasmine unit test failures');
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
     });
     
     
@@ -177,7 +177,7 @@ describe('cmd-parameter-test', function() {
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder';        
         setup.sync.remoteUrl = 'https://localhost/subfolder';        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Add the project name to the package.json file
         let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
@@ -199,7 +199,7 @@ describe('cmd-parameter-test', function() {
         expect(npmInstallResult).not.toContain("npm ERR");
         
         // launch selenium tests on root localhost
-        let testsLaunchResult = utils.exec('-cbst');        
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-cbst');        
         expect(testsLaunchResult).toContain("clean start");
         expect(testsLaunchResult).toContain("build start");
         expect(testsLaunchResult).toContain("sync start");
@@ -207,7 +207,7 @@ describe('cmd-parameter-test', function() {
         expect(testsLaunchResult).toContain("0 failures");
         expect(testsLaunchResult).not.toContain('jasmine unit test failures');
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
     });
     
     
@@ -221,7 +221,7 @@ describe('cmd-parameter-test', function() {
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder1/subfolder2';        
         setup.sync.remoteUrl = 'https://localhost/subfolder1/subfolder2';          
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Add the project name to the package.json file
         let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
@@ -243,7 +243,7 @@ describe('cmd-parameter-test', function() {
         expect(npmInstallResult).not.toContain("npm ERR");
         
         // launch selenium tests on root localhost
-        let testsLaunchResult = utils.exec('-cbst');        
+        let testsLaunchResult = testsGlobalHelper.execTbCmd('-cbst');        
         expect(testsLaunchResult).toContain("clean start");
         expect(testsLaunchResult).toContain("build start");
         expect(testsLaunchResult).toContain("sync start");
@@ -251,6 +251,6 @@ describe('cmd-parameter-test', function() {
         expect(testsLaunchResult).toContain("0 failures");
         expect(testsLaunchResult).not.toContain('jasmine unit test failures');
         
-        expect(utils.exec('-c')).toContain("clean ok");
+        expect(testsGlobalHelper.execTbCmd('-c')).toContain("clean ok");
     });
 });

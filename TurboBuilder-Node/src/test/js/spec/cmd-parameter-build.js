@@ -35,8 +35,8 @@ describe('cmd-parameter-build', function() {
     
     it('should fail when -b and --build arguments are executed on an empty folder', function() {
 
-        expect(utils.exec('-b')).toContain(global.fileNames.setup + ' setup file not found');
-        expect(utils.exec('--build')).toContain(global.fileNames.setup + ' setup file not found');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain(global.fileNames.setup + ' setup file not found');
+        expect(testsGlobalHelper.execTbCmd('--build')).toContain(global.fileNames.setup + ' setup file not found');
     });
     
     
@@ -44,8 +44,8 @@ describe('cmd-parameter-build', function() {
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {}, []);
         
-        expect(utils.exec('-b')).toContain('No valid project type specified');
-        expect(utils.exec('--build')).toContain('No valid project type specified');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('No valid project type specified');
+        expect(testsGlobalHelper.execTbCmd('--build')).toContain('No valid project type specified');
     });
     
     
@@ -53,8 +53,8 @@ describe('cmd-parameter-build', function() {
     
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {lib_ts: {}, lib_php: {}}, []);
 
-        expect(utils.exec('-b')).toContain('Please specify only one of the following on build setup');
-        expect(utils.exec('--build')).toContain('Please specify only one of the following on build setup');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('Please specify only one of the following on build setup');
+        expect(testsGlobalHelper.execTbCmd('--build')).toContain('Please specify only one of the following on build setup');
     });
     
     
@@ -66,8 +66,8 @@ describe('cmd-parameter-build', function() {
         expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + 'src' + utils.fm.dirSep() + 'main' + utils.fm.dirSep() + 'ts', false))
             .toBeGreaterThan(0);
 
-        expect(utils.exec('-b')).toContain('no files to build');
-        expect(utils.exec('--build')).toContain('no files to build');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('no files to build');
+        expect(testsGlobalHelper.execTbCmd('--build')).toContain('no files to build');
     });
     
     
@@ -79,7 +79,7 @@ describe('cmd-parameter-build', function() {
                
         expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isFile('./target/' + folderName + '/dist/es5/PackedJsFileName-ES5.js')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/dist/es6/PackedJsFileName-ES6.js')).toBe(true);
@@ -93,7 +93,7 @@ describe('cmd-parameter-build', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
@@ -109,9 +109,9 @@ describe('cmd-parameter-build', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         setup.build.lib_js.deleteNonMergedJs = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(true);
@@ -129,9 +129,9 @@ describe('cmd-parameter-build', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         setup.build.lib_js.createMergedFile = false;        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
         expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
@@ -147,9 +147,9 @@ describe('cmd-parameter-build', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         setup.build.lib_js.mergedFileName = "SomeMergeFileName";
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.isFile('./target/' + folderName + '/dist/SomeMergeFileName.js')).toBe(true);
         
@@ -172,7 +172,7 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
   
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
@@ -188,7 +188,7 @@ describe('cmd-parameter-build', function() {
         expect(setup.build.hasOwnProperty('site_php')).toBe(true);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         
-        let buildResult = utils.exec('-b');
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
         
         expect(buildResult).toContain('build start: site_php');
         expect(buildResult).toContain('build ok');
@@ -221,7 +221,7 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.fm.deleteFile('./src/main/resources/favicons/196x196.png')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('Warning: No favicons specified');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('Warning: No favicons specified');
     });
     
     
@@ -231,7 +231,7 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('Unexpected favicon name: 196x191.png');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('Unexpected favicon name: 196x191.png');
     });
     
     
@@ -244,7 +244,7 @@ describe('cmd-parameter-build', function() {
         expect(setup.build.hasOwnProperty('server_php')).toBe(true);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
     });
     
     
@@ -258,7 +258,7 @@ describe('cmd-parameter-build', function() {
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.build.hasOwnProperty('app_node_cmd')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok (no files affected or created)');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok (no files affected or created)');
     });
         
     
@@ -270,14 +270,14 @@ describe('cmd-parameter-build', function() {
         
         setup.build.replaceVersion.enabled = true;
         setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php // 1 - 0.0.0 2 - 0.0.0 ?>');
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";// a - 0.0.0 b - 0.0.0');
@@ -293,7 +293,7 @@ describe('cmd-parameter-build', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
@@ -301,7 +301,7 @@ describe('cmd-parameter-build', function() {
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
         // replaceVersion.enabled is false by default, so no replacement must happen
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
@@ -316,12 +316,12 @@ describe('cmd-parameter-build', function() {
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
         // We will now enable replaceversion and set an empty wildcard. No replacement must happen
-        setup = utils.readSetupFile();
+        setup = testsGlobalHelper.readSetupFile();
         setup.build.replaceVersion.enabled = true;
         setup.build.replaceVersion.wildCard = "";        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
                 
         expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
@@ -371,7 +371,7 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
         
-        expect(utils.exec('-b')).toContain("build ok");
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         
         let indexPhpSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '/dist/site/index.php');
 
@@ -406,7 +406,7 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
         
-        expect(utils.exec('-b')).toContain("build ok");
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         
         let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '/dist/site/index.php');
 

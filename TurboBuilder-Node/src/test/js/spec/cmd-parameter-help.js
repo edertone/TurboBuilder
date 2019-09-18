@@ -33,29 +33,29 @@ describe('cmd-parameter-help', function() {
     
     it('should show help when no arguments are passed', function() {
 
-        expect(utils.exec('')).toContain("Usage: turbobuilder|tb [options]");
+        expect(testsGlobalHelper.execTbCmd('')).toContain("Usage: turbobuilder|tb [options]");
     }); 
     
     
     it('should show help when -h and --help arguments are passed', function() {
 
-        expect(utils.exec('-h')).toContain("Usage: turbobuilder|tb [options]");
-        expect(utils.exec('--help')).toContain("Usage: turbobuilder|tb [options]");
+        expect(testsGlobalHelper.execTbCmd('-h')).toContain("Usage: turbobuilder|tb [options]");
+        expect(testsGlobalHelper.execTbCmd('--help')).toContain("Usage: turbobuilder|tb [options]");
     });
     
     
     it('should show help when -h and --help arguments are passed after creating an empty project', function() {
 
-        utils.exec('-g lib_php');
+        testsGlobalHelper.execTbCmd('-g lib_php');
         
-        expect(utils.exec('-h')).toContain("Usage: turbobuilder|tb [options]");
-        expect(utils.exec('--help')).toContain("Usage: turbobuilder|tb [options]");
+        expect(testsGlobalHelper.execTbCmd('-h')).toContain("Usage: turbobuilder|tb [options]");
+        expect(testsGlobalHelper.execTbCmd('--help')).toContain("Usage: turbobuilder|tb [options]");
     });
     
     it('should show help when no arguments are passed after creating an empty project', function() {
 
-        utils.exec('-g lib_php');
+        testsGlobalHelper.execTbCmd('-g lib_php');
         
-        expect(utils.exec('')).toContain("Usage: turbobuilder|tb [options]");
+        expect(testsGlobalHelper.execTbCmd('')).toContain("Usage: turbobuilder|tb [options]");
     });
 });

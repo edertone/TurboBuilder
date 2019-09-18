@@ -41,7 +41,7 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
-        let launchResult = utils.exec('-cr');        
+        let launchResult = testsGlobalHelper.execTbCmd('-cr');        
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("release start");
@@ -79,7 +79,7 @@ describe('cmd-parameter-release', function() {
         
         terminalManager.exec('git tag 0.4.0');
         
-        let launchResult = utils.exec('-cr');        
+        let launchResult = testsGlobalHelper.execTbCmd('-cr');        
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("release start");
@@ -115,14 +115,14 @@ describe('cmd-parameter-release', function() {
             projectResourcesRoot + sep + 'non-optimized-jpg-image.jpg');
         
         // First launch the build
-        let launchResult = utils.exec('-cb');
+        let launchResult = testsGlobalHelper.execTbCmd('-cb');
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("build start");
         expect(launchResult).toContain("build ok");
         
         // Next launch the release
-        launchResult = utils.exec('-r');
+        launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
@@ -189,7 +189,7 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
-        let launchResult = utils.exec('-cr');
+        let launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("release start");
@@ -210,9 +210,9 @@ describe('cmd-parameter-release', function() {
         
         setup.build.lib_js.deleteNonMergedJs = false;
         setup.build.lib_js.createMergedFile = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
                 
-        let launchResult = utils.exec('-cr');
+        let launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("release ok");
@@ -237,14 +237,14 @@ describe('cmd-parameter-release', function() {
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
         // First launch the build
-        let launchResult = utils.exec('-cb');
+        let launchResult = testsGlobalHelper.execTbCmd('-cb');
         expect(launchResult).toContain("clean start");
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("build start");
         expect(launchResult).toContain("build ok");
         
         // Next launch the release
-        launchResult = utils.exec('-r');
+        launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
@@ -273,7 +273,7 @@ describe('cmd-parameter-release', function() {
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.build.hasOwnProperty('app_node_cmd')).toBe(true);
         
-        expect(utils.exec('-r')).toContain('release ok (no files affected or created)');
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok (no files affected or created)');
     });
     
     
@@ -295,7 +295,7 @@ describe('cmd-parameter-release', function() {
         
         terminalManager.exec('git tag 0.4.0');
         
-        let launchResult = utils.exec('-cr');
+        let launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("0.4.0");
         
         let mergedContent = utils.fm.readFile(
@@ -313,7 +313,7 @@ describe('cmd-parameter-release', function() {
         
         setup.build.replaceVersion.enabled = true;
         setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
@@ -321,7 +321,7 @@ describe('cmd-parameter-release', function() {
         expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
-        expect(utils.exec('-r')).toContain('release ok');
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
             .toBe('<?php ?>');
@@ -347,7 +347,7 @@ describe('cmd-parameter-release', function() {
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
         setup.validate.php.namespaces.enabled = false;
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
         expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
@@ -356,7 +356,7 @@ describe('cmd-parameter-release', function() {
         expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
         // replaceVersion.enabled is false by default, so no replacement must happen
-        expect(utils.exec('-r')).toContain('release ok');
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
             .toBe('<?php ?>');
@@ -374,12 +374,12 @@ describe('cmd-parameter-release', function() {
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
         // We will now enable replaceversion and set an empty wildcard. No replacement must happen
-        setup = utils.readSetupFile();
+        setup = testsGlobalHelper.readSetupFile();
         setup.build.replaceVersion.enabled = true;
         setup.build.replaceVersion.wildCard = "";        
-        expect(utils.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.exec('-r')).toContain('release ok');
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
         expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
             .toBe('<?php ?>');
@@ -405,13 +405,13 @@ describe('cmd-parameter-release', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let launchResult = utils.exec('-r');
+        let launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
         expect(utils.fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
     
-        launchResult = utils.exec('-cr');
+        launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
@@ -420,7 +420,7 @@ describe('cmd-parameter-release', function() {
         tsSetup.errorSetup.warningsToBrowser = false;
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);
                 
-        launchResult = utils.exec('-cr');
+        launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
@@ -447,9 +447,9 @@ describe('cmd-parameter-release', function() {
         tsRelease.errorSetup.exceptionsToMail = 'mycustommail';
         expect(utils.fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        let launchResult = utils.exec('-r');
+        let launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
@@ -459,7 +459,7 @@ describe('cmd-parameter-release', function() {
         tsRelease.errorSetup.warningsToBrowser = false;
         expect(utils.fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
         
-        launchResult = utils.exec('-cr');
+        launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
@@ -499,7 +499,7 @@ describe('cmd-parameter-release', function() {
         
         expect(utils.fm.saveFile('.' + sep + 'turbodepot.release.json', JSON.stringify(tdToOverride))).toBe(true);
         
-        expect(utils.exec('-b')).toContain('build ok');
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         let tdSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '/dist/site/index.php');
 
@@ -510,7 +510,7 @@ describe('cmd-parameter-release', function() {
         expect(tdSetup.sources.mariadb[0].database).toBe("");
         expect(tdSetup.sources.mariadb[0].prefix).toBe("tdp_");
         
-        let launchResult = utils.exec('-r');
+        let launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release ok");
          
         let tdReleaseSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '-0.0.0/dist/site/index.php');
@@ -558,7 +558,7 @@ describe('cmd-parameter-release', function() {
         
         expect(utils.fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
         
-        expect(utils.exec('-r')).toContain("release ok");
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
         let indexPhpSetup = tsm.getSetupFromIndexPhp('turbodepot', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
@@ -593,7 +593,7 @@ describe('cmd-parameter-release', function() {
         
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
         
-        expect(utils.exec('-r')).toContain("release ok");
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
         let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
@@ -608,7 +608,7 @@ describe('cmd-parameter-release', function() {
         setup.errorSetup.warningsToBrowser = false;
         expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
         
-        expect(utils.exec('-r')).toContain("release ok");
+        expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
         indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
