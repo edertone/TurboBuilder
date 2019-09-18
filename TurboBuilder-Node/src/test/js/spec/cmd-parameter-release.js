@@ -9,11 +9,6 @@
 
 
 require('./../../../main/js/globals');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const crypto = require('crypto');
-const { execSync } = require('child_process');
 const utils = require('../cmd-parameter-test-utils');
 const { ObjectUtils, StringUtils } = require('turbocommons-ts');
 const { TurboSiteTestsManager } = require('turbotesting-node');
@@ -27,22 +22,22 @@ describe('cmd-parameter-release', function() {
     
     beforeEach(function() {
         
-        this.workdir = terminalManager.createTempDirectory('test-release');
+        this.tempDir = terminalManager.createTempDirectory('test-release');
     });
 
     
     afterEach(function() {
   
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     
     it('should include project semver (0.0.0) inside all generated release merged JS on a non git project', function() {
 
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
@@ -69,7 +64,7 @@ describe('cmd-parameter-release', function() {
     it('should include project semver (0.4.0) inside all generated release merged JS on a lib_ts git project with created tags', function() {
 
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
@@ -106,7 +101,7 @@ describe('cmd-parameter-release', function() {
     it('should correctly generate release minifications for a site_php generated project', function() {
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let projectResourcesRoot = '.' + sep + 'src' + sep + 'main' + sep + 'resources';
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'site';
@@ -208,7 +203,7 @@ describe('cmd-parameter-release', function() {
     it('should correctly generate release for a lib_js project type when deleteNonMergedJs and deleteNonMergedJs are false', function() {
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
@@ -235,7 +230,7 @@ describe('cmd-parameter-release', function() {
     it('should correctly generate release minifications for a lib_js generated project', function() {
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
@@ -285,7 +280,7 @@ describe('cmd-parameter-release', function() {
     it('should include project semver (0.4.0) inside all generated release merged JS on a lib_js git project with created tags', function() {
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
@@ -312,7 +307,7 @@ describe('cmd-parameter-release', function() {
     
     it('should replace all wildcard matches with project version on all configured file extensions', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -347,7 +342,7 @@ describe('cmd-parameter-release', function() {
     
     it('should NOT replace wildcard matches on configured file extensions when wildcard is set to empty string or enabled is false', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -406,7 +401,7 @@ describe('cmd-parameter-release', function() {
     it('should build release correctly when turbosite.release.json is missing', function() {
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -441,7 +436,7 @@ describe('cmd-parameter-release', function() {
     it('should override turbosite.json with turbosite.release.json values on site_php release target folder', function() {
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -485,7 +480,7 @@ describe('cmd-parameter-release', function() {
     it('should override turbodepot.json with turbodepot.release.json values on site_php release target folder', function() {
     
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -544,7 +539,7 @@ describe('cmd-parameter-release', function() {
         // This test checks that this works ok
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -579,7 +574,7 @@ describe('cmd-parameter-release', function() {
         // This test checks that this works ok
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         

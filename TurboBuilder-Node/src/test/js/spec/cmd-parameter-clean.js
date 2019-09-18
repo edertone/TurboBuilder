@@ -19,21 +19,21 @@ describe('cmd-parameter-clean', function(){
 
     beforeEach(function(){
 
-        this.workdir = terminalManager.createTempDirectory('test-clean');
+        this.tempDir = terminalManager.createTempDirectory('test-clean');
     });
 
 
     afterEach(function(){
 
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
 
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
 
     it('should correctly clean a lib_ts project', function(){
 
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
         
@@ -52,7 +52,7 @@ describe('cmd-parameter-clean', function(){
 
     it('should correctly clean a lib_js project', function(){
 
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
@@ -69,7 +69,7 @@ describe('cmd-parameter-clean', function(){
 
     it('should correctly clean a site_php project', function(){
 
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -86,7 +86,7 @@ describe('cmd-parameter-clean', function(){
     
     it('should correctly clean a server_php project', function(){
 
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
         
@@ -105,7 +105,7 @@ describe('cmd-parameter-clean', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
         

@@ -19,15 +19,15 @@ describe('cmd-parameter-help', function() {
     
     beforeEach(function() {
         
-        this.workdir = terminalManager.createTempDirectory('test-help');
+        this.tempDir = terminalManager.createTempDirectory('test-help');
     });
 
     
     afterEach(function() {
   
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     

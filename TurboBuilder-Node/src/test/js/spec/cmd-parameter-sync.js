@@ -18,15 +18,15 @@ describe('cmd-parameter-sync', function(){
 
     beforeEach(function(){
 
-        this.workdir = terminalManager.createTempDirectory('test-sync');
+        this.tempDir = terminalManager.createTempDirectory('test-sync');
     });
 
 
     afterEach(function(){
 
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
 
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
 
@@ -69,7 +69,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
 
@@ -111,7 +111,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
 
@@ -136,7 +136,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
 
@@ -163,7 +163,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
 
@@ -190,7 +190,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
 
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
 
@@ -228,7 +228,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder)).toBe(true);
 
@@ -255,7 +255,7 @@ describe('cmd-parameter-sync', function(){
 
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
-        let destFolder = this.workdir + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
 
         expect(utils.fm.createDirectory(destFolder + '-build')).toBe(true);
         expect(utils.fm.createDirectory(destFolder + '-release')).toBe(true);

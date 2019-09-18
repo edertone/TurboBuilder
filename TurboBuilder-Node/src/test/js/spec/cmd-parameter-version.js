@@ -20,22 +20,22 @@ describe('cmd-parameter-version', function() {
     
     beforeEach(function() {
         
-        this.workdir = terminalManager.createTempDirectory('test-version');
+        this.tempDir = terminalManager.createTempDirectory('test-version');
     });
 
     
     afterEach(function() {
   
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
     
     it('should show application version when -v and --version arguments are passed', function() {
         
-        expect(utils.exec('-v')).toContain(setupModule.getBuilderVersion());
-        expect(utils.exec('--version')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTurboBuilder('-v')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTurboBuilder('--version')).toContain(setupModule.getBuilderVersion());
     });
     
     
@@ -43,7 +43,7 @@ describe('cmd-parameter-version', function() {
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
         
-        expect(utils.exec('-v')).toContain(setupModule.getBuilderVersion());
-        expect(utils.exec('--version')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTurboBuilder('-v')).toContain(setupModule.getBuilderVersion());
+        expect(testsGlobalHelper.execTurboBuilder('--version')).toContain(setupModule.getBuilderVersion());
     }); 
 });

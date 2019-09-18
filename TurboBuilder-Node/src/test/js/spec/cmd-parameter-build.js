@@ -9,11 +9,6 @@
 
 
 require('./../../../main/js/globals');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const crypto = require('crypto');
-const { execSync } = require('child_process');
 const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
 const { TerminalManager } = require('turbodepot-node');
@@ -27,15 +22,15 @@ describe('cmd-parameter-build', function() {
     
     beforeEach(function() {
         
-        this.workdir = terminalManager.createTempDirectory('test-build');
+        this.tempDir = terminalManager.createTempDirectory('test-build');
     });
 
     
     afterEach(function() {
   
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     it('should fail when -b and --build arguments are executed on an empty folder', function() {
@@ -78,7 +73,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build correctly when -b argument is passed after generating a lib_ts structure with some ts files', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
                
@@ -94,7 +89,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build correctly when -b argument is passed after generating a lib_js structure', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
@@ -109,7 +104,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build correctly when -b argument is passed after generating a lib_js structure and deleteNonMergedJs is false', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
@@ -129,7 +124,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build correctly when -b argument is passed after generating a lib_js structure and createMergedFile is false', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
@@ -147,7 +142,7 @@ describe('cmd-parameter-build', function() {
     
     it('should correctly build a lib_js when mergeFileName is specified on setup', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
         
@@ -179,7 +174,7 @@ describe('cmd-parameter-build', function() {
         
         expect(utils.exec('-b')).toContain('build ok');
   
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         expect(utils.fm.isFile('./target/' + folderName  + '/dist/' + folderName  + '-0.0.0.phar')).toBe(true);
     });
@@ -200,7 +195,7 @@ describe('cmd-parameter-build', function() {
         
         // Test that generated favicon files are correct
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
         let buildSetup = tsm.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
         
@@ -269,7 +264,7 @@ describe('cmd-parameter-build', function() {
     
     it('should replace all wildcard matches with project version on all configured file extensions', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -293,7 +288,7 @@ describe('cmd-parameter-build', function() {
     
     it('should NOT replace wildcard matches with project version on configured file extensions when wildcard is set to empty string', function() {
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -357,7 +352,7 @@ describe('cmd-parameter-build', function() {
         // This test checks that this works ok
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         
@@ -392,7 +387,7 @@ describe('cmd-parameter-build', function() {
         // This test checks that this works ok
         
         let sep = utils.fm.dirSep();
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
         utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
         

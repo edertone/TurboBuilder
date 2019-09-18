@@ -56,6 +56,8 @@ exports.generateProjectAndSetTurbobuilderSetup = function (projectType,
  */
 exports.exec = function (options) {
     
+    // TODO - remove
+    
     let pathToExecutable = 'node "' + path.resolve(__dirname + '/../../main/js/turbobuilder.js') + '"';
     
     return terminalManager.exec(pathToExecutable + ' ' + options).output;

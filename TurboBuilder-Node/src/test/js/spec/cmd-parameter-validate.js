@@ -38,15 +38,15 @@ describe('cmd-parameter-validate', function() {
     
     beforeEach(function() {
         
-        this.workdir = terminalManager.createTempDirectory('test-validate');
+        this.tempDir = terminalManager.createTempDirectory('test-validate');
     });
 
     
     afterEach(function() {
   
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
     
@@ -1198,7 +1198,7 @@ describe('cmd-parameter-validate', function() {
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "validate ok"]);
                 
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
@@ -1244,7 +1244,7 @@ describe('cmd-parameter-validate', function() {
         stringTestsManager.assertTextContainsAll(utils.exec('-l'), [
             "ERROR: jscpd found too many duplicates over threshold"]);
          
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(false);
@@ -1268,7 +1268,7 @@ describe('cmd-parameter-validate', function() {
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "validate ok"]);
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
@@ -1294,7 +1294,7 @@ describe('cmd-parameter-validate', function() {
             "validate ok",
             "build ok"]);
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
@@ -1320,7 +1320,7 @@ describe('cmd-parameter-validate', function() {
             "validate ok",
             "release ok"]);
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
         expect(utils.fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
         expect(utils.fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-test/jscpd-report.html')).toBe(true);

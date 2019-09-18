@@ -3,29 +3,32 @@
 'use strict';
 
 
+const path = require('path');
+const { TerminalManager } = require('turbodepot-node');
+
+
+const terminalManager = new TerminalManager('', false);
+
+
 /**
  * Helper that defines global methods to use with the turbobuilder tests
  * Helper modules are always executed once before all the tests run
  */
-
-const path = require('path');
-
-
-const executionDir = path.resolve('./');
+global.testsGlobalHelper = {
 
 
-/**
- * Switch the work directory back to the execution dir
- * @deprecated
- */
-global.switchToExecutionDir = function() {
+    /**
+     * Execute the project main turbobuilder command via cmd with the specified arguments
+     * TODO - replace all utils.exec calls on the project with this method
+     * TODO - Terminal manager class should have the ability to define executable paths and run them when necessary. If this feature is
+     *        implemented, this method may become unnecessary and be replaced with a terminalmanager exec call
+     */
+    execTurboBuilder: function(cmdArguments) {
+    
+        return terminalManager.exec('node "' + path.resolve(__dirname + '/../../../main/js/turbobuilder.js') + '" ' + cmdArguments).output;
+    }
+};
 
-    // TODO - we must implement folder navigation on the terminal manager class.
-    // Every time the terminal manager performs a directory change, it should be pushed into a stack so we
-    // can then go back and forward, or directly to the beginning. This feature can be then used in this project
-    // tests instead of this method (simply by returning back to the initial dir)
-    process.chdir(executionDir);
-}
 
 
 // TODO - add all the methods from cmd-parameter-test-utils.js

@@ -23,15 +23,15 @@ describe('cmd-parameter-test', function() {
     
     beforeEach(function() {
         
-        this.workdir = terminalManager.createTempDirectory('test-test');
+        this.tempDir = terminalManager.createTempDirectory('test-test');
     });
 
     
     afterEach(function() {
   
-        switchToExecutionDir();
+        terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.workdir)).toBeGreaterThan(-1);
+        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     
@@ -105,7 +105,7 @@ describe('cmd-parameter-test', function() {
         expect(testResult).toContain('Generating code coverage report in HTML format');
         expect(testResult).toContain('test done');
         
-        let folderName = StringUtils.getPathElement(this.workdir);
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         expect(utils.fm.isFile('./target/' + folderName + '/reports/coverage/php/index.html')).toBe(true);
     });
