@@ -9,11 +9,12 @@
 
 
 require('./../../../main/js/globals');
-const utils = require('../cmd-parameter-test-utils');
 const { ObjectUtils, StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 const { TerminalManager } = require('turbodepot-node');
 
+const fm = new FilesManager();
 const tsm = new TurboSiteTestsManager('./');
 const terminalManager = new TerminalManager();
 
@@ -30,16 +31,16 @@ describe('cmd-parameter-release', function() {
   
         terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     
     it('should include project semver (0.0.0) inside all generated release merged JS on a non git project', function() {
 
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         let launchResult = testsGlobalHelper.execTbCmd('-cr');        
         expect(launchResult).toContain("clean start");
@@ -49,12 +50,12 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release ok");
         expect(launchResult).toContain("0.0.0");
         
-        let mergedContent = utils.fm.readFile(
+        let mergedContent = fm.readFile(
             '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'es5' + sep + 'PackedJsFileName-ES5.js');
         
         expect(mergedContent.substr(0, 9)).toBe("// 0.0.0\n");
         
-        mergedContent = utils.fm.readFile(
+        mergedContent = fm.readFile(
                 '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'es6' + sep + 'PackedJsFileName-ES6.js');
             
         expect(mergedContent.substr(0, 9)).toBe("// 0.0.0\n");
@@ -63,17 +64,17 @@ describe('cmd-parameter-release', function() {
     
     it('should include project semver (0.4.0) inside all generated release merged JS on a lib_ts git project with created tags', function() {
 
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         expect(terminalManager.exec('git init').output).toContain("Initialized empty Git repository");
         terminalManager.exec('git add .');
         terminalManager.exec('git commit -m "test commit"');
         terminalManager.exec('git tag 0.1.0');
         
-        utils.fm.saveFile('.' + sep + 'test.txt');
+        fm.saveFile('.' + sep + 'test.txt');
         terminalManager.exec('git add .');
         terminalManager.exec('git commit -m "test commit 2"');
         
@@ -86,12 +87,12 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release ok");
         expect(launchResult).toContain("0.4.0");
         
-        let mergedContent = utils.fm.readFile(
+        let mergedContent = fm.readFile(
             '.' + sep + 'target' + sep + folderName + '-0.4.0' + sep + 'dist' + sep + 'es5' + sep + 'PackedJsFileName-ES5.js');
         
         expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
         
-        mergedContent = utils.fm.readFile(
+        mergedContent = fm.readFile(
                 '.' + sep + 'target' + sep + folderName + '-0.4.0' + sep + 'dist' + sep + 'es6' + sep + 'PackedJsFileName-ES6.js');
             
         expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
@@ -100,18 +101,18 @@ describe('cmd-parameter-release', function() {
     
     it('should correctly generate release minifications for a site_php generated project', function() {
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let projectResourcesRoot = '.' + sep + 'src' + sep + 'main' + sep + 'resources';
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist' + sep + 'site';
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         // Copy a non optimized jpg image to the src/main/resources folder
-        utils.fm.createDirectory(projectResourcesRoot + sep + 'pics');
+        fm.createDirectory(projectResourcesRoot + sep + 'pics');
         
-        utils.fm.copyFile(global.installationPaths.testResources + sep + 'cmd-parameter-release' + sep + 'non-optimized-jpg-image.jpg',
+        fm.copyFile(global.installationPaths.testResources + sep + 'cmd-parameter-release' + sep + 'non-optimized-jpg-image.jpg',
             projectResourcesRoot + sep + 'non-optimized-jpg-image.jpg');
         
         // First launch the build
@@ -126,58 +127,58 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
-        expect(utils.fm.isDirectory(buildRoot)).toBe(true);
-        expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
+        expect(fm.isDirectory(buildRoot)).toBe(true);
+        expect(fm.isDirectory(releaseRoot)).toBe(true);
         
         let buildSetup = tsm.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
         let releaseSetup = tsm.getSetupFromIndexPhp('turbosite', releaseRoot + sep + 'index.php');
         
         // Check that js files are smaller on release than on build
-        let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.js');
-        let jsReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'glob-' + releaseSetup.cacheHash + '.js');
+        let jsBuildFileSize = fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.js');
+        let jsReleaseFileSize = fm.getFileSize(releaseRoot + sep + 'glob-' + releaseSetup.cacheHash + '.js');
         
         expect(jsBuildFileSize).toBeGreaterThan(0);
         expect(jsReleaseFileSize).toBeGreaterThan(0);
         expect(jsBuildFileSize).toBeGreaterThan(jsReleaseFileSize);
     
         // Check that css files are smaller on release than on build
-        let cssBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.css');
-        let cssReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'glob-' + releaseSetup.cacheHash + '.css');
+        let cssBuildFileSize = fm.getFileSize(buildRoot + sep + 'glob-' + buildSetup.cacheHash + '.css');
+        let cssReleaseFileSize = fm.getFileSize(releaseRoot + sep + 'glob-' + releaseSetup.cacheHash + '.css');
         
         expect(cssBuildFileSize).toBeGreaterThan(0);
         expect(cssReleaseFileSize).toBeGreaterThan(0);
         expect(cssBuildFileSize).toBeGreaterThan(cssReleaseFileSize);
     
         // Test that php files are smaller on release than on build
-        let phpBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'index.php');
-        let phpReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'index.php');
+        let phpBuildFileSize = fm.getFileSize(buildRoot + sep + 'index.php');
+        let phpReleaseFileSize = fm.getFileSize(releaseRoot + sep + 'index.php');
         
         expect(phpBuildFileSize).toBeGreaterThan(0);
         expect(phpReleaseFileSize).toBeGreaterThan(0);
         expect(phpBuildFileSize).toBeGreaterThan(phpReleaseFileSize);
         
         // Test that htaccess file is smaller on release than on build
-        let htaccessBuildFileSize = utils.fm.getFileSize(buildRoot + sep + '..' + sep + '.htaccess');
-        let htaccessReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + '..' + sep + '.htaccess');
+        let htaccessBuildFileSize = fm.getFileSize(buildRoot + sep + '..' + sep + '.htaccess');
+        let htaccessReleaseFileSize = fm.getFileSize(releaseRoot + sep + '..' + sep + '.htaccess');
         
         expect(htaccessBuildFileSize).toBeGreaterThan(0);
         expect(htaccessReleaseFileSize).toBeGreaterThan(0);
         expect(htaccessBuildFileSize).toBeGreaterThan(htaccessReleaseFileSize);
 
         // Check that apple touch icon size is smaller on release compilation
-        let imgBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'apple-touch-icon.png');
-        let imgReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'apple-touch-icon.png');
+        let imgBuildFileSize = fm.getFileSize(buildRoot + sep + 'apple-touch-icon.png');
+        let imgReleaseFileSize = fm.getFileSize(releaseRoot + sep + 'apple-touch-icon.png');
         
         expect(imgBuildFileSize).toBeGreaterThan(0);
         expect(imgReleaseFileSize).toBeGreaterThan(0);
         expect(imgBuildFileSize * 0.7).toBeGreaterThan(imgReleaseFileSize);
         
         // We must also test that jpg files are reduced in size
-        expect(utils.fm.isFile(projectResourcesRoot + sep + 'non-optimized-jpg-image.jpg')).toBe(true);
-        expect(utils.fm.isFile(releaseRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg')).toBe(true);
+        expect(fm.isFile(projectResourcesRoot + sep + 'non-optimized-jpg-image.jpg')).toBe(true);
+        expect(fm.isFile(releaseRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg')).toBe(true);
         
-        imgBuildFileSize = utils.fm.getFileSize(buildRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg');
-        imgReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg');
+        imgBuildFileSize = fm.getFileSize(buildRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg');
+        imgReleaseFileSize = fm.getFileSize(releaseRoot + sep + 'resources' + sep + 'non-optimized-jpg-image.jpg');
         
         expect(imgBuildFileSize).toBeGreaterThan(0);
         expect(imgReleaseFileSize).toBeGreaterThan(0);
@@ -187,7 +188,7 @@ describe('cmd-parameter-release', function() {
     
     it('should correctly create the release version for a newly generated server_php project', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('server_php', null, []);
         
         let launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("clean start");
@@ -202,11 +203,11 @@ describe('cmd-parameter-release', function() {
     
     it('should correctly generate release for a lib_js project type when deleteNonMergedJs and deleteNonMergedJs are false', function() {
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.build.lib_js.deleteNonMergedJs = false;
         setup.build.lib_js.createMergedFile = false;
@@ -217,24 +218,24 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("clean ok");
         expect(launchResult).toContain("release ok");
      
-        expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
-        expect(utils.fm.isFile(releaseRoot + sep + folderName + '.js')).toBe(false);
-        expect(utils.fm.isDirectory(releaseRoot + '/resources')).toBe(true);
-        expect(utils.fm.isDirectory(releaseRoot + '/js')).toBe(true);
-        expect(utils.fm.isFile(releaseRoot + '/index.js')).toBe(true);
-        expect(utils.fm.isFile(releaseRoot + '/js/managers/MyInstantiableClass.js')).toBe(true);
-        expect(utils.fm.isFile(releaseRoot + '/js/utils/MyStaticClass.js')).toBe(true);
+        expect(fm.isDirectory(releaseRoot)).toBe(true);
+        expect(fm.isFile(releaseRoot + sep + folderName + '.js')).toBe(false);
+        expect(fm.isDirectory(releaseRoot + '/resources')).toBe(true);
+        expect(fm.isDirectory(releaseRoot + '/js')).toBe(true);
+        expect(fm.isFile(releaseRoot + '/index.js')).toBe(true);
+        expect(fm.isFile(releaseRoot + '/js/managers/MyInstantiableClass.js')).toBe(true);
+        expect(fm.isFile(releaseRoot + '/js/utils/MyStaticClass.js')).toBe(true);
     });
     
     
     it('should correctly generate release minifications for a lib_js generated project', function() {
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist';
         let releaseRoot = '.' + sep + 'target' + sep + folderName + '-0.0.0' + sep + 'dist';
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         // First launch the build
         let launchResult = testsGlobalHelper.execTbCmd('-cb');
@@ -248,12 +249,12 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
-        expect(utils.fm.isDirectory(buildRoot)).toBe(true);
-        expect(utils.fm.isDirectory(releaseRoot)).toBe(true);
+        expect(fm.isDirectory(buildRoot)).toBe(true);
+        expect(fm.isDirectory(releaseRoot)).toBe(true);
         
         // Check that js merged file is smaller on release than on setup
-        let jsBuildFileSize = utils.fm.getFileSize(buildRoot + sep + folderName + '.js');
-        let jsReleaseFileSize = utils.fm.getFileSize(releaseRoot + sep + folderName + '.js');
+        let jsBuildFileSize = fm.getFileSize(buildRoot + sep + folderName + '.js');
+        let jsReleaseFileSize = fm.getFileSize(releaseRoot + sep + folderName + '.js');
         
         expect(jsBuildFileSize).toBeGreaterThan(0);
         expect(jsReleaseFileSize).toBeGreaterThan(0);
@@ -263,7 +264,7 @@ describe('cmd-parameter-release', function() {
     
     it('should release ok when -r argument is executed on a generated app_node_cmd project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('app_node_cmd', null, []);
         
         expect(ObjectUtils.getKeys(setup.release).length).toBe(0);
         
@@ -279,17 +280,17 @@ describe('cmd-parameter-release', function() {
     
     it('should include project semver (0.4.0) inside all generated release merged JS on a lib_js git project with created tags', function() {
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         expect(terminalManager.exec('git init').output).toContain("Initialized empty Git repository");
         terminalManager.exec('git add .');
         terminalManager.exec('git commit -m "test commit"');
         terminalManager.exec('git tag 0.1.0');
         
-        utils.fm.saveFile('.' + sep + 'test.txt');
+        fm.saveFile('.' + sep + 'test.txt');
         terminalManager.exec('git add .');
         terminalManager.exec('git commit -m "test commit 2"');
         
@@ -298,7 +299,7 @@ describe('cmd-parameter-release', function() {
         let launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("0.4.0");
         
-        let mergedContent = utils.fm.readFile(
+        let mergedContent = fm.readFile(
             '.' + sep + 'target' + sep + folderName + '-0.4.0' + sep + 'dist' + sep + folderName + '.js');
         
         expect(mergedContent.substr(0, 9)).toBe("// 0.4.0\n");
@@ -309,33 +310,33 @@ describe('cmd-parameter-release', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.build.replaceVersion.enabled = true;
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
+        expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
             .toBe('<?php ?>');
     
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
             .toBe('<?php $1 = "0.0.0"; $2 = "0.0.0" ?>');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
             .toBe('"use strict";var a="0.0.0",b="0.0.0";');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
             .toBe('{ "a": "0.0.0", "b": "0.0.0"}');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
     });
     
@@ -344,33 +345,33 @@ describe('cmd-parameter-release', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t0.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/t1.php', '<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/t2.js', '"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";')).toBe(true);
+        expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
         // replaceVersion.enabled is false by default, so no replacement must happen
         expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
             .toBe('<?php ?>');
     
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
             .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
             .toBe('"use strict";var a="@@--build-version--@@",b="@@--build-version--@@";');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
         // We will now enable replaceversion and set an empty wildcard. No replacement must happen
@@ -381,44 +382,44 @@ describe('cmd-parameter-release', function() {
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
             .toBe('<?php ?>');
     
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t1.php'))
             .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t2.js'))
             .toBe('"use strict";var a="@@--build-version--@@",b="@@--build-version--@@";');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
-        expect(utils.fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
+        expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
     });
     
     
     it('should build release correctly when turbosite.release.json is missing', function() {
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         let launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
-        expect(utils.fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
+        expect(fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
     
         launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
-        let tsSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json')); 
+        let tsSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json')); 
         tsSetup.errorSetup.exceptionsToBrowser = false;
         tsSetup.errorSetup.warningsToBrowser = false;
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);
                 
         launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("release start");
@@ -435,17 +436,17 @@ describe('cmd-parameter-release', function() {
     
     it('should override turbosite.json with turbosite.release.json values on site_php release target folder', function() {
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let tsRelease = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.release.json')); 
+        let tsRelease = JSON.parse(fm.readFile('.' + sep + 'turbosite.release.json')); 
         tsRelease.baseURL = 'some custom base url';
         tsRelease.errorSetup = {};
         tsRelease.errorSetup.exceptionsToBrowser = true;
         tsRelease.errorSetup.exceptionsToMail = 'mycustommail';
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
@@ -453,11 +454,11 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
-        expect(utils.fm.isDirectoryEmpty('./target/' + folderName + '-0.0.0')).toBe(true);
+        expect(fm.isDirectoryEmpty('./target/' + folderName + '-0.0.0')).toBe(true);
         
         tsRelease.errorSetup.exceptionsToBrowser = false;
         tsRelease.errorSetup.warningsToBrowser = false;
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.release.json', JSON.stringify(tsRelease))).toBe(true);
         
         launchResult = testsGlobalHelper.execTbCmd('-cr');
         expect(launchResult).toContain("release start");
@@ -479,10 +480,10 @@ describe('cmd-parameter-release', function() {
     
     it('should override turbodepot.json with turbodepot.release.json values on site_php release target folder', function() {
     
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         let tdToOverride = {
             "sources": {
@@ -497,7 +498,7 @@ describe('cmd-parameter-release', function() {
             }
         };
         
-        expect(utils.fm.saveFile('.' + sep + 'turbodepot.release.json', JSON.stringify(tdToOverride))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbodepot.release.json', JSON.stringify(tdToOverride))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
@@ -538,12 +539,12 @@ describe('cmd-parameter-release', function() {
         // The turbodepot.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
         // This test checks that this works ok
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbodepot.json'));
+        let setup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
         
         setup.wildCards = [
             {
@@ -556,7 +557,7 @@ describe('cmd-parameter-release', function() {
         setup.depots[0].name = "$somewildcard";
         setup.sources.fileSystem[0].name = "$somewildcard";
         
-        expect(utils.fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
@@ -573,12 +574,12 @@ describe('cmd-parameter-release', function() {
         // The turbosite.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
         // This test checks that this works ok
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        let setup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         
         setup.wildCards = [
             {
@@ -591,7 +592,7 @@ describe('cmd-parameter-release', function() {
         setup.baseURL = "$somewildcard";
         setup.locales[0] = "$somewildcard";
         
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
@@ -602,11 +603,11 @@ describe('cmd-parameter-release', function() {
         expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);
         
         // The turbosite.release.json file is overriding the baseUrl value, so we will delete it to see that it was correctly replaced
-        expect(utils.fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
+        expect(fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
         
         setup.errorSetup.exceptionsToBrowser = false;
         setup.errorSetup.warningsToBrowser = false;
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         

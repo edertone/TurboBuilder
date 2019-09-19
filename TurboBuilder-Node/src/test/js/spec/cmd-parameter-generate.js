@@ -8,12 +8,13 @@
 
 
 require('./../../../main/js/globals');
-const { ObjectUtils } = require('turbocommons-ts');
-const utils = require('../cmd-parameter-test-utils');
 const setupModule = require('./../../../main/js/setup');
+const { ObjectUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 
 
@@ -29,7 +30,7 @@ describe('cmd-parameter-generate', function(){
 
         terminalManager.setInitialWorkDir();
 
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
 
@@ -47,17 +48,17 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate lib_php project structure', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/php')).toBe(true);
-        expect(utils.fm.isDirectory('./src/test/php')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isDirectory('./src/main/php')).toBe(true);
+        expect(fm.isDirectory('./src/test/php')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -76,20 +77,20 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate lib_js project structure', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/js')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
-        expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
-        expect(utils.fm.isFile('./src/main/js/utils/MyStaticClass.js')).toBe(true);
-        expect(utils.fm.isFile('./src/main/js/model/MySingletonClass.js')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isDirectory('./src/main/js')).toBe(true);
+        expect(fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(fm.isDirectory('./src/test/js')).toBe(true);
+        expect(fm.isFile('./src/main/js/utils/MyStaticClass.js')).toBe(true);
+        expect(fm.isFile('./src/main/js/model/MySingletonClass.js')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -111,16 +112,16 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate lib_ts project structure', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/ts')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isDirectory('./src/main/ts')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -139,20 +140,20 @@ describe('cmd-parameter-generate', function(){
 
     it('should generate site_php project structure', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./turbosite.json')).toBe(true);
-        expect(utils.fm.isFile('./turbosite.release.json')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/upgrade-dependencies.md')).toBe(true);
-        expect(utils.fm.readFile('./extras/help/upgrade-dependencies.md')).toContain('Update the library versions at the index.php file');
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(fm.isFile('./turbosite.json')).toBe(true);
+        expect(fm.isFile('./turbosite.release.json')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/help/upgrade-dependencies.md')).toBe(true);
+        expect(fm.readFile('./extras/help/upgrade-dependencies.md')).toContain('Update the library versions at the index.php file');
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isDirectory('./src/main/resources')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -173,20 +174,20 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate server_php project structure', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('server_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./turbosite.json')).toBe(true);
-        expect(utils.fm.isFile('./turbosite.release.json')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/resources/fonts')).toBe(false);
-        expect(utils.fm.isDirectory('./src/main/view')).toBe(false);
+        expect(fm.isFile('./turbosite.json')).toBe(true);
+        expect(fm.isFile('./turbosite.release.json')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(fm.isDirectory('./src/main/resources/fonts')).toBe(false);
+        expect(fm.isDirectory('./src/main/view')).toBe(false);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -207,7 +208,7 @@ describe('cmd-parameter-generate', function(){
 
     it('should fail when generate is called twice on the same folder', function(){
 
-        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
@@ -217,7 +218,7 @@ describe('cmd-parameter-generate', function(){
 
     it('should fail when called on a non empty folder', function(){
 
-        expect(utils.fm.saveFile('./someFile.txt', 'file contents')).toBe(true);
+        expect(fm.saveFile('./someFile.txt', 'file contents')).toBe(true);
 
         expect(testsGlobalHelper.execTbCmd('-g lib_php')).toContain('Current folder is not empty! :');
         expect(testsGlobalHelper.execTbCmd('--generate lib_php')).toContain('Current folder is not empty! :');
@@ -226,7 +227,7 @@ describe('cmd-parameter-generate', function(){
 
     it('should fail when generated setup builderVersion value is modified with invalid value', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         setup.metadata.builderVersion = '';
 
@@ -248,20 +249,20 @@ describe('cmd-parameter-generate', function(){
         expect(generateResult).toContain("NOT FINISHED YET! - Remember to follow the instructions on TODO.md");
         expect(generateResult).toContain("Generated project structure ok");
         
-        expect(utils.fm.isFile('./TODO.md')).toBe(true);
-        expect(utils.fm.isFile('./README.md')).toBe(true);
-        expect(utils.fm.isFile('./tslint.json')).toBe(true);
-        expect(utils.fm.isFile('./turbobuilder.json')).toBe(true);
-        expect(utils.fm.isFile('./src/htaccess.txt')).toBe(true);
-        expect(utils.fm.isFile('./src/assets/favicons/196x196.png')).toBe(true);
-        expect(utils.fm.isFile('./src/assets/favicons/readme.txt')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isFile('./TODO.md')).toBe(true);
+        expect(fm.isFile('./README.md')).toBe(true);
+        expect(fm.isFile('./tslint.json')).toBe(true);
+        expect(fm.isFile('./turbobuilder.json')).toBe(true);
+        expect(fm.isFile('./src/htaccess.txt')).toBe(true);
+        expect(fm.isFile('./src/assets/favicons/196x196.png')).toBe(true);
+        expect(fm.isFile('./src/assets/favicons/readme.txt')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
 
-        expect(utils.fm.readFile('./tslint.json')).toContain('"extends": "./tslint-angular.json"');
+        expect(fm.readFile('./tslint.json')).toContain('"extends": "./tslint-angular.json"');
 
         let setup = testsGlobalHelper.readSetupFile();
         
@@ -276,19 +277,19 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate app_node_cmd project structure', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('app_node_cmd', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
 
-        expect(utils.fm.isFile('./extras/help/debug.md')).toBe(true);
-        expect(utils.fm.readFile('./extras/help/debug.md')).toContain('# How to debug a node app with chrome dev tools');
-        expect(utils.fm.isFile('./extras/help/publish-release.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/features.todo')).toBe(true);
-        expect(utils.fm.isFile('./extras/todo/tests.todo')).toBe(true);
-        expect(utils.fm.isFile('./src/main/js/main.js')).toBe(true);
-        expect(utils.fm.isDirectory('./src/main/resources')).toBe(true);
-        expect(utils.fm.isDirectory('./src/test/js')).toBe(true);
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.readFile('./extras/help/debug.md')).toContain('# How to debug a node app with chrome dev tools');
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isFile('./src/main/js/main.js')).toBe(true);
+        expect(fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(fm.isDirectory('./src/test/js')).toBe(true);
         
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.hasOwnProperty('copyrightHeaders')).toBe(true);
@@ -317,18 +318,18 @@ describe('cmd-parameter-generate', function(){
         
         expect(testsGlobalHelper.execTbCmd('-g struct_deploy')).toContain("Generated folders structure ok");
 
-        expect(utils.fm.isDirectory('./_dev')).toBe(true);
-        expect(utils.fm.isDirectory('./_trash')).toBe(true);
-        expect(utils.fm.isDirectory('./site')).toBe(true);
-        expect(utils.fm.isDirectory('./storage/cache')).toBe(true);
-        expect(utils.fm.isDirectory('./storage/custom')).toBe(true);
-        expect(utils.fm.isDirectory('./storage/db')).toBe(true);
-        expect(utils.fm.isDirectory('./storage/executable')).toBe(true);
-        expect(utils.fm.isDirectory('./storage/logs')).toBe(true);
-        expect(utils.fm.isDirectory('./storage/tmp')).toBe(true);
+        expect(fm.isDirectory('./_dev')).toBe(true);
+        expect(fm.isDirectory('./_trash')).toBe(true);
+        expect(fm.isDirectory('./site')).toBe(true);
+        expect(fm.isDirectory('./storage/cache')).toBe(true);
+        expect(fm.isDirectory('./storage/custom')).toBe(true);
+        expect(fm.isDirectory('./storage/db')).toBe(true);
+        expect(fm.isDirectory('./storage/executable')).toBe(true);
+        expect(fm.isDirectory('./storage/logs')).toBe(true);
+        expect(fm.isDirectory('./storage/tmp')).toBe(true);
            
-        expect(utils.fm.getDirectoryList('./').length).toBe(4);
-        expect(utils.fm.getDirectoryList('./storage').length).toBe(6);
+        expect(fm.getDirectoryList('./').length).toBe(4);
+        expect(fm.getDirectoryList('./storage').length).toBe(6);
     });
     
     
@@ -336,15 +337,15 @@ describe('cmd-parameter-generate', function(){
         
         expect(testsGlobalHelper.execTbCmd('-g struct_customer')).toContain("Generated folders structure ok");
 
-        expect(utils.fm.isDirectory('./Documents')).toBe(true);
-        expect(utils.fm.isFile('./Documents/Contact.md')).toBe(true);
-        expect(utils.fm.isFile('./Documents/Passwords.md')).toBe(true);
-        expect(utils.fm.getDirectoryList('./Documents').length).toBe(2);
+        expect(fm.isDirectory('./Documents')).toBe(true);
+        expect(fm.isFile('./Documents/Contact.md')).toBe(true);
+        expect(fm.isFile('./Documents/Passwords.md')).toBe(true);
+        expect(fm.getDirectoryList('./Documents').length).toBe(2);
         
-        expect(utils.fm.isDirectory('./Release')).toBe(true);
-        expect(utils.fm.isDirectory('./Repo')).toBe(true);
-        expect(utils.fm.isDirectory('./Trash')).toBe(true);
+        expect(fm.isDirectory('./Release')).toBe(true);
+        expect(fm.isDirectory('./Repo')).toBe(true);
+        expect(fm.isDirectory('./Trash')).toBe(true);
         
-        expect(utils.fm.getDirectoryList('./').length).toBe(4);
+        expect(fm.getDirectoryList('./').length).toBe(4);
     });
 });

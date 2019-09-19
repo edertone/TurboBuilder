@@ -7,10 +7,12 @@
  */
 
 
-const utils = require('../cmd-parameter-test-utils');
+require('./../../../main/js/globals');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 
 
@@ -26,7 +28,7 @@ describe('cmd-parameter-sync', function(){
 
         terminalManager.setInitialWorkDir();
 
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
 
@@ -39,7 +41,7 @@ describe('cmd-parameter-sync', function(){
 
     it('should fail when -s and --sync arguments are executed on an empty setup file build structure', function(){
 
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', {}, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', {}, []);
 
         expect(testsGlobalHelper.execTbCmd('-s')).toContain('No valid project type specified');
         expect(testsGlobalHelper.execTbCmd('--sync')).toContain('No valid project type specified');
@@ -48,7 +50,7 @@ describe('cmd-parameter-sync', function(){
 
     it('should fail on a generated project that has no target folder', function(){
 
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
         expect(testsGlobalHelper.execTbCmd('-s')).toContain('Source path does not exist:');
         expect(testsGlobalHelper.execTbCmd('--sync')).toContain('Source path does not exist:');
@@ -57,7 +59,7 @@ describe('cmd-parameter-sync', function(){
 
     it('should not sync (runAfterBuild) by default when a site_php project is generated', function(){
 
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
         let testsLaunchResult = testsGlobalHelper.execTbCmd('-b');
         expect(testsLaunchResult).toContain("build start: site_php");
@@ -67,11 +69,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync to another folder when fileSystem sync is enabled', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+        expect(fm.createDirectory(destFolder)).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : false,
@@ -87,13 +89,13 @@ describe('cmd-parameter-sync', function(){
 
         expect(testsGlobalHelper.execTbCmd('-bs')).toContain('sync ok to fs');
 
-        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+        expect(fm.isDirectory(destFolder + fm.dirSep() + 'site')).toBe(true);
 
-        expect(utils.fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
 
         expect(testsGlobalHelper.execTbCmd('--build --sync')).toContain('sync ok to fs');
 
-        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+        expect(fm.isDirectory(destFolder + fm.dirSep() + 'site')).toBe(true);
 
         // Sync must fail the second time due to a non empty destination folder
         expect(testsGlobalHelper.execTbCmd('-s')).toContain('Destination path is not empty');
@@ -103,17 +105,17 @@ describe('cmd-parameter-sync', function(){
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
         expect(testsGlobalHelper.execTbCmd('-s')).toContain('sync ok to fs');
-        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+        expect(fm.isDirectory(destFolder + fm.dirSep() + 'site')).toBe(true);
     });
 
 
     it('should sync automatically to another folder when filesystem sync enabled, runAfterBuild is true and -b is called', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+        expect(fm.createDirectory(destFolder)).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : true,
@@ -134,11 +136,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should not execute filesystem sync two times when runAfterBuild is false and -bs is called via cmd', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+        expect(fm.createDirectory(destFolder)).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : false,
@@ -161,11 +163,11 @@ describe('cmd-parameter-sync', function(){
 
     it('should not execute filesystem sync two times when runAfterBuild is true and -bs is called via cmd', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+        expect(fm.createDirectory(destFolder)).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : true,
@@ -188,16 +190,16 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync release to another folder when fileSystem sync is enabled', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+        expect(fm.createDirectory(destFolder)).toBe(true);
 
         // Create a raw file on the dest folder, so we can check that it gets removed after sync due to the
         // deleteDestPathContents being enabled
-        expect(utils.fm.saveFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt', 'content')).toBe(true);
-        expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(true);
+        expect(fm.saveFile(destFolder + fm.dirSep() + 'some-raw-file-to-be-deleted.txt', 'content')).toBe(true);
+        expect(fm.isFile(destFolder + fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : false,
@@ -213,24 +215,24 @@ describe('cmd-parameter-sync', function(){
 
         expect(testsGlobalHelper.execTbCmd('-rs')).toContain('sync ok to fs');
 
-        expect(utils.fm.isFile(destFolder + utils.fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(false);
-        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+        expect(fm.isFile(destFolder + fm.dirSep() + 'some-raw-file-to-be-deleted.txt')).toBe(false);
+        expect(fm.isDirectory(destFolder + fm.dirSep() + 'site')).toBe(true);
 
-        expect(utils.fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(destFolder, false)).toBeGreaterThan(-1);
 
         expect(testsGlobalHelper.execTbCmd('--release --sync')).toContain('sync ok to fs');
 
-        expect(utils.fm.isDirectory(destFolder + utils.fm.dirSep() + 'site')).toBe(true);
+        expect(fm.isDirectory(destFolder + fm.dirSep() + 'site')).toBe(true);
     });
 
 
     it('should sync release to another folder when fileSystem sync is enabled and runAfterBuild is true', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder)).toBe(true);
+        expect(fm.createDirectory(destFolder)).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : true,
@@ -253,12 +255,12 @@ describe('cmd-parameter-sync', function(){
 
     it('should sync release to a folder as overrided by turbobuilder.release.json when filesystem sync is enabled', function(){
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let destFolder = terminalManager.getWorkDir() + utils.fm.dirSep() + 'destinationfolder';
+        let destFolder = terminalManager.getWorkDir() + fm.dirSep() + 'destinationfolder';
 
-        expect(utils.fm.createDirectory(destFolder + '-build')).toBe(true);
-        expect(utils.fm.createDirectory(destFolder + '-release')).toBe(true);
+        expect(fm.createDirectory(destFolder + '-build')).toBe(true);
+        expect(fm.createDirectory(destFolder + '-release')).toBe(true);
 
         setup.sync = {
             "runAfterBuild" : false,
@@ -273,7 +275,7 @@ describe('cmd-parameter-sync', function(){
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
         // Create a setup file that overrides the destpath to a different location
-        utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setupRelease, JSON.stringify({
+        fm.saveFile('.' + fm.dirSep() + global.fileNames.setupRelease, JSON.stringify({
             "sync" : {
                 "destPath" : destFolder + '-release'
             }
@@ -282,8 +284,8 @@ describe('cmd-parameter-sync', function(){
         // Verify that release generates the files into the -release folder
         expect(testsGlobalHelper.execTbCmd('-rs')).toContain('sync ok to fs');
 
-        expect(utils.fm.isDirectoryEmpty(destFolder + '-build')).toBe(true);
-        expect(utils.fm.isDirectoryEmpty(destFolder + '-release')).toBe(false);
-        expect(utils.fm.isDirectory(destFolder + '-release' + utils.fm.dirSep() + 'site')).toBe(true);
+        expect(fm.isDirectoryEmpty(destFolder + '-build')).toBe(true);
+        expect(fm.isDirectoryEmpty(destFolder + '-release')).toBe(false);
+        expect(fm.isDirectory(destFolder + '-release' + fm.dirSep() + 'site')).toBe(true);
     });
 });

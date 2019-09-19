@@ -8,10 +8,11 @@
  */
 
 
-const utils = require('../cmd-parameter-test-utils');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 
 
@@ -27,7 +28,7 @@ describe('cmd-parameter-help', function() {
   
         terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     

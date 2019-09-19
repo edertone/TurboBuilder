@@ -9,11 +9,12 @@
 
 
 require('./../../../main/js/globals');
-const utils = require('../cmd-parameter-test-utils');
 const { StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 const tsm = new TurboSiteTestsManager('./');
 
@@ -30,7 +31,7 @@ describe('cmd-parameter-build', function() {
   
         terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     it('should fail when -b and --build arguments are executed on an empty folder', function() {
@@ -42,7 +43,7 @@ describe('cmd-parameter-build', function() {
     
     it('should fail when -b and --build arguments are executed on an empty setup file structure', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {}, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', {}, []);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('No valid project type specified');
         expect(testsGlobalHelper.execTbCmd('--build')).toContain('No valid project type specified');
@@ -51,7 +52,7 @@ describe('cmd-parameter-build', function() {
     
     it('should fail when more than one project type are defined on setup file', function() {
     
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {lib_ts: {}, lib_php: {}}, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', {lib_ts: {}, lib_php: {}}, []);
 
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('Please specify only one of the following on build setup');
         expect(testsGlobalHelper.execTbCmd('--build')).toContain('Please specify only one of the following on build setup');
@@ -60,10 +61,10 @@ describe('cmd-parameter-build', function() {
     
     it('should fail with no files to build when build is executed after enabling ts build with no ts files', function() {
     
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', {lib_ts: {}}, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', {lib_ts: {}}, []);
         
         // Delete the src ts folder
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + 'src' + utils.fm.dirSep() + 'main' + utils.fm.dirSep() + 'ts', false))
+        expect(fm.deleteDirectory('.' + fm.dirSep() + 'src' + fm.dirSep() + 'main' + fm.dirSep() + 'ts', false))
             .toBeGreaterThan(0);
 
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('no files to build');
@@ -75,15 +76,15 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
                
-        expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
+        expect(fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/es5/PackedJsFileName-ES5.js')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/es6/PackedJsFileName-ES6.js')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/ts/index.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/es5/PackedJsFileName-ES5.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/es6/PackedJsFileName-ES6.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/ts/index.js')).toBe(true);
     });
     
     
@@ -91,14 +92,14 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
-        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(false);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(true);
+        expect(fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
+        expect(fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(true);
     });
     
     
@@ -106,19 +107,19 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.build.lib_js.deleteNonMergedJs = false;        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
-        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/js/managers/MyInstantiableClass.js')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/js/utils/MyStaticClass.js')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(true);
+        expect(fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
+        expect(fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/js/managers/MyInstantiableClass.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/js/utils/MyStaticClass.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(true);
     });
     
     
@@ -126,17 +127,17 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.build.lib_js.createMergedFile = false;        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
-        expect(utils.fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(false);
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(false);
+        expect(fm.isDirectory('./target/' + folderName + '/dist/resources')).toBe(true);
+        expect(fm.isDirectory('./target/' + folderName + '/dist/js')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/index.js')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/' + folderName + '.js')).toBe(false);
     });
     
     
@@ -144,16 +145,16 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.build.lib_js.mergedFileName = "SomeMergeFileName";
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.isFile('./target/' + folderName + '/dist/SomeMergeFileName.js')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/SomeMergeFileName.js')).toBe(true);
         
-        let mergedFileContents = utils.fm.readFile('./target/' + folderName + '/dist/SomeMergeFileName.js');
+        let mergedFileContents = fm.readFile('./target/' + folderName + '/dist/SomeMergeFileName.js');
         
         expect(mergedFileContents).toContain('this will be the main library entry point');
         expect(mergedFileContents).toContain('MyInstantiableClass');
@@ -164,25 +165,25 @@ describe('cmd-parameter-build', function() {
     
     it('should create phar file when -b argument is executed after generating a lib_php project structure with some php files', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(true);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         
-        expect(utils.fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/php/autoloader.php', '<?php ?>')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
   
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        expect(utils.fm.isFile('./target/' + folderName  + '/dist/' + folderName  + '-0.0.0.phar')).toBe(true);
+        expect(fm.isFile('./target/' + folderName  + '/dist/' + folderName  + '-0.0.0.phar')).toBe(true);
     });
     
     
     it('should build ok when -b argument is executed on a generated site_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(true);
@@ -194,32 +195,32 @@ describe('cmd-parameter-build', function() {
         expect(buildResult).toContain('build ok');
         
         // Test that generated favicon files are correct
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let buildRoot = '.' + sep + 'target' + sep + folderName + sep + 'dist' + sep + 'site';
         let buildSetup = tsm.getSetupFromIndexPhp('turbosite', buildRoot + sep + 'index.php');
         
-        expect(utils.fm.isFile(`${buildRoot}${sep}196x196-${buildSetup.cacheHash}.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-180x180.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-precomposed.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-152x152.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-144x144.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}128x128-${buildSetup.cacheHash}.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-114x114.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}96x96-${buildSetup.cacheHash}.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-76x76.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}apple-touch-icon-57x57.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}32x32-${buildSetup.cacheHash}.png`)).toBe(true);
-        expect(utils.fm.isFile(`${buildRoot}${sep}16x16-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}196x196-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-180x180.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-precomposed.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-152x152.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-144x144.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}128x128-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-114x114.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}96x96-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-76x76.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}apple-touch-icon-57x57.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}32x32-${buildSetup.cacheHash}.png`)).toBe(true);
+        expect(fm.isFile(`${buildRoot}${sep}16x16-${buildSetup.cacheHash}.png`)).toBe(true);
     });
     
     
     it('should show a warning when no favicons are defined on a site_php project', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.deleteFile('./src/main/resources/favicons/196x196.png')).toBe(true);
+        expect(fm.deleteFile('./src/main/resources/favicons/196x196.png')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('Warning: No favicons specified');
     });
@@ -227,9 +228,9 @@ describe('cmd-parameter-build', function() {
     
     it('should fail when a non expected favicon is found on a site_php project', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
+        expect(fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('Unexpected favicon name: 196x191.png');
     });
@@ -237,7 +238,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build ok when -b argument is executed on a generated server_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('server_php', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
@@ -250,7 +251,7 @@ describe('cmd-parameter-build', function() {
     
     it('should build ok when -b argument is executed on a generated app_node_cmd project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('app_node_cmd', null, []);
         
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
@@ -266,23 +267,23 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.build.replaceVersion.enabled = true;
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
+        expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php // 1 - 0.0.0 2 - 0.0.0 ?>');
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";// a - 0.0.0 b - 0.0.0');
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t3.json')).toBe('{ "a": "0.0.0", "b": "0.0.0"}');
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t4.txt')).toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php // 1 - 0.0.0 2 - 0.0.0 ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";// a - 0.0.0 b - 0.0.0');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json')).toBe('{ "a": "0.0.0", "b": "0.0.0"}');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt')).toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
     });
     
     
@@ -290,29 +291,29 @@ describe('cmd-parameter-build', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
+        expect(fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
+        expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
         // replaceVersion.enabled is false by default, so no replacement must happen
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
             .toBe('"use strict";// a - @@--build-version--@@ b - @@--build-version--@@');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
         // We will now enable replaceversion and set an empty wildcard. No replacement must happen
@@ -323,16 +324,16 @@ describe('cmd-parameter-build', function() {
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
                 
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
             .toBe('"use strict";// a - @@--build-version--@@ b - @@--build-version--@@');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
-        expect(utils.fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
     });
     
@@ -351,12 +352,12 @@ describe('cmd-parameter-build', function() {
         // The turbodepot.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
         // This test checks that this works ok
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbodepot.json'));
+        let setup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
         
         setup.wildCards = [
             {
@@ -369,7 +370,7 @@ describe('cmd-parameter-build', function() {
         setup.depots[0].name = "$somewildcard";
         setup.sources.fileSystem[0].name = "$somewildcard";
         
-        expect(utils.fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         
@@ -386,12 +387,12 @@ describe('cmd-parameter-build', function() {
         // The turbosite.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
         // This test checks that this works ok
         
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let setup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        let setup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         
         setup.wildCards = [
             {
@@ -404,7 +405,7 @@ describe('cmd-parameter-build', function() {
         setup.baseURL = "$somewildcard";
         setup.locales[0] = "$somewildcard";
         
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         

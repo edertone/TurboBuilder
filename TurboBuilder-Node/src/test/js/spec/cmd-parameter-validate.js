@@ -8,13 +8,15 @@
  */
 
 
-const utils = require('../cmd-parameter-test-utils');
+require('./../../../main/js/globals');
 const setupModule = require('./../../../main/js/setup');
 const { StringUtils } = require('turbocommons-ts');
 const { StringTestsManager } = require('turbotesting-node');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 const stringTestsManager = new StringTestsManager();
 
@@ -46,13 +48,13 @@ describe('cmd-parameter-validate', function() {
   
         terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
     
     it('should validate ok a newly generated lib_php project', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
@@ -60,7 +62,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated lib_js project', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
@@ -68,7 +70,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a lib_js project with a turbobuilder file with unexpected field', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         // Test that no validate.php section exists
         expect(setup.validate.hasOwnProperty('php')).toBe(false); 
@@ -83,7 +85,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when an unknown test type is defined on test section at turboduilder.json setup file', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
@@ -109,11 +111,11 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validate for javascript files that do not contain the use strict modifier', function() {
     
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
-        expect(utils.fm.saveFile('./src/main/test.js', "does not begin with use strict")).toBe(true);
+        expect(fm.saveFile('./src/main/test.js', "does not begin with use strict")).toBe(true);
          
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('File must start with "use strict":');
         
@@ -143,7 +145,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated lib_ts project', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
     });
@@ -151,7 +153,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated site_php project', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
@@ -161,7 +163,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validaton on a newly generated site_php project with an empty turbobuilder setup', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.saveToSetupFile({})).toBe(true);
         
@@ -171,7 +173,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validaton on a newly generated site_php project with a turbobuilder setup containing only $schema and metadata', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}}))
             .toBe(true);
@@ -182,7 +184,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated site_php project with a turbobuilder setup containing only $schema, metadata and build', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
@@ -200,7 +202,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated lib_php project', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-b'), ["validate ok", "build ok"]);
     });
@@ -208,12 +210,12 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated lib_ts project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
             .toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
+        expect(fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
 
         let buildResult = testsGlobalHelper.execTbCmd('-b');
         
@@ -225,7 +227,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate by default before build on a generated site_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, 
             metadata: {
@@ -246,7 +248,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should not validate two times if runBeforeBuild is enabled on a generated site_php project and -bl options are passed', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', {site_php: {}}, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', {site_php: {}}, []);
         
         expect(setup.validate.runBeforeBuild).toBe(true);
         
@@ -277,7 +279,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should not validate before build when disabled in setup', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, 
             build: {lib_ts: {}},
@@ -293,7 +295,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation if copyright headers file template is not found', function() {
     
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         setup.validate.filesContent.copyrightHeaders = [
                         {
@@ -315,7 +317,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate copyright headers when enabled in setup and all project files have valid headers except an excluded one', function() {
     
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         setup.validate.runBeforeBuild = false;
         
@@ -331,22 +333,22 @@ describe('cmd-parameter-validate', function() {
         testsGlobalHelper.saveToSetupFile(setup);
         
         // Create the copyright header template
-        expect(utils.fm.createDirectory('./extras/copyright headers')).toBe(true);
-        expect(utils.fm.saveFile('./extras/copyright headers/TsFiles-Header.txt', "/* this header is correct */\n")).toBe(true);
+        expect(fm.createDirectory('./extras/copyright headers')).toBe(true);
+        expect(fm.saveFile('./extras/copyright headers/TsFiles-Header.txt', "/* this header is correct */\n")).toBe(true);
         
         // Add the correct header to all existing ts files on the generated project structure
-        let tsFiles = utils.fm.findDirectoryItems('./', /.*\.ts$/i, 'absolute');
+        let tsFiles = fm.findDirectoryItems('./', /.*\.ts$/i, 'absolute');
      
         for(let tsFile of tsFiles){
             
-            expect(utils.fm.saveFile(tsFile, "/* this header is correct */\n\n\nand some more text")).toBe(true);
+            expect(fm.saveFile(tsFile, "/* this header is correct */\n\n\nand some more text")).toBe(true);
         }
  
         // Add some files with the right header
-        expect(utils.fm.saveFile('./src/main/ts/index.ts', "/* this header is correct */\n\n\nand some more text")).toBe(true);
-        expect(utils.fm.saveFile('./src/main/ts/file1.ts', "/* this header is correct */\n\n\nmore text here")).toBe(true);
-        expect(utils.fm.saveFile('./src/main/ts/file2.ts', "/* this header is correct */\n\n\neven more text")).toBe(true);
-        expect(utils.fm.saveFile('./src/main/ts/file3.ts', "/* this header is not correct */\n\n\neven more text")).toBe(true);
+        expect(fm.saveFile('./src/main/ts/index.ts', "/* this header is correct */\n\n\nand some more text")).toBe(true);
+        expect(fm.saveFile('./src/main/ts/file1.ts', "/* this header is correct */\n\n\nmore text here")).toBe(true);
+        expect(fm.saveFile('./src/main/ts/file2.ts', "/* this header is correct */\n\n\neven more text")).toBe(true);
+        expect(fm.saveFile('./src/main/ts/file3.ts', "/* this header is not correct */\n\n\neven more text")).toBe(true);
    
         // Test that headers are correctly validated
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
@@ -364,8 +366,8 @@ describe('cmd-parameter-validate', function() {
         expect(buildResult).not.toContain("validate ok");
         
         // Add a file with bad header
-        expect(utils.fm.createDirectory('./src/main/ts/somefolder')).toBe(true);
-        expect(utils.fm.saveFile('./src/main/ts/somefolder/file4.ts', "/* this heade1r is correct */\n\n\neven more text")).toBe(true);
+        expect(fm.createDirectory('./src/main/ts/somefolder')).toBe(true);
+        expect(fm.saveFile('./src/main/ts/somefolder/file4.ts', "/* this heade1r is correct */\n\n\neven more text")).toBe(true);
       
         // Test that headers are correctly validated
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("file4.ts");
@@ -374,7 +376,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should corectly detect files that match the includes list on copyrightHeaders setup', function() {
     
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         setup.validate.filesContent.copyrightHeaders = [
             {
@@ -388,21 +390,21 @@ describe('cmd-parameter-validate', function() {
         testsGlobalHelper.saveToSetupFile(setup);
     
         // Create the copyright header template
-        expect(utils.fm.createDirectory('./extras/copyright headers')).toBe(true);
-        expect(utils.fm.saveFile('./extras/copyright headers/TsFiles-Header.txt', "/* this header is correct */\n")).toBe(true);
+        expect(fm.createDirectory('./extras/copyright headers')).toBe(true);
+        expect(fm.saveFile('./extras/copyright headers/TsFiles-Header.txt', "/* this header is correct */\n")).toBe(true);
         
         // Add the correct header to all existing ts files on the generated project structure
-        let tsFiles = utils.fm.findDirectoryItems('./', /.*\.ts$/i, 'absolute');
+        let tsFiles = fm.findDirectoryItems('./', /.*\.ts$/i, 'absolute');
      
         for(let tsFile of tsFiles){
             
-            expect(utils.fm.saveFile(tsFile, "/* this header is correct */\n\n\nand some more text")).toBe(true);
+            expect(fm.saveFile(tsFile, "/* this header is correct */\n\n\nand some more text")).toBe(true);
         }
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         // Create a file that ends with ts but is not a .ts file. This must currently fail cause we have included all files which end with ts
-        expect(utils.fm.saveFile('./src/main/ts/ThisIsNotAts', "invalid header")).toBe(true);
+        expect(fm.saveFile('./src/main/ts/ThisIsNotAts', "invalid header")).toBe(true);
         
         let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("Bad copyright header");
@@ -428,9 +430,9 @@ describe('cmd-parameter-validate', function() {
    
     it('should fail on a site_php project with a missing turbobuilder setup file', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.setup)).toBe(true);        
+        expect(fm.deleteFile('.' + fm.dirSep() + global.fileNames.setup)).toBe(true);        
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain(global.fileNames.setup + ' setup file not found');
     });
@@ -438,7 +440,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a turbobuilder file with unexpected field', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.unexpected = 'unexpected';
         
@@ -450,9 +452,9 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a missing turbosite setup file', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup)).toBe(true);        
+        expect(fm.deleteFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup)).toBe(true);        
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("Could not find " + global.fileNames.turboSiteSetup + " at ");
     });
@@ -460,15 +462,15 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a turbosite file with missing homeView field', function() {
             
-        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        let turboSiteSetupPath = '.' + fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));       
+        let turboSiteSetup = JSON.parse(fm.readFile(turboSiteSetupPath));       
         expect(turboSiteSetup.homeView).toBe('home');        
         delete turboSiteSetup.homeView;
         
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance requires property "homeView"');
     });
@@ -476,13 +478,13 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a turbosite file with missing locales field', function() {
         
-        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        let turboSiteSetupPath = '.' + fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
-        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        let turboSiteSetup = JSON.parse(fm.readFile(turboSiteSetupPath));   
         delete turboSiteSetup.locales;
         
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance requires property "locales"');
     });
@@ -490,14 +492,14 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a turbosite file with missing globalJs field', function() {
         
-        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        let turboSiteSetupPath = '.' + fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
+        let turboSiteSetup = JSON.parse(fm.readFile(turboSiteSetupPath));   
         delete turboSiteSetup.globalJs;
         
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance requires property "globalJs"');
     });
@@ -505,37 +507,37 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail on a site_php project with a turbosite file that has invalid uri values on the api section', function() {
         
-        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        let turboSiteSetupPath = '.' + fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
-        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));   
+        let turboSiteSetup = JSON.parse(fm.readFile(turboSiteSetupPath));   
         
         turboSiteSetup.webServices.api[0].uri = 'aapi/site';
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: aapi/site)');
         
         turboSiteSetup.webServices.api[0].uri = 'api/site';
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         turboSiteSetup.webServices.api.push({uri: 'api1/site', namespace: turboSiteSetup.webServices.api[0].namespace});
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('All URIs defined inside the api section on turbosite.json must start with api/ (found: api1/site)');
     });
 
 
     it('should fail on a site_php project with a turbosite file with unexpected field', function() {
         
-        let turboSiteSetupPath = '.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup;
+        let turboSiteSetupPath = '.' + fm.dirSep() + global.fileNames.turboSiteSetup;
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
-        let turboSiteSetup = JSON.parse(utils.fm.readFile(turboSiteSetupPath));
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        let turboSiteSetup = JSON.parse(fm.readFile(turboSiteSetupPath));
         turboSiteSetup.unexpectedValue = 'some value';
         
-        expect(utils.fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "unexpectedValue" exists in instance when not allowed');
     });
@@ -543,7 +545,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok if replaceVersion is missing on turbosite setup.build for a lib_js project type', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         delete setup.build.replaceVersion;
         
@@ -555,7 +557,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validate if replaceVersion.enabled is missing on turbosite setup.build for a lib_js project type', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         delete setup.build.replaceVersion.enabled;
         
@@ -567,7 +569,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok setup with empty sync property', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         delete setup.sync;       
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
@@ -578,7 +580,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok setup with correct sync filesystem task', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.sync = {
             "runAfterBuild": false,
@@ -597,7 +599,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok setup with correct sync ftp task', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.sync = {
             "runAfterBuild": false,
@@ -618,7 +620,7 @@ describe('cmd-parameter-validate', function() {
 
     it('should fail validate setup with a wrong sync ftp task', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.sync = {
             "runAfterBuild": false,
@@ -650,7 +652,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validate setup with a wrong sync filesystem task', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
         setup.sync = {
             "runAfterBuild": false,
@@ -679,9 +681,9 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when a corrupted turbobuilder.json file exists', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.setup, '{ "a": 1, { ')).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.setup, '{ "a": 1, { ')).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Corrupted JSON for');
@@ -690,9 +692,9 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when a corrupted turbosite.json file exists', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, '{ "a": 1, { }')).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, '{ "a": 1, { }')).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Corrupted JSON for');
@@ -701,7 +703,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbobuilder.json does not contain a $schema property', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         delete setup.$schema;
         
@@ -715,13 +717,13 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbosite.json does not contain a $schema property', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let tsSetup = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup));
+        let tsSetup = JSON.parse(fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup));
         
         delete tsSetup.$schema;
         
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
@@ -731,7 +733,7 @@ describe('cmd-parameter-validate', function() {
 
     it('should fail when turbobuilder.json $schema property contains invalid values', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.$schema = 'some invalid value';
         
@@ -745,13 +747,13 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbosite.json $schema property contains invalid values', function() {
     
-        utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let tsSetup = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup));
+        let tsSetup = JSON.parse(fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup));
         
         tsSetup.$schema = 'some invalid value';
         
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Invalid JSON schema for turbosite.json');
@@ -761,16 +763,16 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok when turbobuilder.json and package.json contain same project name and description on a site_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.metadata.name = 'name';        
         setup.metadata.description = 'description';        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
+        let packageJson = JSON.parse(fm.readFile('.' + fm.dirSep() + 'package.json'));        
         packageJson.name = 'name';        
         packageJson.description = 'description';         
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('validate ok');
@@ -779,14 +781,14 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbobuilder.json and package.json contain different project names on a site_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.metadata.name = 'name 1';        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
+        let packageJson = JSON.parse(fm.readFile('.' + fm.dirSep() + 'package.json'));        
         packageJson.name = 'name 2';        
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Name and description must match between the following files');
@@ -797,14 +799,14 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail when turbobuilder.json and package.json contain different project descriptions on a site_php project', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.metadata.description = 'desc 1';        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        let packageJson = JSON.parse(utils.fm.readFile('.' + utils.fm.dirSep() + 'package.json'));        
+        let packageJson = JSON.parse(fm.readFile('.' + fm.dirSep() + 'package.json'));        
         packageJson.description = 'desc 2';        
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
+        expect(fm.saveFile('.' + fm.dirSep() + 'package.json', JSON.stringify(packageJson))).toBe(true);
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Name and description must match between the following files');
@@ -815,7 +817,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate with default values even if projectStructure is missing on turbobuilder.json', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
         
@@ -823,21 +825,21 @@ describe('cmd-parameter-validate', function() {
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
-        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
+        expect(fm.deleteFile('.' + fm.dirSep() + global.fileNames.readme)).toBe(true);        
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('README.md does not exist');
         
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);       
+        expect(fm.deleteDirectory('.' + fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);       
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('extras does not exist');
     });
     
     
     it('should fail validation when projectStructure.readmeFileMandatory is enabled and README.md does not exist', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.readmeFileMandatory).toBe(true);
         
-        expect(utils.fm.deleteFile('.' + utils.fm.dirSep() + global.fileNames.readme)).toBe(true);        
+        expect(fm.deleteFile('.' + fm.dirSep() + global.fileNames.readme)).toBe(true);        
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('README.md does not exist');
         
@@ -853,11 +855,11 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.extrasFolderMandatory is enabled and extras folder does not exist', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.extrasFolderMandatory).toBe(true);
         
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);        
+        expect(fm.deleteDirectory('.' + fm.dirSep() + global.folderNames.extras)).toBeGreaterThan(-1);        
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('extras does not exist');
         
@@ -874,12 +876,12 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.extrasSubFoldersMandatory is enabled and extras subfolders do not match', function() {
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        expect(utils.fm.createDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'somedir')).toBe(true);        
+        expect(fm.createDirectory('.' + fm.dirSep() + global.folderNames.extras + fm.dirSep() + 'somedir')).toBe(true);        
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
-        expect(utils.fm.deleteDirectory('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() + 'help')).toBeGreaterThan(-1);        
+        expect(fm.deleteDirectory('.' + fm.dirSep() + global.folderNames.extras + fm.dirSep() + 'help')).toBeGreaterThan(-1);        
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('help does not exist');
         
         setup.validate.projectStructure.extrasSubFoldersMandatory = [];        
@@ -894,12 +896,12 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.extrasTodoExtension is enabled and extras/todo files do not have .todo extension', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(setup.validate.projectStructure.extrasTodoExtension).toBe(true);
         
-        expect(utils.fm.saveFile('.' + utils.fm.dirSep() + global.folderNames.extras + utils.fm.dirSep() +
-                'todo' + utils.fm.dirSep() + 'test.txt', 'txt')).toBe(true);        
+        expect(fm.saveFile('.' + fm.dirSep() + global.folderNames.extras + fm.dirSep() +
+                'todo' + fm.dirSep() + 'test.txt', 'txt')).toBe(true);        
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('test.txt must have .todo extension');
         
@@ -915,7 +917,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation when projectStructure.strictSrcFolders is enabled and libs or resources folders are found outside the root of src/main and src/test', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(setup.validate.projectStructure.strictSrcFolders.enabled).toBe(true);
         
@@ -923,7 +925,7 @@ describe('cmd-parameter-validate', function() {
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Add a libs folder on an incorrect place an test that validate fails
-        expect(utils.fm.createDirectory('./src/main/php/utils/libs', true)).toBe(true);  
+        expect(fm.createDirectory('./src/main/php/utils/libs', true)).toBe(true);  
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
         
         // Set strictfolders to false and make sure it now passes validation
@@ -937,11 +939,11 @@ describe('cmd-parameter-validate', function() {
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
         
         // Delete the invalid libs folder and test it passes
-        expect(utils.fm.deleteDirectory('./src/main/php/utils/libs')).toBeGreaterThan(-1);  
+        expect(fm.deleteDirectory('./src/main/php/utils/libs')).toBeGreaterThan(-1);  
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Add a resources folder on an incorrect place an test that validate fails
-        expect(utils.fm.createDirectory('./src/main/php/managers/resources', true)).toBe(true);  
+        expect(fm.createDirectory('./src/main/php/managers/resources', true)).toBe(true);  
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');
         
         // Set strictfolders to false and make sure it now passes validation
@@ -965,14 +967,14 @@ describe('cmd-parameter-validate', function() {
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
         
         // Delete the invalid resources folder and test it passes
-        expect(utils.fm.deleteDirectory('./src/main/php/managers/resources')).toBeGreaterThan(-1);  
+        expect(fm.deleteDirectory('./src/main/php/managers/resources')).toBeGreaterThan(-1);  
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');        
     });
     
     
     it('should fail validation when projectStructure.strictFileExtensionCase is enabled and a file with an extension containing upper case is found anywhere on the affected paths', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(setup.validate.projectStructure.strictFileExtensionCase.affectedPaths).toEqual(['']);
         
@@ -980,7 +982,7 @@ describe('cmd-parameter-validate', function() {
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
         // Add a file with invalid case anywhere and test that validate fails
-        expect(utils.fm.saveFile('./src/main/php/model/file.Php', 'somedata')).toBe(true);
+        expect(fm.saveFile('./src/main/php/model/file.Php', 'somedata')).toBe(true);
         let validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('Expected lower case file extension');
         expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
@@ -1010,21 +1012,21 @@ describe('cmd-parameter-validate', function() {
         expect(validateResult).toContain('src\\main\\php\\model\\file.Php');
         
         // Delete invalid file and test it passes
-        expect(utils.fm.deleteFile('./src/main/php/model/file.Php')).toBe(true);  
+        expect(fm.deleteFile('./src/main/php/model/file.Php')).toBe(true);  
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');       
     });
     
     
     it('should correctly validate when css files exist / not exist and onlyScss validation rule is true / false', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
          
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
        
         // Check that the only css rule is enabled
         expect(setup.validate.styleSheets.onlyScss).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/view/css/test.css', "")).toBe(true);
+        expect(fm.saveFile('./src/main/view/css/test.css', "")).toBe(true);
 
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('only scss files are allowed');
         
@@ -1034,7 +1036,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
         
-        expect(utils.fm.deleteFile('./src/main/view/css/test.css')).toBe(true);
+        expect(fm.deleteFile('./src/main/view/css/test.css')).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
     });
@@ -1042,7 +1044,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should correctly validate when tabulations exist / not exist and tabsForbidden validation rule is true / false', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
        
@@ -1056,8 +1058,8 @@ describe('cmd-parameter-validate', function() {
         expect(setup.validate.filesContent.tabsForbidden.excludes).toEqual([".svg", ".properties"]);
         
         // Create files with tabs and make sure validation fails
-        expect(utils.fm.saveFile('./src/main/test.php', "contains\ttabs")).toBe(true);
-        expect(utils.fm.saveFile('./extras/help/test.md', "contains\ttabs")).toBe(true);
+        expect(fm.saveFile('./src/main/test.php', "contains\ttabs")).toBe(true);
+        expect(fm.saveFile('./extras/help/test.md', "contains\ttabs")).toBe(true);
         
         let validateResult = testsGlobalHelper.execTbCmd('-l');
         expect(validateResult).toContain('File contains tabulations');
@@ -1098,7 +1100,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated server_php project', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('server_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('server_php', null, []);
         
         let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
@@ -1108,7 +1110,7 @@ describe('cmd-parameter-validate', function() {
     
      it('should fail validation when PHP files contain invalid namespace definitions', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
        
@@ -1135,13 +1137,13 @@ describe('cmd-parameter-validate', function() {
         expect(execResult).not.toContain('Namespace error');
         expect(execResult).toContain('SomeManager.php');
         
-        expect(utils.fm.saveFile('./src/main/php/managers/SomeManager.php',
+        expect(fm.saveFile('./src/main/php/managers/SomeManager.php',
             "<?php namespace org\\libname\\src\\main\\php\\managers; class SomeManager {} ?>")).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/php/model/SomeClass.php',
+        expect(fm.saveFile('./src/main/php/model/SomeClass.php',
             "<?php namespace org\\libname\\src\\main\\php\\model; class SomeClass {} ?>")).toBe(true);
         
-        expect(utils.fm.saveFile('./src/main/php/utils/SomeUtils.php',
+        expect(fm.saveFile('./src/main/php/utils/SomeUtils.php',
             "<?php namespace org\\libname\\src\\main\\php\\utils; class SomeUtils {} ?>")).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
@@ -1150,7 +1152,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should validate ok a newly generated app_node_cmd project', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('app_node_cmd', null, []);
+        testsGlobalHelper.generateProjectAndSetup('app_node_cmd', null, []);
         
         let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
@@ -1160,7 +1162,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should correctly validate a newly generated site_php project without duplicate code verification', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         expect(setup.validate.filesContent.copyPasteDetect.length).toBe(0);
         
@@ -1173,7 +1175,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should correctly validate a newly generated site_php project without duplicate code exceeding the threshold. Report must be generated if configured, and not if not configured', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, null);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, null);
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
@@ -1183,8 +1185,8 @@ describe('cmd-parameter-validate', function() {
              "Percentage of duplicate code: 0 (maximum allowed: 0)",
              "validate ok"]);
                 
-        expect(utils.fm.isDirectory('./src')).toBe(true);
-        expect(utils.fm.isDirectory('./target')).toBe(false);
+        expect(fm.isDirectory('./src')).toBe(true);
+        expect(fm.isDirectory('./target')).toBe(false);
         
         // Enable the copy paste report generation
         
@@ -1200,8 +1202,8 @@ describe('cmd-parameter-validate', function() {
                 
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
         
         setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel = 4;
         setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel = 10;
@@ -1216,7 +1218,7 @@ describe('cmd-parameter-validate', function() {
     
     it('should fail validation for a newly generated lib_js project containing duplicate code. Report must be generated if configured, and not if not configured', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_js', null, null);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, null);
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
@@ -1227,13 +1229,13 @@ describe('cmd-parameter-validate', function() {
         
         // Duplicate a js file and run validation again
         
-        expect(utils.fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
+        expect(fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
         
         stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), [
             "ERROR: jscpd found too many duplicates over threshold"]);
         
-        expect(utils.fm.isDirectory('./src')).toBe(true);
-        expect(utils.fm.isDirectory('./target')).toBe(false);
+        expect(fm.isDirectory('./src')).toBe(true);
+        expect(fm.isDirectory('./target')).toBe(false);
         
         // Enable the copy paste report generation
         
@@ -1246,14 +1248,14 @@ describe('cmd-parameter-validate', function() {
          
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(false);
     });
     
     
     it('should generate duplicate code reports for a newly generated lib_php project when clean and validation are performed at the same time', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, null);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, null);
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
@@ -1270,14 +1272,14 @@ describe('cmd-parameter-validate', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
     });
     
     
     it('should generate duplicate code reports for a newly generated lib_ts project when clean, build and validation are performed', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, null);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, null);
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
@@ -1296,14 +1298,14 @@ describe('cmd-parameter-validate', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
     });
     
     
     it('should generate duplicate code reports for a newly generated lib_ts project when clean, release and validation are performed', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, null);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, null);
         
         this.testCopyPasteDetectSetupIsValid(setup);
         
@@ -1322,7 +1324,7 @@ describe('cmd-parameter-validate', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(utils.fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(utils.fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
     });
 });

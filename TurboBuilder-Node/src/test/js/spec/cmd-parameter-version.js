@@ -8,11 +8,13 @@
  */
 
 
-const utils = require('../cmd-parameter-test-utils');
+require('./../../../main/js/globals');
 const setupModule = require('./../../../main/js/setup');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 
 
@@ -28,7 +30,7 @@ describe('cmd-parameter-version', function() {
   
         terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
 
     
@@ -41,7 +43,7 @@ describe('cmd-parameter-version', function() {
     
     it('should show application version when -v and --version arguments are passed after creating an empty project', function() {
         
-        utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         
         expect(testsGlobalHelper.execTbCmd('-v')).toContain(setupModule.getBuilderVersion());
         expect(testsGlobalHelper.execTbCmd('--version')).toContain(setupModule.getBuilderVersion());

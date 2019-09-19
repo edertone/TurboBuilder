@@ -8,13 +8,15 @@
  */
 
 
-const utils = require('../cmd-parameter-test-utils');
+require('./../../../main/js/globals');
 const { execSync } = require('child_process');
 const { StringTestsManager } = require('turbotesting-node');
 const { StringUtils } = require('turbocommons-ts');
+const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const terminalManager = new TerminalManager();
 const stringTestsManager = new StringTestsManager();
 
@@ -31,7 +33,7 @@ describe('cmd-parameter-test', function() {
   
         terminalManager.setInitialWorkDir();
         
-        expect(utils.fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
+        expect(fm.deleteDirectory(this.tempDir)).toBeGreaterThan(-1);
     });
     
     
@@ -45,7 +47,7 @@ describe('cmd-parameter-test', function() {
     
     it('should fail when test is passed as the only parameter', function() {
 
-        utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
         stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-t'),
             ['--test SHOULD be used at the same time with -b --build or -r --release.',
@@ -61,7 +63,7 @@ describe('cmd-parameter-test', function() {
     
     it('should fail when no tests are defined on setup', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_ts', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
  
         setup.test = [];
         
@@ -73,7 +75,7 @@ describe('cmd-parameter-test', function() {
     
     it('should correctly run php unit tests on a generated lib_php project', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
         setup.test[0].coverageReport = false;
         
@@ -90,7 +92,7 @@ describe('cmd-parameter-test', function() {
     
     it('should correctly generate coverage report with php unit tests on a generated lib_php project', function() {
 
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('lib_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
         setup.test[0].coverageReport = true;
         setup.test[0].coverageReportOpenAfterTests = false;
@@ -107,7 +109,7 @@ describe('cmd-parameter-test', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
-        expect(utils.fm.isFile('./target/' + folderName + '/reports/coverage/php/index.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/coverage/php/index.html')).toBe(true);
     });
     
     
@@ -132,9 +134,9 @@ describe('cmd-parameter-test', function() {
     
     it('should successfully run the jasmine tests on a generated site_php project when baseUrl is the root', function() {
 
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         // Modify the project setup to sync the files to /
         setup.metadata.name = 'project-name';
@@ -143,14 +145,14 @@ describe('cmd-parameter-test', function() {
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Add the project name to the package.json file
-        let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
+        let packageSetup = JSON.parse(fm.readFile('.' + sep + 'package.json'));
         packageSetup.name = 'project-name';
-        expect(utils.fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
-        let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        let turboSiteSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = '';
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
         let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
         expect(npmInstallResult).not.toContain("npm ERR");
@@ -169,9 +171,9 @@ describe('cmd-parameter-test', function() {
     
     it('should successfully run the jasmine tests on a generated site_php project on a webserver subfolder', function() {
 
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
                 
         // Modify the project setup to sync the files to /subfolder
         setup.metadata.name = 'project-name';
@@ -180,19 +182,19 @@ describe('cmd-parameter-test', function() {
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Add the project name to the package.json file
-        let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
+        let packageSetup = JSON.parse(fm.readFile('.' + sep + 'package.json'));
         packageSetup.name = 'project-name';
-        expect(utils.fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
-        let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        let turboSiteSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = 'subfolder';
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
         // Create the subfolder on server
-        if(!utils.fm.isDirectory(setup.sync.destPath)){
+        if(!fm.isDirectory(setup.sync.destPath)){
             
-            expect(utils.fm.createDirectory(setup.sync.destPath)).toBe(true);
+            expect(fm.createDirectory(setup.sync.destPath)).toBe(true);
         }
         
         let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
@@ -213,9 +215,9 @@ describe('cmd-parameter-test', function() {
     
     it('should successfully run the jasmine tests on a generated site_php project on a webserver with 2 levels of subfolder depth', function() {
 
-        let sep = utils.fm.dirSep();
+        let sep = fm.dirSep();
         
-        let setup = utils.generateProjectAndSetTurbobuilderSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         // Modify the project setup to sync the files to /subfolder1/subfolder2
         setup.metadata.name = 'project-name';
@@ -224,19 +226,19 @@ describe('cmd-parameter-test', function() {
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         // Add the project name to the package.json file
-        let packageSetup = JSON.parse(utils.fm.readFile('.' + sep + 'package.json'));
+        let packageSetup = JSON.parse(fm.readFile('.' + sep + 'package.json'));
         packageSetup.name = 'project-name';
-        expect(utils.fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
         // Modify the turbosite tests setup to point the host to /subfolder
-        let turboSiteSetup = JSON.parse(utils.fm.readFile('.' + sep + 'turbosite.json'));
+        let turboSiteSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = 'subfolder1/subfolder2';
-        expect(utils.fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
         
         // Create the subfolders on server
-        if(!utils.fm.isDirectory(setup.sync.destPath)){
+        if(!fm.isDirectory(setup.sync.destPath)){
             
-            expect(utils.fm.createDirectory(setup.sync.destPath, true)).toBe(true);
+            expect(fm.createDirectory(setup.sync.destPath, true)).toBe(true);
         }
         
         let npmInstallResult = execSync('npm ci', {stdio : 'pipe'}).toString();
