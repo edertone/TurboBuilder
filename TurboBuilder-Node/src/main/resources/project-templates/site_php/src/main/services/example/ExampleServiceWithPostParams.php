@@ -13,7 +13,8 @@ class ExampleServiceWithPostParams extends WebService{
 
     protected function setup(){
 
-        $this->enabledPostParams = ['param1', 'param2'];
+        $this->enabledPostParams[] = ['param1'];
+        $this->enabledPostParams[] = ['param2'];
     }
 
 

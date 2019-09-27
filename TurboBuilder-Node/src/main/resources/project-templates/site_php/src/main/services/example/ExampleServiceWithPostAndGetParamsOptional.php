@@ -17,9 +17,7 @@ class ExampleServiceWithPostAndGetParamsOptional extends WebService{
 
         $this->isGetDataMandatory = false;
 
-        $this->enabledPostParams = ['data'];
-
-        $this->isPostDataMandatory = false;
+        $this->enabledPostParams[] = ['data', WebService::NOT_TYPED, WebService::NOT_REQUIRED];
     }
 
 

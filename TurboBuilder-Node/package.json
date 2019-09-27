@@ -20,19 +20,19 @@
   },
   "dependencies": {
     "clean-css": "4.2.1",
-    "commander": "^3.0.1",
+    "commander": "^3.0.2",
     "html-minifier": "^4.0.0",
     "http-server": "0.11.1",
     "imagemin": "^6.1.0",
     "imagemin-jpegtran": "^6.0.0",
     "imagemin-pngquant": "^8.0.0",
-    "jasmine": "^3.4.0",
-    "jscpd": "^2.0.15",
+    "jasmine": "^3.5.0",
+    "jscpd": "^2.0.16",
     "jsonschema": "1.2.4",
     "opn": "^6.0.0",
     "sass": "^1.22.12",
     "selenium-webdriver": "^4.0.0-alpha.5",
-    "sharp": "^0.23.0",
+    "sharp": "^0.23.1",
     "turbocommons-ts": "^3.0.1",
     "turbodepot-node": "^6.0.0",
     "turbotesting-node": "^7.1.0",
@@ -41,8 +41,8 @@
     "uglify-es": "3.3.9"
   },
   "devDependencies": {
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.8"
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
   },
   "keywords": [
     "project",

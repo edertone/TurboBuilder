@@ -91,7 +91,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -106,7 +106,7 @@ describe('web-services', function() {
                 "data": "some arbitrary string",
                 "extravariable": "some extra value"
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -177,7 +177,7 @@ describe('web-services', function() {
                 "extradata": "some extra value",
                 "more extra data": "&&--!!..."
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -191,7 +191,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -252,7 +252,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -268,7 +268,7 @@ describe('web-services', function() {
                 "extradata": "some extra value",
                 "more extra data": "&&--!!..."
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -282,7 +282,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Received POST variables but POST not enabled on service'],
+            contains: ['"code":500', 'Unexpected POST parameter received: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -295,7 +295,16 @@ describe('web-services', function() {
             responseCode: 500,
             postParameters: {
             },
-            contains: ['"code":500', 'This service expects POST data'],
+            contains: ['"code":500', 'Missing mandatory POST parameter: param1'],
+            notContains: ['turbosite-global-error-manager-problem']
+        },
+        {
+            url: this.baseUrl + 'example-service-with-post-params',
+            responseCode: 500,
+            postParameters: {
+                "param1": "some arbitrary string"
+            },
+            contains: ['"code":500', 'Missing mandatory POST parameter: param2'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -373,7 +382,18 @@ describe('web-services', function() {
                 "param1": "some arbitrary string",
                 "extradata": "some extra value"
             },
-            contains: ['"code":500', 'Unexpected POST variables received'],
+            contains: ['"code":500', 'Missing mandatory POST parameter: param2'],
+            notContains: ['turbosite-global-error-manager-problem']
+        },
+        {
+            url: this.baseUrl + 'example-service-with-post-params',
+            responseCode: 500,
+            postParameters: {
+                "param1": "some arbitrary string",
+                "param2": "some arbitrary string",
+                "extradata": "some extra value"
+            },
+            contains: ['"code":500', 'Unexpected POST parameter received: extradata'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -413,7 +433,7 @@ describe('web-services', function() {
             responseCode: 500,
             postParameters: {
             },
-            contains: ['"code":500', 'This service expects POST data'],
+            contains: ['"code":500', 'Missing mandatory POST parameter: data'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -479,7 +499,7 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional',
             postParameters: {
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":null,"received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}']
         }], (responses) => { done() });
     });
     
@@ -490,13 +510,13 @@ describe('web-services', function() {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1',
             postParameters: {
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"param1","received-GET-param-1-value":"","received-GET-param-2-value":""}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":null,"received-GET-param-0-value":"param1","received-GET-param-1-value":"","received-GET-param-2-value":""}']
         },
         {
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1/param2',
             postParameters: {
             },
-            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":""}']
+            contains: ['{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":null,"received-GET-param-0-value":"param1","received-GET-param-1-value":"param2","received-GET-param-2-value":""}']
         }], (responses) => { done() });
     });
     
@@ -533,7 +553,7 @@ describe('web-services', function() {
                 "data": "some arbitrary string",
                 "extradata": "some more data"
             },
-            contains: ['"code":500', 'Unexpected POST variables received'],
+            contains: ['"code":500', 'Unexpected POST parameter received: extradata'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -586,7 +606,7 @@ describe('web-services', function() {
                        'ExampleServiceWithPostAndGetParams called. Result:',
                        '{"info":"this object is returned as a json string with the received GET and POST parameters values","received-GET-param-0-value":"param0","received-GET-param-1-value":"param1","received-POST-params":"data from constructor"}',
                        'ExampleServiceWithPostAndGetParamsOptional called. Result:',
-                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"","received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}',
+                       '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":null,"received-GET-param-0-value":"","received-GET-param-1-value":"","received-GET-param-2-value":""}',
                        'ExampleServiceWithPostAndGetParamsOptional called 2. Result:',
                        '{"info":"this object is returned as a json string with the optionally received GET and POST parameters values","received-POST-param-data":"datavalue","received-GET-param-0-value":"p1","received-GET-param-1-value":"p2","received-GET-param-2-value":""}',
                        'ExampleServiceThatThrows400BadRequest called. Result:',
@@ -682,7 +702,7 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: 'https://$host/api/turbosite/chain/chain-services',
             responseCode: 500,
-            contains: ['"code":500', 'This service expects POST data'],
+            contains: ['"code":500', 'Missing mandatory POST parameter: services'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
