@@ -56,7 +56,7 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-without-params/param0/param1',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -67,17 +67,17 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-without-params/unexpected-param',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 1 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         },{
             url: this.baseUrl + 'example-service-without-params/unexpected-param1/unexpected-param2',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         },{
             url: this.baseUrl + 'example-service-without-params/&& &&   /&&&  /-----???',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 3 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -117,17 +117,17 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            contains: ['"code":500', 'Missing mandatory GET parameter at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         },{
             url: this.baseUrl + 'example-service-with-get-params/param1',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 1 but expected 2'],
+            contains: ['"code":500', 'Missing mandatory GET parameter at 1'],
             notContains: ['turbosite-global-error-manager-problem']
         },{
             url: this.baseUrl + 'example-service-with-get-params/param1/param2/param3',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 3 but expected 2'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 2'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -147,7 +147,7 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params/param1/param2/param3/param4',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 4 but expected 2'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 2'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -161,7 +161,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            contains: ['"code":500', 'Missing mandatory GET parameter at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -232,13 +232,13 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2/param3/param4/param5',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 5 but expected 4'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 4'],
             notContains: ['turbosite-global-error-manager-problem']
         },
         {
             url: this.baseUrl + 'example-service-with-get-params-optional/param1/param2/param3/param4/param5/param6/param7',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 7 but expected 4'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 4'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -317,7 +317,7 @@ describe('web-services', function() {
             responseCode: 500,
             postParameters: {
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -330,7 +330,7 @@ describe('web-services', function() {
             responseCode: 500,
             postParameters: {
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 4 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -407,7 +407,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 2 but expected 0'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -420,7 +420,7 @@ describe('web-services', function() {
             responseCode: 500,
             postParameters: {
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            contains: ['"code":500', 'Missing mandatory GET parameter at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -446,7 +446,7 @@ describe('web-services', function() {
             responseCode: 500,
             postParameters: {
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 4 but expected 2'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 2'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -460,7 +460,7 @@ describe('web-services', function() {
             postParameters: {
                 "data": "some arbitrary string"
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            contains: ['"code":500', 'Missing mandatory GET parameter at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -475,7 +475,7 @@ describe('web-services', function() {
                 "data": "some arbitrary string",
                 "data2": "more data"
             },
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 0 but expected 2'],
+            contains: ['"code":500', 'Missing mandatory GET parameter at 0'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });
@@ -526,7 +526,7 @@ describe('web-services', function() {
         httpTestsManager.assertUrlsFail([{
             url: this.baseUrl + 'example-service-with-post-and-get-params-optional/param1/param2/param3/param4/param5',
             responseCode: 500,
-            contains: ['"code":500', 'Invalid number of GET parameters passed to service. Received 5 but expected 3'],
+            contains: ['"code":500', 'Unexpected GET parameter received at 3'],
             notContains: ['turbosite-global-error-manager-problem']
         }], done);
     });

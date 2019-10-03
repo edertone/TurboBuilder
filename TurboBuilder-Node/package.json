@@ -30,7 +30,7 @@
     "jscpd": "^2.0.16",
     "jsonschema": "1.2.4",
     "opn": "^6.0.0",
-    "sass": "^1.22.12",
+    "sass": "^1.23.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "sharp": "^0.23.1",
     "turbocommons-ts": "^3.0.1",

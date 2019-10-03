@@ -13,9 +13,11 @@ class ExampleServiceWithPostAndGetParamsOptional extends WebService{
 
     protected function setup(){
 
-        $this->enabledGetParams = 3;
-
-        $this->isGetDataMandatory = false;
+        $this->enabledGetParams = [
+            [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''],
+            [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''],
+            [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, '']
+        ];
 
         $this->enabledPostParams[] = ['data', WebService::NOT_TYPED, WebService::NOT_REQUIRED];
     }

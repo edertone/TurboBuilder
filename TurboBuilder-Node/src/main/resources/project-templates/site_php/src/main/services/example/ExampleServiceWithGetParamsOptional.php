@@ -6,16 +6,17 @@ use org\turbosite\src\main\php\model\WebService;
 
 
 /**
- * An example of a service that may be called with GET parameters
+ * An example of a service that may be called with 4 GET optional parameters
  */
 class ExampleServiceWithGetParamsOptional extends WebService{
 
 
     protected function setup(){
 
-        $this->enabledGetParams = 4;
-
-        $this->isGetDataMandatory = false;
+        $this->enabledGetParams[] = [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''];
+        $this->enabledGetParams[] = [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''];
+        $this->enabledGetParams[] = [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''];
+        $this->enabledGetParams[] = [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''];
     }
 
 
