@@ -1,18 +1,24 @@
 Sorted by priority:
 
-- Incorporate ts lint also for lib_ts project types
-
 - Implement project structure validation for site_php:
     All files inside view/views folder must be lower case, do not have spaces or non url friendly characters
     All files inside view/views folder must be analyzed so the correct code, code order and html structure is used.
     All php class files inside a site_php project must have a namespace that starts with "site/php". (are components excluded from this rule or not?)
     .. more ideas?
 
-- Turbobuilder uses the jscpd library to validate copy pasted code on projects. For now it is being called via CMD, but it has a javascript api. We should use the api instead of calling the cmd commands. 
+- Error and warnings notifications to mail or similar on site_php projects should be mandatory on production. This feature must be rethinked a lot, to make sure that no
+  massive amounts of emails are sent with errors.
+
+- Save all the turbobuilder CLI application console output into a txt file on target when executing build or release 
 
 - Create the turbo builder website.
 
-- Save all the turbobuilder CLI application console output into a txt file on target when executing build or release 
+- When executing release on a project that contains package.json file with dependencies, it would be interesting to perform an npm ci call before the project is built.
+  As we are creating a release build, we must make sure that everything is up to date at the node_modules folder.
+
+- Incorporate ts lint also for lib_ts project types
+
+- Turbobuilder uses the jscpd library to validate copy pasted code on projects. For now it is being called via CMD, but it has a javascript api. We should use the api instead of calling the cmd commands. 
 
 - Implement local html validator into turbobuilder. See:
     https://github.com/validator/validator

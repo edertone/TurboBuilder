@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 'use strict';
 
 
@@ -70,6 +68,16 @@ describe('cmd-parameter-test', function() {
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-bt')).toContain('Nothing to test. Please setup some tests on test section');
+    });
+    
+    
+    it('should fail when no jasmine.json setup file is found at the configured location', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
+        
+        // This test makes sure that the expected error is found at the execution result and ALSO checks that there's no extra texts after the end of this error.
+        // In fact it checks that the execution result ENDS with this error and nothing more
+        expect(testsGlobalHelper.execTbCmd('-bt')).toMatch(/[\s\S]*Could not find jasmine config file at[\s\S]*src.test.js.jasmine\.json[\s\S]*Please setup a jasmine\.json file there so jasmine tests can be executed![\s\S]{0,5}$/);
     });
     
     

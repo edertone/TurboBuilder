@@ -613,12 +613,12 @@ let validateJavascript = function () {
           
             let jsContents = fm.readFile(file);
             
-            if(jsContents.indexOf('#!/usr/bin/env node') === 0){
+            if(jsContents.indexOf('#!/usr/bin') === 0){
             
                 if((jsContents.indexOf('use strict') < 0 && jsContents.indexOf("'use strict'") < 0) ||
                    (jsContents.indexOf('use strict') > 24 && jsContents.indexOf("'use strict'") > 24)){
                           
-                    errors.push('File must have "use strict" after #!/usr/bin/env node:\n' + file);
+                    errors.push('File must have "use strict" after #!/usr/bin:\n' + file);
                 }
                 
             }else if(jsContents.indexOf('"use strict"') !== 0 && jsContents.indexOf("'use strict'") !== 0){

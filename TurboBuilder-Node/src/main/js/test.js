@@ -9,15 +9,16 @@ require('./globals');
 
 const { ArrayUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
+const { ConsoleManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 const { spawn } = require('child_process');
-const console = require('./console');
 const setupModule = require('./setup');
 const releaseModule = require('./release');
 const opn = require('opn');
 
 
 let fm = new FilesManager(); 
+let cm = new ConsoleManager();
 const terminalManager = new TerminalManager();
 
 
@@ -26,11 +27,11 @@ const terminalManager = new TerminalManager();
  */
 exports.execute = function () {
     
-    console.log("\ntest start");
+    cm.text("\ntest start");
     
     if(!ArrayUtils.isArray(global.setup.test) || global.setup.test.length <= 0){
         
-        console.warning("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
+        cm.warning("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
     }
     
     // Check which build paths must be tested
@@ -63,7 +64,7 @@ exports.execute = function () {
         }
     }
     
-    console.success('test done');
+    cm.success('test done');
 };
 
 
@@ -85,7 +86,7 @@ let launchHttpServer = function (root, port) {
     
     spawn(httpServerCmd, [], {shell: true, stdio: 'ignore', detached: true}).unref();    
    
-    console.success('started http-server');
+    cm.success('started http-server');
 }
 
 
@@ -100,7 +101,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
 
     if(!global.setup.build.lib_php){
         
-        console.error('build.lib_php is mandatory on ' + global.fileNames.setup + ' to run php tests');
+        cm.error('build.lib_php is mandatory on ' + global.fileNames.setup + ' to run php tests');
     }
     
     let sep = fm.dirSep();
@@ -116,7 +117,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         // Verify testsRoot value is correct
         if(!fm.isDirectory(global.runtimePaths.root + sep + testSetup.testsRoot + sep + 'php')){
                     
-            console.error('testsRoot setup value (' + testSetup.testsRoot + ') is incorrect on ' + global.fileNames.setup);            
+            cm.error('testsRoot setup value (' + testSetup.testsRoot + ') is incorrect on ' + global.fileNames.setup);            
         }
         
         // Copy all tests source code
@@ -127,11 +128,11 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         
         if(!fm.isFile(phpUnitSetupPath)){
                     
-            console.error('Php setup file not found on target for tests:\n' + phpUnitSetupPath);            
+            cm.error('Php setup file not found on target for tests:\n' + phpUnitSetupPath);            
         }
         
-        console.success("launching phpunit tests at:\n");
-        console.success(destTestsPath + "\n");
+        cm.success("launching phpunit tests at:");
+        cm.success(destTestsPath);
         
         // Launch unit tests via php executable
         let phpExecCommand = 'php';
@@ -140,7 +141,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         
         if(testSetup.coverageReport){
             
-            console.warning("Warning: Enabling Php coverage report in unit tests is many times slower");
+            cm.warning("Warning: Enabling Php coverage report in unit tests is many times slower");
             
             phpExecCommand += ' --coverage-html "' + coverageReportPath + '"';                           
         }
@@ -152,7 +153,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         
         if(testsResult.failed){
     
-            console.error('There are PHP unit test failures\n\n' + testsResult.output);
+            cm.error('There are PHP unit test failures\n\n' + testsResult.output);
         }
         
         // Open the coverage report if necessary
@@ -174,13 +175,18 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
  */
 let executeJasmineTests = function (testSetup, relativeBuildPaths) {
     
-    console.success("launching jasmine tests");
+    cm.success("launching jasmine tests");
+    
+    if(!fm.isFile(global.runtimePaths.root + fm.dirSep() + testSetup.jasmineConfig)){
+        
+        cm.error('Could not find jasmine config file at:\n' + global.runtimePaths.root + fm.dirSep() + testSetup.jasmineConfig + '\nPlease setup a jasmine.json file there so jasmine tests can be executed!');
+    }
 
     let jasmineExecCommand = global.installationPaths.jasmineBin + ' --config=' + testSetup.jasmineConfig;
     
     if(terminalManager.exec(jasmineExecCommand, true).failed){
         
-        console.error('There are jasmine unit test failures');
+        cm.error('There are jasmine unit test failures');
     } 
 }
 
@@ -196,10 +202,10 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
     
     if(!global.setup.build.lib_ts){
         
-        console.error('build.lib_ts is mandatory on ' + global.fileNames.setup + ' to run qunit tests');
+        cm.error('build.lib_ts is mandatory on ' + global.fileNames.setup + ' to run qunit tests');
     }
     
-    console.success("launching qunit tests");
+    cm.success("launching qunit tests");
     
     let sep = fm.dirSep();
     let srcTestsPath = global.runtimePaths.root + sep + testSetup.testsRoot;
@@ -216,7 +222,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
         // Verify testsRoot value is correct
         if(!fm.isDirectory(global.runtimePaths.root + sep + testSetup.testsRoot + sep + 'js')){
                     
-            console.error('testsRoot setup value (' + testSetup.testsRoot + ') is incorrect on ' + global.fileNames.setup);            
+            cm.error('testsRoot setup value (' + testSetup.testsRoot + ') is incorrect on ' + global.fileNames.setup);            
         }
         
         // Generate all the files to launch the tests
@@ -228,7 +234,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                 
                 if(!fm.createDirectory(testsTarget, true)){
                     
-                    console.error('Could not create ' + testsTarget);
+                    cm.error('Could not create ' + testsTarget);
                 }
                 
                 // Merge all tests code into tests target
@@ -246,7 +252,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                 // Copy qunit library
                 if(!fm.copyDirectory(global.installationPaths.test + sep + 'libs' + sep + 'qunit', testsTarget, false)){
                     
-                    console.error('Could not copy qunit library');
+                    cm.error('Could not copy qunit library');
                 }
             
                 // Generate index.html if not exists
@@ -279,7 +285,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                         
                     }catch(e){
                         
-                        console.error('Could not create ' + testsTarget + sep + 'index.html');
+                        cm.error('Could not create ' + testsTarget + sep + 'index.html');
                     }
                 }
                 

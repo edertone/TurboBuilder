@@ -6,9 +6,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "dependencies": {
+    "devDependencies": {
         "turbocommons-ts": "^3.0.1",
-        "turbodepot-node": "^6.0.0",
+        "turbodepot-node": "^6.2.0",
         "turbotesting-node": "^7.1.0"
     },
     "author": "",
