@@ -8,6 +8,10 @@
 
 const path = require('path');
 const { StringUtils } = require('turbocommons-ts');
+const { ConsoleManager } = require('turbodepot-node');
+
+
+const cm = new ConsoleManager();
 
 
 /**
@@ -124,5 +128,5 @@ global.blockingSleepTill = function (verificationFun, maxTimeMs, timeExceededErr
         }
     }
     
-    console.error(timeExceededErrorMessage);
+    cm.error(timeExceededErrorMessage);
 }

@@ -6,12 +6,14 @@
 
 
 const { FilesManager } = require('turbodepot-node');
-const console = require('./console.js');
+const { ConsoleManager } = require('turbodepot-node');
+const { TerminalManager } = require('turbodepot-node');
 const buildModule = require('./build');
-const setupModule = require('./setup');
 
 
 let fm = new FilesManager();
+const cm = new ConsoleManager();
+const terminalManager = new TerminalManager();
 
 
 /**
@@ -19,7 +21,7 @@ let fm = new FilesManager();
  */
 exports.execute = function (alsoCleanSync = false) {
     
-    console.log("\nclean start");
+    cm.text("\nclean start");
     
     if(fm.isDirectory(global.runtimePaths.target)){
         
@@ -31,7 +33,7 @@ exports.execute = function (alsoCleanSync = false) {
             
             if(!fm.isDirectoryEmpty(global.runtimePaths.target)){
                 
-                console.error('could not clean ' + global.runtimePaths.target);
+                cm.error('could not clean ' + global.runtimePaths.target);
             }        
         }
     }
@@ -49,7 +51,7 @@ exports.execute = function (alsoCleanSync = false) {
         }
     }
     
-    console.success("clean ok");
+    cm.success("clean ok");
 }
 
 
@@ -67,7 +69,7 @@ let cleanSyncDests = function (setup) {
         
         }catch(e){
             
-            console.error("could not delete contents of " + setup.sync.destPath);
+            cm.error("could not delete contents of " + setup.sync.destPath);
         }
      }
      
@@ -91,10 +93,10 @@ let deleteRemoteSyncFolder = function (setup) {
     winscpExec += ' "rm ' + setup.sync.remotePath + '/*.*"';
     winscpExec += ' "exit"';
     
-    if(!console.exec(winscpExec, '', true)){
+    if(terminalManager.exec(winscpExec, true).failed){
         
-        console.error('Remote clean errors');
+        cm.error('Remote clean errors');
     }
 
-    console.success('cleaned remote ftp: ' + setup.sync.host + ' ' + setup.sync.remotePath);
+    cm.success('cleaned remote ftp: ' + setup.sync.host + ' ' + setup.sync.remotePath);
 }

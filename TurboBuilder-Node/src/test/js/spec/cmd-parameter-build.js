@@ -43,8 +43,9 @@ describe('cmd-parameter-build', function() {
 
         testsGlobalHelper.generateProjectAndSetup('lib_ts', {}, []);
         
-        expect(testsGlobalHelper.execTbCmd('-b')).toContain('No valid project type specified');
-        expect(testsGlobalHelper.execTbCmd('--build')).toContain('No valid project type specified');
+        // These regexps make sure that the last message from the exec result is the expected error and nothing more comes after
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/^[\s\S]{0,5}No valid project type specified.*under build section in turbobuilder.json[\s\S]{0,5}$/);
+        expect(testsGlobalHelper.execTbCmd('--build')).toMatch(/^[\s\S]{0,5}No valid project type specified.*under build section in turbobuilder.json[\s\S]{0,5}$/);
     });
     
     
@@ -65,8 +66,9 @@ describe('cmd-parameter-build', function() {
         expect(fm.deleteDirectory('.' + fm.dirSep() + 'src' + fm.dirSep() + 'main' + fm.dirSep() + 'ts', false))
             .toBeGreaterThan(0);
 
-        expect(testsGlobalHelper.execTbCmd('-b')).toContain('no files to build');
-        expect(testsGlobalHelper.execTbCmd('--build')).toContain('no files to build');
+        // These regexps make sure that the last message from the exec result is the expected error and nothing more comes after
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/[\s\S]*no files to build[\s\S]{0,5}$/);
+        expect(testsGlobalHelper.execTbCmd('--build')).toMatch(/[\s\S]*no files to build[\s\S]{0,5}$/);
     });
     
     
@@ -230,7 +232,8 @@ describe('cmd-parameter-build', function() {
         
         expect(fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-b')).toContain('Unexpected favicon name: 196x191.png');
+        // This regexp makes sure that the last message from the exec result is the expected error and nothing more comes after
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/[\s\S]*Unexpected favicon name: 196x191.png[\s\S]{0,5}$/);
     });
     
     

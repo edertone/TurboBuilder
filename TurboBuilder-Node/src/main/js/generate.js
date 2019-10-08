@@ -7,11 +7,12 @@
 
 const { StringUtils, ObjectUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const console = require('./console');
+const { ConsoleManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 
 
 let fm = new FilesManager();
+const cm = new ConsoleManager();
 
 
 /**
@@ -21,19 +22,19 @@ exports.execute = function (type) {
 
     validate(type);
     
-    console.log("\ngenerate " + type + " start");
+    cm.text("\ngenerate " + type + " start");
     
     if(ObjectUtils.getKeys(global.folderStructures).indexOf(type) >= 0){
     
         createFoldersStructure(type);
         
-        console.success('Generated folders structure ok');
+        cm.success('Generated folders structure ok');
         
     } else {
         
         createProjectStructure(type);
         
-        console.success('Generated project structure ok');    
+        cm.success('Generated project structure ok');    
     }
 };
 
@@ -47,24 +48,24 @@ let validate = function (type) {
 
     if(validTypes.indexOf(type) < 0){
         
-        console.error("invalid project type. Allowed types: " + validTypes.join(', '));
+        cm.error("invalid project type. Allowed types: " + validTypes.join(', '));
     }
     
     let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;
     
     if (fm.isFile(global.runtimePaths.setupFile)) {
         
-        console.error('File ' + global.fileNames.setup + ' already exists');
+        cm.error('File ' + global.fileNames.setup + ' already exists');
     }
     
     if (!fm.isFile(templateSetupPath)) {
         
-        console.error(templateSetupPath + ' file not found');
+        cm.error(templateSetupPath + ' file not found');
     }
     
     if(!fm.isDirectoryEmpty(global.runtimePaths.root)){
         
-        console.error('Current folder is not empty! :' + global.runtimePaths.root);
+        cm.error('Current folder is not empty! :' + global.runtimePaths.root);
     }
 }
 
@@ -117,7 +118,7 @@ let createProjectStructure = function (type) {
     
     if(!fm.copyDirectory(templatesFolder + sep + 'shared' + sep + 'extras', global.runtimePaths.extras)){
     
-        console.error('Failed creating: ' + global.runtimePaths.extras);
+        cm.error('Failed creating: ' + global.runtimePaths.extras);
     }
     
     // Copy the project type specific files
@@ -144,19 +145,19 @@ let createProjectStructure = function (type) {
     if(!fm.copyFile(templatesFolder + sep + 'shared' + sep + global.fileNames.readme,
        global.runtimePaths.root + sep + global.fileNames.readme)){
         
-        console.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.readme);
+        cm.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.readme);
     }
     
     // Copy the gitignore file
     if(!fm.copyFile(templatesFolder + sep + 'shared' + sep + 'gitignore.txt',
         global.runtimePaths.root + sep + global.fileNames.gitignore)){
          
-        console.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.gitignore);
+        cm.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.gitignore);
     }
     
     replaceDependenciesIntoTemplate();
     
-    console.success('Generated ' + type + ' structure');
+    cm.success('Generated ' + type + ' structure');
     
     // Generate a custom project setup and save it to file
     try{
@@ -166,10 +167,10 @@ let createProjectStructure = function (type) {
             
     }catch(e){
         
-        console.error('Error creating ' + global.fileNames.setup + ' file');
+        cm.error('Error creating ' + global.fileNames.setup + ' file');
     }
     
-    console.success('Created ' + global.fileNames.setup + ' file');
+    cm.success('Created ' + global.fileNames.setup + ' file');
     
     if(type === global.setupBuildTypes.app_angular){
         
@@ -179,7 +180,7 @@ let createProjectStructure = function (type) {
         fm.copyDirectory(`${templatesFolder}${sep}site_php${sep}src${sep}main${sep}resources${sep}favicons`,
                          `${global.runtimePaths.root}${sep}src${sep}assets${sep}favicons`);
         
-        console.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
+        cm.warning("\nNOT FINISHED YET! - Remember to follow the instructions on TODO.md to complete the project setup\n");
     }
 }
 

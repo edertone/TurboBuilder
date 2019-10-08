@@ -9,7 +9,7 @@ require('./globals');
 
 const { ObjectUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const console = require('./console.js');
+const { ConsoleManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
 const validateModule = require('./validate');
@@ -17,6 +17,7 @@ const buildModule = require('./build');
 
 
 let fm = new FilesManager();
+const cm = new ConsoleManager();
 
 
 /**
@@ -54,7 +55,7 @@ exports.getProjectName = function () {
             
         }catch(e){
             
-            console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
+            cm.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
         }
     }
     
@@ -129,7 +130,7 @@ exports.loadSetupFromDisk = function (setupFile) {
     
     if (!fm.isFile(global.runtimePaths.root + sep + setupFile)) {
     
-        console.error(setupFile + ' setup file not found');
+        cm.error(setupFile + ' setup file not found');
     }
 
     try{
@@ -162,7 +163,7 @@ exports.loadSetupFromDisk = function (setupFile) {
         
     }catch(e){
         
-        console.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
+        cm.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
     }
     
     // Check if .release.json must be also merged into the setup
@@ -176,7 +177,7 @@ exports.loadSetupFromDisk = function (setupFile) {
             
         }catch(e){
             
-            console.error("Corrupted JSON for " + releaseSetupPath + ":\n" + e.toString());
+            cm.error("Corrupted JSON for " + releaseSetupPath + ":\n" + e.toString());
         }
     }
     
@@ -207,13 +208,13 @@ exports.detectProjectTypeFromSetup = function (setup) {
     
     if(projectType === ''){
         
-        console.error("No valid project type specified. Please enable any of [" + 
+        cm.error("No valid project type specified. Please enable any of [" + 
             buildTypes.join(', ') + "] under build section in " + global.fileNames.setup);
     }
     
     if(projectTypesCount !== 1){
         
-        console.error("Please specify only one of the following on build setup: " + buildTypes.join(","));
+        cm.error("Please specify only one of the following on build setup: " + buildTypes.join(","));
     }
     
     return projectType;

@@ -8,8 +8,9 @@
 const { StringUtils, ObjectUtils } = require('turbocommons-ts');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 const { FilesManager } = require('turbodepot-node');
+const { ConsoleManager } = require('turbodepot-node');
+const { TerminalManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
-const console = require('./console');
 const setupModule = require('./setup');
 const validateModule = require('./validate');
 const syncModule = require('./sync');
@@ -18,6 +19,8 @@ const sharp = require('sharp');
 
 
 const fm = new FilesManager();
+const cm = new ConsoleManager();
+const terminalManager = new TerminalManager();
 const tsm = new TurboSiteTestsManager('./');
 
 
@@ -36,7 +39,7 @@ process.on('exit', () => {
  */
 exports.execute = function () {
     
-    console.log("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
+    cm.text("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
     
@@ -56,7 +59,7 @@ exports.execute = function () {
         
         this.buildAppAngular(buildFullPath);
     
-        console.success('build ok');
+        cm.success('build ok');
         
         return;
     }
@@ -64,7 +67,7 @@ exports.execute = function () {
     // Node cmd apps are not built, cause we run them installed globally via npm install -g
     if(global.setup.build.app_node_cmd){
         
-        return console.success('build ok (no files affected or created)');
+        return cm.success('build ok (no files affected or created)');
     }
     
     // Copy all the src main files to the target build folder
@@ -97,7 +100,7 @@ exports.execute = function () {
         syncModule.execute(false);
     }
     
-    console.success('build ok');
+    cm.success('build ok');
 };
 
 
@@ -110,7 +113,7 @@ exports.copyMainFiles = function (destPath) {
     if(!fm.isDirectory(global.runtimePaths.main) ||
        fm.findDirectoryItems(global.runtimePaths.main, /.*/i, 'relative', 'files').length === 0){
         
-        console.error('no files to build');
+        cm.error('no files to build');
     }
     
     let destMain = destPath + fm.dirSep() + 'main';
@@ -123,7 +126,7 @@ exports.copyMainFiles = function (destPath) {
     
     fm.mirrorDirectory(global.runtimePaths.main, destMain);
     
-    console.success('copy main files ok');
+    cm.success('copy main files ok');
     
     this.replaceVersionOnAllFiles(destPath);
 }
@@ -142,18 +145,18 @@ exports.buildSitePhp = function (destPath) {
     // Validate turbosite setup exists
     if(!fm.isFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup)){
     
-        console.error(global.fileNames.turboSiteSetup + ' does not exist');
+        cm.error(global.fileNames.turboSiteSetup + ' does not exist');
     }
     
     // Create the dist and site folders if not exists
     if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
         
-        console.error('Could not create ' + destDist);
+        cm.error('Could not create ' + destDist);
     }
     
     if(!fm.isDirectory(destSite) && !fm.createDirectory(destSite)){
         
-        console.error('Could not create ' + destSite);
+        cm.error('Could not create ' + destSite);
     }
     
     fm.copyDirectory(destMain, destSite);
@@ -181,7 +184,7 @@ exports.buildSitePhp = function (destPath) {
     // Fail if errors or warnings are configured to be sent to browser
     if(global.isRelease && (turboSiteSetup.errorSetup.exceptionsToBrowser || turboSiteSetup.errorSetup.warningsToBrowser)){
         
-        console.error("Exceptions or warnings are enabled to be shown on browser. " +
+        cm.error("Exceptions or warnings are enabled to be shown on browser. " +
                 "This is a security problem. Please disable them on " + global.fileNames.turboSiteSetup);
     }
     
@@ -240,7 +243,7 @@ exports.buildSitePhp = function (destPath) {
                 
                 if(!fm.isFile(viewsRoot + sep + viewName + sep + viewName + '.php')){
                     
-                    console.error('View ' + viewName + ' must have a ' + viewName + '.php file');
+                    cm.error('View ' + viewName + ' must have a ' + viewName + '.php file');
                 }
     
                 // Add extra html code to the view if necessary
@@ -252,7 +255,7 @@ exports.buildSitePhp = function (destPath) {
     
                     if(!fm.isFile(destSite + sep + afterBodyOpenPath)){
                     
-                        console.error('afterBodyOpen file not found: ' + afterBodyOpenPath);
+                        cm.error('afterBodyOpen file not found: ' + afterBodyOpenPath);
                     }
                     
                     afterBodyOpenHtml += "\n" + fm.readFile(destSite + sep + afterBodyOpenPath);
@@ -264,7 +267,7 @@ exports.buildSitePhp = function (destPath) {
     
                     if(!fm.isFile(destSite + sep + beforeBodyClosePath)){
                     
-                        console.error('beforeBodyClose file not found: ' + beforeBodyClosePath);
+                        cm.error('beforeBodyClose file not found: ' + beforeBodyClosePath);
                     }
                     
                     beforeBodyCloseHtml += "\n" + fm.readFile(destSite + sep + beforeBodyClosePath);
@@ -283,7 +286,7 @@ exports.buildSitePhp = function (destPath) {
                 
                 if(!fm.isFile(cssFiles[0])){
                     
-                    console.error('View ' + viewName + ' must have a ' + viewName + '.css file');
+                    cm.error('View ' + viewName + ' must have a ' + viewName + '.css file');
                 }
                 
                 // Generate an array with the view js file plus all the defined view components js files
@@ -291,7 +294,7 @@ exports.buildSitePhp = function (destPath) {
                 
                 if(!fm.isFile(jsFiles[0])){
                     
-                    console.error('View ' + viewName + ' must have a ' + viewName + '.js file');
+                    cm.error('View ' + viewName + ' must have a ' + viewName + '.js file');
                 }
                 
                 // Append all the components related to this view to the arrays of css and js files
@@ -305,14 +308,14 @@ exports.buildSitePhp = function (destPath) {
                             
                             if(!fm.isFile(cssFiles[cssFiles.length - 1])){
                                 
-                                console.error('Missing component file ' + component + '.css');
+                                cm.error('Missing component file ' + component + '.css');
                             }                    
                             
                             jsFiles.push(destSite + sep + component + '.js');
                             
                             if(!fm.isFile(jsFiles[jsFiles.length - 1])){
                                 
-                                console.error('Missing component file ' + component + '.js');
+                                cm.error('Missing component file ' + component + '.js');
                             }
                         }
                     }
@@ -341,7 +344,7 @@ exports.buildSitePhp = function (destPath) {
     
     if(!fm.isDirectory(finalDestDist) && !fm.createDirectory(finalDestDist)){
         
-        console.error('Could not create ' + finalDestDist);
+        cm.error('Could not create ' + finalDestDist);
     }
     
     fm.mirrorDirectory(destDist, finalDestDist);
@@ -369,7 +372,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
         
         if(!fm.renameFile(filePath, filePathWithHash)){
             
-            console.error('Could not rename file with cache hash: ' + filePathWithHash);
+            cm.error('Could not rename file with cache hash: ' + filePathWithHash);
         }
         
         return StringUtils.getPathElement(filePathWithHash);
@@ -385,7 +388,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
     // If no favicons are specified, launch a warning
     if(faviconFiles.length <= 0){
         
-        console.warning("Warning: No favicons specified");
+        cm.warning("Warning: No favicons specified");
     }
     
     // List of expected favicon files and sizes, sorted from biggest to smallest
@@ -425,7 +428,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
         
         if(!fileNameFound){
             
-            console.error('Unexpected favicon name: ' + faviconFile);
+            cm.error('Unexpected favicon name: ' + faviconFile);
         }
     }
     
@@ -474,7 +477,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                         
                         if(err) {
                             
-                            console.error('Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
+                            cm.error('Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
                         }
                     });
                 
@@ -496,7 +499,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                         
                         if(err) {
                             
-                            console.error('Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
+                            cm.error('Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name + "\n" + err);
                         }
                     });
                 
@@ -525,7 +528,7 @@ exports.buildLibPhp = function (destPath) {
     
     if(!fm.isFile(autoLoaderPath)){
         
-        console.error(autoLoaderPath + " not found.\nThis is required to create a phar that loads classes automatically");
+        cm.error(autoLoaderPath + " not found.\nThis is required to create a phar that loads classes automatically");
     }
     
     // Define the contents for the stub file that will be autoexecuted when the phar file is included
@@ -536,7 +539,7 @@ exports.buildLibPhp = function (destPath) {
     // Create the dist folder if not exists
     if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
         
-        console.error('Could not create ' + destDist);
+        cm.error('Could not create ' + destDist);
     }
     
     // Create the phar using the current project name
@@ -550,7 +553,7 @@ exports.buildLibPhp = function (destPath) {
     phpExecCommand += " $p->compressFiles(Phar::GZ); $p->stopBuffering();";
     phpExecCommand += '"';
     
-    console.exec(phpExecCommand);
+    terminalManager.exec(phpExecCommand);
 }
 
 
@@ -566,7 +569,7 @@ exports.buildLibJs = function (destPath) {
     // Create the dist folder if not exists
     if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
         
-        console.error('Could not create ' + destDist);
+        cm.error('Could not create ' + destDist);
     }
     
     // Copy the main source folder to the target dist
@@ -622,7 +625,7 @@ exports.buildLibTs = function (destPath) {
             
         }catch(e){
             
-            console.error('Could not create ' + tsConfig);
+            cm.error('Could not create ' + tsConfig);
         }        
     }
     
@@ -646,7 +649,7 @@ exports.buildLibTs = function (destPath) {
         tsExecution += ' --module commonjs';
         tsExecution += ' --rootDir "' + destMain + sep + 'ts"';      
         tsExecution += ' --project "' + destMain + sep + 'ts"';                          
-        console.exec(tsExecution);
+        terminalManager.exec(tsExecution);
 
         // Check if the target requires a merged JS file or not and
         // Generate it via webpack for the current target       
@@ -670,9 +673,14 @@ exports.buildLibTs = function (destPath) {
             
             fm.saveFile(compiledFolder + sep + 'webpack.config.js', "module.exports = " + JSON.stringify(webPackSetup) + ";");
             
-               let webPackCmd = global.installationPaths.webPackBin + ' --config "' + compiledFolder + sep + 'webpack.config.js"';
-             
-            console.exec(webPackCmd, 'Webpack ' + target.jsTarget + ' ok');
+            let webPackCmd = global.installationPaths.webPackBin + ' --config "' + compiledFolder + sep + 'webpack.config.js"';
+            
+            if(terminalManager.exec(webPackCmd).failed){
+                
+                cm.error('Webpack command failed: ' + webPackCmd);
+            }
+            
+            cm.success('Webpack ' + target.jsTarget + ' ok');
             
             fm.deleteDirectory(compiledFolder);   
         }
@@ -687,14 +695,14 @@ exports.buildLibAngular = function () {
     
     // Use angular cli to compile the project to the target folder
     let angularBuildCommand = 'build ' + setupModule.getProjectName();
-    console.log("\nLaunching ng " + angularBuildCommand + "\n");
+    cm.text("\nLaunching ng " + angularBuildCommand + "\n");
     
-    if(!console.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, '', true)){
+    if(terminalManager.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, true).failed){
         
-        console.error('build failed');
+        cm.error('build failed');
     }
     
-    console.success('build ok');
+    cm.success('build ok');
 }
 
 
@@ -711,11 +719,11 @@ exports.buildAppAngular = function (destPath) {
      
     let angularBuildCommand = `build${prod} --output-hashing=all --output-path="${destPath + sep}dist"`;
     
-    console.log("\nLaunching ng " + angularBuildCommand + "\n");
+    cm.text("\nLaunching ng " + angularBuildCommand + "\n");
 
-    if(!console.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, '', true)){
+    if(terminalManager.exec('"./node_modules/.bin/ng" ' + angularBuildCommand, true).failed){
         
-        console.error('angular compilation failed: ' + angularBuildCommand);
+        cm.error('angular compilation failed: ' + angularBuildCommand);
     }
     
     // Copy htaccess file if it exists to the target folder
@@ -875,7 +883,7 @@ exports.removeUnusedTargetFiles = function (destPath) {
             
         }catch(e){
             
-            console.error('Could not delete unpacked src files from ' + destMain);
+            cm.error('Could not delete unpacked src files from ' + destMain);
         }        
     }
     
@@ -890,7 +898,7 @@ exports.removeUnusedTargetFiles = function (destPath) {
             
         }catch(e){
             
-            console.error('Could not delete folder: ' + destDist);
+            cm.error('Could not delete folder: ' + destDist);
         }
     }
 }
@@ -914,7 +922,7 @@ exports.checkWinSCPAvailable = function () {
             
         }catch(e){
 
-            console.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable if necessary) to perform sync operations');
+            cm.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable if necessary) to perform sync operations');
         }
     }
 }
@@ -938,7 +946,7 @@ exports.checkGitAvailable = function () {
             
         }catch(e){
 
-            console.error('Could not find Git cmd executable. Please install git on your system and make sure it is globally accessible via cmd');
+            cm.error('Could not find Git cmd executable. Please install git on your system and make sure it is globally accessible via cmd');
         }
     }
 }
@@ -962,7 +970,7 @@ exports.checkPhpAvailable = function () {
             
         }catch(e){
 
-            console.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
+            cm.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
         }
     }
 }

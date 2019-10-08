@@ -77,7 +77,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "invalidField" exists in instance when not allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/additionalProperty "invalidField" exists in instance when not allowed[\s\S]{0,5}$/);
     });
     
     
@@ -126,7 +126,7 @@ describe('cmd-parameter-validate', function() {
         
         testsGlobalHelper.saveToSetupFile(setup);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/validate ok[\s\S]{0,5}$/);
         
         // Enable again the use strict validation on setup but ignore the bad file
         setup.validate.javascript.useStrict = {
@@ -137,7 +137,7 @@ describe('cmd-parameter-validate', function() {
         
         testsGlobalHelper.saveToSetupFile(setup);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/validate ok[\s\S]{0,5}$/);
     });
 
     
@@ -271,7 +271,7 @@ describe('cmd-parameter-validate', function() {
             validate: {runBeforeBuild: false}}))
                 .toBe(true);
 
-        expect(testsGlobalHelper.execTbCmd('-b')).toContain("no files to build");
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/no files to build[\s\S]{0,5}$/);
     });
     
     

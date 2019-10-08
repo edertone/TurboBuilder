@@ -5,14 +5,17 @@
  */
 
 
-const console = require('./console.js');
 const buildModule = require('./build');
 const setupModule = require('./setup');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
+const { ConsoleManager } = require('turbodepot-node');
+const { TerminalManager } = require('turbodepot-node');
 
 
 let fm = new FilesManager();
+const cm = new ConsoleManager();
+const terminalManager = new TerminalManager();
 
 
 /**
@@ -22,7 +25,7 @@ exports.execute = function (verbose = true) {
     
     if(verbose){
         
-        console.log("\nsync start");
+        cm.text("\nsync start");
     }
       
     if(verbose || global.setup.sync.runAfterBuild === true){
@@ -70,12 +73,12 @@ let syncFileSystem = function () {
     
     if(!fm.isDirectory(sourcePath)){
         
-        console.error('Source path does not exist: ' + sourcePath);
+        cm.error('Source path does not exist: ' + sourcePath);
     }
     
     if(!fm.isDirectory(global.setup.sync.destPath)){
         
-        console.error('Destination path does not exist: ' + global.setup.sync.destPath);
+        cm.error('Destination path does not exist: ' + global.setup.sync.destPath);
     }
     
     // TODO - apply excludes option
@@ -88,18 +91,18 @@ let syncFileSystem = function () {
             
         }catch(e) {
             
-            console.error('Could not delete destination: ' + global.setup.sync.destPath + '\n' + e.toString());
+            cm.error('Could not delete destination: ' + global.setup.sync.destPath + '\n' + e.toString());
         }        
     }
     
     if(!fm.isDirectoryEmpty(global.setup.sync.destPath)){
         
-        console.error('Destination path is not empty: ' + global.setup.sync.destPath);
+        cm.error('Destination path is not empty: ' + global.setup.sync.destPath);
     }
     
     fm.copyDirectory(sourcePath, global.setup.sync.destPath);
     
-    console.success('sync ok to fs: ' + global.setup.sync.destPath);
+    cm.success('sync ok to fs: ' + global.setup.sync.destPath);
 }
 
 
@@ -115,7 +118,7 @@ let syncFtp = function () {
     
     if(!fm.isDirectory(sourcePath)){
         
-        console.error('Folder does not exist: ' + sourcePath);
+        cm.error('Folder does not exist: ' + sourcePath);
     }
     
     // TODO - apply excludes option
@@ -124,10 +127,10 @@ let syncFtp = function () {
     winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + global.setup.sync.remotePath + '"';
     winscpExec += ' "exit"';
     
-    if(!console.exec(winscpExec, '', true)){
+    if(terminalManager.exec(winscpExec, true).failed){
         
-        console.error('Sync errors');
+        cm.error('Sync errors');
     }
 
-    console.success('sync ok to ftp: ' + global.setup.sync.host);
+    cm.success('sync ok to ftp: ' + global.setup.sync.host);
 }

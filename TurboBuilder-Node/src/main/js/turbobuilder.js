@@ -8,7 +8,9 @@ require('./globals');
 
 const program = require('commander');
 const { ObjectUtils } = require('turbocommons-ts');
-const console = require('./console');
+const { StringUtils } = require('turbocommons-ts');
+const { ConsoleManager } = require('turbodepot-node');
+const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const generateModule = require('./generate');
 const validateModule = require('./validate');
@@ -19,13 +21,59 @@ const cleanModule = require('./clean');
 const syncModule = require('./sync');
 
 
+const cm = new ConsoleManager();
+const fm = new FilesManager();
+
+
+/**
+ * Get information about all the application related versions
+ */
+let printVersionInfo = function () {
+
+    let result = "\nturbobuilder: " + setupModule.getBuilderVersion();
+    
+    if (fm.isFile(global.runtimePaths.setupFile)) {
+    
+        result += "\n\n" + setupModule.getProjectName() + ': ' + setupModule.getProjectRepoSemVer(true);
+    }
+    
+    return result;
+}
+
+
+/**
+ * Show the contents of each one of the specified folder files in an organized and readable way
+ *
+ * TODO - Improve and move to consoleManager on turbodepot library
+ */
+let printFolderContents = function (path, headlineText) {
+
+    if(fm.isDirectory(path)){
+        
+        let folderList = fm.getDirectoryList(global.runtimePaths.todoFolder);
+
+        for(let item of folderList){
+            
+            let todoContents = fm.readFile(global.runtimePaths.todoFolder + fm.dirSep() + item);
+            
+            if(!StringUtils.isEmpty(todoContents)){
+            
+                cm.warning("\n" + headlineText + item);
+                        
+                cm.warning(todoContents);
+            }
+        }
+    }
+}
+
+
 /**
  * This application uses the commander npm module to easily manage the command line args.
  * All cmd interface and options are defined here
  */
 program
     .alias('tb')
-    .version(console.printVersionInfo(), '-v, --version')
+    .version(printVersionInfo(), '-v, --version')
     .option('-g, --generate <type>', 'Create a full project or folders structure on the current directory. Allowed types: ' + ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '))
     .option('-l, --lint', 'Perform project validation as configured in ' + global.fileNames.setup)
     .option('-c, --clean', 'Clear all the built files and delete ' + global.folderNames.target + ' folder. If -s is executed at the same time, synced files will be also deleted')
@@ -57,7 +105,7 @@ if (program.release){
 //Build and release cannot be launched at the same time
 if (program.build && program.release){
  
-    console.error('build and release cannot be executed at the same time. Please launch separately');
+    cm.error('build and release cannot be executed at the same time. Please launch separately');
 }
 
 // Generate the default project files if necessary
@@ -114,7 +162,7 @@ if (program.test){
           output: process.stdout
         });
         
-        console.warning('\n--test SHOULD be used at the same time with -b --build or -r --release.\n\nIF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT, RESULTS MAY NOT BE ACCURATE.', false);  
+        cm.warning('\n--test SHOULD be used at the same time with -b --build or -r --release.\n\nIF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT, RESULTS MAY NOT BE ACCURATE.', false);  
         
         rl.question('\nDo you still want to run the tests (Y/N)?', (answer) => {
         
@@ -136,5 +184,5 @@ if (program.test){
 if((global.setup.release.printTodoFiles && program.release) ||
         (global.setup.build.printTodoFiles && program.build)){
     
-    console.printFolderContents(global.runtimePaths.todoFolder, 'TODO file : ');
+    printFolderContents(global.runtimePaths.todoFolder, 'TODO file : ');
 }

@@ -8,12 +8,13 @@
 const { StringUtils, ArrayUtils, NumericUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
-const console = require('./console.js');
+const { ConsoleManager } = require('turbodepot-node');
 let validate = require('jsonschema').validate;
 const { TerminalManager } = require('turbodepot-node');
 
 
 let fm = new FilesManager();
+const cm = new ConsoleManager();
 const terminalManager = new TerminalManager();
 
 
@@ -36,7 +37,7 @@ exports.execute = function (verbose = true) {
     
     if(verbose){
     
-        console.log("\nvalidate start");
+        cm.text("\nvalidate start");
     }
     
     validateAllJSONSchemas();
@@ -60,18 +61,18 @@ exports.execute = function (verbose = true) {
     // Use angular cli to run the tslint verification for angular projects
     if(global.setup.build.app_angular || global.setup.build.lib_angular){
     
-        console.log("\nLaunching ng lint");
+        cm.text("\nLaunching ng lint");
         
-        if(!console.exec('"./node_modules/.bin/ng" lint', '', true)){
+        if(terminalManager.exec('"./node_modules/.bin/ng" lint', true).failed){
             
-            console.error("validate failed");
+            cm.error("validate failed");
         }        
     }
     
-    console.errors(errors);
+    cm.errors(errors);
     
     // Reaching here means validation was successful
-    console.success("validate ok");
+    cm.success("validate ok");
 }
 
 
@@ -84,12 +85,12 @@ exports.validateBuilderVersion = function () {
     
     if(StringUtils.isEmpty(expectedVersion)){
         
-        console.error("metadata.builderVersion not specified on " + global.fileNames.setup);
+        cm.error("metadata.builderVersion not specified on " + global.fileNames.setup);
     }
     
     if(expectedVersion !== setupModule.getBuilderVersion()){
     
-        console.warning("Warning: Current turbobuilder version (" + setupModule.getBuilderVersion() + ") does not match expected (" + expectedVersion + ")");
+        cm.warning("Warning: Current turbobuilder version (" + setupModule.getBuilderVersion() + ") does not match expected (" + expectedVersion + ")");
     }
 }
 
@@ -136,7 +137,7 @@ let validateJSONSchema = function (filePath, schemaFileName) {
     // Validate the received path
     if(!fm.isFile(filePath)){
         
-        console.error("Could not find " + StringUtils.getPathElement(filePath) + " at " + filePath);
+        cm.error("Could not find " + StringUtils.getPathElement(filePath) + " at " + filePath);
     }
     
     let fileContent = '';
@@ -147,7 +148,7 @@ let validateJSONSchema = function (filePath, schemaFileName) {
         
     }catch(e){
         
-        console.error("Corrupted JSON for " + StringUtils.getPathElement(filePath) + ":\n" + e.toString());
+        cm.error("Corrupted JSON for " + StringUtils.getPathElement(filePath) + ":\n" + e.toString());
     }
     
     let schemaContent = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + schemaFileName));
@@ -174,7 +175,7 @@ let validateProjectStructure = function () {
     // Validate project name is not empty
     if(StringUtils.isEmpty(global.setup.metadata.name)){
     
-        console.warning(`No project name defined. Please add it to ${global.fileNames.setup} -> metadata.name`);
+        cm.warning(`No project name defined. Please add it to ${global.fileNames.setup} -> metadata.name`);
     }
     
     // Validate README.md main file is mandatory
@@ -330,7 +331,7 @@ let validateCopyPasteDetect = function () {
                 
             }catch(e){
                 
-                console.error('The .jscpd folder could not be deleted. Please delete it manually');
+                cm.error('The .jscpd folder could not be deleted. Please delete it manually');
             }            
         }       
     };
@@ -339,7 +340,7 @@ let validateCopyPasteDetect = function () {
         
         if(copyPasteEntry.maxPercentErrorLevel >= 0){
             
-            console.log('Looking for duplicate code on ' + copyPasteEntry.path);
+            cm.text('Looking for duplicate code on ' + copyPasteEntry.path);
             
             let jscpdExecIgnore = ' --ignore "**/*.phar,**/*.min.js,**/*.map,**/libs/**"';
             let jscpdExecMaxLimits = ' --max-size 250kb --max-lines 8000';
@@ -366,19 +367,19 @@ let validateCopyPasteDetect = function () {
 
             if(jscpdResult.indexOf('ERROR') >= 0){
                 
-                console.error(`Found too much duplicate code. Generating report...`, false);
+                cm.error(`Found too much duplicate code. Generating report...`, false);
                 
                 terminalManager.exec(jscpdExecCommand, true);
                 
                 cleanJscpdFolder();
                 
-                console.error('Setup the copy paste validation on ' + global.fileNames.setup + ' under validate.filesContent.copyPasteDetect section');
+                cm.error('Setup the copy paste validation on ' + global.fileNames.setup + ' under validate.filesContent.copyPasteDetect section');
             
             }else{
                 
                 let realCodePercentage = Number(jscpdResult.substring(jscpdResult.indexOf('(') + 1, jscpdResult.indexOf('%)')));
                                                 
-                console.success(`Percentage of duplicate code: ${realCodePercentage} (maximum allowed: ${copyPasteEntry.maxPercentErrorLevel})`);
+                cm.success(`Percentage of duplicate code: ${realCodePercentage} (maximum allowed: ${copyPasteEntry.maxPercentErrorLevel})`);
                 
                 if(copyPasteEntry.maxPercentErrorDifference >= 0){
                     
@@ -387,7 +388,7 @@ let validateCopyPasteDetect = function () {
                         
                         cleanJscpdFolder();
                         
-                        console.error(`The percentage of duplicate code on the project is ${realCodePercentage} which is too below from ` +
+                        cm.error(`The percentage of duplicate code on the project is ${realCodePercentage} which is too below from ` +
                             `the maxPercentErrorLevel of ${copyPasteEntry.maxPercentErrorLevel} (max expected difference is ` +
                             `${copyPasteEntry.maxPercentErrorDifference}). Please lower the maxPercentErrorLevel value to make it closer to the real one`);
                     }
@@ -409,14 +410,14 @@ let validateCopyrightHeaders = function () {
     
         if(!fm.isFile(global.runtimePaths.root + fm.dirSep() + validator.path)){
         
-            console.error("Copyrhight headers template not found:\n" + global.runtimePaths.root + fm.dirSep() + validator.path);
+            cm.error("Copyrhight headers template not found:\n" + global.runtimePaths.root + fm.dirSep() + validator.path);
         }
     
         let header = fm.readFile(global.runtimePaths.root + fm.dirSep() + validator.path).replace(/(?:\r\n|\r|\n)/g, "\n");
         
         if(!ArrayUtils.isArray(validator.affectedPaths)){
         
-            console.error(global.fileNames.setup + " copyrightHeaders affectedPaths must be an array");
+            cm.error(global.fileNames.setup + " copyrightHeaders affectedPaths must be an array");
         }
         
         for (let affectedPath of validator.affectedPaths) {
@@ -646,19 +647,19 @@ let validateAngularApp = function () {
     if(global.setup.validate.angularApp.noLegacyFavicon &&
        indexHtmlCode.indexOf('favicon.ico') >= 0){
         
-        console.error("Deprecated favicon.ico metadata is not allowed. Please remove it from index.html");
+        cm.error("Deprecated favicon.ico metadata is not allowed. Please remove it from index.html");
     }
     
     if(global.setup.validate.angularApp.forceOverscrollContain &&
        indexHtmlCode.indexOf('overscroll-behavior: contain') < 0){
         
-        console.error('style="overscroll-behavior: contain" is mandatory on index.html <body> tag to prevent scroll reloading on mobile browsers');
+        cm.error('style="overscroll-behavior: contain" is mandatory on index.html <body> tag to prevent scroll reloading on mobile browsers');
     }
     
     if(global.setup.validate.angularApp.forceMobileWebAppCapable &&
        indexHtmlCode.indexOf('name="mobile-web-app-capable" content="yes"') < 0){
         
-        console.error('<meta name="mobile-web-app-capable" content="yes"> is mandatory on index.html to enable app-like features on mobile browsers');
+        cm.error('<meta name="mobile-web-app-capable" content="yes"> is mandatory on index.html to enable app-like features on mobile browsers');
     }
     
     if(global.setup.validate.angularApp.forceHttpsWithHtaccess &&
@@ -666,7 +667,7 @@ let validateAngularApp = function () {
         fm.readFile(global.runtimePaths.src + fm.dirSep() + 'htaccess.txt')
             .indexOf('RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]') < 0)){
         
-        console.error('src/htaccess.txt must exist and redirect all urls from http to https with the following code:\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]');
+        cm.error('src/htaccess.txt must exist and redirect all urls from http to https with the following code:\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]');
     }
 }
 

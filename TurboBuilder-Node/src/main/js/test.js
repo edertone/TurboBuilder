@@ -17,8 +17,8 @@ const releaseModule = require('./release');
 const opn = require('opn');
 
 
-let fm = new FilesManager(); 
-let cm = new ConsoleManager();
+const fm = new FilesManager(); 
+const cm = new ConsoleManager();
 const terminalManager = new TerminalManager();
 
 

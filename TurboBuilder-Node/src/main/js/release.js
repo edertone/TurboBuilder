@@ -8,7 +8,8 @@
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
-const console = require('./console');
+const { ConsoleManager } = require('turbodepot-node');
+const { TerminalManager } = require('turbodepot-node');
 const validateModule = require('./validate');
 const syncModule = require('./sync');
 const setupModule = require('./setup');
@@ -20,6 +21,8 @@ const imageminJpegtran = require('imagemin-jpegtran');
 const imageminPngquant = require('imagemin-pngquant');
 
 let fm = new FilesManager();
+const cm = new ConsoleManager();
+const terminalManager = new TerminalManager();
 
 
 let releaseRelativePath = '';
@@ -45,10 +48,10 @@ exports.execute = function () {
     // Angular libs are only built via -b
     if(global.setup.build.lib_angular){
         
-        console.error("Angular libs can only be built with -b option");
+        cm.error("Angular libs can only be built with -b option");
     }
     
-    console.log("\nrelease start");
+    cm.text("\nrelease start");
     
     let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
     
@@ -66,7 +69,7 @@ exports.execute = function () {
     // Node cmd apps are not built, cause we run them installed globally via npm install -g
     if(global.setup.build.app_node_cmd){
         
-        return console.success('release ok (no files affected or created)');
+        return cm.success('release ok (no files affected or created)');
     }
     
     // Angular apps are compiled exclusively with ng cli
@@ -139,7 +142,7 @@ exports.execute = function () {
         syncModule.execute(false);
     }
     
-    console.success('release ok (' + this.getReleaseRelativePath() + ')');
+    cm.success('release ok (' + this.getReleaseRelativePath() + ')');
 };
 
 
@@ -175,7 +178,7 @@ let minifyJs = function (destPath) {
         
         if(result.error !== undefined){
             
-            console.error('Minification failed: ' + jsFile + "\n\n" + result.error);
+            cm.error('Minification failed: ' + jsFile + "\n\n" + result.error);
         }
         
         fm.deleteFile(jsFile);        
@@ -184,7 +187,7 @@ let minifyJs = function (destPath) {
     
     if(jsFiles.length > 0){
         
-        console.success("minify Js ok");
+        cm.success("minify Js ok");
     }
 }
 
@@ -213,7 +216,7 @@ let minifyCss = function (destPath) {
         
         if(result.errors.length > 0){
             
-            console.error('Minification failed: ' + cssFile + "\n\n" + result.error[0]);
+            cm.error('Minification failed: ' + cssFile + "\n\n" + result.error[0]);
         }
         
         fm.deleteFile(cssFile);
@@ -222,7 +225,7 @@ let minifyCss = function (destPath) {
     
     if(cssFiles.length > 0){
         
-        console.success("minify Css ok");
+        cm.success("minify Css ok");
     }
 }
 
@@ -256,7 +259,7 @@ let minifyImages = function (destPath) {
     
     if(imageFiles.length > 0){
         
-        console.success("minify Images ok");
+        cm.success("minify Images ok");
     }    
 }
 
@@ -300,7 +303,7 @@ let minifyHtmlFiles = function (destPath) {
                         
         }catch(e){
 
-            console.error("Html minify failed:\n" + htmlFile);
+            cm.error("Html minify failed:\n" + htmlFile);
         }
         
         fm.saveFile(htmlFile, htmlMinified); 
@@ -308,7 +311,7 @@ let minifyHtmlFiles = function (destPath) {
     
     if(htmlFiles.length > 0){
         
-        console.success("minify html ok");
+        cm.success("minify html ok");
     }
 }
 
@@ -333,7 +336,7 @@ let minifyPhpFiles = function (destPath) {
             
         }catch(e){
 
-            console.error("Php minify failed");
+            cm.error("Php minify failed");
         }
         
         fm.deleteFile(phpFile);
@@ -342,7 +345,7 @@ let minifyPhpFiles = function (destPath) {
     
     if(phpFiles.length > 0){
         
-        console.success("minify php ok");
+        cm.success("minify php ok");
     }
 }
 
@@ -376,7 +379,7 @@ let minifyHtaccess = function (destPath) {
     
     if(htaccessFiles.length > 0){
         
-        console.success("minify .htaccess ok");
+        cm.success("minify .htaccess ok");
     }
 }
 
@@ -395,7 +398,7 @@ let generateCodeDocumentation = function (destPath) {
         
         if(!fm.createDirectory(docsPath + sep + 'php', true)){
             
-            console.error('Could not create docs folder ' + docsPath + sep + 'php');
+            cm.error('Could not create docs folder ' + docsPath + sep + 'php');
         }
         
         let phpDocExec = 'php';
@@ -408,7 +411,12 @@ let generateCodeDocumentation = function (destPath) {
         phpDocExec += ' -d "' + destMain + sep + 'php"';
         phpDocExec += ' -t "' + docsPath + sep + 'php"';
         
-        console.exec(phpDocExec, 'php doc ok');
+        if(terminalManager.exec(phpDocExec).failed){
+            
+            cm.error('php doc command failed: ' + phpDocExec);
+        }
+        
+        cm.success('php doc ok');
     }
     
     // Generate ts doc if ts build is enabled
@@ -416,7 +424,7 @@ let generateCodeDocumentation = function (destPath) {
         
         if(!fm.createDirectory(docsPath + sep + 'ts', true)){
            
-            console.error('Could not create docs folder ' + docsPath + sep + 'ts');
+            cm.error('Could not create docs folder ' + docsPath + sep + 'ts');
         }
         
         let typeDocExec = global.installationPaths.typeDocBin;
@@ -429,7 +437,12 @@ let generateCodeDocumentation = function (destPath) {
         typeDocExec += ' --out "' + docsPath + sep + 'ts"';
         typeDocExec += ' "' + destMain + sep + 'ts"';
         
-        console.exec(typeDocExec, 'ts doc ok');
+        if(terminalManager.exec(typeDocExec).failed){
+            
+            cm.error('ts doc command failed: ' + typeDocExec);
+        }
+        
+        cm.success('ts doc ok');
     }
 }
 
@@ -453,7 +466,7 @@ let createGitChangeLog = function (destPath) {
         
     }catch(e){
 
-        console.warning("changelog failed. Not a git repository?");
+        cm.warning("changelog failed. Not a git repository?");
         
         return;
     }
@@ -506,5 +519,5 @@ let createGitChangeLog = function (destPath) {
     // Create the changelog file
     fm.saveFile(destPath + fm.dirSep() + 'Changelog.txt', changeLogContents);
     
-    console.success("changelog ok");
+    cm.success("changelog ok");
 }
