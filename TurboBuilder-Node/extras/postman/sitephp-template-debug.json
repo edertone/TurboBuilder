@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "364753bc-43a5-412f-9e68-58464052d9df",
-		"name": "SitePhp debug",
+		"name": "TurboBuilder-Node site_php template debug",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [

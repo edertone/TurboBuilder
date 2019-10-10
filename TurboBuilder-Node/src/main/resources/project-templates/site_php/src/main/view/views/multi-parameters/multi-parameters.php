@@ -11,10 +11,10 @@ $ws->metaDescription = $ws->getText('META_DESCRIPTION');
 
 $webViewSetup = new WebViewSetup();
 
-$webViewSetup->enabledParams = 3;
+$webViewSetup->enabledGetParams = 3;
 $webViewSetup->defaultParameters = ['default-param1', 'default-param2', 'default-param3'];
 
-$ws->initializeView($webViewSetup);
+$ws->initializeAsView($webViewSetup);
 
 ?>
 <!doctype html>

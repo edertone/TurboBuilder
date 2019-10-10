@@ -8,7 +8,7 @@ $ws->loadBundles(['home']);
 $ws->metaTitle = $ws->getText('META_TITLE');
 $ws->metaDescription = $ws->getText('META_DESCRIPTION');
 
-$ws->initializeView();
+$ws->initializeAsView();
 
 ?>
 <!doctype html>
