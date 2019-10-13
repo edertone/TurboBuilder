@@ -6,8 +6,6 @@ $ws = WebSiteManager::getInstance();
 
 $ws->initializeAsSingleParameterView('en', ['test parameter 1', 'testparameter2']);
 
-// TODO - Test that parameter redirects to similar values!!
-
 $ws->metaTitle = $ws->getUrlParam();
 $ws->metaDescription = $ws->getUrlParam();
 
