@@ -11,7 +11,7 @@ $ws->metaDescription = $ws->getText('META_DESCRIPTION');
 
 $webViewSetup = new WebViewSetup();
 
-$webViewSetup->enabledGetParams = 3;
+$webViewSetup->enabledUrlParams = 3;
 $webViewSetup->defaultParameters = ['default-param1', 'default-param2', 'default-param3'];
 
 $ws->initializeAsView($webViewSetup);

@@ -15,7 +15,7 @@
 					"formdata": [
 						{
 							"key": "services",
-							"value": "[{ \"uri\": \"api/site/example/example-service-without-params\" }, { \"uri\": \"api/site/example/example-service-with-get-params\", \"getParameters\" : [\"1\", \"2\"] }]",
+							"value": "[{ \"uri\": \"api/site/example/example-service-without-params\" }, { \"uri\": \"api/site/example/example-service-with-get-params\", \"urlParameters\" : [\"1\", \"2\"] }]",
 							"type": "text"
 						}
 					]

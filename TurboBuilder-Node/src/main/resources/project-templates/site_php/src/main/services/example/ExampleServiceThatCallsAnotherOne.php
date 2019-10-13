@@ -27,16 +27,16 @@ class ExampleServiceThatCallsAnotherOne extends WebService{
         $result .= json_encode($exampleServiceWithoutParams->run());
         $result .= "\n\n";
 
-        $exampleServiceWithGetParams = new ExampleServiceWithGetParams(['param0', 'param1']);
+        $exampleServiceWithUrlParams = new ExampleServiceWithUrlParams(['param0', 'param1']);
 
-        $result .= "ExampleServiceWithGetParams called. Result:\n";
-        $result .= json_encode($exampleServiceWithGetParams->run());
+        $result .= "ExampleServiceWithUrlParams called. Result:\n";
+        $result .= json_encode($exampleServiceWithUrlParams->run());
         $result .= "\n\n";
 
-        $exampleServiceWithGetParamsOptional = new ExampleServiceWithGetParamsOptional(['param0']);
+        $exampleServiceWithUrlParamsOptional = new ExampleServiceWithUrlParamsOptional(['param0']);
 
-        $result .= "ExampleServiceWithGetParamsOptional called. Result:\n";
-        $result .= json_encode($exampleServiceWithGetParamsOptional->run());
+        $result .= "ExampleServiceWithUrlParamsOptional called. Result:\n";
+        $result .= json_encode($exampleServiceWithUrlParamsOptional->run());
         $result .= "\n\n";
 
         $exampleServiceWithPostParams = new ExampleServiceWithPostParams(null, ['param1' => 'p1 value', 'param2' => 'p2 value']);
@@ -45,22 +45,22 @@ class ExampleServiceThatCallsAnotherOne extends WebService{
         $result .= json_encode($exampleServiceWithPostParams->run());
         $result .= "\n\n";
 
-        $exampleServiceWithPostAndGetParams = new ExampleServiceWithPostAndGetParams(['param0', 'param1'], ['data' => 'data from constructor']);
+        $exampleServiceWithPostAndUrlParams = new ExampleServiceWithPostAndUrlParams(['param0', 'param1'], ['data' => 'data from constructor']);
 
-        $result .= "ExampleServiceWithPostAndGetParams called. Result:\n";
-        $result .= json_encode($exampleServiceWithPostAndGetParams->run());
+        $result .= "ExampleServiceWithPostAndUrlParams called. Result:\n";
+        $result .= json_encode($exampleServiceWithPostAndUrlParams->run());
         $result .= "\n\n";
 
-        $exampleServiceWithPostAndGetParamsOptional = new ExampleServiceWithPostAndGetParamsOptional([], null);
+        $exampleServiceWithPostAndUrlParamsOptional = new ExampleServiceWithPostAndUrlParamsOptional([], null);
 
-        $result .= "ExampleServiceWithPostAndGetParamsOptional called. Result:\n";
-        $result .= json_encode($exampleServiceWithPostAndGetParamsOptional->run());
+        $result .= "ExampleServiceWithPostAndUrlParamsOptional called. Result:\n";
+        $result .= json_encode($exampleServiceWithPostAndUrlParamsOptional->run());
         $result .= "\n\n";
 
-        $exampleServiceWithPostAndGetParamsOptional = new ExampleServiceWithPostAndGetParamsOptional(['p1', 'p2'], ['data' => 'datavalue']);
+        $exampleServiceWithPostAndUrlParamsOptional = new ExampleServiceWithPostAndUrlParamsOptional(['p1', 'p2'], ['data' => 'datavalue']);
 
-        $result .= "ExampleServiceWithPostAndGetParamsOptional called 2. Result:\n";
-        $result .= json_encode($exampleServiceWithPostAndGetParamsOptional->run());
+        $result .= "ExampleServiceWithPostAndUrlParamsOptional called 2. Result:\n";
+        $result .= json_encode($exampleServiceWithPostAndUrlParamsOptional->run());
         $result .= "\n\n";
 
         $exampleServiceThatThrows400BadRequest = new ExampleServiceThatThrows400BadRequest();

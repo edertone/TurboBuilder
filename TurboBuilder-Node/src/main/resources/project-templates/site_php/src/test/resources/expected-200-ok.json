@@ -283,17 +283,17 @@
         "sourceHtmlNotContains": null
     },
     {
-        "url": "https://$host/api/site/example/example-service-with-get-params/param1/param2",
+        "url": "https://$host/api/site/example/example-service-with-url-params/param1/param2",
         "titleContains": null,
-        "sourceHtmlContains": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"param1\",\"received-param-1-value\":\"param2\"}"],
+        "sourceHtmlContains": ["{\"info\":\"this object is returned as a json string with the received URL parameters values\",\"received-param-0-value\":\"param1\",\"received-param-1-value\":\"param2\"}"],
         "sourceHtmlStartsWith": null,
         "sourceHtmlEndsWith": null,
         "sourceHtmlNotContains": null
     },
     {
-        "url": "https://$host/api/site/example/example-service-with-get-params/0-1-2-3-4-5-6/FFF9900022",
+        "url": "https://$host/api/site/example/example-service-with-url-params/0-1-2-3-4-5-6/FFF9900022",
         "titleContains": null,
-        "sourceHtmlContains": ["{\"info\":\"this object is returned as a json string with the received GET parameters values\",\"received-param-0-value\":\"0-1-2-3-4-5-6\",\"received-param-1-value\":\"FFF9900022\"}"],
+        "sourceHtmlContains": ["{\"info\":\"this object is returned as a json string with the received URL parameters values\",\"received-param-0-value\":\"0-1-2-3-4-5-6\",\"received-param-1-value\":\"FFF9900022\"}"],
         "sourceHtmlStartsWith": null,
         "sourceHtmlEndsWith": null,
         "sourceHtmlNotContains": null

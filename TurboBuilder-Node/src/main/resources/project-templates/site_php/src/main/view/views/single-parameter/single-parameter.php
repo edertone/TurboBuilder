@@ -6,8 +6,10 @@ $ws = WebSiteManager::getInstance();
 
 $ws->initializeAsSingleParameterView('en', ['test parameter 1', 'testparameter2']);
 
-$ws->metaTitle = $ws->getParam();
-$ws->metaDescription = $ws->getParam();
+// TODO - Test that parameter redirects to similar values!!
+
+$ws->metaTitle = $ws->getUrlParam();
+$ws->metaDescription = $ws->getUrlParam();
 
 ?>
 <!doctype html>
@@ -29,7 +31,7 @@ $ws->metaDescription = $ws->getParam();
 
             <h1><?php echo 'This is the single parameter view' ?></h1>
 
-            <h4><?php echo 'You passed the following parameter value: '.$ws->getParam() ?></h4>
+            <h4><?php echo 'You passed the following parameter value: '.$ws->getUrlParam() ?></h4>
 
             <p><?php echo 'Use it to process data when only one parameter is enough. The only parameter restriction is to be more than 2 digits in length' ?></p>
 

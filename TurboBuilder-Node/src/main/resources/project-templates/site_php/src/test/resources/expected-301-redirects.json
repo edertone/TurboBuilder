@@ -232,24 +232,24 @@
         "to": "https://$host/api/site/example/example-service-without-params"
     },
     {
-        "url": "http://$host/build/api/site/example/example-service-with-get-params/p1/p2",
-        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+        "url": "http://$host/build/api/site/example/example-service-with-url-params/p1/p2",
+        "to": "https://$host/build/api/site/example/example-service-with-url-params/p1/p2"
     },
     {
-        "url": "http://www.$host/build/api/site/example/example-service-with-get-params/p1/p2",
-        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+        "url": "http://www.$host/build/api/site/example/example-service-with-url-params/p1/p2",
+        "to": "https://$host/build/api/site/example/example-service-with-url-params/p1/p2"
     },
     {
-        "url": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2/",
-        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+        "url": "https://$host/build/api/site/example/example-service-with-url-params/p1/p2/",
+        "to": "https://$host/build/api/site/example/example-service-with-url-params/p1/p2"
     },
     {
-        "url": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2////",
-        "to": "https://$host/build/api/site/example/example-service-with-get-params/p1/p2"
+        "url": "https://$host/build/api/site/example/example-service-with-url-params/p1/p2////",
+        "to": "https://$host/build/api/site/example/example-service-with-url-params/p1/p2"
     },
     {
-        "url": "https://$host/build/api/site/example/example-service-with-get-params/1/?2",
-        "to": "https://$host/build/api/site/example/example-service-with-get-params/1"
+        "url": "https://$host/build/api/site/example/example-service-with-url-params/1/?2",
+        "to": "https://$host/build/api/site/example/example-service-with-url-params/1"
     },
     {
         "url": "http://$host/api/site/example/example-service-with-post-params",

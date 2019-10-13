@@ -22,8 +22,8 @@ class ExampleServiceWithPostParams extends WebService{
 
         return [
             "info" => "this object is returned as a json string with the received POST parameters",
-            "received-param1" => $this->getPost('param1'),
-            "received-param2" => $this->getPost('param2')
+            "received-param1" => $this->getPostParam('param1'),
+            "received-param2" => $this->getPostParam('param2')
         ];
     }
 }
