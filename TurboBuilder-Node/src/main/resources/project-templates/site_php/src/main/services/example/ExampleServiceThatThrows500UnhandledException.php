@@ -3,13 +3,13 @@
 namespace project\src\main\services\example;
 
 use UnexpectedValueException;
-use org\turbosite\src\main\php\model\WebService;
+use org\turbosite\src\main\php\managers\WebServiceManager;
 
 
 /**
  * An example of a service that throws a 500 error due to exception not being catched
  */
-class ExampleServiceThatThrows500UnhandledException extends WebService{
+class ExampleServiceThatThrows500UnhandledException extends WebServiceManager{
 
 
     protected function setup(){

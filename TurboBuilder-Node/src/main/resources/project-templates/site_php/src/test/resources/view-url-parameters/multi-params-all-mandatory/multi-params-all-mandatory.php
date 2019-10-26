@@ -3,23 +3,26 @@
 use org\turbosite\src\main\php\managers\WebSiteManager;
 use org\turbosite\src\main\php\model\WebViewSetup;
 
+// This view is used by tests to verify that all mandatory url parameters works as expected
+
+/* jscpd:ignore-start */
+
 $ws = WebSiteManager::getInstance();
 
 $ws->loadBundles(['multi-parameters']);
-$ws->metaTitle = $ws->getText('META_TITLE');
-$ws->metaDescription = $ws->getText('META_DESCRIPTION');
+$ws->metaTitle = 'blabla';
+$ws->metaDescription = 'blabla';
 
 $webViewSetup = new WebViewSetup();
 
-$webViewSetup->enabledUrlParams = [
-    [WebSiteManager::NOT_TYPED, WebSiteManager::NOT_RESTRICTED, 'default-param1'],
-    [WebSiteManager::NOT_TYPED, WebSiteManager::NOT_RESTRICTED, 'default-param2'],
-    [WebSiteManager::NOT_TYPED, WebSiteManager::NOT_RESTRICTED, 'default-param3']
-];
+$webViewSetup->enabledUrlParams = 3;
 
 $ws->initializeAsView($webViewSetup);
 
+/* jscpd:ignore-end */
+
 ?>
+<!--jscpd:ignore-start-->
 <!doctype html>
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
@@ -29,15 +32,13 @@ $ws->initializeAsView($webViewSetup);
 
 <body>
 
-    <!-- TODO: Adapt this multi parameters view template to your needs -->
-
     <?php $ws->includeComponent('view/components/main-menu/main-menu') ?>
 
     <main>
 
         <section>
 
-
+            <p><?php echo $ws->getUrlParam(0).$ws->getUrlParam(1).$ws->getUrlParam(2) ?></p>
 
         </section>
 
@@ -49,3 +50,4 @@ $ws->initializeAsView($webViewSetup);
 
 </body>
 </html>
+<!--jscpd:ignore-end-->

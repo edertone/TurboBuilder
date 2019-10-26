@@ -11,7 +11,7 @@
         "selenium-webdriver": "^4.0.0-alpha.4",
         "turbocommons-ts": "^3.1.0",
         "turbodepot-node": "^6.2.0",
-        "turbotesting-node": "^7.2.1"
+        "turbotesting-node": "^7.2.3"
     },
     "author": "",
     "license": ""

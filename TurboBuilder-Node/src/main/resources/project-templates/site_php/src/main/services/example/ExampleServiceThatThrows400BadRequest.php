@@ -2,13 +2,13 @@
 
 namespace project\src\main\services\example;
 
-use org\turbosite\src\main\php\model\WebService;
+use org\turbosite\src\main\php\managers\WebServiceManager;
 
 
 /**
  * An example of a service that throws a 400 bad request error
  */
-class ExampleServiceThatThrows400BadRequest extends WebService{
+class ExampleServiceThatThrows400BadRequest extends WebServiceManager{
 
 
     protected function setup(){

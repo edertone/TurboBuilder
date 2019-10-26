@@ -229,7 +229,7 @@ let replaceDependenciesIntoTemplate = function () {
         
         if(depFile === 'turbosite-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'turbosite-php-6.0.0.phar', depParent + sep + 'turbosite-php-6.0.0.phar');
+            fm.copyFile(libsPath + sep + 'turbosite-php-7.0.0.phar', depParent + sep + 'turbosite-php-7.0.0.phar');
         }
 
         fm.deleteFile(tbdependency);

@@ -2,13 +2,13 @@
 
 namespace project\src\main\services\example;
 
-use org\turbosite\src\main\php\model\WebService;
+use org\turbosite\src\main\php\managers\WebServiceManager;
 
 
 /**
  * An example of a service without any parameter
  */
-class ExampleServiceWithoutParams extends WebService{
+class ExampleServiceWithoutParams extends WebServiceManager{
 
 
     protected function setup(){

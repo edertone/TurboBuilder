@@ -2,13 +2,13 @@
 
 namespace project\src\main\services\example;
 
-use org\turbosite\src\main\php\model\WebService;
+use org\turbosite\src\main\php\managers\WebServiceManager;
 
 
 /**
  * An example of a service that must be called with POST parameters
  */
-class ExampleServiceWithPostParams extends WebService{
+class ExampleServiceWithPostParams extends WebServiceManager{
 
 
     protected function setup(){

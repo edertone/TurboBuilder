@@ -2,24 +2,24 @@
 
 namespace project\src\main\services\example;
 
-use org\turbosite\src\main\php\model\WebService;
+use org\turbosite\src\main\php\managers\WebServiceManager;
 
 
 /**
  * An example of a service that may be called with POST or URL parameters
  */
-class ExampleServiceWithPostAndUrlParamsOptional extends WebService{
+class ExampleServiceWithPostAndUrlParamsOptional extends WebServiceManager{
 
 
     protected function setup(){
 
         $this->enabledUrlParams = [
-            [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''],
-            [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, ''],
-            [WebService::NOT_TYPED, WebService::NOT_RESTRICTED, '']
+            [WebServiceManager::NOT_TYPED, WebServiceManager::NOT_RESTRICTED, ''],
+            [WebServiceManager::NOT_TYPED, WebServiceManager::NOT_RESTRICTED, ''],
+            [WebServiceManager::NOT_TYPED, WebServiceManager::NOT_RESTRICTED, '']
         ];
 
-        $this->enabledPostParams[] = ['data', WebService::NOT_TYPED, WebService::NOT_REQUIRED];
+        $this->enabledPostParams[] = ['data', WebServiceManager::NOT_TYPED, WebServiceManager::NOT_REQUIRED];
     }
 
 
