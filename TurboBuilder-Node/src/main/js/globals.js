@@ -65,6 +65,7 @@ global.fileNames = {
     setupRelease: 'turbobuilder.release.json',
     turboSiteSetup: 'turbosite.json',
     gitignore: '.gitignore',
+    gitattributes: '.gitattributes',
     readme: 'README.md'
 };
 

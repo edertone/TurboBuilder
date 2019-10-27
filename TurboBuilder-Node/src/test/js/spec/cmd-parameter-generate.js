@@ -56,6 +56,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./extras/help/tests.md')).toBe(true);
         expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
         expect(fm.isDirectory('./src/main/php')).toBe(true);
         expect(fm.isDirectory('./src/test/php')).toBe(true);
 
@@ -85,6 +87,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./extras/help/tests.md')).toBe(true);
         expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
         expect(fm.isDirectory('./src/main/js')).toBe(true);
         expect(fm.isDirectory('./src/main/resources')).toBe(true);
         expect(fm.isDirectory('./src/test/js')).toBe(true);
@@ -121,6 +125,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(fm.isDirectory('./src/main/ts')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -153,6 +159,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(fm.isDirectory('./src/main/resources')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -187,6 +195,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isDirectory('./src/main/resources')).toBe(true);
         expect(fm.isDirectory('./src/main/resources/fonts')).toBe(false);
         expect(fm.isDirectory('./src/main/view')).toBe(false);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
@@ -260,6 +270,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./extras/help/tests.md')).toBe(true);
         expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
 
         expect(fm.readFile('./tslint.json')).toContain('"extends": "./tslint-angular.json"');
 
@@ -289,6 +301,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./src/main/js/main.js')).toBe(true);
         expect(fm.isDirectory('./src/main/resources')).toBe(true);
         expect(fm.isDirectory('./src/test/js')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
         
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.hasOwnProperty('copyrightHeaders')).toBe(true);

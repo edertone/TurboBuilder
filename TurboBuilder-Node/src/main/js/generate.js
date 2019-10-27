@@ -155,6 +155,13 @@ let createProjectStructure = function (type) {
         cm.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.gitignore);
     }
     
+    // Copy the gitattributes file
+    if(!fm.copyFile(templatesFolder + sep + 'shared' + sep + 'gitattributes.txt',
+        global.runtimePaths.root + sep + global.fileNames.gitattributes)){
+         
+        cm.error('Failed creating: ' + global.runtimePaths.root + sep + global.fileNames.gitattributes);
+    }
+    
     replaceDependenciesIntoTemplate();
     
     cm.success('Generated ' + type + ' structure');
