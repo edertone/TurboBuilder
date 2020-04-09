@@ -263,7 +263,7 @@
                             "type": "boolean",
                             "description": "If enabled, only scss files will be allowed for stylesheets on the project"
                         },
-                        "noCssHardcodedColors": {
+                        "cssHardcodedColorForbid": {
                             "type": "boolean",
                             "description": "If enabled, no hardcoded colors will be accepted on the project css files. Use a palete with variables instead"
                         }
@@ -367,6 +367,10 @@
                         "forceHttpsWithHtaccess": {
                             "type": "boolean",
                             "description": "If enabled, the application must have an src/htaccess.txt file that forces the redirect of the url from http to https"
+                        },
+                        "lintEnabled": {
+                            "type": "boolean",
+                            "description": "If enabled, the project validation fase will perform a lint for the angular application"
                         }
                     }
                 }

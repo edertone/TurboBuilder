@@ -58,17 +58,6 @@ exports.execute = function (verbose = true) {
     
     validateAngularApp();
     
-    // Use angular cli to run the tslint verification for angular projects
-    if(global.setup.build.app_angular || global.setup.build.lib_angular){
-    
-        cm.text("\nLaunching ng lint");
-        
-        if(terminalManager.exec('"./node_modules/.bin/ng" lint', true).failed){
-            
-            cm.error("validate failed");
-        }        
-    }
-    
     cm.errors(errors);
     
     // Reaching here means validation was successful
@@ -471,7 +460,7 @@ let validateStyleSheets = function () {
         
         let cssContents = fm.readFile(cssFile);
         
-        if(global.setup.validate.styleSheets.noCssHardcodedColors &&
+        if(global.setup.validate.styleSheets.cssHardcodedColorForbid &&
            /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
                 
             errors.push("File contains hardcoded css color: " + cssFile);
@@ -668,6 +657,18 @@ let validateAngularApp = function () {
             .indexOf('RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]') < 0)){
         
         cm.error('src/htaccess.txt must exist and redirect all urls from http to https with the following code:\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]');
+    }
+    
+    // Use angular cli to run the tslint verification for angular projects
+    if((global.setup.build.app_angular && global.setup.validate.angularApp.lintEnabled) ||
+        global.setup.build.lib_angular){
+    
+        cm.text("\nLaunching ng lint");
+        
+        if(terminalManager.exec('"./node_modules/.bin/ng" lint', true).failed){
+            
+            cm.error("angular lint validate failed");
+        }        
     }
 }
 

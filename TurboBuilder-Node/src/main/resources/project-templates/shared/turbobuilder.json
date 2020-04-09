@@ -55,7 +55,7 @@
         },
         "styleSheets": {
             "onlyScss": true,
-            "noCssHardcodedColors": true
+            "cssHardcodedColorForbid": true
         },
         "php": {
             "coding": {
@@ -81,7 +81,8 @@
             "noLegacyFavicon": true,
             "forceOverscrollContain": true,
             "forceMobileWebAppCapable": true,
-            "forceHttpsWithHtaccess": true
+            "forceHttpsWithHtaccess": true,
+            "lintEnabled": true
         }
     },
     
