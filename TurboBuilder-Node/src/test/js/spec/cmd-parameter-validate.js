@@ -1040,6 +1040,32 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation when css files contain hardcoded css colors and cssHardcodedColorForbid flag is enabled', function() {
+    
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        expect(setup.validate.styleSheets.cssHardcodedColorForbid).toBe(true);
+        
+        expect(fm.saveFile('./src/main/view/css/test.scss', "body{ background-color: #ff0000; }")).toBe(true);
+       
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/File contains hardcoded css color.*test.scss/);
+    });
+    
+    
+    it('should correctly pass validation when css files do not contain hardcoded css colors and cssHardcodedColorForbid flag is disabled', function() {
+     
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.validate.styleSheets.cssHardcodedColorForbid = false;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(setup.validate.styleSheets.cssHardcodedColorForbid).toBe(false);
+        
+        expect(fm.saveFile('./src/main/view/css/test.scss', "body{ background-color: $some-color-variable; }")).toBe(true);
+       
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
+    });
+    
+    
     it('should correctly validate when tabulations exist / not exist and tabsForbidden validation rule is true / false', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
