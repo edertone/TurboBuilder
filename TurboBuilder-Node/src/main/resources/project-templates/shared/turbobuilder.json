@@ -88,7 +88,7 @@
     
     "build": {
         "printTodoFiles" : false,
-        "replaceVersion": {
+        "injectVersion": {
             "enabled": false,
             "wildCard": "@@--build-version--@@",
             "extensions": ["js", "php", "json"]

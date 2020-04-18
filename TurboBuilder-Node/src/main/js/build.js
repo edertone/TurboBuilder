@@ -128,7 +128,7 @@ exports.copyMainFiles = function (destPath) {
     
     cm.success('copy main files ok');
     
-    this.replaceVersionOnAllFiles(destPath);
+    this.injectVersionOnAllFiles(destPath);
 }
 
 
@@ -754,19 +754,19 @@ exports.buildAppAngular = function (destPath) {
 /**
  * Replace the project version number on all the files as defined on project setup
  */
-exports.replaceVersionOnAllFiles = function (destPath) {
+exports.injectVersionOnAllFiles = function (destPath) {
 
     let sep = fm.dirSep();
     let destMain = destPath + sep + 'main';
     
-    let wildCard = global.setup.build.replaceVersion.wildCard;
+    let wildCard = global.setup.build.injectVersion.wildCard;
     
-    if(!global.setup.build.replaceVersion.enabled || StringUtils.isEmpty(wildCard)){
+    if(!global.setup.build.injectVersion.enabled || StringUtils.isEmpty(wildCard)){
     
         return;
     }
     
-    let extensionsToReplace = global.setup.build.replaceVersion.extensions.join('|');
+    let extensionsToReplace = global.setup.build.injectVersion.extensions.join('|');
     
     let filesToReplaceRegExp = new RegExp("^.*\.(" + extensionsToReplace + ")$", "i" );
     

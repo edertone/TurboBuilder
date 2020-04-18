@@ -396,9 +396,9 @@
                     "type": "boolean",
                     "description": "If enabled, the contents of all the files on the extras/todo folder will be displayed as part of the build console output"
                 },
-                "replaceVersion": {
+                "injectVersion": {
                     "type": "object",
-                    "description": "This feature allows us to replace a specific wildcard with the current project version number on all the specified file types as part of the build and release processes",
+                    "description": "If enabled, the build version will be inserted into any of the compiled files that we want by replacing a wildcard with it. We can also add the build number just before the file extension on any files that we want as part of the build and release processes",
                     "required": [
                         "enabled",
                         "wildCard",

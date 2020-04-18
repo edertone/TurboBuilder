@@ -270,7 +270,7 @@ describe('cmd-parameter-build', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.replaceVersion.enabled = true;
+        setup.build.injectVersion.enabled = true;
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -302,7 +302,7 @@ describe('cmd-parameter-build', function() {
         expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
-        // replaceVersion.enabled is false by default, so no replacement must happen
+        // injectVersion.enabled is false by default, so no replacement must happen
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
@@ -319,8 +319,8 @@ describe('cmd-parameter-build', function() {
         
         // We will now enable replaceversion and set an empty wildcard. No replacement must happen
         setup = testsGlobalHelper.readSetupFile();
-        setup.build.replaceVersion.enabled = true;
-        setup.build.replaceVersion.wildCard = "";        
+        setup.build.injectVersion.enabled = true;
+        setup.build.injectVersion.wildCard = "";        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
