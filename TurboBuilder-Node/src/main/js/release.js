@@ -437,9 +437,11 @@ let generateCodeDocumentation = function (destPath) {
         typeDocExec += ' --out "' + docsPath + sep + 'ts"';
         typeDocExec += ' "' + destMain + sep + 'ts"';
         
-        if(terminalManager.exec(typeDocExec).failed){
+        let typeDocExecResult = terminalManager.exec(typeDocExec);
+        
+        if(typeDocExecResult.failed){
             
-            cm.error('ts doc command failed: ' + typeDocExec);
+            cm.error('ts doc command failed: ' + typeDocExec + '\n\n' + typeDocExecResult.output);
         }
         
         cm.success('ts doc ok');
