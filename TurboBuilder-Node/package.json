@@ -27,7 +27,7 @@
     "imagemin-jpegtran": "^6.0.0",
     "imagemin-pngquant": "^8.0.0",
     "jasmine": "^3.5.0",
-    "jscpd": "^3.2.0",
+    "jscpd": "^3.2.1",
     "jsonschema": "^1.2.6",
     "opn": "^6.0.0",
     "sass": "^1.26.3",
@@ -37,7 +37,7 @@
     "turbodepot-node": "^6.2.0",
     "turbotesting-node": "^7.5.0",
     "typedoc": "^0.15.3",
-    "typescript": "3.1.3",
+    "typescript": "^3.8.3",
     "uglify-es": "3.3.9"
   },
   "devDependencies": {
