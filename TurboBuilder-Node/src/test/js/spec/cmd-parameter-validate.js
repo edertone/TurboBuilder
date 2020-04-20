@@ -323,7 +323,7 @@ describe('cmd-parameter-validate', function() {
                             {
                                 "path": "extras/copyright headers/TsFiles-Header.txt",
                                 "affectedPaths": ["src"],
-                                "includes": ["ts"],
+                                "includes": [".ts"],
                                 "excludes": ["file3"]
                             }
                         ];
@@ -381,7 +381,7 @@ describe('cmd-parameter-validate', function() {
                 "path": "extras/copyright headers/TsFiles-Header.txt",
                 "affectedPaths": ["src"],
                 "includes": ["ts"],
-                "excludes": []
+                "excludes": [".txt"]
             }
         ];
         

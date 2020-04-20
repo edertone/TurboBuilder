@@ -217,7 +217,7 @@ let validateProjectStructure = function () {
 
         for (let folder of folders){
 
-            if(!isExcluded(folder, global.setup.validate.projectStructure.strictSrcFolders.excludes) &&
+            if(!isFileOnExcludeList(folder, global.setup.validate.projectStructure.strictSrcFolders.excludes) &&
                StringUtils.getPath(folder, 1, '/') !== 'main' &&
                StringUtils.getPath(folder, 1, '/') !== 'test'){
                 
@@ -233,11 +233,12 @@ let validateProjectStructure = function () {
         for (let affectedPath of global.setup.validate.projectStructure.strictFileExtensionCase.affectedPaths) {
         
             // Note that we are here excluding target and node_modules folders from the search to improve performance
-            let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + affectedPath, /.*/, 'absolute', 'files', -1, /target(\/|\\)|node_modules(\/|\\)/);
+            let filesToValidate = fm.findDirectoryItems(global.runtimePaths.root + fm.dirSep() + affectedPath, /.*/,
+                'absolute', 'files', -1, /target(\/|\\)|node_modules(\/|\\)/);
             
             for (let fileToValidate of filesToValidate){
                 
-                if(!isExcluded(fileToValidate, global.setup.validate.projectStructure.strictFileExtensionCase.excludes) &&
+                if(!isFileOnExcludeList(fileToValidate, global.setup.validate.projectStructure.strictFileExtensionCase.excludes) &&
                    StringUtils.getPathExtension(fileToValidate).toLowerCase() !== StringUtils.getPathExtension(fileToValidate)){
                     
                     errors.push("Expected lower case file extension:\n" + fileToValidate);
@@ -287,7 +288,7 @@ let validateNoTabulations = function () {
                 
                 for (let file of files){
                     
-                    if(!isExcluded(file, excludedStrings) &&
+                    if(!isFileOnExcludeList(file, excludedStrings) &&
                        file.indexOf(sep + 'main' + sep + 'libs') < 0){
                     
                         let fileContents = fm.readFile(file);
@@ -411,11 +412,12 @@ let validateCopyrightHeaders = function () {
         
         for (let affectedPath of validator.affectedPaths) {
         
-            let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + affectedPath, validator.includes);
+            let filesToValidate = getFilesFromIncludeList(global.runtimePaths.root + fm.dirSep() + affectedPath,
+                validator.includes, validator.excludes);
             
             for (let fileToValidate of filesToValidate){
                 
-                if(!isExcluded(fileToValidate, validator.excludes) && fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
+                if(fm.readFile(fileToValidate).replace(/(?:\r\n|\r|\n)/g, "\n").indexOf(header) !== 0){
                     
                     errors.push("Bad copyright header:\n" + fileToValidate + "\nMust be as defined in " + validator.path + "\n");
                 }
@@ -484,7 +486,7 @@ let validatePhp = function () {
            global.setup.validate.php.namespaces.enabled){
         
             // Auxiliary function to perform namespace validations
-            function validate(namespaceToCheck, fileAbsolutePath, mustContainList){
+            function validateAux(namespaceToCheck, fileAbsolutePath, mustContainList){
                 
                 if(mustContainList.length > 0){
                     
@@ -508,7 +510,7 @@ let validatePhp = function () {
             
             for (let fileToValidate of filesToValidate){
                 
-                if(!isExcluded(fileToValidate, global.setup.validate.php.namespaces.excludes)){
+                if(!isFileOnExcludeList(fileToValidate, global.setup.validate.php.namespaces.excludes)){
                     
                     var fileContents = fm.readFile(fileToValidate);
                     
@@ -516,7 +518,7 @@ let validatePhp = function () {
         
                         var namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
                         
-                        var validateNamespace = validate(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
+                        var validateNamespace = validateAux(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
                         
                         if(validateNamespace !== ''){
                         
@@ -593,13 +595,13 @@ let validateJavascript = function () {
         return;
     }
     
-    let filesToValidate = getFilesFromIncludeList(global.runtimePaths.src, global.setup.validate.javascript.useStrict.includes);
+    let filesToValidate = getFilesFromIncludeList(global.runtimePaths.src,
+        global.setup.validate.javascript.useStrict.includes, global.setup.validate.javascript.useStrict.excludes);
         
     for (let file of filesToValidate){
         
         // Check if js files must contain "use strict" at the very first beginning of the file
-        if(global.setup.validate.javascript.useStrict.enabled &&
-           !isExcluded(file, global.setup.validate.javascript.useStrict.excludes)) {
+        if(global.setup.validate.javascript.useStrict.enabled) {
           
             let jsContents = fm.readFile(file);
             
@@ -670,40 +672,4 @@ let validateAngularApp = function () {
             cm.error("angular lint validate failed");
         }        
     }
-}
-
-
-/**
- * Generates a list of absolute paths for files on the specified folder which full path that matches any of the patterns
- * specified on the includeList parameter.
- */
-let getFilesFromIncludeList = function (path, includeList) {
-
-    let includeListProcessed = [];
-    
-    for (let include of includeList){
-    
-        includeListProcessed.push(StringUtils.replace(include, '.', '\\.'));
-    }
-
-    let regex = new RegExp('^.*(' + includeListProcessed.join('|') + ')$', 'i');
-        
-    return fm.findDirectoryItems(path, regex, 'absolute', 'files');
-}
-
-
-/**
- * Checks if the specified path contains any of the provided exclude patterns
- */
-let isExcluded = function (path, excludeList) {
-
-    for (let exclude of excludeList){
-    
-        if(StringUtils.formatPath(path, '/').includes(StringUtils.formatPath(exclude, '/'))){
-
-            return true;
-        }
-    }
-    
-    return false;
 }

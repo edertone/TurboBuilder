@@ -5,7 +5,7 @@
     "metadata": {
         "name": "turbobuilder",
         "description": "Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, and many more features",
-        "builderVersion": "3.0.1"
+        "builderVersion": "4.0.0"
     },
     
     "validate": {
@@ -51,7 +51,7 @@
             "useStrict": {
                 "enabled": true,
                 "includes": [".js"],
-                "excludes": ["src/main/libs", "src/test/libs"]
+                "excludes": [".json", "src/main/libs", "src/test/libs"]
             }
         }
     },

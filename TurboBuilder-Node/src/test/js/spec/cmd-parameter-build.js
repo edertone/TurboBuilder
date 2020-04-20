@@ -415,5 +415,148 @@ describe('cmd-parameter-build', function() {
         expect(indexPhpSetup.baseURL).toBe("wildcard-build-value");
         expect(indexPhpSetup.locales[0]).toBe("wildcard-build-value");
         expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);  
-    });     
+    });
+    
+    
+    it('should inject project version before all file extension on all files that are specified by extensions', function() {
+        
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.build.injectVersion.enabled = true;
+        setup.build.injectVersion.code.includes = [];
+        setup.build.injectVersion.files.includes = ['.test'];
+        setup.validate.php.namespaces.enabled = false;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        expect(fm.saveFile('./src/main/a.test', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/b.test', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/c.test', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/a.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/b.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/c.txt', 'some content')).toBe(true);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
+        expect(buildResult).toMatch(/replaced project version .* on 0 files/);
+        expect(buildResult).toMatch(/renamed 3 files with project version 0.0.0/);
+        
+        expect(fm.isFile('./src/main/a.test')).toBe(true);
+        expect(fm.isFile('./src/main/b.test')).toBe(true);
+        expect(fm.isFile('./src/main/c.test')).toBe(true);
+        expect(fm.isFile('./src/main/a.txt')).toBe(true);
+        expect(fm.isFile('./src/main/b.txt')).toBe(true);
+        expect(fm.isFile('./src/main/c.txt')).toBe(true);
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a.test')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a.test')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a.test')).toBe(false);
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a0.0.0.test')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a0.0.0.test')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a0.0.0.test')).toBe(true);
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/site/a.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/b.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/c.txt')).toBe(true);
+        
+        expect(buildResult).toContain('build ok');
+    });
+    
+    
+    it('should inject project version before all file extension on all files that are specified by extensions inside some arbitrary folders', function() {
+        
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.build.injectVersion.enabled = true;
+        setup.build.injectVersion.code.includes = [];
+        setup.build.injectVersion.files.includes = ['.test'];
+        setup.validate.php.namespaces.enabled = false;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        expect(fm.createDirectory('./src/main/folder1/folder2', true)).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/a.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/b.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/folder2/a.test', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/folder2/b.test', 'some content')).toBe(true);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
+        expect(buildResult).toMatch(/replaced project version .* on 0 files/);
+        expect(buildResult).toMatch(/renamed 2 files with project version 0.0.0/);
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/a.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/b.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/folder2/a0.0.0.test')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/folder2/b0.0.0.test')).toBe(true);
+        
+        expect(buildResult).toContain('build ok');
+    });
+    
+    
+    it('should inject project version before all file extension on all files that are specified by folder', function() {
+        
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.build.injectVersion.enabled = true;
+        setup.build.injectVersion.code.includes = [];
+        setup.build.injectVersion.files.includes = ['folder1'];
+        setup.validate.php.namespaces.enabled = false;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        expect(fm.createDirectory('./src/main/folder1/folder2', true)).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/a.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/b.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/folder2/a.test', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/folder2/b.test', 'some content')).toBe(true);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
+        expect(buildResult).toMatch(/replaced project version .* on 0 files/);
+        expect(buildResult).toMatch(/renamed 4 files with project version 0.0.0/);
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/a0.0.0.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/b0.0.0.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/folder2/a0.0.0.test')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/folder2/b0.0.0.test')).toBe(true);
+        
+        expect(buildResult).toContain('build ok');
+    });
+    
+    
+    it('should inject project version before all file extension on all files that are specified by subfolder', function() {
+        
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.build.injectVersion.enabled = true;
+        setup.build.injectVersion.code.includes = [];
+        setup.build.injectVersion.files.includes = ['folder1/folder2'];
+        setup.validate.php.namespaces.enabled = false;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        expect(fm.createDirectory('./src/main/folder1/folder2', true)).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/a.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/b.txt', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/folder2/a.test', 'some content')).toBe(true);
+        expect(fm.saveFile('./src/main/folder1/folder2/b.test', 'some content')).toBe(true);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
+        expect(buildResult).toMatch(/replaced project version .* on 0 files/);
+        expect(buildResult).toMatch(/renamed 2 files with project version 0.0.0/);
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/a.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/b.txt')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/folder2/a0.0.0.test')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/dist/site/folder1/folder2/b0.0.0.test')).toBe(true);
+        
+        expect(buildResult).toContain('build ok');
+        
+        // Perform the same tests but using reverse slash \ as the folder divider. Both directory separators must work the same
+        setup.build.injectVersion.files.includes = ['folder1\\folder2'];
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        buildResult = testsGlobalHelper.execTbCmd('-cb');
+        expect(buildResult).toMatch(/replaced project version .* on 0 files/);
+        expect(buildResult).toMatch(/renamed 2 files with project version 0.0.0/);
+    });      
 });

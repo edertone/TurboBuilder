@@ -9,8 +9,10 @@
 const path = require('path');
 const { StringUtils } = require('turbocommons-ts');
 const { ConsoleManager } = require('turbodepot-node');
+const { FilesManager } = require('turbodepot-node');
 
 
+const fm = new FilesManager();
 const cm = new ConsoleManager();
 
 
@@ -130,4 +132,62 @@ global.blockingSleepTill = function (verificationFun, maxTimeMs, timeExceededErr
     }
     
     cm.error(timeExceededErrorMessage);
+}
+
+
+/**
+ * Generates a list of absolute paths for files on the specified folder which full path that matches any of the patterns
+ * specified on the includeList parameter.
+ *
+ * TODO - Improve docs and move it to some global lib or similar
+ */
+global.getFilesFromIncludeList = function (rootPath, includeList, excludeList = []) {
+
+    if(includeList.length <= 0){
+        
+        return [];
+    }
+
+    let includeListProcessed = [];
+    let escapedDirSep = fm.dirSep() === '/' ? '\\/' : '\\\\';
+    
+    for (let include of includeList){
+    
+        includeListProcessed.push(StringUtils.replace(include, ['\\', '/', '.'], [escapedDirSep, escapedDirSep, '\\.']));        
+    }
+
+    let regex = new RegExp('^.*(' + includeListProcessed.join('|') + ').*$', 'i');
+
+    let filesToInclude = fm.findDirectoryItems(rootPath, regex, 'absolute', 'files', -1, '', 'absolute');
+    
+    let result = [];
+    
+    for (let fileToInclude of filesToInclude){
+    
+        if(!isFileOnExcludeList(fileToInclude, excludeList)){
+            
+            result.push(fileToInclude);
+        }
+    }
+    
+    return result;
+}
+
+
+/**
+ * Checks if the specified path contains any of the provided exclude patterns
+ *
+ * TODO - Improve docs and move it to some global lib or similar
+ */
+global.isFileOnExcludeList = function (rootPath, excludeList) {
+
+    for (let exclude of excludeList){
+    
+        if(StringUtils.formatPath(rootPath, '/').includes(StringUtils.formatPath(exclude, '/'))){
+
+            return true;
+        }
+    }
+    
+    return false;
 }

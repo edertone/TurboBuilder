@@ -398,25 +398,54 @@
                 },
                 "injectVersion": {
                     "type": "object",
-                    "description": "If enabled, the build version will be inserted into any of the compiled files that we want by replacing a wildcard with it. We can also add the build number just before the file extension on any files that we want as part of the build and release processes",
+                    "description": "If enabled, the build version will be inserted into any of the compiled files that we want by replacing a wildcard with it. We can also add the build number to folders or just before the file extension on any files that we want as part of the build and release processes",
                     "required": [
                         "enabled",
                         "wildCard",
-                        "extensions"
+                        "code",
+                        "files"
                     ],
                     "additionalProperties": false, 
                     "properties": {
                         "enabled": {
                             "type": "boolean",
-                            "description": "Enables or disables the replace version feature"
+                            "description": "Enables or disables the injectVersion feature"
                         },
                         "wildCard": {
                             "type": "string",
-                            "description": "A pattern to search on the specified file extensions which will be replaced with the project version number"
+                            "description": "A pattern to search inside the files which will be replaced by the project version number"
                         },
-                        "extensions": {
-                            "type": "array",
-                            "description": "List of file extensions where the wildcard search and replacement will be performed ('php', 'js', 'json', etc...)"
+                        "code": {
+                           "type": "object",
+                            "description": "Defines which files will be inspected to replace the wildcard by the version number on their contents",
+                            "required": ["includes","excludes"],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "includes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to include the files that will be inspected for version injection"
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to exclude files from version injection"
+                                }
+                            }
+                        },
+                        "files": {
+                           "type": "object",
+                            "description": "Defines which files will be renamed to include the project version just before their extension",
+                            "required": ["includes","excludes"],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "includes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to include the files that will be renamed to contain the project version just before their extension"
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to exclude files from being renamed to include the project version"
+                                }
+                            }
                         }
                     }
                 },

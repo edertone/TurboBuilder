@@ -757,8 +757,6 @@ exports.buildAppAngular = function (destPath) {
 exports.injectVersionOnAllFiles = function (destPath) {
 
     let sep = fm.dirSep();
-    let destMain = destPath + sep + 'main';
-    
     let wildCard = global.setup.build.injectVersion.wildCard;
     
     if(!global.setup.build.injectVersion.enabled || StringUtils.isEmpty(wildCard)){
@@ -766,21 +764,38 @@ exports.injectVersionOnAllFiles = function (destPath) {
         return;
     }
     
-    let extensionsToReplace = global.setup.build.injectVersion.extensions.join('|');
+    let version = setupModule.getProjectRepoSemVer(false);
     
-    let filesToReplaceRegExp = new RegExp("^.*\.(" + extensionsToReplace + ")$", "i" );
+    let replacedFiles = 0;
     
-    let filesToReplace = fm.findDirectoryItems(destMain, filesToReplaceRegExp, 'absolute', 'files');
-    
+    let filesToReplace = getFilesFromIncludeList(destPath,
+        global.setup.build.injectVersion.code.includes,
+        global.setup.build.injectVersion.code.excludes);
+     
     for (let fileToReplace of filesToReplace) {
         
         let fileContent = fm.readFile(fileToReplace);
         
         if(fileContent.indexOf(wildCard) >= 0){
             
-            fm.saveFile(fileToReplace, StringUtils.replace(fileContent, wildCard, setupModule.getProjectRepoSemVer(false)));
+            fm.saveFile(fileToReplace, StringUtils.replace(fileContent, wildCard, version));
+            replacedFiles ++;
         }
     }
+    
+    cm.success('replaced project version ' + version + ' on ' + replacedFiles + ' files');
+    
+    let filesToRename = getFilesFromIncludeList(destPath,
+        global.setup.build.injectVersion.files.includes,
+        global.setup.build.injectVersion.files.excludes);
+     
+    for (let fileToRename of filesToRename) {
+        
+        fm.renameFile(fileToRename, StringUtils.getPath(fileToRename) + sep +
+            StringUtils.getPathElementWithoutExt(fileToRename) + version + '.' + StringUtils.getPathExtension(fileToRename));
+    }
+    
+    cm.success('renamed ' + filesToRename.length + ' files with project version ' + version);
 }
 
 
