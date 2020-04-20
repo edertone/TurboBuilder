@@ -33,7 +33,7 @@
     "sass": "^1.26.3",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "sharp": "^0.25.2",
-    "turbocommons-ts": "^3.1.0",
+    "turbocommons-ts": "^3.2.0",
     "turbodepot-node": "^6.3.0",
     "turbotesting-node": "^7.5.0",
     "typedoc": "^0.15.3",
