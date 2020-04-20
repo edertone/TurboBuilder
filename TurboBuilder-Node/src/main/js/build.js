@@ -675,9 +675,11 @@ exports.buildLibTs = function (destPath) {
             
             let webPackCmd = global.installationPaths.webPackBin + ' --config "' + compiledFolder + sep + 'webpack.config.js"';
             
-            if(terminalManager.exec(webPackCmd).failed){
+            let webpackExecResult = terminalManager.exec(webPackCmd);
+            
+            if(webpackExecResult.failed){
                 
-                cm.error('Webpack command failed: ' + webPackCmd);
+                cm.error('Webpack command failed: ' + webPackCmd + '\n\n' + webpackExecResult.output);
             }
             
             cm.success('Webpack ' + target.jsTarget + ' ok');
