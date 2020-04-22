@@ -28,6 +28,9 @@ describe('view-url-parameters', function() {
         this.resourcesRootPath = './src/test/resources';
         this.viewsRootPath = this.turbobuilderSetup.sync.destPath + '/site/view/views';
         
+        // Define the path to indexphp file so it can be altered by tests
+        this.indexPhpPath = this.turbobuilderSetup.sync.destPath + '/site/index.php';
+        
         // Copy all the test views to the synced project
         let viewsToCopyList = fm.getDirectoryList(this.resourcesRootPath + '/view-url-parameters');
         
@@ -194,5 +197,113 @@ describe('view-url-parameters', function() {
             
             done();
         });
+    });
+    
+    
+    it('should redirect a single parameter view url to the closest restricted parameter value when sending url parameter that does not match the required ones', function(done) {
+        
+        // Change the home view at the index.php stored setup
+        let setup = tsm.getSetupFromIndexPhp('turbosite', this.indexPhpPath);
+        let previousSingleParameterView = setup.singleParameterView;
+        
+        setup.singleParameterView = 'single-parameter-with-restricted-values';
+        
+        tsm.saveSetupToIndexPhp(setup, 'turbosite', this.indexPhpPath);
+        
+        this.automatedBrowserManager.assertUrlsRedirect([{
+            "url": "https://$host/hel",
+            "to": "https://$host/hello"
+        },{
+            "url": "https://$host/hell",
+            "to": "https://$host/hello"
+        },{
+            "url": "https://$host/hello",
+            "to": "https://$host/hello"
+        },{
+            "url": "https://$host/rld",
+            "to": "https://$host/world"
+        },{
+            "url": "https://$host/fac",
+            "to": "https://$host/facts"
+        },{
+            "url": "https://$host/facts",
+            "to": "https://$host/facts"
+        },{
+            "url": "https://$host/stringui",
+            "to": "https://$host/string"
+        }], () =>{
+            
+            // It should show a 404 error when trying to call like a normal view a single parameter view with restricted
+            // values that has redirectToClosest = true
+            this.automatedBrowserManager.assertUrlsFail([
+                "https://$host/$locale/single-parameter-with-restricted-values",
+                "https://$host/$locale/single-parameter-with-restricted-values/hello",
+                "https://$host/$locale/single-parameter-with-restricted-values/hello/string"
+            ], () =>{
+                
+                // Restore the previous setup home view
+                setup.singleParameterView = previousSingleParameterView;
+                tsm.saveSetupToIndexPhp(setup, 'turbosite', this.indexPhpPath);
+                
+                done();    
+            }); 
+        });
+    });
+    
+    
+    it('should redirect a view url to the closest restricted parameter values when sending url parameters which do not match any of the required ones', function(done) {
+        
+        this.automatedBrowserManager.assertUrlsRedirect([{
+            "url": "https://$host/$locale/multi-params-non-typed-with-restricted-values/2/hell",
+            "to": "https://$host/$locale/multi-params-non-typed-with-restricted-values/1/hello"
+        },
+        {
+            "url": "https://$host/$locale/multi-params-non-typed-with-restricted-values/1/h",
+            "to": "https://$host/$locale/multi-params-non-typed-with-restricted-values/1/hello"
+        },
+        {
+            "url": "https://$host/$locale/multi-params-non-typed-with-restricted-values/10000/s",
+            "to": "https://$host/$locale/multi-params-non-typed-with-restricted-values/1/string"
+        },
+        {
+            "url": "https://$host/$locale/multi-params-non-typed-with-restricted-values/3/str",
+            "to": "https://$host/$locale/multi-params-non-typed-with-restricted-values/3/string"
+        },
+        {
+            "url": "https://$host/$locale/multi-params-non-typed-with-restricted-values/5/rld",
+            "to": "https://$host/$locale/multi-params-non-typed-with-restricted-values/5/world"
+        },
+        {
+            "url": "https://$host/$locale/multi-params-non-typed-with-restricted-values/blabla/werwer345orld",
+            "to": "https://$host/$locale/multi-params-non-typed-with-restricted-values/1/world"
+        }], done);
+    });
+    
+    
+    it('should redirect a view url to the closest typed restricted parameter values when sending url parameters which do not match any of the required ones', function(done) {
+        
+        this.automatedBrowserManager.assertUrlsRedirect([{
+            "url": "https://$host/$locale/multi-params-typed-with-restricted-values/false/3/%22hello%22",
+            "to": "https://$host/$locale/multi-params-typed-with-restricted-values/false/3/%22hello%22"
+        },{
+            "url": "https://$host/$locale/multi-params-typed-with-restricted-values/false/3/%22hel%22",
+            "to": "https://$host/$locale/multi-params-typed-with-restricted-values/false/3/%22hello%22"
+        },{
+            "url": "https://$host/$locale/multi-params-typed-with-restricted-values/true/2/%22wor%22",
+            "to": "https://$host/$locale/multi-params-typed-with-restricted-values/false/1/%22world%22"
+        },{
+            "url": "https://$host/$locale/multi-params-typed-with-restricted-values/true/3/%22stringer%22",
+            "to": "https://$host/$locale/multi-params-typed-with-restricted-values/false/3/%22string%22"
+        },{
+            "url": "https://$host/$locale/multi-params-typed-with-restricted-values/true/222",
+            "to": "https://$host/$locale/multi-params-typed-with-restricted-values/false/1/%22world%22"
+        }], done);
+    });
+    
+    
+    it('should fail loading a view url when sending url parameters which do not match any of the required ones and redirect to closest parameter is disabled', function(done) {
+        
+        // TODO - this feature must be implemented. It is not currently available. All restricted parameters get redirected to the most similar value.
+        done();
     });
 });
