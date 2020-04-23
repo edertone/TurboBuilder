@@ -139,6 +139,17 @@ let createProjectStructure = function (type) {
         
         fm.deleteDirectory(global.runtimePaths.test + sep + 'js', false);
         fm.saveFile(global.runtimePaths.test + sep + 'js' + sep + 'TODO.txt', 'To get a js tests template you can generate a site_php project and copy them from there');
+        
+        // Clear the homeView and singleParameterView values on the turbosite setup file
+        let tsSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup));
+        
+        tsSetup.homeView = '';
+        tsSetup.singleParameterView = '';
+        
+        fm.saveFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup, null, 4));       
+        
+        // Overwrite the site_php files with the server_php specific ones
+        fm.copyDirectory(templatesFolder + sep + global.setupBuildTypes.server_php, global.runtimePaths.root, false);
     }
     
     // Create readme file

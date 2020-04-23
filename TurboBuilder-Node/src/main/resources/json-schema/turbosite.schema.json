@@ -105,7 +105,7 @@
         },
         "homeView": {
             "type": "string",
-            "description": "Contains the name of the view that is shown at the root url.",
+            "description": "Contains the name of the view that is used by the root url. Leave it empty if there's no home view",
             "examples": [
                 "home",
                 "some-other-view"
@@ -117,7 +117,7 @@
         },
         "singleParameterView": {
             "type": "string",
-            "description": "This is the view that will be called by default when the current url contains only a single parameter like: http://host/this-is-a-parameter"
+            "description": "This is the view that will be called by default when the current url contains only a single parameter like: http://host/this-is-a-parameter. Leave it empty if there's no single parameter view"
         },
         "locales": {
             "type": "array",

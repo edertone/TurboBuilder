@@ -578,7 +578,26 @@ let validatePackageAndTurboBuilderJsonIntegrity = function () {
  */
 let validateSitePhp = function () {
 
-    if(global.setup.build.site_php){
+    if(global.setup.build.site_php || global.setup.build.server_php){
+        
+        let turbositeSetup = JSON.parse(fm.readFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        // Validate that defined home and singleparam views exist
+        let validateView = (view, errorMsg) => {
+            
+            if(!StringUtils.isEmpty(view)){
+                
+                let viewPath = global.runtimePaths.root + '/src/main/view/views/' + view + '/' + view + '.php';
+                
+                if(!fm.isFile(viewPath)){
+                    
+                    errors.push(errorMsg + " defined at " + global.fileNames.turboSiteSetup + " does not exist:\n" + viewPath);
+                }
+            }
+        };
+        
+        validateView(turbositeSetup.homeView, 'Home view');
+        validateView(turbositeSetup.singleParameterView, 'Single parameter view');
             
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }

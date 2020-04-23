@@ -198,6 +198,74 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation for a newly generated site_php project with an invalid homeView value on turbosite.json', function() {
+          
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let tsSetup = JSON.parse(fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        tsSetup.homeView = 'invalidviewvalue';
+        
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        
+        let execResult = testsGlobalHelper.execTbCmd('-l');
+        
+        expect(execResult).toContain("Home view defined at turbosite.json does not exist");  
+        expect(execResult).toMatch(/invalidviewvalue.invalidviewvalue.php/);  
+    });
+    
+    
+    it('should fail validation for a newly generated server_php project with an invalid homeView value on turbosite.json', function() {
+          
+        testsGlobalHelper.generateProjectAndSetup('server_php', null, []);
+        
+        let tsSetup = JSON.parse(fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        tsSetup.homeView = 'invalidviewvalue';
+        
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        
+        let execResult = testsGlobalHelper.execTbCmd('-l');
+        
+        expect(execResult).toContain("Home view defined at turbosite.json does not exist");  
+        expect(execResult).toMatch(/invalidviewvalue.invalidviewvalue.php/);  
+    });
+    
+    
+    it('should fail validation for a newly generated site_php project with an invalid singleParameterView value on turbosite.json', function() {
+          
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let tsSetup = JSON.parse(fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        tsSetup.singleParameterView = 'invalidviewvalue';
+        
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        
+        let execResult = testsGlobalHelper.execTbCmd('-l');
+        
+        expect(execResult).toContain("Single parameter view defined at turbosite.json does not exist");  
+        expect(execResult).toMatch(/invalidviewvalue.invalidviewvalue.php/);  
+    });
+    
+    
+    it('should fail validation for a newly generated server_php project with an invalid singleParameterView value on turbosite.json', function() {
+          
+        testsGlobalHelper.generateProjectAndSetup('server_php', null, []);
+        
+        let tsSetup = JSON.parse(fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup));
+        
+        tsSetup.singleParameterView = 'invalidviewvalue';
+        
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, JSON.stringify(tsSetup))).toBe(true);
+        
+        let execResult = testsGlobalHelper.execTbCmd('-l');
+        
+        expect(execResult).toContain("Single parameter view defined at turbosite.json does not exist");  
+        expect(execResult).toMatch(/invalidviewvalue.invalidviewvalue.php/);  
+    });
+    
+    
     it('should validate by default before build on a generated lib_php project', function() {
         
         testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);

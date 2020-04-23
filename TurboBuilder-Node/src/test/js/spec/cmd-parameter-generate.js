@@ -188,6 +188,8 @@ describe('cmd-parameter-generate', function(){
         expect(setup.sync.type).toBe("fileSystem");
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("jasmine");
+        
+        expect(fm.readFile('./src/main/error-404.php')).toContain('Redirecting to');
     });
     
     
@@ -227,6 +229,8 @@ describe('cmd-parameter-generate', function(){
         expect(setup.sync.type).toBe("fileSystem");
         expect(setup.test.length).toBe(1);
         expect(setup.test[0].type).toBe("phpUnit");
+        
+        expect(fm.readFile('./src/main/error-404.php')).not.toContain('Redirecting to');
     });
 
 
