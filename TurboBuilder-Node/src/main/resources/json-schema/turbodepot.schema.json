@@ -178,29 +178,26 @@
                     },
                     "users": {
                         "type": "object",
-                        "description": "",
+                        "description": "Defines the setup for the storage of users into this depot instance",
                         "required": [
-                            "source"
+                            "source",
+                            "prefix"
                         ],
                         "additionalProperties": false,
                         "properties": {
                             "source": {
                                 "type": "string",
-                                "description": ""
+                                "description": "The name for a source that will be used to store and read the users"
                             },
-                            "tokenLength": {
-                                "type": "integer",
-                                "description": ""
+                            "prefix": {
+                                "type": "string",
+                                "description": "The prefix to use with database table names for all the user related database tables. This will help with avoiding table name collisions on a database"
                             },
                             "tokenLifetime": {
                                 "type": "integer",
-                                "description": ""
+                                "description": "TODO"
                             }
                         }
-                    },
-                    "database": {
-                        "type": "string",
-                        "description": ""
                     }
                 }
             }
@@ -214,7 +211,7 @@
             "properties": {
                 "fileSystem": {
                     "type": "array",
-                    "description": "",
+                    "description": "Defines a source that stores all data using OS files and folders",
                     "items": {
                         "type": "object",
                         "description": "",
@@ -237,7 +234,7 @@
                 },
                 "mariadb": {
                     "type": "array",
-                    "description": "",
+                    "description": "Defines a source that stores all data using a MariaDb or Mysql (legacy) database storage engine",
                     "items": {
                         "type": "object",
                         "description": "",
@@ -245,65 +242,37 @@
                             "name",
                             "host",
                             "database",
-                            "prefix"
+                            "user",
+                            "password"
                         ],
                         "additionalProperties": false,
                         "properties": {
                             "name": {
                                 "type": "string",
-                                "description": ""
+                                "description": "A name we want to use as an alias for this database source"
                             },
                             "host": {
                                 "type": "string",
-                                "description": ""
+                                "description": "The host where database is found. Usually localhost if the db is on the same machine, but may be any ip or hostname where db may be found"
                             },
                             "database": {
                                 "type": "string",
-                                "description": ""
+                                "description": "The name for the database to which this source will be connected"
                             },
-                            "prefix": {
+                            "user": {
                                 "type": "string",
-                                "description": ""
-                            }
-                        }
-                    }
-                },
-                "mysql": {
-                    "type": "array",
-                    "description": "",
-                    "items": {
-                        "type": "object",
-                        "description": "",
-                        "required": [
-                            "name",
-                            "host",
-                            "database",
-                            "prefix"
-                        ],
-                        "additionalProperties": false,
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": ""
+                                "description": "The user name that will be used to connect to this source's database"
                             },
-                            "host": {
+                            "password": {
                                 "type": "string",
-                                "description": ""
-                            },
-                            "database": {
-                                "type": "string",
-                                "description": ""
-                            },
-                            "prefix": {
-                                "type": "string",
-                                "description": ""
+                                "description": "The password to use with the user when connecting to database"
                             }
                         }
                     }
                 },
                 "sqLite": {
                     "type": "array",
-                    "description": "",
+                    "description": "Defines a source that stores all data using an SQLite database storage engine",
                     "items": {
                         "type": "object",
                         "description": "",

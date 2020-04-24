@@ -490,7 +490,8 @@ describe('cmd-parameter-release', function() {
                         "name": "overriden_name",
                         "host": "overriden_host",
                         "database": "overriden_database",
-                        "prefix": "overriden_prefix"
+                        "user": "overriden_user",
+                        "password": "overriden_password"
                     }
                 ] 
             }
@@ -507,7 +508,8 @@ describe('cmd-parameter-release', function() {
         expect(tdSetup.sources.mariadb[0].name).toBe("mariadb_source_1");
         expect(tdSetup.sources.mariadb[0].host).toBe("");
         expect(tdSetup.sources.mariadb[0].database).toBe("");
-        expect(tdSetup.sources.mariadb[0].prefix).toBe("tdp_");
+        expect(tdSetup.sources.mariadb[0].user).toBe("");
+        expect(tdSetup.sources.mariadb[0].password).toBe("");
         
         let launchResult = testsGlobalHelper.execTbCmd('-r');
         expect(launchResult).toContain("release ok");
@@ -519,7 +521,8 @@ describe('cmd-parameter-release', function() {
         expect(tdReleaseSetup.sources.mariadb[0].name).toBe("overriden_name");
         expect(tdReleaseSetup.sources.mariadb[0].host).toBe("overriden_host");
         expect(tdReleaseSetup.sources.mariadb[0].database).toBe("overriden_database");
-        expect(tdReleaseSetup.sources.mariadb[0].prefix).toBe("overriden_prefix");
+        expect(tdReleaseSetup.sources.mariadb[0].user).toBe("overriden_user");
+        expect(tdReleaseSetup.sources.mariadb[0].password).toBe("overriden_password");
     });
     
     

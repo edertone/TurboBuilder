@@ -34,7 +34,7 @@
             },
             "users": {
                 "source": "",
-                "tokenLength": 175,
+                "prefix": "usr_",
                 "tokenLifetime": 60
             }
         }
@@ -54,11 +54,9 @@
                 "name": "mariadb_source_1",
                 "host": "",
                 "database": "",
-                "prefix": "tdp_"
+                "user": "",
+                "password": ""
             }
-        ],
-        
-        "mysql": [
         ],
         
         "sqLite": [
