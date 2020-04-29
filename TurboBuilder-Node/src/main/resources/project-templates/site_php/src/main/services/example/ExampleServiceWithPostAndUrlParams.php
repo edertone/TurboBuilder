@@ -13,6 +13,8 @@ class ExampleServiceWithPostAndUrlParams extends WebServiceManager{
 
     protected function setup(){
 
+        $this->authorizeMethod = function () { return true; };
+
         $this->enabledPostParams[] = ['data'];
 
         $this->enabledUrlParams = 2;

@@ -15,6 +15,8 @@ class ExampleServiceWithPostParams extends WebServiceManager{
 
         $this->enabledPostParams[] = ['param1'];
         $this->enabledPostParams[] = ['param2'];
+
+        $this->authorizeMethod = function () { return true; };
     }
 
 

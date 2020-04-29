@@ -14,6 +14,7 @@ class ExampleServiceThatThrows500UnhandledException extends WebServiceManager{
 
     protected function setup(){
 
+        $this->authorizeMethod = function () { return true; };
     }
 
 

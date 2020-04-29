@@ -20,6 +20,8 @@ class ExampleServiceWithPostAndUrlParamsOptional extends WebServiceManager{
         ];
 
         $this->enabledPostParams[] = ['data', WebServiceManager::NOT_TYPED, WebServiceManager::NOT_REQUIRED];
+
+        $this->authorizeMethod = function () { return true; };
     }
 
 

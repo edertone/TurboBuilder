@@ -13,6 +13,7 @@ class ExampleServiceThatThrows400BadRequest extends WebServiceManager{
 
     protected function setup(){
 
+        $this->authorizeMethod = function () { return true; };
     }
 
 

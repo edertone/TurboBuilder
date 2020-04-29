@@ -17,6 +17,8 @@ class ExampleServiceWithUrlParamsOptional extends WebServiceManager{
         $this->enabledUrlParams[] = [WebServiceManager::NOT_TYPED, WebServiceManager::NOT_RESTRICTED, ''];
         $this->enabledUrlParams[] = [WebServiceManager::NOT_TYPED, WebServiceManager::NOT_RESTRICTED, ''];
         $this->enabledUrlParams[] = [WebServiceManager::NOT_TYPED, WebServiceManager::NOT_RESTRICTED, ''];
+
+        $this->authorizeMethod = function () { return true; };
     }
 
 

@@ -181,7 +181,9 @@
                         "description": "Defines the setup for the storage of users into this depot instance",
                         "required": [
                             "source",
-                            "prefix"
+                            "prefix",
+                            "tokenLifeTime",
+                            "isTokenLifeTimeRecycled"
                         ],
                         "additionalProperties": false,
                         "properties": {
@@ -193,9 +195,13 @@
                                 "type": "string",
                                 "description": "The prefix to use with database table names for all the user related database tables. This will help with avoiding table name collisions on a database"
                             },
-                            "tokenLifetime": {
+                            "tokenLifeTime": {
                                 "type": "integer",
-                                "description": "TODO"
+                                "description": "Defines the number of seconds that user tokens will be active since they are created. After the number of seconds has passed, tokens will expire and a login will be necessary to obtain a new token"
+                            },
+                            "isTokenLifeTimeRecycled": {
+                                "type": "boolean",
+                                "description": "If set to true, every time a token is validated the lifetime will be restarted to the configured token lifetime. So the token lifetime will start counting again after the last token validation has been performed. So with a 10 minutes token lifetime if we perform 2 token validations in 5 minutes, the time will still be 10 minutes after the last validation's been performed."
                             }
                         }
                     }

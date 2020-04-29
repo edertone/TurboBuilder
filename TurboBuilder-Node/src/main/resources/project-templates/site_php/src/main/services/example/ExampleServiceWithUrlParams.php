@@ -14,6 +14,8 @@ class ExampleServiceWithUrlParams extends WebServiceManager{
     protected function setup(){
 
         $this->enabledUrlParams = 2;
+
+        $this->authorizeMethod = function () { return true; };
     }
 
 
