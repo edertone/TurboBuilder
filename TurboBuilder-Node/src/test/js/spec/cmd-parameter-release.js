@@ -304,13 +304,25 @@ describe('cmd-parameter-release', function() {
     });
     
     
-    it('should replace all wildcard matches with project version on all configured file extensions', function() {
+    it('should replace all wildcard matches with project version on the configured file extensions', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.injectVersion.enabled = true;
+        setup.wildCards = {
+            "versionWildCard":{             
+                "enabled": true,
+                "wildCard": "@@--build-version--@@",
+                "code":{
+                    "includes": [".js", ".php", ".json"]
+                },
+                "files": {
+                    "includes": []    
+                }
+            }
+        };
+        
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -354,7 +366,7 @@ describe('cmd-parameter-release', function() {
         expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
-        // injectVersion.enabled is false by default, so no replacement must happen
+        // versionWildCard.enabled is false by default, so no replacement must happen
         expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
         
         expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t0.php'))
@@ -372,10 +384,22 @@ describe('cmd-parameter-release', function() {
         expect(fm.readFile('./target/' + folderName + '-0.0.0/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
-        // We will now enable replaceversion and set an empty wildcard. No replacement must happen
+        // We will now enable versionWildCard and set an empty wildcard. No replacement must happen
         setup = testsGlobalHelper.readSetupFile();
-        setup.build.injectVersion.enabled = true;
-        setup.build.injectVersion.wildCard = "";        
+        
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,         
+                "wildCard": "",
+                "code":{
+                    "includes": [".js", ".php", ".json"]
+                },
+                "files": {
+                    "includes": []    
+                }
+            }
+        };
+             
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain('release ok');
@@ -537,28 +561,30 @@ describe('cmd-parameter-release', function() {
     
     it('should replace wildcards with their RELEASE value on the turbodepot.json setup when a release is performed', function() {
     
-        // The turbodepot.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // The turbobuilder.json file allows to define wildcards to be replaced on the setup files with different values when build or release is executed.
         // This test checks that this works ok
         
         let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+         
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
-        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        setup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value",
+                "releaseValue": "wildcard-release-value"
+            }]
+        };
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
         
-        let setup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
+        let tdSetup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
         
-        setup.wildCards = [
-            {
-                "name": "$somewildcard",
-                "build": "wildcard-build-value",
-                "release": "wildcard-release-value"
-            }
-        ];
+        tdSetup.depots[0].name = "$somewildcard";
+        tdSetup.sources.fileSystem[0].name = "$somewildcard";
         
-        setup.depots[0].name = "$somewildcard";
-        setup.sources.fileSystem[0].name = "$somewildcard";
-        
-        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
+        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(tdSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
@@ -570,35 +596,95 @@ describe('cmd-parameter-release', function() {
     }); 
     
     
-    it('should replace wildcards with their RELEASE value on the turbosite.json setup when a release is performed', function() {
+    it('should show errors on turbobuilder.json file when wildcards section is not correctly defined', function() {
     
-        // The turbosite.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        let sep = fm.dirSep();
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+
+        setup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true
+            }]
+        };
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);        
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Corrupted JSON for .*turbobuilder.json/);
+        
+         setup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value"
+            }]
+        };
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/.*wildCards.setupWildCards.* requires property "releaseValue"/);
+    });
+    
+    
+    it('should not allow wildcards section on turbosite.json file', function() {
+        
+        let sep = fm.dirSep();
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let tsSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
+
+        tsSetup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true
+            }]
+        };
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);        
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Invalid JSON schema for turbosite.json[\s\S]*additionalProperty "wildCards" exists in instance when not allowed/);
+    });    
+    
+    
+    it('should not allow wildcards section on turbodepot.json file', function() {
+        
+        let sep = fm.dirSep();
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let tsSetup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
+
+        tsSetup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true
+            }]
+        };
+        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(tsSetup))).toBe(true);        
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Invalid JSON schema for turbodepot.json[\s\S]*additionalProperty "wildCards" exists in instance when not allowed/);
+    }); 
+    
+    
+    it('should replace setup wildcards with their RELEASE value on the turbosite.json when a release is performed', function() {
+    
+        // The turbobuilder.json file allows to define wildcards to be replaced on the setup with different values when build or release is executed.
         // This test checks that this works ok
         
         let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
          
-        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+
+        setup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value",
+                "releaseValue": "wildcard-release-value"
+            }]
+        };
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
         
-        let setup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
-        
-        setup.wildCards = [
-            {
-                "name": "$somewildcard",
-                "build": "wildcard-build-value",
-                "release": "wildcard-release-value"
-            }
-        ];
-        
-        setup.baseURL = "$somewildcard";
-        setup.locales[0] = "$somewildcard";
-        
-        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        let tsSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
+        tsSetup.baseURL = "$somewildcard";
+        tsSetup.locales[0] = "$somewildcard";
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
         let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
+        // Note that baseUrl is empty cause it gets overriden by turbosite.release.json
         expect(indexPhpSetup.baseURL).toBe("");
         expect(indexPhpSetup.locales[0]).toBe("wildcard-release-value");
         expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);
@@ -606,9 +692,9 @@ describe('cmd-parameter-release', function() {
         // The turbosite.release.json file is overriding the baseUrl value, so we will delete it to see that it was correctly replaced
         expect(fm.deleteFile('.' + sep + 'turbosite.release.json')).toBe(true);
         
-        setup.errorSetup.exceptionsToBrowser = false;
-        setup.errorSetup.warningsToBrowser = false;
-        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        tsSetup.errorSetup.exceptionsToBrowser = false;
+        tsSetup.errorSetup.warningsToBrowser = false;
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         

@@ -270,7 +270,19 @@ describe('cmd-parameter-build', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.injectVersion.enabled = true;
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,       
+                "wildCard": "@@--build-version--@@",
+                "code":{
+                    "includes": [".js", ".php", ".json"]
+                },
+                "files": {
+                    "includes": []   
+                }
+            }
+        };
+        
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -302,7 +314,7 @@ describe('cmd-parameter-build', function() {
         expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
         
-        // injectVersion.enabled is false by default, so no replacement must happen
+        // wildCards.versionWildCard.enabled is false by default, so no replacement must happen
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
         expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
@@ -317,10 +329,22 @@ describe('cmd-parameter-build', function() {
         expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
-        // We will now enable replaceversion and set an empty wildcard. No replacement must happen
+        // We will now enable versionWildCard and set an empty wildcard. No replacement must happen
         setup = testsGlobalHelper.readSetupFile();
-        setup.build.injectVersion.enabled = true;
-        setup.build.injectVersion.wildCard = "";        
+        
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,         
+                "wildCard": "",
+                "code":{
+                    "includes": [".js", ".php", ".json"]
+                },
+                "files": {
+                    "includes": []   
+                }
+            }
+        };
+             
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
@@ -350,28 +374,27 @@ describe('cmd-parameter-build', function() {
     
     it('should replace wildcards with their BUILD value on the turbodepot.json setup when a build is performed', function() {
     
-        // The turbodepot.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // The turbobuilder.json file allows to define wildcards to be replaced on the setup files with different values when build or release is executed.
         // This test checks that this works ok
         
         let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
-         
-        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let setup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
+        setup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value",
+                "releaseValue": "wildcard-release-value"
+            }]};
         
-        setup.wildCards = [
-            {
-                "name": "$somewildcard",
-                "build": "wildcard-build-value",
-                "release": "wildcard-release-value"
-            }
-        ];
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
         
-        setup.depots[0].name = "$somewildcard";
-        setup.sources.fileSystem[0].name = "$somewildcard";
-        
-        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(setup))).toBe(true);
+        let tdSetup = JSON.parse(fm.readFile('.' + sep + 'turbodepot.json'));
+        tdSetup.depots[0].name = "$somewildcard";
+        tdSetup.sources.fileSystem[0].name = "$somewildcard";
+        expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(tdSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         
@@ -385,28 +408,27 @@ describe('cmd-parameter-build', function() {
     
     it('should replace wildcards with their BUILD value on the turbosite.json setup when a build is performed', function() {
     
-        // The turbosite.json file allows to define wildcards to be replaced on the setup itself with different values when build or release is executed.
+        // The turbobuilder.json file allows to define wildcards to be replaced on the setup files with different values when build or release is executed.
         // This test checks that this works ok
         
         let sep = fm.dirSep();
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
-         
-        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        let setup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
+        setup.wildCards = {
+            "setupWildCards": [{
+                "enabled": true,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value",
+                "releaseValue": "wildcard-release-value"
+            }]};
         
-        setup.wildCards = [
-            {
-                "name": "$somewildcard",
-                "build": "wildcard-build-value",
-                "release": "wildcard-release-value"
-            }
-        ];
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
         
-        setup.baseURL = "$somewildcard";
-        setup.locales[0] = "$somewildcard";
-        
-        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(setup))).toBe(true);
+        let tsSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
+        tsSetup.baseURL = "$somewildcard";
+        tsSetup.locales[0] = "$somewildcard";
+        expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         
@@ -418,14 +440,24 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should inject project version before all file extension on all files that are specified by extensions', function() {
+    it('should add project version before all file extension on all files that are specified by extensions', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.injectVersion.enabled = true;
-        setup.build.injectVersion.code.includes = [];
-        setup.build.injectVersion.files.includes = ['.test'];
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,         
+                "wildCard": "",
+                "code":{
+                    "includes": []
+                },
+                "files": {
+                    "includes": ['.test']    
+                }
+            }
+        };
+        
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -463,14 +495,24 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should inject project version before all file extension on all files that are specified by extensions inside some arbitrary folders', function() {
+    it('should add project version before all file extension on all files that are specified by extensions inside some arbitrary folders', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.injectVersion.enabled = true;
-        setup.build.injectVersion.code.includes = [];
-        setup.build.injectVersion.files.includes = ['.test'];
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,         
+                "wildCard": "",
+                "code":{
+                    "includes": []
+                },
+                "files": {
+                    "includes": ['.test']    
+                }
+            }
+        };
+        
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -493,14 +535,24 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should inject project version before all file extension on all files that are specified by folder', function() {
+    it('should add project version before all file extension on all files that are specified by folder', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.injectVersion.enabled = true;
-        setup.build.injectVersion.code.includes = [];
-        setup.build.injectVersion.files.includes = ['folder1'];
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,         
+                "wildCard": "",
+                "code":{
+                    "includes": []
+                },
+                "files": {
+                    "includes": ['folder1']    
+                }
+            }
+        };
+        
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -523,14 +575,24 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should inject project version before all file extension on all files that are specified by subfolder', function() {
+    it('should add project version before all file extension on all files that are specified by subfolder', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
-        setup.build.injectVersion.enabled = true;
-        setup.build.injectVersion.code.includes = [];
-        setup.build.injectVersion.files.includes = ['folder1/folder2'];
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,         
+                "wildCard": "",
+                "code":{
+                    "includes": []
+                },
+                "files": {
+                    "includes": ['folder1/folder2']    
+                }
+            }
+        };
+        
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -552,7 +614,7 @@ describe('cmd-parameter-build', function() {
         expect(buildResult).toContain('build ok');
         
         // Perform the same tests but using reverse slash \ as the folder divider. Both directory separators must work the same
-        setup.build.injectVersion.files.includes = ['folder1\\folder2'];
+        setup.wildCards.versionWildCard.files.includes = ['folder1\\folder2'];
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         buildResult = testsGlobalHelper.execTbCmd('-cb');

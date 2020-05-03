@@ -15,34 +15,6 @@
             "description": "Url to the json schema definition to validate this file",
             "enum": ["https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbodepot.schema.json"]
         },
-        "wildCards": {
-            "type": "array",
-            "description": "List of wildcards that can be used to be dinamically replaced on this setup, with different values for the build and release commands",
-            "items": {
-                "type": "object",
-                "description": "",
-                "required": [
-                    "name",
-                    "build",
-                    "release"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "The name for the wildcard. This string will be searched on all the setup file and replaced with the build or release value"
-                    },
-                    "build": {
-                        "type": "string",
-                        "description": "The value that will be assigned to all the wildcard occurences when the build process is executed"
-                    },
-                    "release": {
-                        "type": "string",
-                        "description": "The value that will be assigned to all the wildcard occurences when the release process is executed"
-                    }
-                }
-            }
-        },
         "depots": {
             "type": "array",
             "description": "",

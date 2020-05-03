@@ -16,29 +16,90 @@
             "enum": ["https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbobuilder.schema.json"]
         },
         "wildCards": {
-            "type": "array",
-            "description": "List of wildcards that can be used to be dinamically replaced on this setup, with different values for the build and release commands",
-            "items": {
-                "type": "object",
-                "description": "",
-                "required": [
-                    "name",
-                    "build",
-                    "release"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "The name for the wildcard. This string will be searched on all the setup file and replaced with the build or release value"
-                    },
-                    "build": {
-                        "type": "string",
-                        "description": "The value that will be assigned to all the wildcard occurences when the build process is executed"
-                    },
-                    "release": {
-                        "type": "string",
-                        "description": "The value that will be assigned to all the wildcard occurences when the release process is executed"
+            "type": "object",
+            "description": "Feature that allows us to replace pieces of text on our project code, setup or even filenames with custom values depending on project version, build or release execution",
+            "required": [],
+            "additionalProperties": false,
+            "properties": {
+                "setupWildCards": {
+                    "type": "array",
+                    "description": "Configures the wildcards that will be replaced at the project setup files (turbo***.json)",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": ["enabled", "wildCard", "buildValue", "releaseValue"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean",
+                                "description": "Enables or disables this wildcard replacement"
+                            },
+                            "wildCard": {
+                                "type": "string",
+                                "description": "The name for the wildcard. This string will be searched on all the setup files and replaced with the build or release value"
+                            },
+                            "buildValue": {
+                                "type": "string",
+                                "description": "The value that will be assigned to all the wildcard occurences when the build process is executed"
+                            },
+                            "releaseValue": {
+                                "type": "string",
+                                "description": "The value that will be assigned to all the wildcard occurences when the release process is executed"
+                            }
+                        }
+                    }                    
+                },
+                "versionWildCard": {
+                    "type": "object",
+                    "description": "Configures the version wildcard. If enabled, the build version will be inserted into any of the compiled files that we want by replacing a wildcard. We can also add the build number to folders or just before the file extension on any files that we want as part of the build and release processes",
+                    "required": [
+                        "enabled",
+                        "wildCard",
+                        "code",
+                        "files"
+                    ],
+                    "additionalProperties": false, 
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enables or disables the version wildCard feature"
+                        },
+                        "wildCard": {
+                            "type": "string",
+                            "description": "A pattern to search inside the files which will be replaced by the project version number"
+                        },
+                        "code": {
+                           "type": "object",
+                            "description": "Defines which files will be inspected to replace the wildcard by the version number on their contents",
+                            "required": ["includes"],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "includes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to include the files that will be inspected for version injection"
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to exclude files from version injection"
+                                }
+                            }
+                        },
+                        "files": {
+                           "type": "object",
+                            "description": "Defines which files will be renamed to include the project version just before their extension",
+                            "required": ["includes"],
+                            "additionalProperties": false, 
+                            "properties": {
+                                "includes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to include the files that will be renamed to contain the project version just before their extension"
+                                },
+                                "excludes": {
+                                    "type": "array",
+                                    "description": "List of string patterns that will be used to exclude files from being renamed to include the project version"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -46,9 +107,7 @@
         "metadata": {
             "type": "object",
             "description": "Contains information about the project",
-            "required": [
-                "builderVersion"
-            ],
+            "required": ["builderVersion"],
             "additionalProperties": false, 
             "properties": {
                 "name": {
@@ -395,59 +454,6 @@
                 "printTodoFiles": {
                     "type": "boolean",
                     "description": "If enabled, the contents of all the files on the extras/todo folder will be displayed as part of the build console output"
-                },
-                "injectVersion": {
-                    "type": "object",
-                    "description": "If enabled, the build version will be inserted into any of the compiled files that we want by replacing a wildcard with it. We can also add the build number to folders or just before the file extension on any files that we want as part of the build and release processes",
-                    "required": [
-                        "enabled",
-                        "wildCard",
-                        "code",
-                        "files"
-                    ],
-                    "additionalProperties": false, 
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean",
-                            "description": "Enables or disables the injectVersion feature"
-                        },
-                        "wildCard": {
-                            "type": "string",
-                            "description": "A pattern to search inside the files which will be replaced by the project version number"
-                        },
-                        "code": {
-                           "type": "object",
-                            "description": "Defines which files will be inspected to replace the wildcard by the version number on their contents",
-                            "required": ["includes","excludes"],
-                            "additionalProperties": false, 
-                            "properties": {
-                                "includes": {
-                                    "type": "array",
-                                    "description": "List of string patterns that will be used to include the files that will be inspected for version injection"
-                                },
-                                "excludes": {
-                                    "type": "array",
-                                    "description": "List of string patterns that will be used to exclude files from version injection"
-                                }
-                            }
-                        },
-                        "files": {
-                           "type": "object",
-                            "description": "Defines which files will be renamed to include the project version just before their extension",
-                            "required": ["includes","excludes"],
-                            "additionalProperties": false, 
-                            "properties": {
-                                "includes": {
-                                    "type": "array",
-                                    "description": "List of string patterns that will be used to include the files that will be renamed to contain the project version just before their extension"
-                                },
-                                "excludes": {
-                                    "type": "array",
-                                    "description": "List of string patterns that will be used to exclude files from being renamed to include the project version"
-                                }
-                            }
-                        }
-                    }
                 },
                 "site_php": {
                     "type": "object",

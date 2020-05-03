@@ -87,19 +87,7 @@
     },
     
     "build": {
-        "printTodoFiles" : false,
-        "injectVersion": {
-            "enabled": false,
-            "wildCard": "@@--build-version--@@",
-            "code":{
-                "includes": [".js", ".php", ".json"],
-                "excludes": []
-            },
-            "files": {
-                "includes": [],
-                "excludes": []    
-            }
-        },        
+        "printTodoFiles" : false,        
         "site_php" : {
         },
         "server_php" : {

@@ -137,20 +137,22 @@ exports.loadSetupFromDisk = function (setupFile) {
         
         let setupContents = fm.readFile(global.runtimePaths.root + sep + setupFile);
         
-        // Replace all the setup wildcards if they exist
-        if(JSON.parse(setupContents).hasOwnProperty('wildCards')){
+        // Replace all the setup wildcards if they have been defined at turbobuilder main setup file
+        let turbobuilderSetup = JSON.parse(fm.readFile(global.runtimePaths.root + sep + global.fileNames.setup));
         
-            let wildCards = JSON.parse(setupContents).wildCards;
-            
-            for(let wildCard of wildCards){
+        if(turbobuilderSetup.wildCards && turbobuilderSetup.wildCards.setupWildCards){
+        
+            for(let wildCard of turbobuilderSetup.wildCards.setupWildCards){
 
-                setupContents = StringUtils.replace(setupContents, wildCard.name, (global.isRelease ? wildCard.release : wildCard.build));
+                if(wildCard.enabled){
+                    
+                    setupContents = StringUtils.replace(setupContents, wildCard.wildCard,
+                        (global.isRelease ? wildCard.releaseValue : wildCard.buildValue));
+                }
             }
         }
         
         setup = JSON.parse(setupContents);
-        
-        delete setup.wildCards;
         
         if(setupFile === global.fileNames.setup){
         

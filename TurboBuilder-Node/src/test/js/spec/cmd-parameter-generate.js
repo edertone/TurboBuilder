@@ -64,13 +64,7 @@ describe('cmd-parameter-generate', function(){
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
-        expect(setup.build.hasOwnProperty('injectVersion')).toBe(true);
-        expect(setup.build.injectVersion.enabled).toBe(false);
-        expect(setup.build.injectVersion.wildCard).toBe("@@--build-version--@@");
-        expect(setup.build.injectVersion.code.includes.length).toBe(3);
-        expect(setup.build.injectVersion.code.excludes.length).toBe(0);
-        expect(setup.build.injectVersion.files.includes.length).toBe(0);
-        expect(setup.build.injectVersion.files.excludes.length).toBe(0);
+        expect(setup.hasOwnProperty('wildCards')).toBe(false);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
         expect(setup.hasOwnProperty("sync")).toBe(false);
@@ -99,16 +93,10 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./src/main/js/model/MySingletonClass.js')).toBe(true);
 
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
+        expect(setup.hasOwnProperty('wildCards')).toBe(false);
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.validate.hasOwnProperty('angularApp')).toBe(false);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
-        expect(setup.build.hasOwnProperty('injectVersion')).toBe(true);
-        expect(setup.build.injectVersion.enabled).toBe(false);
-        expect(setup.build.injectVersion.wildCard).toBe("@@--build-version--@@");
-        expect(setup.build.injectVersion.code.includes.length).toBe(3);
-        expect(setup.build.injectVersion.code.excludes.length).toBe(0);
-        expect(setup.build.injectVersion.files.includes.length).toBe(0);
-        expect(setup.build.injectVersion.files.excludes.length).toBe(0);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);
@@ -134,16 +122,10 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('.gitignore')).toBe(true);
         expect(fm.isFile('.gitattributes')).toBe(true);
 
+        expect(setup.hasOwnProperty('wildCards')).toBe(false);
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
-        expect(setup.build.hasOwnProperty('injectVersion')).toBe(true);
-        expect(setup.build.injectVersion.enabled).toBe(false);
-        expect(setup.build.injectVersion.wildCard).toBe("@@--build-version--@@");
-        expect(setup.build.injectVersion.code.includes.length).toBe(3);
-        expect(setup.build.injectVersion.code.excludes.length).toBe(0);
-        expect(setup.build.injectVersion.files.includes.length).toBe(0);
-        expect(setup.build.injectVersion.files.excludes.length).toBe(0);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.hasOwnProperty("sync")).toBe(false);
@@ -171,16 +153,10 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('.gitignore')).toBe(true);
         expect(fm.isFile('.gitattributes')).toBe(true);
 
+        expect(setup.hasOwnProperty('wildCards')).toBe(false);
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
-        expect(setup.build.hasOwnProperty('injectVersion')).toBe(true);
-        expect(setup.build.injectVersion.enabled).toBe(false);
-        expect(setup.build.injectVersion.wildCard).toBe("@@--build-version--@@");
-        expect(setup.build.injectVersion.code.includes.length).toBe(3);
-        expect(setup.build.injectVersion.code.excludes.length).toBe(0);
-        expect(setup.build.injectVersion.files.includes.length).toBe(0);
-        expect(setup.build.injectVersion.files.excludes.length).toBe(0);
         expect(setup.build.hasOwnProperty('site_php')).toBe(true);
         expect(setup.build.hasOwnProperty('server_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
@@ -212,16 +188,10 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('.gitignore')).toBe(true);
         expect(fm.isFile('.gitattributes')).toBe(true);
 
+        expect(setup.hasOwnProperty('wildCards')).toBe(false);
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
-        expect(setup.build.hasOwnProperty('injectVersion')).toBe(true);
-        expect(setup.build.injectVersion.enabled).toBe(false);
-        expect(setup.build.injectVersion.wildCard).toBe("@@--build-version--@@");
-        expect(setup.build.injectVersion.code.includes.length).toBe(3);
-        expect(setup.build.injectVersion.code.excludes.length).toBe(0);
-        expect(setup.build.injectVersion.files.includes.length).toBe(0);
-        expect(setup.build.injectVersion.files.excludes.length).toBe(0);
         expect(setup.build.hasOwnProperty('server_php')).toBe(true);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
@@ -323,11 +293,11 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('.gitignore')).toBe(true);
         expect(fm.isFile('.gitattributes')).toBe(true);
         
+        expect(setup.hasOwnProperty('wildCards')).toBe(false);
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.hasOwnProperty('copyrightHeaders')).toBe(true);
         expect(setup.validate.hasOwnProperty('styleSheets')).toBe(false);
         expect(setup.build.hasOwnProperty('printTodoFiles')).toBe(true);
-        expect(setup.build.hasOwnProperty('injectVersion')).toBe(true);
         expect(setup.build.hasOwnProperty('site_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_php')).toBe(false);
         expect(setup.build.hasOwnProperty('lib_ts')).toBe(false);

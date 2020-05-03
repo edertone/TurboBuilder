@@ -609,11 +609,11 @@ describe('cmd-parameter-validate', function() {
     });
     
     
-    it('should validate ok if injectVersion is missing on turbosite setup.build for a lib_js project type', function() {
+    it('should validate ok if wildcards section is empty for a lib_js project type', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
-        delete setup.build.injectVersion;
+        setup.wildCards = {};
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -621,15 +621,40 @@ describe('cmd-parameter-validate', function() {
     });
     
     
-    it('should fail validate if injectVersion.enabled is missing on turbosite setup.build for a lib_js project type', function() {
+    it('should fail validate if wildCards.versionWildCard is not correctly formatted on turbobuilder for a lib_js project type', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, []);
         
-        delete setup.build.injectVersion.enabled;
+        setup.wildCards = {
+            "versionWildCard":{             
+                "wildCard": "--build-version--",
+                "code":{
+                    "includes": [".js"],
+                    "excludes": []
+                },
+                "files": {
+                    "includes": [],
+                    "excludes": []    
+                }
+            }
+        };
         
-        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);        
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/Invalid JSON schema for turbobuilder.json[\s\S]*wildCards.versionWildCard requires property "enabled"/);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("instance.build.injectVersion requires property \"enabled\"");
+        setup.wildCards = {
+            "versionWildCard":{
+                "enabled": true,       
+                "wildCard": "--build-version--",
+                "files": {
+                    "includes": [],
+                    "excludes": []    
+                }
+            }
+        };
+        
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);        
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/Invalid JSON schema for turbobuilder.json[\s\S]*wildCards.versionWildCard requires property "code"/);
     });
     
     
