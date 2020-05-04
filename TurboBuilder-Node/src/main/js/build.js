@@ -58,7 +58,8 @@ exports.execute = function () {
     if(global.setup.build.app_angular){
         
         this.buildAppAngular(buildFullPath);
-    
+        this.applyCodeWildCards(buildFullPath);
+        this.applyVersionWildCard(buildFullPath);
         cm.success('build ok');
         
         return;
@@ -128,6 +129,7 @@ exports.copyMainFiles = function (destPath) {
     
     cm.success('copy main files ok');
     
+    this.applyCodeWildCards(destPath);
     this.applyVersionWildCard(destPath);
 }
 
@@ -756,6 +758,41 @@ exports.buildAppAngular = function (destPath) {
 /**
  * Replace the project version number on all the files as defined on project setup
  */
+exports.applyCodeWildCards = function (destPath) {
+    
+    if(global.setup.wildCards && global.setup.wildCards.codeWildCards){
+    
+        let replacedFiles = 0;
+         
+        for(let wildCard of global.setup.wildCards.codeWildCards){
+
+            if(wildCard.enabled && !StringUtils.isEmpty(wildCard.wildCard)){
+                
+                let filesToReplace = getFilesFromIncludeList(destPath, wildCard.includes, wildCard.excludes);
+                
+                for (let fileToReplace of filesToReplace) {
+                    
+                    let fileContent = fm.readFile(fileToReplace);
+                    
+                    if(fileContent.indexOf(wildCard.wildCard) >= 0){
+                        
+                        fm.saveFile(fileToReplace, StringUtils.replace(fileContent, wildCard.wildCard,
+                            (global.isRelease ? wildCard.releaseValue : wildCard.buildValue)));
+                        
+                        replacedFiles ++;
+                    }
+                }
+            }
+        }
+        
+        cm.success('replaced code wildcards on ' + replacedFiles + ' files');
+    }
+}
+
+
+/**
+ * Replace the project version number on all the files as defined on project setup
+ */
 exports.applyVersionWildCard = function (destPath) {
 
     let sep = fm.dirSep();
@@ -769,17 +806,20 @@ exports.applyVersionWildCard = function (destPath) {
     let wildCard = global.setup.wildCards.versionWildCard.wildCard;    
     let version = setupModule.getProjectRepoSemVer(false);
     
-    let filesToRename = getFilesFromIncludeList(destPath,
-        global.setup.wildCards.versionWildCard.files.includes,
-        global.setup.wildCards.versionWildCard.files.excludes);
-     
-    for (let fileToRename of filesToRename) {
+    if(global.setup.wildCards.versionWildCard.files.includes.length > 0){
         
-        fm.renameFile(fileToRename, StringUtils.getPath(fileToRename) + sep +
-            StringUtils.getPathElementWithoutExt(fileToRename) + version + '.' + StringUtils.getPathExtension(fileToRename));
+        let filesToRename = getFilesFromIncludeList(destPath,
+            global.setup.wildCards.versionWildCard.files.includes,
+            global.setup.wildCards.versionWildCard.files.excludes);
+         
+        for (let fileToRename of filesToRename) {
+            
+            fm.renameFile(fileToRename, StringUtils.getPath(fileToRename) + sep +
+                StringUtils.getPathElementWithoutExt(fileToRename) + version + '.' + StringUtils.getPathExtension(fileToRename));
+        }
+        
+        cm.success('renamed ' + filesToRename.length + ' files with project version ' + version);        
     }
-    
-    cm.success('renamed ' + filesToRename.length + ' files with project version ' + version);
     
     let replacedFiles = 0;
     

@@ -79,6 +79,7 @@ exports.execute = function () {
         minifyHtaccess(releaseFullPath);
         minifyHtmlFiles(releaseFullPath);
         minifyImages(releaseFullPath);
+        buildModule.applyCodeWildCards(releaseFullPath);
         buildModule.applyVersionWildCard(releaseFullPath);
         return;
     } 

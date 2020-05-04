@@ -49,9 +49,45 @@
                         }
                     }                    
                 },
+                "codeWildCards": {
+                    "type": "array",
+                    "description": "Configures the wildcards that will be replaced at the project target files after a build or release have been performed",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": ["enabled", "wildCard", "buildValue", "releaseValue", "includes"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "enabled": {
+                                "type": "boolean",
+                                "description": "Enables or disables this wildcard replacement"
+                            },
+                            "wildCard": {
+                                "type": "string",
+                                "description": "The name for the wildcard. This string will be searched on the source for all the included files and replaced with the build or release value"
+                            },
+                            "buildValue": {
+                                "type": "string",
+                                "description": "The value that will be assigned to all the wildcard occurences when the build process is executed"
+                            },
+                            "releaseValue": {
+                                "type": "string",
+                                "description": "The value that will be assigned to all the wildcard occurences when the release process is executed"
+                            },
+                            "includes": {
+                                "type": "array",
+                                "description": "List of string patterns that will be used to include the files that will be inspected for the wildcard"
+                            },
+                            "excludes": {
+                                "type": "array",
+                                "description": "List of string patterns that will be used to exclude files from the wildcard replacement"
+                            }
+                        }
+                    }                    
+                },
                 "versionWildCard": {
                     "type": "object",
-                    "description": "Configures the version wildcard. If enabled, the build version will be inserted into any of the compiled files that we want by replacing a wildcard. We can also add the build number to folders or just before the file extension on any files that we want as part of the build and release processes",
+                    "description": "Configures the version wildcard. If enabled, the build version will be inserted into any of the compiled files that we want by replacing our wildcard. We can also add the build number to folders or just before the file extension on any files that we want as part of the build and release processes",
                     "required": [
                         "enabled",
                         "wildCard",

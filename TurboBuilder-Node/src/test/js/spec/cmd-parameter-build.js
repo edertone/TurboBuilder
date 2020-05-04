@@ -286,15 +286,13 @@ describe('cmd-parameter-build', function() {
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
-        expect(fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
-        expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        testsGlobalHelper.generateSitePhpFilesWithWildcard('@@--build-version--@@');
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php // 1 - 0.0.0 2 - 0.0.0 ?>');
-        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";// a - 0.0.0 b - 0.0.0');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t0.php')).toBe('<?php // 1 - 0.0.0 2 - 0.0.0 ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php $1 = "0.0.0"; $2 = "0.0.0" ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";var a = "0.0.0"; var b = "0.0.0";// a - 0.0.0 b - 0.0.0');
         expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json')).toBe('{ "a": "0.0.0", "b": "0.0.0"}');
         expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt')).toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
     });
@@ -309,19 +307,19 @@ describe('cmd-parameter-build', function() {
         setup.validate.php.namespaces.enabled = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(fm.saveFile('./src/main/t1.php', '<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>')).toBe(true);
-        expect(fm.saveFile('./src/main/t2.js', '"use strict";// a - @@--build-version--@@ b - @@--build-version--@@')).toBe(true);
-        expect(fm.saveFile('./src/main/t3.json', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
-        expect(fm.saveFile('./src/main/t4.txt', '{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}')).toBe(true);
+        testsGlobalHelper.generateSitePhpFilesWithWildcard('@@--build-version--@@');
         
         // wildCards.versionWildCard.enabled is false by default, so no replacement must happen
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
         
-        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t0.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
+            
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+            .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
         
         expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
-            .toBe('"use strict";// a - @@--build-version--@@ b - @@--build-version--@@');
+            .toBe('"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";// a - @@--build-version--@@ b - @@--build-version--@@');
         
         expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
@@ -349,11 +347,14 @@ describe('cmd-parameter-build', function() {
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
                 
-        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t0.php'))
             .toBe('<?php // 1 - @@--build-version--@@ 2 - @@--build-version--@@ ?>');
+            
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php'))
+            .toBe('<?php $1 = "@@--build-version--@@"; $2 = "@@--build-version--@@" ?>');
         
         expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js'))
-            .toBe('"use strict";// a - @@--build-version--@@ b - @@--build-version--@@');
+            .toBe('"use strict";var a = "@@--build-version--@@"; var b = "@@--build-version--@@";// a - @@--build-version--@@ b - @@--build-version--@@');
         
         expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json'))
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
@@ -437,6 +438,72 @@ describe('cmd-parameter-build', function() {
         expect(indexPhpSetup.baseURL).toBe("wildcard-build-value");
         expect(indexPhpSetup.locales[0]).toBe("wildcard-build-value");
         expect(indexPhpSetup.hasOwnProperty('wildCards')).toBe(false);  
+    });
+    
+    
+    it('should replace code wildcards with their BUILD value on the code for the specified files when a build is performed', function() {
+    
+        let sep = fm.dirSep();
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.wildCards = {
+            "codeWildCards": [{
+                "enabled": true,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value",
+                "releaseValue": "wildcard-release-value",
+                "includes": [".php", ".js", ".json"]
+            }]};
+        
+        setup.validate.php.namespaces.enabled = false;
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
+        
+        testsGlobalHelper.generateSitePhpFilesWithWildcard('$somewildcard');
+        
+        let execResult = testsGlobalHelper.execTbCmd('-b');       
+        
+        expect(execResult).toContain("replaced code wildcards on 4 files");
+        expect(execResult).toContain("build ok");
+        
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t0.php')).toBe('<?php // 1 - wildcard-build-value 2 - wildcard-build-value ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php $1 = "wildcard-build-value"; $2 = "wildcard-build-value" ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";var a = "wildcard-build-value"; var b = "wildcard-build-value";// a - wildcard-build-value b - wildcard-build-value');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json')).toBe('{ "a": "wildcard-build-value", "b": "wildcard-build-value"}');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt')).toBe('{ "a": "$somewildcard", "b": "$somewildcard"}');
+    });
+    
+    
+    it('should NOT replace code wildcards with their BUILD value on the code for the specified files when a build is performed and code wildcard is disabled', function() {
+    
+        let sep = fm.dirSep();
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.wildCards = {
+            "codeWildCards": [{
+                "enabled": false,
+                "wildCard": "$somewildcard",
+                "buildValue": "wildcard-build-value",
+                "releaseValue": "wildcard-release-value",
+                "includes": [".php", ".js", ".json"]
+            }]};
+        
+        setup.validate.php.namespaces.enabled = false;
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
+        
+        testsGlobalHelper.generateSitePhpFilesWithWildcard('$somewildcard');
+        
+        let execResult = testsGlobalHelper.execTbCmd('-b');       
+        
+        expect(execResult).toContain("replaced code wildcards on 0 files");
+        expect(execResult).toContain("build ok");
+        
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t0.php')).toBe('<?php // 1 - $somewildcard 2 - $somewildcard ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t1.php')).toBe('<?php $1 = "$somewildcard"; $2 = "$somewildcard" ?>');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t2.js')).toBe('"use strict";var a = "$somewildcard"; var b = "$somewildcard";// a - $somewildcard b - $somewildcard');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t3.json')).toBe('{ "a": "$somewildcard", "b": "$somewildcard"}');
+        expect(fm.readFile('./target/' + folderName + '/dist/site/t4.txt')).toBe('{ "a": "$somewildcard", "b": "$somewildcard"}');
     });
     
     

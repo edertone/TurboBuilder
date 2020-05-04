@@ -79,5 +79,18 @@ global.testsGlobalHelper = {
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         return setup;
+    },
+    
+    
+    /**
+     * Generate several files with the specified wildcard on a site_php project type
+     */
+    generateSitePhpFilesWithWildcard: function(wildCard) {
+    
+        expect(filesManager.saveFile('./src/main/t0.php', '<?php // 1 - ' + wildCard + ' 2 - ' + wildCard + ' ?>')).toBe(true);
+        expect(filesManager.saveFile('./src/main/t1.php', '<?php $1 = "' + wildCard + '"; $2 = "' + wildCard + '" ?>')).toBe(true);
+        expect(filesManager.saveFile('./src/main/t2.js', '"use strict";var a = "' + wildCard + '"; var b = "' + wildCard + '";// a - ' + wildCard + ' b - ' + wildCard)).toBe(true);
+        expect(filesManager.saveFile('./src/main/t3.json', '{ "a": "' + wildCard + '", "b": "' + wildCard + '"}')).toBe(true);
+        expect(filesManager.saveFile('./src/main/t4.txt', '{ "a": "' + wildCard + '", "b": "' + wildCard + '"}')).toBe(true);
     }
 };
