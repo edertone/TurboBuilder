@@ -48,6 +48,12 @@ exports.execute = function () {
         validateModule.execute(false);
     }
     
+    // Node cmd apps are not built, cause we run them installed globally via npm install -g
+    if(global.setup.build.app_node_cmd){
+        
+        return cm.success('build ok (no files affected or created)');
+    }
+    
     // Angular libs are built using ng cli and nothing more is necessary
     if(global.setup.build.lib_angular){
         
@@ -60,39 +66,32 @@ exports.execute = function () {
         this.buildAppAngular(buildFullPath);
         this.applyCodeWildCards(buildFullPath);
         this.applyVersionWildCard(buildFullPath);
-        cm.success('build ok');
         
-        return;
-    }
-    
-    // Node cmd apps are not built, cause we run them installed globally via npm install -g
-    if(global.setup.build.app_node_cmd){
+    }else{
         
-        return cm.success('build ok (no files affected or created)');
-    }
-    
-    // Copy all the src main files to the target build folder
-    this.copyMainFiles(buildFullPath);
-    
-    // Perform custom build depending on project type
-    if(global.setup.build.site_php || global.setup.build.server_php){
+        // Copy all the src main files to the target build folder
+        this.copyMainFiles(buildFullPath);
         
-        this.buildSitePhp(buildFullPath);
-    }
-    
-    if(global.setup.build.lib_php){
+        // Perform custom build depending on project type
+        if(global.setup.build.site_php || global.setup.build.server_php){
+            
+            this.buildSitePhp(buildFullPath);
+        }
         
-        this.buildLibPhp(buildFullPath);
-    }
-    
-    if(global.setup.build.lib_js){
+        if(global.setup.build.lib_php){
+            
+            this.buildLibPhp(buildFullPath);
+        }
         
-        this.buildLibJs(buildFullPath);
-    }
-    
-    if(global.setup.build.lib_ts){
-    
-        this.buildLibTs(buildFullPath);
+        if(global.setup.build.lib_js){
+            
+            this.buildLibJs(buildFullPath);
+        }
+        
+        if(global.setup.build.lib_ts){
+        
+            this.buildLibTs(buildFullPath);
+        }
     }
     
     // Check if sync is configured to be executed after build
