@@ -312,7 +312,7 @@ describe('cmd-parameter-generate', function(){
     
     it('should generate lib_angular project structure', function() {
         
-        // TODO
+        // TODO - lib_angular generation is still not implemented!
     });
     
     
