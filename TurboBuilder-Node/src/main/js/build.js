@@ -650,7 +650,13 @@ exports.buildLibTs = function (destPath) {
         tsExecution += ' --module commonjs';
         tsExecution += ' --rootDir "' + destMain + sep + 'ts"';      
         tsExecution += ' --project "' + destMain + sep + 'ts"';                          
-        terminalManager.exec(tsExecution);
+        
+        let tsResult = terminalManager.exec(tsExecution);
+        
+        if(tsResult.failed){
+           
+            cm.error('Typescript compilation failed: \n\n' + tsResult.output);
+        }
 
         // Check if the target requires a merged JS file or not and
         // Generate it via webpack for the current target       

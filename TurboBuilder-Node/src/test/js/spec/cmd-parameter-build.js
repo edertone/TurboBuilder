@@ -72,6 +72,25 @@ describe('cmd-parameter-build', function() {
     });
     
     
+    it('should fail build when a lib_ts project contains a typescript file with compilation errors', function() {
+        
+        let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
+        
+        testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
+               
+        expect(fm.saveFile('./src/main/ts/index.ts', 'let a = 1; a = "string";')).toBe(true);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-b');
+        
+        expect(buildResult).toContain('Typescript compilation failed');
+        expect(buildResult).toContain('Type \'"string"\' is not assignable to type \'number\'');
+        
+        expect(fm.isFile('./target/' + folderName + '/dist/es5/PackedJsFileName-ES5.js')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/es6/PackedJsFileName-ES6.js')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/dist/ts/index.js')).toBe(true);
+    });
+    
+    
     it('should build correctly when -b argument is passed after generating a lib_ts structure with some ts files', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
