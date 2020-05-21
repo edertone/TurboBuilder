@@ -76,6 +76,7 @@ let validate = function (type) {
 let createFoldersStructure = function (type) {
 
     let sep = fm.dirSep();
+    let templatesFolder = global.installationPaths.mainResources + sep + 'project-templates';
 
     // Generate all the folders and files that are used on a remote location where projects are deployed.
     if (type === global.folderStructures.struct_deploy) {
@@ -86,9 +87,11 @@ let createFoldersStructure = function (type) {
         fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'cache', true);
         fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'custom', true);
         fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'db', true);
+        fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'data', true);
         fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'executable', true);
         fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'logs', true);        
         fm.createDirectory(global.runtimePaths.root + sep + 'storage' + sep + 'tmp', true);
+        fm.copyFile(templatesFolder + sep + 'struct_deploy' + sep + 'README.txt', global.runtimePaths.root + sep + 'storage' + sep + 'README.txt');
     }
         
     // Generate all the folders and files that are used on a customer folder

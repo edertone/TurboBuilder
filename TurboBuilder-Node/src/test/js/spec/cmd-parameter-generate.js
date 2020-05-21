@@ -326,12 +326,14 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isDirectory('./storage/cache')).toBe(true);
         expect(fm.isDirectory('./storage/custom')).toBe(true);
         expect(fm.isDirectory('./storage/db')).toBe(true);
+        expect(fm.isDirectory('./storage/data')).toBe(true);
         expect(fm.isDirectory('./storage/executable')).toBe(true);
         expect(fm.isDirectory('./storage/logs')).toBe(true);
         expect(fm.isDirectory('./storage/tmp')).toBe(true);
+        expect(fm.isFile('./storage/README.txt')).toBe(true);
            
         expect(fm.getDirectoryList('./').length).toBe(4);
-        expect(fm.getDirectoryList('./storage').length).toBe(6);
+        expect(fm.getDirectoryList('./storage').length).toBe(8);
     });
     
     
