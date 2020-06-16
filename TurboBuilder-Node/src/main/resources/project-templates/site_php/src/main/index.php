@@ -12,7 +12,7 @@ if(file_exists('cache/hash')){
 }
 
 require 'phar://libs/turbosite-php/turbosite-php-7.1.1.phar/php/autoloader-project.php';
-require 'libs/turbocommons-php/turbocommons-php-3.2.0.phar';
+require 'libs/turbocommons-php/turbocommons-php-3.5.0.phar';
 require 'libs/turbodepot-php/turbodepot-php-6.3.1.phar';
 require 'libs/turbosite-php/turbosite-php-7.1.1.phar';
 
