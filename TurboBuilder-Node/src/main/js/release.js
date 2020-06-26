@@ -304,7 +304,11 @@ let minifyHtmlFiles = function (destPath) {
                         
         }catch(e){
 
-            cm.error("Html minify failed:\n" + htmlFile);
+            // If the file is a php file we will ignore html minification errors cause it may be caused by unexpected characters
+            if(StringUtils.getPathExtension(htmlFile).toLowerCase() !== 'php'){
+                
+                cm.error("Html minify failed:\n" + htmlFile);
+            }
         }
         
         fm.saveFile(htmlFile, htmlMinified); 
@@ -319,6 +323,8 @@ let minifyHtmlFiles = function (destPath) {
 
 /**
  * Minifies (overwrites) all the php files that exist on the provided path
+ * Note that phar files won't be affected by this minification cause they are generated before this method is called
+ * and do not have a php extension. We don't want to lose phpdoc comments on phar files
  */
 let minifyPhpFiles = function (destPath) {
     
