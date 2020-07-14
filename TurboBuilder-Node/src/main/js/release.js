@@ -418,9 +418,11 @@ let generateCodeDocumentation = function (destPath) {
         phpDocExec += ' -d "' + destMain + sep + 'php"';
         phpDocExec += ' -t "' + docsPath + sep + 'php"';
         
-        if(terminalManager.exec(phpDocExec).failed){
+        let phpDocExecResult = terminalManager.exec(phpDocExec);
+        
+        if(phpDocExecResult.failed){
             
-            cm.error('php doc command failed: ' + phpDocExec);
+            cm.error('php doc command failed: ' + phpDocExec + '\n' + StringUtils.limitLen(phpDocExecResult.output, 3000));
         }
         
         cm.success('php doc ok');
