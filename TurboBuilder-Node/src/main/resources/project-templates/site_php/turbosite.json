@@ -46,17 +46,17 @@
         "view/css/global-styles.scss"
     ],
     
-    "globalComponents": [
-        "view/components/main-menu/main-menu",
-        "view/components/footer/footer"
-    ],
-    
     "globalHtml": {
         "afterBodyOpen": [
         ],
         "beforeBodyClose": [
         ]
     },
+    
+    "globalComponents": [
+        "view/components/main-menu/main-menu",
+        "view/components/footer/footer"
+    ],
     
     "viewComponents": [
     ],

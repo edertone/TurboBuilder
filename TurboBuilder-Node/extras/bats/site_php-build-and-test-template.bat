@@ -1,5 +1,5 @@
-:: This file contains a template to automate the process of building a generated site_php
-:: project, including required turbo dependencies and launching the respective tests.
+:: This file contains a template to automate the process of generating a new site_php project with the default project template, 
+:: build it including the latest versions of its required turbo dependencies and launch the default site_php tests that are bundled with the template.
 :: Modify it to fit your needs
 
 

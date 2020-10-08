@@ -14,8 +14,8 @@
         "globalCDNS",
         "globalJs",
         "globalCss",
-        "globalComponents",
         "globalHtml",
+        "globalComponents",
         "viewComponents",
         "webServices"
     ],
@@ -188,18 +188,6 @@
                 "view/components/footer/footer.scss"
             ]
         },
-        "globalComponents": {
-            "type": "array",
-            "description": "A list of components that will be globally loaded right after the globalJs and globalCss. Each array element is a string with the path to a component (based on src/main) without a file extension",
-            "items": {
-                "type": "string",
-                "description": "A path to the component (based on src/main) without the file extension"
-            },
-            "examples": [
-                "view/components/main-menu/main-menu",
-                "view/components/footer/footer"
-            ]
-        },
         "globalHtml": {
             "type": "object",
             "description": "Defines extra fragments of html that will be added globally to all the project views",
@@ -233,9 +221,21 @@
                 }
             }
         },
+        "globalComponents": {
+            "type": "array",
+            "description": "A list of components that will be globally loaded right after the globalJs and globalCss. Each array element is a string with the path to a component (based on src/main) without a file extension",
+            "items": {
+                "type": "string",
+                "description": "A path to the component (based on src/main) without the file extension"
+            },
+            "examples": [
+                "view/components/main-menu/main-menu",
+                "view/components/footer/footer"
+            ]
+        },
         "viewComponents": {
             "type": "array",
-            "description": "A list of components that will be loaded with specific views. They will be loaded after the global css, js and global elements. Each array item is an object with two properties: view (the name of the view that will load the component) and components (a list of paths based on src/main to the components to load with the view, without file extension)",
+            "description": "A list of components that will be loaded ONLY with the specified views. They will be loaded after the global css, js and global elements. Each array item is an object with two properties: view (the name of the view that will load the component) and components (a list of paths based on src/main to the components to load with the view, without file extension)",
             "items": {
                 "type": "object",
                 "required": ["view", "components"],
