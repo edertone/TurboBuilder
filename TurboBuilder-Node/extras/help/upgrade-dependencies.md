@@ -9,9 +9,7 @@ This project uses libraries and dependencies from a variety of sources. To make 
     
     Update the package.json versions based on the command result, by running:
     
-      npm install libraryname@latest --save
-      
-    For each one of the outdated libraries we want to upgrade  
+      npm install libraryname1@latest libraryname2@latest libraryname3@latest
     
 - Update all the libraries versions on:
 
