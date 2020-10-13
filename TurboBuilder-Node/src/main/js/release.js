@@ -456,7 +456,7 @@ let generateCodeDocumentation = function (destPath) {
         typeDocExec += ' --module commonjs';
         typeDocExec += ' --mode modules';
         typeDocExec += ' --target ES5'; 
-        typeDocExec += ' --options "' + destMain + sep + 'ts' + sep + 'tsconfig.json"';
+        typeDocExec += ' --tsconfig "' + destMain + sep + 'ts' + sep + 'tsconfig.json"';
         typeDocExec += ' --out "' + docsPath + sep + 'ts"';
         typeDocExec += ' "' + destMain + sep + 'ts"';
         

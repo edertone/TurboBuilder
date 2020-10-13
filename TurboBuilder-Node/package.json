@@ -36,7 +36,7 @@
     "turbocommons-ts": "^3.7.0",
     "turbodepot-node": "^6.3.0",
     "turbotesting-node": "^7.6.0",
-    "typedoc": "^0.15.3",
+    "typedoc": "^0.19.2",
     "typescript": "^3.8.3",
     "uglify-es": "3.3.9"
   },

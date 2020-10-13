@@ -137,7 +137,7 @@ if (program.lint &&
     validateModule.execute();
 }
 
-// Perform the build as defined on xml setup
+// Perform the build as defined on setup
 if (program.build){
     
     buildModule.execute();
