@@ -240,22 +240,36 @@ let minifyImages = function (destPath) {
     let destDist = destPath + sep + 'dist';
     
     let imageFiles = fm.findDirectoryItems(destDist, /^.*\.(jpg|jpeg|png)$/i, 'absolute', 'files');
-    
+        
     for (let imageFile of imageFiles) {
         
+        // NOTE: Imagemin has a small bug with file paths on Windows. For it to correctly work we must pass the imagefile path
+        // but formatted with the / os sepparator
+        
         // Asynchronously overwrite all the project images with their optimized versions
-        imagemin([imageFile], StringUtils.getPath(imageFile), {
-            plugins: [
-                imageminJpegtran({
-                    progressive: true
-                }),
-                imageminPngquant({
-                    quality: [0.8, 0.9],
-                    speed: 1, // The lowest speed of optimization with the highest quality
-                    floyd: 1 // Controls level of dithering (0 = none, 1 = full).
-                })
-            ]
-        });
+        (async () => {
+            
+            const imageminResult = await imagemin([StringUtils.formatPath(imageFile, '/')], {
+                destination: StringUtils.formatPath(StringUtils.getPath(imageFile), '/'),
+                plugins: [
+                    imageminJpegtran({
+                        progressive: true
+                    }),
+                    imageminPngquant({
+                        quality: [0.8, 0.9],
+                        strip: true, // Remove optional metadata
+                        speed: 1, // The lowest speed of optimization with the highest quality
+                        dithering: 1 // Controls level of dithering (0 = none, 1 = full)
+                    })
+                ]
+            });
+         
+            if(imageminResult.length !== 1){
+                
+                cm.error('Image minification failed for: ' + imageFile);
+            }
+            
+        })();
     }
     
     if(imageFiles.length > 0){
