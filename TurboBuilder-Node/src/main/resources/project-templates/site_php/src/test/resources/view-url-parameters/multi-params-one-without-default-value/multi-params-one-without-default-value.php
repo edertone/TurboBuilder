@@ -31,7 +31,7 @@ $ws->initializeAsView($webViewSetup);
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
-<?php $ws->echoHeadHtml() ?>
+<?php $ws->echoHtmlHead() ?>
 </head>
 
 <body>
@@ -39,7 +39,7 @@ $ws->initializeAsView($webViewSetup);
     <main>
     </main>
 
-<?php $ws->echoJavaScriptTags() ?>
+<?php $ws->echoHtmlJavaScriptTags() ?>
 
 </body>
 </html>

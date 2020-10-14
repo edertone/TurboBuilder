@@ -21,7 +21,7 @@ $ws->metaDescription = 'some description';
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
-<?php $ws->echoHeadHtml() ?>
+<?php $ws->echoHtmlHead() ?>
 </head>
 
 <body>
@@ -43,7 +43,7 @@ $ws->metaDescription = 'some description';
 
     <?php $ws->includeComponent('view/components/footer/footer') ?>
 
-<?php $ws->echoJavaScriptTags() ?>
+<?php $ws->echoHtmlJavaScriptTags() ?>
 
 </body>
 </html>

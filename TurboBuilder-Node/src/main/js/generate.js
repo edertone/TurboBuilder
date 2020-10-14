@@ -240,17 +240,17 @@ let replaceDependenciesIntoTemplate = function () {
         
         if(depFile === 'turbocommons-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'turbocommons-php-3.5.0.phar', depParent + sep + 'turbocommons-php-3.5.0.phar');
+            fm.copyFile(libsPath + sep + 'turbocommons-php-3.7.0.phar', depParent + sep + 'turbocommons-php-3.7.0.phar');
         }
         
         if(depFile === 'turbodepot-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'turbodepot-php-6.3.1.phar', depParent + sep + 'turbodepot-php-6.3.1.phar');
+            fm.copyFile(libsPath + sep + 'turbodepot-php-7.0.0.phar', depParent + sep + 'turbodepot-php-7.0.0.phar');
         }
         
         if(depFile === 'turbosite-php.tbdependency'){
             
-            fm.copyFile(libsPath + sep + 'turbosite-php-8.0.0.phar', depParent + sep + 'turbosite-php-8.0.0.phar');
+            fm.copyFile(libsPath + sep + 'turbosite-php-8.1.0.phar', depParent + sep + 'turbosite-php-8.1.0.phar');
         }
 
         fm.deleteFile(tbdependency);

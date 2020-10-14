@@ -14,7 +14,7 @@ $ws->metaDescription = $ws->getUrlParam();
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
-<?php $ws->echoHeadHtml() ?>
+<?php $ws->echoHtmlHead() ?>
 </head>
 
 <body>
@@ -39,7 +39,7 @@ $ws->metaDescription = $ws->getUrlParam();
 
     <?php $ws->includeComponent('view/components/footer/footer') ?>
 
-<?php $ws->echoJavaScriptTags() ?>
+<?php $ws->echoHtmlJavaScriptTags() ?>
 
 </body>
 

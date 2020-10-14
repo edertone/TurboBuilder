@@ -15,7 +15,7 @@ $ws->initializeAsView();
 <html lang="<?php echo $ws->getPrimaryLanguage() ?>">
 
 <head>
-<?php $ws->echoHeadHtml() ?>
+<?php $ws->echoHtmlHead() ?>
 </head>
 
 <body>
@@ -52,7 +52,7 @@ $ws->initializeAsView();
 
     <?php $ws->includeComponent('view/components/footer/footer') ?>
 
-<?php $ws->echoJavaScriptTags() ?>
+<?php $ws->echoHtmlJavaScriptTags() ?>
 
 </body>
 </html>
