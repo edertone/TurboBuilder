@@ -176,7 +176,7 @@
         },
         "globalCss": {
             "type": "array",
-            "description": "List of css file paths that will be included globally on all the project views. All the specified files will be merged into a single global css file to optimize performance. The merge order will be exactly the same as the one defined here",
+            "description": "List of css file paths (relative to src/main) that will be included globally on all the project views. All the specified files will be merged into a single global css file to optimize performance. The merge order will be exactly the same as the one defined here",
             "items": {
                 "type": "string",
                 "description": "The Items Schema"
@@ -199,7 +199,7 @@
             "properties": {
                 "afterBodyOpen": {
                     "type": "array",
-                    "description": "List of paths to files containing html code that will be added just after the <body> tag on all the project views, sorted in the same order as here",
+                    "description": "List of paths (relative to src/main) to files containing html code that will be added just after the <body> tag on all the project views, sorted in the same order as here",
                     "items": {
                         "type": "string",
                         "description": "Path to a file containing some html code"
@@ -210,7 +210,7 @@
                 },
                 "beforeBodyClose": {
                     "type": "array",
-                    "description": "List of paths to files containing html code that will be added just before the </body> tag on all the project views, sorted in the same order as here",
+                    "description": "List of paths (relative to src/main) to files containing html code that will be added just before the </body> tag on all the project views, sorted in the same order as here",
                     "items": {
                         "type": "string",
                         "description": "Path to a file containing some html code"
@@ -226,7 +226,7 @@
             "description": "A list of components that will be globally loaded right after the globalJs and globalCss. Each array element is a string with the path to a component (based on src/main) without a file extension",
             "items": {
                 "type": "string",
-                "description": "A path to the component (based on src/main) without the file extension"
+                "description": "A path to the component (relative to src/main) without the file extension"
             },
             "examples": [
                 "view/components/main-menu/main-menu",

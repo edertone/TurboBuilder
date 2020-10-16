@@ -217,11 +217,12 @@ exports.buildSitePhp = function (destPath) {
         globalCssFiles.push(globalComponent + '.css');
     }
     
-    // Create the global css file
     let viewsRoot = destSite + sep + 'view' + sep + 'views';
         
+    // Create all the css and js files
     if(fm.isDirectory(viewsRoot)){
         
+        // Global css file
         fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
                 mergeFilesFromArray(globalCssFiles, destSite, true));
         
@@ -237,19 +238,15 @@ exports.buildSitePhp = function (destPath) {
         fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
                 mergeFilesFromArray(globalJsFiles, destSite, true));
         
-        // Generate all the views css and js merged files
+        // Generate all the views css and js merged files for each one of the project views
         for (let viewName of fm.getDirectoryList(viewsRoot)) {
             
             if(fm.isDirectory(viewsRoot + sep + viewName)){
                 
-                if(!fm.isFile(viewsRoot + sep + viewName + sep + viewName + '.php')){
-                    
-                    cm.error('View ' + viewName + ' must have a ' + viewName + '.php file');
-                }
-    
-                // Add extra html code to the view if necessary
+                // Read the php code of the view so we can inject the js files directly to the code
                 let viewHtmlCode = fm.readFile(viewsRoot + sep + viewName + sep + viewName + '.php');
-                
+                                
+                // Search for all the html code that needs to be injected globally after the body tag
                 let afterBodyOpenHtml = '';
                 
                 for (let afterBodyOpenPath of turboSiteSetup.globalHtml.afterBodyOpen) {
@@ -262,6 +259,7 @@ exports.buildSitePhp = function (destPath) {
                     afterBodyOpenHtml += "\n" + fm.readFile(destSite + sep + afterBodyOpenPath);
                 }
                 
+                // Search for all the html code that needs to be injected globally before the body closing tag
                 let beforeBodyCloseHtml = '';
                 
                 for (let beforeBodyClosePath of turboSiteSetup.globalHtml.beforeBodyClose) {
@@ -274,6 +272,7 @@ exports.buildSitePhp = function (destPath) {
                     beforeBodyCloseHtml += "\n" + fm.readFile(destSite + sep + beforeBodyClosePath);
                 }
                 
+                // Inject the global html code after or before the body tags to the view php file
                 if(!StringUtils.isEmpty(afterBodyOpenHtml) || !StringUtils.isEmpty(beforeBodyCloseHtml)){
                      
                     viewHtmlCode = StringUtils.replace(viewHtmlCode, '<body>', '<body>' + afterBodyOpenHtml, 1);
@@ -285,18 +284,8 @@ exports.buildSitePhp = function (destPath) {
                 // Generate an array with the view css file plus all the defined view components css files
                 let cssFiles = [viewsRoot + sep + viewName + sep + viewName + '.css'];
                 
-                if(!fm.isFile(cssFiles[0])){
-                    
-                    cm.error('View ' + viewName + ' must have a ' + viewName + '.css file');
-                }
-                
                 // Generate an array with the view js file plus all the defined view components js files
                 let jsFiles = [viewsRoot + sep + viewName + sep + viewName + '.js'];
-                
-                if(!fm.isFile(jsFiles[0])){
-                    
-                    cm.error('View ' + viewName + ' must have a ' + viewName + '.js file');
-                }
                 
                 // Append all the components related to this view to the arrays of css and js files
                 for (let viewComponent of turboSiteSetup.viewComponents) {
@@ -309,6 +298,7 @@ exports.buildSitePhp = function (destPath) {
                             
                             if(!fm.isFile(cssFiles[cssFiles.length - 1])){
                                 
+                                // TODO - should be moved to the validate part
                                 cm.error('Missing component file ' + component + '.css');
                             }                    
                             
@@ -316,6 +306,7 @@ exports.buildSitePhp = function (destPath) {
                             
                             if(!fm.isFile(jsFiles[jsFiles.length - 1])){
                                 
+                                // TODO - should be moved to the validate part
                                 cm.error('Missing component file ' + component + '.js');
                             }
                         }
@@ -332,7 +323,7 @@ exports.buildSitePhp = function (destPath) {
                             
                 let jsContent = mergeFilesFromArray(jsFiles, '', true);
                 
-                if(!StringUtils.isEmpty(jsContent)){
+                if(!StringUtils.isEmpty(jsContent, ['"use strict"', ';'])){
                     
                     fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
                 }

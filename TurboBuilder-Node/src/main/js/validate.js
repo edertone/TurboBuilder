@@ -601,6 +601,93 @@ let validateSitePhp = function () {
             
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }
+    
+    if(global.setup.build.site_php){
+            
+        // Validate that all the views are correctly defined and structured
+        let viewNames = fm.getDirectoryList(global.runtimePaths.root + '/src/main/view/views'); 
+        
+        for (let viewName of viewNames){
+
+            let viewPath = global.runtimePaths.root + '/src/main/view/views/';
+
+            // the view name must be lower case
+            if(viewName.toLowerCase() !== viewName){
+
+                errors.push(viewName + ' view folder must be lower case'); 
+            }
+            
+            // The view js file must exist
+            if(!fm.isFile(viewPath + viewName + '/' + viewName + '.js')){
+
+                errors.push(viewName + '.js does not exist for view ' + viewName); 
+                return;
+            }
+            
+            // the view php file must exist
+            if(!fm.isFile(viewPath + viewName + '/' + viewName + '.php')){
+
+                errors.push(viewName + '.php does not exist for view ' + viewName);
+                return;
+            }
+            
+            // the view scss file must exist
+            if(!fm.isFile(viewPath + viewName + '/' + viewName + '.scss')){
+
+                errors.push(viewName + '.scss does not exist for view ' + viewName);
+                return;
+            }
+            
+            // All files inside the view folder must be lower case
+            let viewFiles = fm.getDirectoryList(viewPath + viewName + '/');
+            
+            for (let viewFile of viewFiles){
+                
+                if(viewFile.toLowerCase() !== viewFile){
+    
+                    errors.push(viewName + ': All files inside the view folder must be lower case');
+                    return;
+                }
+            }
+            
+            // Read the php code of the view to analyze it
+            let viewHtmlCode = fm.readFile(global.runtimePaths.root + '/src/main/view/views/' + viewName + '/' + viewName + '.php');
+            let viewHtmlCodeCleaned = StringUtils.replace(viewHtmlCode, [' ', "\n", "\r"], '');
+
+            // Make sure view starts with <?php use org\turbosite\src\main\php\managers\WebSiteManager; $ws = WebSiteManager::getInstance();
+            if(!(new RegExp(/^<.php(use[^;]*;)+\$[^;-]*=WebSiteManager::getInstance..;/)).test(viewHtmlCodeCleaned)){
+
+                errors.push(viewName + ' view must start with: <?php use .....; $ws = WebSiteManager::getInstance();'); 
+            }
+            
+            // Make sure view contains the right html tags in the right order
+            if(!(new RegExp(/^<.php.*.><.doctypehtml><htmllang="<.phpecho\$.*->getPrimaryLanguage\(\).>"><head>.*<.head><body>.*<.body><.html>$/)).test(viewHtmlCodeCleaned)){
+
+                errors.push(viewName + ' view structure and or html tags are incorrect, please check other views to fix them'); 
+            }
+                      
+            // Make sure view ends with <?php $ws->echoHtmlJavaScriptTags() ?></body></html>
+            if(!viewHtmlCode.endsWith('/html>') ||
+               !viewHtmlCodeCleaned.endsWith('<?php$ws->echoHtmlJavaScriptTags()?></body></html>')){
+
+                errors.push(viewName + ' view must end with: <?php $ws->echoHtmlJavaScriptTags() ?></body></html> and no extra characters'); 
+            }
+            
+            // if cacheFullPageBegin() method is used, check that it is correctly placed
+            if(viewHtmlCode.includes('->cacheFullPageBegin')){
+            
+                if(viewHtmlCode.indexOf('->cacheFullPageBegin') < viewHtmlCode.indexOf('->initializeAs')){
+                
+                    errors.push(viewName + ' view: cacheFullPageBegin() method must be always called after initializeAs...() method');
+                }
+                
+                if(viewHtmlCode.indexOf('->cacheFullPageBegin') > viewHtmlCode.indexOf('<!doctype html>')){
+                
+                    errors.push(viewName + ' view: cacheFullPageBegin() method must be always called before <!doctype html>');
+                }
+            }
+        }
+    }
 }
 
 

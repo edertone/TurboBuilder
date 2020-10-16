@@ -1333,6 +1333,117 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation for a site_php project which contains upper case characters on the view folders', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        expect(fm.createDirectory('./src/main/view/views/someView')).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("someView view folder must be lower case");
+    });
+    
+    
+    it('should fail validation for a site_php project when view files are missing', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        expect(fm.createDirectory('./src/main/view/views/someview')).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("someview.js does not exist for view someview");
+        
+        expect(fm.saveFile('./src/main/view/views/someview/someview.js')).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("someview.php does not exist for view someview");
+        
+        expect(fm.saveFile('./src/main/view/views/someview/someview.php')).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("someview.scss does not exist for view someview");
+        
+        expect(fm.saveFile('./src/main/view/views/someview/someview.scss')).toBe(true);
+        
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
+        expect(lintResult).toContain("someview view must start with:");
+        expect(lintResult).toContain("someview view structure and or html tags are incorrect");
+        expect(lintResult).toContain("someview view must end with:");
+        expect(lintResult).toContain("File must start with \"use strict\":");
+    });
+    
+    
+    it('should fail validation for a site_php project when upper case characters are found inside a view folder', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        expect(fm.createDirectory('./src/main/view/views/someview')).toBe(true);
+        expect(fm.saveFile('./src/main/view/views/someview/someview.php')).toBe(true);
+        expect(fm.saveFile('./src/main/view/views/someview/someview.js', '"use strict"')).toBe(true);
+        expect(fm.saveFile('./src/main/view/views/someview/someview.Scss')).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/Expected lower case file extension[\s\S]*someview.Scss/);
+        
+        expect(fm.deleteFile('./src/main/view/views/someview/someview.Scss')).toBe(true);
+        expect(fm.saveFile('./src/main/view/views/someview/someView.scss')).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/someview: All files inside the view folder must be lower case/);
+    });
+    
+    
+    it('should fail validation for a site_php project when view code starts with unexpected code', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), 'WebSiteManager::getInstance()' , 'WebSiteManager::getIn1stance()');
+        
+        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view must start with: <?php use ");
+    });
+    
+    
+    it('should fail validation for a site_php project when some of the html tags are incorrect at the view code', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), '<body>' , '<bodY>');
+        
+        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view structure and or html tags are incorrect");
+    });
+    
+    
+    it('should fail validation for a site_php project when the view code ends with unexpected code', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), '->echoHtmlJavaScriptTags()' , '->echoHtmlJavaScriptTag()');
+        
+        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view must end with: <?php $ws->");
+    });
+    
+    
+    it('should fail validation for a site_php project when cacheFullPageBegin() method is placed before initializeAsView', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), '$ws->initializeAsView();' , '->cacheFullPageBegin();$ws->initializeAsView();');
+        
+        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view: cacheFullPageBegin() method must be always called after initializeAs");
+    });
+    
+    
+    it('should fail validation for a site_php project when cacheFullPageBegin() method is placed after doctype html', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), '<header>' , '<header>->cacheFullPageBegin();');
+        
+        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view: cacheFullPageBegin() method must be always called before <!doctype html>");
+    });
+    
+    
     it('should fail validation for a newly generated lib_js project containing duplicate code. Report must be generated if configured, and not if not configured', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, null);

@@ -4,10 +4,9 @@
  * Entry point that generates the http document based on the current URL
  */
 
-// TODO - cache implementation
-if(file_exists('cache/hash')){
+if(file_exists($cacheFile = __DIR__.DIRECTORY_SEPARATOR.'___views_cache___'.DIRECTORY_SEPARATOR.hash('md5', $_SERVER['REQUEST_URI']))){
 
-    require 'cache/hash-TODO';
+    require $cacheFile;
     die();
 }
 
