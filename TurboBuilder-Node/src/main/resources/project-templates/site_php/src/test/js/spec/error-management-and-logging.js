@@ -5,7 +5,6 @@
  * Tests related to the correct operation of the error management turbosite feature
  */
 
-const utils = require('../sitephp-test-utils');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager, TurboSiteTestsManager, HTTPTestsManager } = require('turbotesting-node');
@@ -23,7 +22,7 @@ describe('error-management-and-logging', function() {
         
         this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.initializeChrome();
-        this.automatedBrowserManager.wildcards = utils.generateWildcards();
+        this.automatedBrowserManager.wildcards = tsm.getWildcards();
         
         // Define all required paths
         this.turbobuilderSetup = tsm.getSetup('turbobuilder');        

@@ -5,7 +5,6 @@
  * Tests that verifies the website views URL parameters behaviour
  */
 
-const utils = require('../sitephp-test-utils');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager, TurboSiteTestsManager } = require('turbotesting-node');
 
@@ -21,7 +20,7 @@ describe('view-url-parameters', function() {
         
         this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.initializeChrome();
-        this.automatedBrowserManager.wildcards = utils.generateWildcards();
+        this.automatedBrowserManager.wildcards = tsm.getWildcards();
         
         // Define the path to the views root so we can copy all our test views there
         this.turbobuilderSetup = tsm.getSetup('turbobuilder');

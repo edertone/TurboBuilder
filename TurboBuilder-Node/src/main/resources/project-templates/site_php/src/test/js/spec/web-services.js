@@ -6,10 +6,11 @@
  * POST and URL parameters
  */
 
-const utils = require('../sitephp-test-utils');
 const { HTTPTestsManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
 
 const httpTestsManager = new HTTPTestsManager();
+const tsm = new TurboSiteTestsManager('./');
 
 
 describe('web-services', function() {
@@ -20,7 +21,7 @@ describe('web-services', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
         this.baseUrl = "https://$host/api/site/example/";
-        httpTestsManager.wildcards = utils.generateWildcards();
+        httpTestsManager.wildcards = tsm.getWildcards();
     });
 
     

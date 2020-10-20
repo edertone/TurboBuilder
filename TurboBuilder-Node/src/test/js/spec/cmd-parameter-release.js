@@ -692,7 +692,7 @@ describe('cmd-parameter-release', function() {
             }]
         };
         expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(tsSetup))).toBe(true);        
-        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Invalid JSON schema for turbosite.json[\s\S]*additionalProperty "wildCards" exists in instance when not allowed/);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Invalid JSON schema for turbosite.json[\s\S]*instance is not allowed to have the additional property "wildCards"/);
     });    
     
     
@@ -709,7 +709,7 @@ describe('cmd-parameter-release', function() {
             }]
         };
         expect(fm.saveFile('.' + sep + 'turbodepot.json', JSON.stringify(tsSetup))).toBe(true);        
-        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Invalid JSON schema for turbodepot.json[\s\S]*additionalProperty "wildCards" exists in instance when not allowed/);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Invalid JSON schema for turbodepot.json[\s\S]*instance is not allowed to have the additional property "wildCards"/);
     }); 
     
     

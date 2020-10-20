@@ -578,20 +578,23 @@ let validatePackageAndTurboBuilderJsonIntegrity = function () {
  */
 let validateSitePhp = function () {
 
+    let viewsPath = global.runtimePaths.root + '/src/main/view/views/';
+    
+    // Validations that affect both site_php and server_php projects
     if(global.setup.build.site_php || global.setup.build.server_php){
         
         let turbositeSetup = JSON.parse(fm.readFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup));
         
         // Validate that defined home and singleparam views exist
-        let validateView = (view, errorMsg) => {
+        let validateView = (viewName, errorMsg) => {
             
-            if(!StringUtils.isEmpty(view)){
+            if(!StringUtils.isEmpty(viewName)){
                 
-                let viewPath = global.runtimePaths.root + '/src/main/view/views/' + view + '/' + view + '.php';
+                let viewPhpPath = viewsPath + viewName + '/' + viewName + '.php';
                 
-                if(!fm.isFile(viewPath)){
+                if(!fm.isFile(viewPhpPath)){
                     
-                    errors.push(errorMsg + " defined at " + global.fileNames.turboSiteSetup + " does not exist:\n" + viewPath);
+                    errors.push(errorMsg + ' defined at ' + global.fileNames.turboSiteSetup + " does not exist:\n" + viewPhpPath);
                 }
             }
         };
@@ -602,6 +605,7 @@ let validateSitePhp = function () {
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }
     
+    // Validations that affect only site_php projects
     if(global.setup.build.site_php){
             
         // Validate that all the views are correctly defined and structured
@@ -609,82 +613,69 @@ let validateSitePhp = function () {
         
         for (let viewName of viewNames){
 
-            let viewPath = global.runtimePaths.root + '/src/main/view/views/';
-
+            let viewPath = viewsPath + viewName;
+            let viewPhpPath = viewPath + '/' + viewName + '.php';
+    
             // the view name must be lower case
             if(viewName.toLowerCase() !== viewName){
 
-                errors.push(viewName + ' view folder must be lower case'); 
+                errors.push(viewName + ' view folder must be lower case:\n' + viewPath); 
             }
             
             // The view js file must exist
-            if(!fm.isFile(viewPath + viewName + '/' + viewName + '.js')){
+            if(!fm.isFile(viewPath + '/' + viewName + '.js')){
 
-                errors.push(viewName + '.js does not exist for view ' + viewName); 
+                errors.push(viewName + '.js does not exist for view ' + viewName + ':\n' + viewPath); 
                 return;
             }
             
             // the view php file must exist
-            if(!fm.isFile(viewPath + viewName + '/' + viewName + '.php')){
+            if(!fm.isFile(viewPhpPath)){
 
-                errors.push(viewName + '.php does not exist for view ' + viewName);
+                errors.push(viewName + '.php does not exist for view ' + viewName + ':\n' + viewPath);
                 return;
             }
             
             // the view scss file must exist
-            if(!fm.isFile(viewPath + viewName + '/' + viewName + '.scss')){
+            if(!fm.isFile(viewPath + '/' + viewName + '.scss')){
 
-                errors.push(viewName + '.scss does not exist for view ' + viewName);
+                errors.push(viewName + '.scss does not exist for view ' + viewName + ':\n' + viewPath);
                 return;
             }
             
             // All files inside the view folder must be lower case
-            let viewFiles = fm.getDirectoryList(viewPath + viewName + '/');
+            let viewFiles = fm.getDirectoryList(viewPath + '/');
             
             for (let viewFile of viewFiles){
                 
                 if(viewFile.toLowerCase() !== viewFile){
     
-                    errors.push(viewName + ': All files inside the view folder must be lower case');
+                    errors.push(`All files inside the ${viewName} view folder must be lower case:\n` + viewPath);
                     return;
                 }
             }
             
             // Read the php code of the view to analyze it
-            let viewHtmlCode = fm.readFile(global.runtimePaths.root + '/src/main/view/views/' + viewName + '/' + viewName + '.php');
+            let viewHtmlCode = fm.readFile(viewPhpPath);
             let viewHtmlCodeCleaned = StringUtils.replace(viewHtmlCode, [' ', "\n", "\r"], '');
 
-            // Make sure view starts with <?php use org\turbosite\src\main\php\managers\WebSiteManager; $ws = WebSiteManager::getInstance();
+            // Make sure view starts with <?php use .....; $ws = WebSiteManager::getInstance();
             if(!(new RegExp(/^<.php(use[^;]*;)+\$[^;-]*=WebSiteManager::getInstance..;/)).test(viewHtmlCodeCleaned)){
 
-                errors.push(viewName + ' view must start with: <?php use .....; $ws = WebSiteManager::getInstance();'); 
+                errors.push(viewName + ' view must start with: <?php use .....; $ws = WebSiteManager::getInstance();\n' + viewPhpPath); 
             }
             
-            // Make sure view contains the right html tags in the right order
-            if(!(new RegExp(/^<.php.*.><.doctypehtml><htmllang="<.phpecho\$.*->getPrimaryLanguage\(\).>"><head>.*<.head><body>.*<.body><.html>$/)).test(viewHtmlCodeCleaned)){
+            // Make sure view contains the right html and php tags in the right order
+            if(!(new RegExp(/^<\?php.*\?><.doctypehtml><htmllang="<\?phpecho\$.*->getPrimaryLanguage\(\)\?>"><head>.*<\?php.*->echoHtmlHead\(\)\?>.*<\/head><body>.*<\/body><\/html>$/)).test(viewHtmlCodeCleaned)){
 
-                errors.push(viewName + ' view structure and or html tags are incorrect, please check other views to fix them'); 
+                errors.push(viewName + ' view structure php or html tags are incorrect, please fix them:\n' + viewPhpPath); 
             }
                       
             // Make sure view ends with <?php $ws->echoHtmlJavaScriptTags() ?></body></html>
             if(!viewHtmlCode.endsWith('/html>') ||
                !viewHtmlCodeCleaned.endsWith('<?php$ws->echoHtmlJavaScriptTags()?></body></html>')){
 
-                errors.push(viewName + ' view must end with: <?php $ws->echoHtmlJavaScriptTags() ?></body></html> and no extra characters'); 
-            }
-            
-            // if cacheFullPageBegin() method is used, check that it is correctly placed
-            if(viewHtmlCode.includes('->cacheFullPageBegin')){
-            
-                if(viewHtmlCode.indexOf('->cacheFullPageBegin') < viewHtmlCode.indexOf('->initializeAs')){
-                
-                    errors.push(viewName + ' view: cacheFullPageBegin() method must be always called after initializeAs...() method');
-                }
-                
-                if(viewHtmlCode.indexOf('->cacheFullPageBegin') > viewHtmlCode.indexOf('<!doctype html>')){
-                
-                    errors.push(viewName + ' view: cacheFullPageBegin() method must be always called before <!doctype html>');
-                }
+                errors.push(viewName + ' view must end with <?php $ws->echoHtmlJavaScriptTags() ?></body></html> and no extra characters:\n' + viewPhpPath); 
             }
         }
     }

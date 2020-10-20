@@ -5,11 +5,12 @@
  * Tests that check a list of urls that must perform a 301 redirect
  */
 
-const utils = require('../sitephp-test-utils');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 
 
 describe('expected-301-redirects', function() {
@@ -20,7 +21,7 @@ describe('expected-301-redirects', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
         this.automatedBrowserManager = new AutomatedBrowserManager();
-        this.automatedBrowserManager.wildcards = utils.generateWildcards();     
+        this.automatedBrowserManager.wildcards = tsm.getWildcards();     
         this.automatedBrowserManager.initializeChrome();
     });
 

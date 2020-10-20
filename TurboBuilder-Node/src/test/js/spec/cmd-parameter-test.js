@@ -157,7 +157,7 @@ describe('cmd-parameter-test', function() {
         packageSetup.name = 'project-name';
         expect(fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
-        // Modify the turbosite tests setup to point the host to /subfolder
+        // Modify the turbosite tests setup to point the host to /
         let turboSiteSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = '';
         expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);
@@ -238,7 +238,7 @@ describe('cmd-parameter-test', function() {
         packageSetup.name = 'project-name';
         expect(fm.saveFile('.' + sep + 'package.json', JSON.stringify(packageSetup))).toBe(true);
         
-        // Modify the turbosite tests setup to point the host to /subfolder
+        // Modify the turbosite tests setup to point the host to /subfolder1/subfolder2
         let turboSiteSetup = JSON.parse(fm.readFile('.' + sep + 'turbosite.json'));
         turboSiteSetup.baseURL = 'subfolder1/subfolder2';
         expect(fm.saveFile('.' + sep + 'turbosite.json', JSON.stringify(turboSiteSetup))).toBe(true);

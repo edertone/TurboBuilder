@@ -5,10 +5,12 @@
  * Contains tests that check urls which must not give a 200 ok result
  */
 
-const utils = require('../sitephp-test-utils');
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
+
 const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 
 
 describe('expected-404-errors', function() {
@@ -19,7 +21,7 @@ describe('expected-404-errors', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
         this.automatedBrowserManager = new AutomatedBrowserManager();     
-        this.automatedBrowserManager.wildcards = utils.generateWildcards();
+        this.automatedBrowserManager.wildcards = tsm.getWildcards();
     });
 
     

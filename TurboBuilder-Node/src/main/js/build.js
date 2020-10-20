@@ -16,7 +16,7 @@ const validateModule = require('./validate');
 const syncModule = require('./sync');
 const sass = require('sass');
 const sharp = require('sharp');
-
+const UglifyJS = require("uglify-es");
 
 const fm = new FilesManager();
 const cm = new ConsoleManager();
@@ -298,7 +298,6 @@ exports.buildSitePhp = function (destPath) {
                             
                             if(!fm.isFile(cssFiles[cssFiles.length - 1])){
                                 
-                                // TODO - should be moved to the validate part
                                 cm.error('Missing component file ' + component + '.css');
                             }                    
                             
@@ -306,7 +305,6 @@ exports.buildSitePhp = function (destPath) {
                             
                             if(!fm.isFile(jsFiles[jsFiles.length - 1])){
                                 
-                                // TODO - should be moved to the validate part
                                 cm.error('Missing component file ' + component + '.js');
                             }
                         }
@@ -323,7 +321,8 @@ exports.buildSitePhp = function (destPath) {
                             
                 let jsContent = mergeFilesFromArray(jsFiles, '', true);
                 
-                if(!StringUtils.isEmpty(jsContent, ['"use strict"', ';'])){
+                // Minify the js code to check if it is empty or contains only "use strict". In that case it will be ignored 
+                if(!StringUtils.isEmpty(UglifyJS.minify(jsContent).code, ['"use strict"', ';'])){
                     
                     fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
                 }

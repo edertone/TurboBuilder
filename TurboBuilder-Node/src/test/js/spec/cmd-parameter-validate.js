@@ -77,7 +77,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/additionalProperty "invalidField" exists in instance when not allowed[\s\S]{0,5}$/);
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/instance.build.lib_js is not allowed to have the additional property "invalidField"[\s\S]{0,5}$/);
     });
     
     
@@ -512,7 +512,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "unexpected" exists in instance when not allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance is not allowed to have the additional property "unexpected"');
     });
 
     
@@ -605,7 +605,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(fm.saveFile(turboSiteSetupPath, JSON.stringify(turboSiteSetup))).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('additionalProperty "unexpectedValue" exists in instance when not allowed');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('instance is not allowed to have the additional property "unexpectedValue"');
     });
     
     
@@ -1361,8 +1361,8 @@ describe('cmd-parameter-validate', function() {
         
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain("someview view must start with:");
-        expect(lintResult).toContain("someview view structure and or html tags are incorrect");
-        expect(lintResult).toContain("someview view must end with:");
+        expect(lintResult).toMatch(/someview view structure php or html tags are incorrect, please fix them:[\s\S]*view.views.someview.someview.php/);
+        expect(lintResult).toMatch(/someview view must end with [\s\S]*view.views.someview.someview.php/);
         expect(lintResult).toContain("File must start with \"use strict\":");
     });
     
@@ -1376,11 +1376,11 @@ describe('cmd-parameter-validate', function() {
         expect(fm.saveFile('./src/main/view/views/someview/someview.js', '"use strict"')).toBe(true);
         expect(fm.saveFile('./src/main/view/views/someview/someview.Scss')).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/Expected lower case file extension[\s\S]*someview.Scss/);
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/Expected lower case file extension[\s\S]*view.views.someview.someview.Scss/);
         
         expect(fm.deleteFile('./src/main/view/views/someview/someview.Scss')).toBe(true);
         expect(fm.saveFile('./src/main/view/views/someview/someView.scss')).toBe(true);
-        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/someview: All files inside the view folder must be lower case/);
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/All files inside the someview view folder must be lower case[\s\S]*view.views.someview/);
     });
     
     
@@ -1404,7 +1404,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view structure and or html tags are incorrect");
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/home view structure php or html tags are incorrect, please fix them:[\s\S]*view.views.home.home.php/);
     });
     
     
@@ -1416,31 +1416,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
         
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view must end with: <?php $ws->");
-    });
-    
-    
-    it('should fail validation for a site_php project when cacheFullPageBegin() method is placed before initializeAsView', function() {
-
-        testsGlobalHelper.generateProjectAndSetup('site_php');
-        
-        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), '$ws->initializeAsView();' , '->cacheFullPageBegin();$ws->initializeAsView();');
-        
-        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
-        
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view: cacheFullPageBegin() method must be always called after initializeAs");
-    });
-    
-    
-    it('should fail validation for a site_php project when cacheFullPageBegin() method is placed after doctype html', function() {
-
-        testsGlobalHelper.generateProjectAndSetup('site_php');
-        
-        let homeContent = StringUtils.replace(fm.readFile('./src/main/view/views/home/home.php'), '<header>' , '<header>->cacheFullPageBegin();');
-        
-        expect(fm.saveFile('./src/main/view/views/home/home.php', homeContent)).toBe(true);
-        
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("home view: cacheFullPageBegin() method must be always called before <!doctype html>");
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/home view must end with <\?php \$ws->[\s\S]*view.views.home.home.php/);
     });
     
     

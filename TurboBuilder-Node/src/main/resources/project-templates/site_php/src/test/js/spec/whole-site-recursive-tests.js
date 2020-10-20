@@ -5,8 +5,10 @@
  * Executes a standard set of recursive website tests that scan the whole site and all its links
  */
 
-const utils = require('../sitephp-test-utils');
 const { AutomatedBrowserManager } = require('turbotesting-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
+
+const tsm = new TurboSiteTestsManager('./');
 
 
 describe('whole-site-recursive-tests', function() {
@@ -18,7 +20,7 @@ describe('whole-site-recursive-tests', function() {
         
         this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.initializeChrome();
-        this.automatedBrowserManager.wildcards = utils.generateWildcards();
+        this.automatedBrowserManager.wildcards = tsm.getWildcards();
     });
 
     
@@ -30,7 +32,7 @@ describe('whole-site-recursive-tests', function() {
     
     it('should pass full website recursive tests', function(done) {
     
-        this.automatedBrowserManager.assertWholeWebsite("https://$host/$locale/en", () => {
+        this.automatedBrowserManager.assertWholeWebSite("https://$host/$locale/en", () => {
             
             done();
         });
