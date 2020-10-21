@@ -44,8 +44,8 @@ describe('cmd-parameter-build', function() {
         testsGlobalHelper.generateProjectAndSetup('lib_ts', {}, []);
         
         // These regexps make sure that the last message from the exec result is the expected error and nothing more comes after
-        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/^[\s\S]{0,5}No valid project type specified.*under build section in turbobuilder.json[\s\S]{0,5}$/);
-        expect(testsGlobalHelper.execTbCmd('--build')).toMatch(/^[\s\S]{0,5}No valid project type specified.*under build section in turbobuilder.json[\s\S]{0,5}$/);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/^[\s\S]*No valid project type specified.*under build section in turbobuilder.json[\s\S]*$/);
+        expect(testsGlobalHelper.execTbCmd('--build')).toMatch(/^[\s\S]*No valid project type specified.*under build section in turbobuilder.json[\s\S]*$/);
     });
     
     

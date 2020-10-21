@@ -43,8 +43,8 @@ describe('cmd-parameter-sync', function(){
         testsGlobalHelper.generateProjectAndSetup('site_php', {}, []);
 
         // These regexps make sure that the last message from the exec result is the expected error and nothing more comes after
-        expect(testsGlobalHelper.execTbCmd('-s')).toMatch(/^[\s\S]{0,5}No valid project type specified.*under build section in turbobuilder.json[\s\S]{0,5}$/);
-        expect(testsGlobalHelper.execTbCmd('--sync')).toMatch(/^[\s\S]{0,5}No valid project type specified.*under build section in turbobuilder.json[\s\S]{0,5}$/);
+        expect(testsGlobalHelper.execTbCmd('-s')).toMatch(/^[\s\S]*No valid project type specified.*under build section in turbobuilder.json[\s\S]*$/);
+        expect(testsGlobalHelper.execTbCmd('--sync')).toMatch(/^[\s\S]*No valid project type specified.*under build section in turbobuilder.json[\s\S]*$/);
     });
 
 

@@ -1,5 +1,7 @@
 'use strict';
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
+        
 try {
     
     // Test that node_modules is installed by checking one of the custom modules (turbocommons)

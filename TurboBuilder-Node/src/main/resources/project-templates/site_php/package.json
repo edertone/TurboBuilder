@@ -10,8 +10,8 @@
         "jasmine": "^3.6.2",
         "selenium-webdriver": "^4.0.0-alpha.4",
         "turbocommons-ts": "^3.7.0",
-        "turbodepot-node": "^6.3.0",
-        "turbotesting-node": "^7.6.1"
+        "turbodepot-node": "^7.0.1",
+        "turbotesting-node": "^7.7.0"
     },
     "author": "",
     "license": ""

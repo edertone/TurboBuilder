@@ -12,7 +12,7 @@ if(file_exists($cacheFile = __DIR__.DIRECTORY_SEPARATOR.'___views_cache___'.DIRE
 
 require 'phar://libs/turbosite-php/turbosite-php-8.1.0.phar/php/autoloader-project.php';
 require 'libs/turbocommons-php/turbocommons-php-3.7.0.phar';
-require 'libs/turbodepot-php/turbodepot-php-7.0.0.phar';
+require 'libs/turbodepot-php/turbodepot-php-7.0.1.phar';
 require 'libs/turbosite-php/turbosite-php-8.1.0.phar';
 
 $ws = org\turbosite\src\main\php\managers\WebSiteManager::getInstance();

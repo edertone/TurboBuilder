@@ -16,11 +16,17 @@ describe('whole-site-recursive-tests', function() {
 
     beforeAll(function() {
         
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
-        
         this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = tsm.getWildcards();
+    });
+
+
+    beforeEach(function() {
+    });
+    
+    
+    afterEach(function() {
     });
 
     
@@ -32,9 +38,6 @@ describe('whole-site-recursive-tests', function() {
     
     it('should pass full website recursive tests', function(done) {
     
-        this.automatedBrowserManager.assertWholeWebSite("https://$host/$locale/en", () => {
-            
-            done();
-        });
+        this.automatedBrowserManager.assertWholeWebSite("https://$host/$locale/en", done);
     });
 });

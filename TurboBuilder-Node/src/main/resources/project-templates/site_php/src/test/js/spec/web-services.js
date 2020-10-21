@@ -17,8 +17,6 @@ describe('web-services', function() {
 
 
     beforeAll(function() {
-
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
         
         this.baseUrl = "https://$host/api/site/example/";
         httpTestsManager.wildcards = tsm.getWildcards();
@@ -26,18 +24,14 @@ describe('web-services', function() {
 
     
     afterAll(function() {
-
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = this.originalTimeout;
     });
     
     
     beforeEach(function() {
-
     });
     
     
     afterEach(function() {
-
     });
     
     

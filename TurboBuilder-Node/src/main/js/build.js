@@ -21,7 +21,6 @@ const UglifyJS = require("uglify-es");
 const fm = new FilesManager();
 const cm = new ConsoleManager();
 const terminalManager = new TerminalManager();
-const tsm = new TurboSiteTestsManager('./');
 
 
 /**
@@ -142,6 +141,7 @@ exports.buildSitePhp = function (destPath) {
     let destMain = destPath + sep + 'main';
     let destDist = destPath + sep + 'dist-tmp';
     let destSite = destDist + sep + 'site';
+    let tsm = new TurboSiteTestsManager('./');
     
     // Validate turbosite setup exists
     if(!fm.isFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup)){

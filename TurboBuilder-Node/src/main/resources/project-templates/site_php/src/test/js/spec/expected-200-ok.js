@@ -20,8 +20,6 @@ describe('expected-200-ok', function() {
         this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = tsm.getWildcards();
-        
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
     });
 
     

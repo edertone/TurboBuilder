@@ -18,8 +18,6 @@ describe('expected-301-redirects', function() {
 
     beforeAll(function() {
         
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
-        
         this.automatedBrowserManager = new AutomatedBrowserManager();
         this.automatedBrowserManager.wildcards = tsm.getWildcards();     
         this.automatedBrowserManager.initializeChrome();

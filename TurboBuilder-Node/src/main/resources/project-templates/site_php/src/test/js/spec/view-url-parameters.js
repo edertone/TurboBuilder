@@ -16,30 +16,20 @@ describe('view-url-parameters', function() {
 
     beforeAll(function() {
         
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
-        
         this.automatedBrowserManager = new AutomatedBrowserManager();     
         this.automatedBrowserManager.initializeChrome();
         this.automatedBrowserManager.wildcards = tsm.getWildcards();
         
         // Define the path to the views root so we can copy all our test views there
-        this.turbobuilderSetup = tsm.getSetup('turbobuilder');
-        this.resourcesRootPath = './src/test/resources';
-        this.viewsRootPath = this.turbobuilderSetup.sync.destPath + '/site/view/views';
+        this.syncDestPath = tsm.getSyncDestPath();
+        this.testResourcesPath = './src/test/resources';
+        this.syncDestViewsPath = this.syncDestPath + '/site/view/views';
         
         // Define the path to indexphp file so it can be altered by tests
-        this.indexPhpPath = this.turbobuilderSetup.sync.destPath + '/site/index.php';
+        this.indexPhpPath = this.syncDestPath + '/site/index.php';
         
         // Copy all the test views to the synced project
-        let viewsToCopyList = fm.getDirectoryList(this.resourcesRootPath + '/view-url-parameters');
-        
-        for(let viewToCopyList of viewsToCopyList){
-        
-            fm.createDirectory(this.viewsRootPath + '/' + viewToCopyList);
-        
-            fm.copyDirectory(this.resourcesRootPath + '/view-url-parameters/' + viewToCopyList,
-                this.viewsRootPath + '/' + viewToCopyList);   
-        }
+        fm.copyDirectory(this.testResourcesPath + '/view-url-parameters', this.syncDestViewsPath, false);
     });
     
     
@@ -180,10 +170,10 @@ describe('view-url-parameters', function() {
     it('should throw exception when single parameter view contains a call to getUrlParam with a wrong URL param index', function(done) {
     
         // Replace the single param view at the synced project with the corrputed one, so we can call it to perform our test
-        let singleParamViewContentBackup = fm.readFile(this.viewsRootPath + '/single-parameter/single-parameter.php');
+        let singleParamViewContentBackup = fm.readFile(this.syncDestViewsPath + '/single-parameter/single-parameter.php');
         
-        fm.copyFile(this.resourcesRootPath + '/view-url-parameters/single-parameter-with-wrong-call-to-geturlparam/single-parameter-with-wrong-call-to-geturlparam.php',
-                    this.viewsRootPath + '/single-parameter/single-parameter.php');
+        fm.copyFile(this.testResourcesPath + '/view-url-parameters/single-parameter-with-wrong-call-to-geturlparam/single-parameter-with-wrong-call-to-geturlparam.php',
+                    this.syncDestViewsPath + '/single-parameter/single-parameter.php');
     
         this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/param1",
@@ -192,7 +182,7 @@ describe('view-url-parameters', function() {
         }], () => {
             
             // Restore the single param view with the original backup
-            expect(fm.saveFile(this.viewsRootPath + '/single-parameter/single-parameter.php', singleParamViewContentBackup)).toBe(true);
+            expect(fm.saveFile(this.syncDestViewsPath + '/single-parameter/single-parameter.php', singleParamViewContentBackup)).toBe(true);
             
             done();
         });
