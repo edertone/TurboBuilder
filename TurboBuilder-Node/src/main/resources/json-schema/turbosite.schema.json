@@ -189,35 +189,28 @@
             ]
         },
         "globalHtml": {
-            "type": "object",
-            "description": "Defines extra fragments of html that will be added globally to all the project views",
-            "required": [
-                "afterBodyOpen",
-                "beforeBodyClose"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "afterBodyOpen": {
-                    "type": "array",
-                    "description": "List of paths (relative to src/main) to files containing html code that will be added just after the <body> tag on all the project views, sorted in the same order as here",
-                    "items": {
+            "type": "array",
+            "description": "Allows us to globally inject extra fragments of html code from static files to all the project views",
+            "items": {
+                "type": "object",
+                "required": ["element", "codePlacement", "path"],
+                "additionalProperties": false,
+                "properties": {
+                    "element": {
                         "type": "string",
-                        "description": "Path to a file containing some html code"
+                        "description": "The name for the html document tag where the code will be injected like head, main, body...",
+                        "examples": ["body", "main", "head"]
                     },
-                    "examples": [
-                        "view/components/google-analytics/google-analytics.html"
-                    ]
-                },
-                "beforeBodyClose": {
-                    "type": "array",
-                    "description": "List of paths (relative to src/main) to files containing html code that will be added just before the </body> tag on all the project views, sorted in the same order as here",
-                    "items": {
+                    "codePlacement": {
                         "type": "string",
-                        "description": "Path to a file containing some html code"
+                        "description": "Specifies the position where the code will be injected inside the specified element. Start means the html code will be placed at the very beginning after the <element> tag opens, and end means it will be placed just before the </element> tag closes",
+                        "enum": ["start", "end"]
                     },
-                    "examples": [
-                        "view/components/google-analytics/google-analytics.html"
-                    ]
+                    "path": {
+                        "type": "string",
+                        "description": "Path to a file (relative to src/main) containing some html code which will be loaded and injected at the specified codePlacement position on all the project views",
+                        "examples": ["view/components/google-analytics/google-analytics.html"]
+                    }
                 }
             }
         },

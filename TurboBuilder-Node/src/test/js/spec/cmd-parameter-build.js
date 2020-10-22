@@ -256,6 +256,97 @@ describe('cmd-parameter-build', function() {
     });
     
     
+    it('should inject html code to all the project views when configured to be at the start of the head tag', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let pathToTargetViews = './target/' + tsm.getProjectname() + '/dist/site/view/views';
+        
+        // Create an html file with the code to inject on the views
+        expect(fm.saveFile('./src/main/view/components/rawhtml/rawhtml.html', '<p>hello world</p>', false, true)).toBe(true);
+        
+        // Check that compiled views do not have the compiled code
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
+        expect(fm.readFile(pathToTargetViews + '/home/home.php')).not.toContain('<head>\n<p>hello world</p>');
+        expect(fm.readFile(pathToTargetViews + '/multi-parameters/multi-parameters.php')).not.toContain('<head>\n<p>hello world</p>');
+        
+        // Enable the global html injection on the turbosite setup
+        let tsSetup = tsm.getSetup('turbosite');
+        
+        tsSetup.globalHtml = [{
+            element: "head",
+            codePlacement: "start",
+            path: "view/components/rawhtml/rawhtml.html"
+        }];
+        
+        expect(testsGlobalHelper.saveToSetupFile(tsSetup, 'turbosite.json')).toBe(true);
+        
+        // Check that html code has been injected
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
+        expect(fm.readFile(pathToTargetViews + '/home/home.php')).toContain('<head>\n<p>hello world</p>');
+        expect(fm.readFile(pathToTargetViews + '/multi-parameters/multi-parameters.php')).toContain('<head>\n<p>hello world</p>');
+        
+        // Remove the global injection from setup and check again that the code is now not present on the views
+        tsSetup.globalHtml = [];
+        expect(testsGlobalHelper.saveToSetupFile(tsSetup, 'turbosite.json')).toBe(true);
+        
+        // Check that html code has NOT been injected
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
+        expect(fm.readFile(pathToTargetViews + '/home/home.php')).not.toContain('<head>\n<p>hello world</p>');
+        expect(fm.readFile(pathToTargetViews + '/multi-parameters/multi-parameters.php')).not.toContain('<head>\n<p>hello world</p>');
+    });
+    
+    
+    it('should inject html code to all the project views when configured to be at the end of the body tag', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        let pathToTargetViews = './target/' + tsm.getProjectname() + '/dist/site/view/views';
+        
+        // Create an html file with the code to inject on the views
+        expect(fm.saveFile('./src/main/view/components/rawhtml/rawhtml.html', '<p>bye world</p>', false, true)).toBe(true);
+        
+        // Check that compiled views do not have the compiled code
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
+        expect(fm.readFile(pathToTargetViews + '/home/home.php')).not.toContain('<p>bye world</p>');
+        expect(fm.readFile(pathToTargetViews + '/multi-parameters/multi-parameters.php')).not.toContain('<p>bye world</p>');
+        
+        // Enable the global html injection on the turbosite setup
+        let tsSetup = tsm.getSetup('turbosite');
+        
+        tsSetup.globalHtml = [{
+            element: "body",
+            codePlacement: "end",
+            path: "view/components/rawhtml/rawhtml.html"
+        }];
+        
+        expect(testsGlobalHelper.saveToSetupFile(tsSetup, 'turbosite.json')).toBe(true);
+        
+        // Check that html code has been injected
+        expect(testsGlobalHelper.execTbCmd('-b')).toContain('build ok');
+        expect(fm.readFile(pathToTargetViews + '/home/home.php')).toContain('<p>bye world</p>\n</body>');
+        expect(fm.readFile(pathToTargetViews + '/multi-parameters/multi-parameters.php')).toContain('<p>bye world</p>\n</body>');
+    });
+    
+    
+    it('should fail site_php project build when global html code path points to an invalid file', function() {
+    
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        // Enable the global html injection on the turbosite setup with an invalid path
+        let tsSetup = tsm.getSetup('turbosite');
+        
+        tsSetup.globalHtml = [{
+            element: "body",
+            codePlacement: "end",
+            path: "view/components/invalidhtml.html"
+        }];
+        
+        expect(testsGlobalHelper.saveToSetupFile(tsSetup, 'turbosite.json')).toBe(true);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Error loading globalHtml path for <body>: Error: File does not exist:.*invalidhtml.html/);
+    });
+    
+    
     it('should build ok when -b argument is executed on a generated server_php project', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('server_php', null, []);

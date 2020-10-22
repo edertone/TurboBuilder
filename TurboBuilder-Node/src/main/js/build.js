@@ -238,49 +238,45 @@ exports.buildSitePhp = function (destPath) {
         fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
                 mergeFilesFromArray(globalJsFiles, destSite, true));
         
-        // Generate all the views css and js merged files for each one of the project views
+        // Process all the project views to inject global html code, and create the view js merged and css files
         for (let viewName of fm.getDirectoryList(viewsRoot)) {
             
             if(fm.isDirectory(viewsRoot + sep + viewName)){
                 
-                // Read the php code of the view so we can inject the js files directly to the code
+                // Read the php code of the view in case it needs to be altered by the compilation
                 let viewHtmlCode = fm.readFile(viewsRoot + sep + viewName + sep + viewName + '.php');
+                                    
+                // Check if global html code must be injected to the views
+                if(turboSiteSetup.globalHtml.length > 0){
+                        
+                    // Search for all the html code that needs to be injected globally to all views
+                    for (let globalHtmlItem of turboSiteSetup.globalHtml) {
+                    
+                        try{
+                            
+                            let htmlCodeToInject = fm.readFile(global.runtimePaths.main + sep + globalHtmlItem.path);
+                        
+                            if(globalHtmlItem.codePlacement === 'start'){
                                 
-                // Search for all the html code that needs to be injected globally after the body tag
-                let afterBodyOpenHtml = '';
+                                viewHtmlCode = StringUtils.replace(viewHtmlCode,
+                                    `<${globalHtmlItem.element}>`, `<${globalHtmlItem.element}>\n${htmlCodeToInject}`, 1);
+                                
+                            }else{
+                                
+                                viewHtmlCode = StringUtils.replace(viewHtmlCode,
+                                    `</${globalHtmlItem.element}>`, `${htmlCodeToInject}\n</${globalHtmlItem.element}>`, 1);
+                            }
+                            
+                        }catch(e){
                 
-                for (let afterBodyOpenPath of turboSiteSetup.globalHtml.afterBodyOpen) {
-    
-                    if(!fm.isFile(destSite + sep + afterBodyOpenPath)){
-                    
-                        cm.error('afterBodyOpen file not found: ' + afterBodyOpenPath);
+                            cm.error('Error loading globalHtml path for <' + globalHtmlItem.element + '>: ' + e.toString() + '\n' +
+                                destSite + sep + globalHtmlItem.path + '\n');
+                        }
                     }
-                    
-                    afterBodyOpenHtml += "\n" + fm.readFile(destSite + sep + afterBodyOpenPath);
-                }
-                
-                // Search for all the html code that needs to be injected globally before the body closing tag
-                let beforeBodyCloseHtml = '';
-                
-                for (let beforeBodyClosePath of turboSiteSetup.globalHtml.beforeBodyClose) {
-    
-                    if(!fm.isFile(destSite + sep + beforeBodyClosePath)){
-                    
-                        cm.error('beforeBodyClose file not found: ' + beforeBodyClosePath);
-                    }
-                    
-                    beforeBodyCloseHtml += "\n" + fm.readFile(destSite + sep + beforeBodyClosePath);
-                }
-                
-                // Inject the global html code after or before the body tags to the view php file
-                if(!StringUtils.isEmpty(afterBodyOpenHtml) || !StringUtils.isEmpty(beforeBodyCloseHtml)){
-                     
-                    viewHtmlCode = StringUtils.replace(viewHtmlCode, '<body>', '<body>' + afterBodyOpenHtml, 1);
-                    viewHtmlCode = StringUtils.replace(viewHtmlCode, '</body>', beforeBodyCloseHtml + "\n</body>", 1);
                     
                     fm.saveFile(viewsRoot + sep + viewName + sep + viewName + '.php', viewHtmlCode);
                 }
-                
+                                
                 // Generate an array with the view css file plus all the defined view components css files
                 let cssFiles = [viewsRoot + sep + viewName + sep + viewName + '.css'];
                 

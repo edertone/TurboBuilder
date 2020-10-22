@@ -46,12 +46,8 @@
         "view/css/global-styles.scss"
     ],
     
-    "globalHtml": {
-        "afterBodyOpen": [
-        ],
-        "beforeBodyClose": [
-        ]
-    },
+    "globalHtml": [
+    ],
     
     "globalComponents": [
         "view/components/main-menu/main-menu",
