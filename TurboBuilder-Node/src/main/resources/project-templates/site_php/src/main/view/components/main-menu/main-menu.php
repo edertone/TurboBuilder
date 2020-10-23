@@ -4,7 +4,7 @@ use org\turbosite\src\main\php\managers\WebSiteManager;
 
 $ws = WebSiteManager::getInstance();
 
-$ws->loadBundles(['main-menu']);
+$ws->loadBundles(['global']);
 
 ?>
 
@@ -12,7 +12,7 @@ $ws->loadBundles(['main-menu']);
 
     <section>
 
-        <p><?php $ws->echoText('TITLE')?></p>
+        <p><?php $ws->echoText('MENU_TITLE', 'global')?></p>
 
         <a href="<?php $ws->echoUrlToView($ws->getHomeView()) ?>">
             <?php $ws->echoText('HOME')?></a>
