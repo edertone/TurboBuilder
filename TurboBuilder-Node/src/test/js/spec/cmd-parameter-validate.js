@@ -9,12 +9,13 @@
 require('./../../../main/js/globals');
 const setupModule = require('./../../../main/js/setup');
 const { StringUtils } = require('turbocommons-ts');
-const { StringTestsManager } = require('turbotesting-node');
+const { StringTestsManager, TurboSiteTestsManager } = require('turbotesting-node');
 const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
 const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 const terminalManager = new TerminalManager();
 const stringTestsManager = new StringTestsManager();
 
@@ -155,6 +156,25 @@ describe('cmd-parameter-validate', function() {
         
         let buildResult = testsGlobalHelper.execTbCmd('-l');
         expect(buildResult).toContain("validate start");
+        expect(buildResult).toContain("validate ok");
+    });
+    
+    
+    it('should not show the empty logs source property warning on a newly generated site_php project when the value is specifically set on the turbodepot.json file', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
+        expect(buildResult).toContain("No logs will be written for this project");
+        expect(buildResult).toContain("validate ok");
+        
+        let turboDepotSetup = tsm.getSetup('turbodepot');
+        
+        turboDepotSetup.depots[0].logs.source = 'some source';
+        expect(testsGlobalHelper.saveToSetupFile(turboDepotSetup, 'turbodepot.json')).toBe(true);
+     
+        buildResult = testsGlobalHelper.execTbCmd('-l');
+        expect(buildResult).not.toContain("No logs will be written for this project");
         expect(buildResult).toContain("validate ok");
     });
     

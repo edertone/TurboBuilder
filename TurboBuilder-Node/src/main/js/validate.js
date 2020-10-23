@@ -5,7 +5,7 @@
  */
 
 
-const { StringUtils, ArrayUtils, NumericUtils } = require('turbocommons-ts');
+const { StringUtils, ArrayUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const { ConsoleManager } = require('turbodepot-node');
@@ -59,6 +59,7 @@ exports.execute = function (verbose = true) {
     validateAngularApp();
     
     cm.errors(errors);
+    cm.warnings(warnings);
     
     // Reaching here means validation was successful
     cm.success("validate ok");
@@ -584,6 +585,13 @@ let validateSitePhp = function () {
     if(global.setup.build.site_php || global.setup.build.server_php){
         
         let turbositeSetup = JSON.parse(fm.readFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup));
+        let turbodepotSetup = JSON.parse(fm.readFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboDepotSetup));
+        
+        // If the logs source on turbodepot is not specified, a warning will be shown telling the user that no logs will be available
+        if(StringUtils.isEmpty(turbodepotSetup.depots[0].logs.source)){
+            
+            warnings.push(`IMPORTANT! turbodepot.json logs.source property is empty on ${turbodepotSetup.depots[0].name}. No logs will be written for this project`);
+        }
         
         // Validate that defined home and singleparam views exist
         let validateView = (viewName, errorMsg) => {

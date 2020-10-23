@@ -8,13 +8,14 @@
 
 require('./../../../main/js/globals');
 const { execSync } = require('child_process');
-const { StringTestsManager } = require('turbotesting-node');
+const { StringTestsManager, TurboSiteTestsManager } = require('turbotesting-node');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
 
 
 const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 const terminalManager = new TerminalManager();
 const stringTestsManager = new StringTestsManager();
 
@@ -128,7 +129,7 @@ describe('cmd-parameter-test', function() {
         expect(testsGenerateResult).toContain("Created turbobuilder.json file");
         expect(testsGenerateResult).toContain("Generated project structure ok");
         
-        let setup = testsGlobalHelper.readSetupFile();  
+        let setup = tsm.getSetup('turbobuilder');  
         setup.validate.filesContent.copyPasteDetect = [];
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         

@@ -66,6 +66,7 @@ global.fileNames = {
     setup: 'turbobuilder.json',
     setupRelease: 'turbobuilder.release.json',
     turboSiteSetup: 'turbosite.json',
+    turboDepotSetup: 'turbodepot.json',
     gitignore: '.gitignore',
     gitattributes: '.gitattributes',
     readme: 'README.md'

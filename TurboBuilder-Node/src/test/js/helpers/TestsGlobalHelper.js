@@ -29,15 +29,6 @@ global.testsGlobalHelper = {
     
     
     /**
-     * Read the specified setup file from the current work dir and return it as a json object
-     */
-    readSetupFile: function(fileName = 'turbobuilder.json') {
-    
-        return JSON.parse(filesManager.readFile('.' + filesManager.dirSep() + fileName));
-    },
-    
-    
-    /**
      * Save the provided object to the setup file on the current work dir as a json string
      */
     saveToSetupFile: function(object, fileName = 'turbobuilder.json') {
@@ -64,7 +55,7 @@ global.testsGlobalHelper = {
     
         expect(testsGlobalHelper.execTbCmd('-g ' + projectType)).toContain("Generated project structure ok");
             
-        let setup = testsGlobalHelper.readSetupFile();
+        let setup = JSON.parse(filesManager.readFile('.' + filesManager.dirSep() + 'turbobuilder.json'));
         
         if(build !== null){
             

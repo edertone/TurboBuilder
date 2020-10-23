@@ -9,11 +9,12 @@
 require('./../../../main/js/globals');
 const setupModule = require('./../../../main/js/setup');
 const { ObjectUtils } = require('turbocommons-ts');
-const { FilesManager } = require('turbodepot-node');
-const { TerminalManager } = require('turbodepot-node');
+const { FilesManager, TerminalManager } = require('turbodepot-node');
+const { TurboSiteTestsManager } = require('turbotesting-node');
 
 
 const fm = new FilesManager();
+const tsm = new TurboSiteTestsManager('./');
 const terminalManager = new TerminalManager();
 
 
@@ -264,7 +265,7 @@ describe('cmd-parameter-generate', function(){
 
         expect(fm.readFile('./tslint.json')).toContain('"extends": "./tslint-angular.json"');
 
-        let setup = testsGlobalHelper.readSetupFile();
+        let setup = tsm.getSetup('turbobuilder');
         
         expect(setup.metadata.builderVersion).toBe(setupModule.getBuilderVersion());
         expect(setup.validate.filesContent.copyrightHeaders.length).toBe(0);

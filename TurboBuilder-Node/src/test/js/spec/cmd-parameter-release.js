@@ -377,7 +377,7 @@ describe('cmd-parameter-release', function() {
             .toBe('{ "a": "@@--build-version--@@", "b": "@@--build-version--@@"}');
         
         // We will now enable versionWildCard and set an empty wildcard. No replacement must happen
-        setup = testsGlobalHelper.readSetupFile();
+        setup = tsm.getSetup('turbobuilder');
         
         setup.wildCards = {
             "versionWildCard":{
