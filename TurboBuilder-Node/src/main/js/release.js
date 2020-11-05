@@ -315,6 +315,9 @@ let minifyHtmlFiles = function (destPath) {
                 minifyCSS: true,
                 minifyJS: true
             });
+            
+            // This is a small hack to avoid an empty space at the start of the html documents when there's php code first
+            htmlMinified = StringUtils.replace(htmlMinified, '?> <!doctype html>', '?><!doctype html>');
                         
         }catch(e){
 
