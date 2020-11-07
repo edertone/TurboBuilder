@@ -34,6 +34,10 @@ A javascript unit tests framework
 
 A copy paste detector tool that supports more than 150 programming languages
 
+## json-dup-key-validator
+
+A json string validator that has a specific option to check if there are duplicate keys
+
 ## jsonschema
 
 A library to validate json files agains their respective json schemas

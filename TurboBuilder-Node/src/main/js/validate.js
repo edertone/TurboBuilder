@@ -9,8 +9,9 @@ const { StringUtils, ArrayUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const { ConsoleManager } = require('turbodepot-node');
-let validate = require('jsonschema').validate;
 const { TerminalManager } = require('turbodepot-node');
+const validate = require('jsonschema').validate;
+const jsonDuplicateValidator = require('json-dup-key-validator');
 
 
 let fm = new FilesManager();
@@ -130,27 +131,38 @@ let validateJSONSchema = function (filePath, schemaFileName) {
         cm.error("Could not find " + StringUtils.getPathElement(filePath) + " at " + filePath);
     }
     
-    let fileContent = '';
+    // Check the JSON file is not corrupt
+    let fileJsonAsObject = null;
+    let fileContents = fm.readFile(filePath);
     
     try{
-    
-        fileContent = JSON.parse(fm.readFile(filePath));
+        
+        fileJsonAsObject = JSON.parse(fileContents);
         
     }catch(e){
         
         cm.error("Corrupted JSON for " + StringUtils.getPathElement(filePath) + ":\n" + e.toString());
     }
     
+    // Validate that the json file does not have duplicate keys
+    let jsonDupKeysResult = jsonDuplicateValidator.validate(fileContents, false);
+    
+    if(jsonDupKeysResult !== undefined){
+        
+        cm.error("Duplicate keys found on JSON for " + StringUtils.getPathElement(filePath) + ":\n" + jsonDupKeysResult);
+    }
+    
+    // Validate that the JSON matches the respective schema
     let schemaContent = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + schemaFileName));
     
-    let results = validate(fileContent, schemaContent);
+    let results = validate(fileJsonAsObject, schemaContent);
     
     if(!results.valid){
         
         errors.push("Invalid JSON schema for " + StringUtils.getPathElement(filePath) + ":\n" + results.errors[0]);
     }
     
-    return fileContent;
+    return fileJsonAsObject;
 }
 
 

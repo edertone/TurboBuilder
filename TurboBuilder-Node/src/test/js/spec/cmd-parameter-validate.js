@@ -810,6 +810,40 @@ describe('cmd-parameter-validate', function() {
         let lintResult = testsGlobalHelper.execTbCmd('-l');
         expect(lintResult).toContain('Corrupted JSON for');
     });
+    
+    
+    it('should fail when a turbobuilder.json file jas duplicate keys', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let turbobuilderAsString = fm.readFile('.' + fm.dirSep() + global.fileNames.setup);
+        
+        turbobuilderAsString = StringUtils.replace(turbobuilderAsString, '"strictFileExtensionCase"',
+            '"readmeFileMandatory": true,"strictFileExtensionCase"', 1);
+        
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.setup, turbobuilderAsString)).toBe(true);
+        
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
+        expect(lintResult).toContain('Duplicate keys found on JSON for turbobuilder.json');
+        expect(lintResult).toContain('duplicated keys "readmeFileMandatory"');
+    });
+    
+    
+    it('should fail when a turbosite.json file jas duplicate keys', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let turbobuilderAsString = fm.readFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup);
+        
+        turbobuilderAsString = StringUtils.replace(turbobuilderAsString, '"globalHtml"',
+            '"homeView": "home","globalHtml"', 1);
+        
+        expect(fm.saveFile('.' + fm.dirSep() + global.fileNames.turboSiteSetup, turbobuilderAsString)).toBe(true);
+        
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
+        expect(lintResult).toContain('Duplicate keys found on JSON for turbosite.json');
+        expect(lintResult).toContain('duplicated keys "homeView"');
+    });
 
     
     it('should fail when turbobuilder.json does not contain a $schema property', function() {
