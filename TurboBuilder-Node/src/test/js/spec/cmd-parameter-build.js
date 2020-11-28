@@ -256,7 +256,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should inject html code to all the project views when configured to be at the start of the head tag', function() {
+    it('should inject globalHtml code to all the project views when "*" is specified and configured to be at the start of the head tag', function() {
         
         testsGlobalHelper.generateProjectAndSetup('site_php');
         
@@ -274,6 +274,7 @@ describe('cmd-parameter-build', function() {
         let tsSetup = tsm.getSetup('turbosite');
         
         tsSetup.globalHtml = [{
+            affectedViews: ["*"],
             element: "head",
             codePlacement: "start",
             path: "view/components/rawhtml/rawhtml.html"
@@ -297,7 +298,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should inject html code to all the project views when configured to be at the end of the body tag', function() {
+    it('should inject globalHtml code to all the project views when "*" is specified and configured to be at the end of the body tag', function() {
         
         testsGlobalHelper.generateProjectAndSetup('site_php');
         
@@ -315,6 +316,7 @@ describe('cmd-parameter-build', function() {
         let tsSetup = tsm.getSetup('turbosite');
         
         tsSetup.globalHtml = [{
+            affectedViews: ["*"],
             element: "body",
             codePlacement: "end",
             path: "view/components/rawhtml/rawhtml.html"
@@ -329,7 +331,7 @@ describe('cmd-parameter-build', function() {
     });
     
     
-    it('should fail site_php project build when global html code path points to an invalid file', function() {
+    it('should fail site_php project build when globalHtml code path points to an invalid file', function() {
     
         testsGlobalHelper.generateProjectAndSetup('site_php');
         
@@ -337,6 +339,7 @@ describe('cmd-parameter-build', function() {
         let tsSetup = tsm.getSetup('turbosite');
         
         tsSetup.globalHtml = [{
+            affectedViews: ["*"],
             element: "body",
             codePlacement: "end",
             path: "view/components/invalidhtml.html"

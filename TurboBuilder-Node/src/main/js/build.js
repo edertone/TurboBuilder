@@ -169,12 +169,12 @@ exports.buildSitePhp = function (destPath) {
     // Read the turbodepot.json file if exists and add its contents to the index php file
     if(fm.isFile(global.runtimePaths.root + sep + 'turbodepot.json')){
     
-        let turboDepotSetup = setupModule.loadSetupFromDisk('turbodepot.json');
+        let turboDepotSetup = setupModule.loadSetupFromDisk('turbodepot.json', global.isRelease);
         
         tsm.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', destSite + sep + 'index.php');
     }
     
-    let turboSiteSetup = setupModule.loadSetupFromDisk(global.fileNames.turboSiteSetup);
+    let turboSiteSetup = setupModule.loadSetupFromDisk(global.fileNames.turboSiteSetup, global.isRelease);
     
     // Generate a random hash to avoid browser caches
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
@@ -249,29 +249,32 @@ exports.buildSitePhp = function (destPath) {
                 // Check if global html code must be injected to the views
                 if(turboSiteSetup.globalHtml.length > 0){
                         
-                    // Search for all the html code that needs to be injected globally to all views
+                    // Search for all the html code that needs to be injected
                     for (let globalHtmlItem of turboSiteSetup.globalHtml) {
                     
-                        try{
+                        if(globalHtmlItem.affectedViews.includes("*") || globalHtmlItem.affectedViews.includes(viewName)) {
                             
-                            let htmlCodeToInject = fm.readFile(global.runtimePaths.main + sep + globalHtmlItem.path);
-                        
-                            if(globalHtmlItem.codePlacement === 'start'){
+                            try{
                                 
-                                viewHtmlCode = StringUtils.replace(viewHtmlCode,
-                                    `<${globalHtmlItem.element}>`, `<${globalHtmlItem.element}>\n${htmlCodeToInject}`, 1);
+                                let htmlCodeToInject = fm.readFile(global.runtimePaths.main + sep + globalHtmlItem.path);
+                            
+                                if(globalHtmlItem.codePlacement === 'start'){
+                                    
+                                    viewHtmlCode = StringUtils.replace(viewHtmlCode,
+                                        `<${globalHtmlItem.element}>`, `<${globalHtmlItem.element}>\n${htmlCodeToInject}`, 1);
+                                    
+                                }else{
+                                    
+                                    viewHtmlCode = StringUtils.replace(viewHtmlCode,
+                                        `</${globalHtmlItem.element}>`, `${htmlCodeToInject}\n</${globalHtmlItem.element}>`, 1);
+                                }
                                 
-                            }else{
-                                
-                                viewHtmlCode = StringUtils.replace(viewHtmlCode,
-                                    `</${globalHtmlItem.element}>`, `${htmlCodeToInject}\n</${globalHtmlItem.element}>`, 1);
+                            }catch(e){
+                    
+                                cm.error('Error loading globalHtml path for <' + globalHtmlItem.element + '>: ' + e.toString() + '\n' +
+                                    destSite + sep + globalHtmlItem.path + '\n');
                             }
-                            
-                        }catch(e){
-                
-                            cm.error('Error loading globalHtml path for <' + globalHtmlItem.element + '>: ' + e.toString() + '\n' +
-                                destSite + sep + globalHtmlItem.path + '\n');
-                        }
+                        }                        
                     }
                     
                     fm.saveFile(viewsRoot + sep + viewName + sep + viewName + '.php', viewHtmlCode);

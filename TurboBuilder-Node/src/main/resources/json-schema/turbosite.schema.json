@@ -93,7 +93,7 @@
         },
         "locales": {
             "type": "array",
-            "description": "The list of locales that will be available on the site. Sorted by preference",
+            "description": "The list of locales that will be available to the site. Sorted by preference",
             "items": {
                 "type": "string"
             }
@@ -190,12 +190,19 @@
         },
         "globalHtml": {
             "type": "array",
-            "description": "Allows us to globally inject extra fragments of html code from static files to all the project views",
+            "description": "Allows us to globally inject extra fragments of static html code to project views.",
             "items": {
                 "type": "object",
-                "required": ["element", "codePlacement", "path"],
+                "required": ["affectedViews", "element", "codePlacement", "path"],
                 "additionalProperties": false,
                 "properties": {
+                    "affectedViews": {
+                        "type": "array",
+                        "description": "A list with the view names where the html code will be injected, or \"*\" if we want to inject the html to all the project views",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "element": {
                         "type": "string",
                         "description": "The name for the html document tag where the code will be injected like head, main, body...",

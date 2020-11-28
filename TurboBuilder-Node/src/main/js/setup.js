@@ -25,7 +25,7 @@ const cm = new ConsoleManager();
  */
 exports.init = function () {
     
-    global.setup = this.loadSetupFromDisk(global.fileNames.setup);
+    global.setup = this.loadSetupFromDisk(global.fileNames.setup, global.isRelease);
 
     validateModule.validateBuilderVersion();
 }
@@ -119,10 +119,39 @@ exports.countCommitsSinceLatestTag = function () {
 
 
 /**
- * Read the specified json setup file from the project root and return a valid parsed object that represents it.
- * If we are in release mode and a .release.json setup file also exists, it will be merged with the base one.
+ * obtain the full file system path to the for the .release.json file that is related to the provided setup file.
+ * Note that this method does not check if it exsits, it must be previously verified with this.isReleaseSetupPresent()
  */
-exports.loadSetupFromDisk = function (setupFile) {
+exports.getReleaseSetupFilePath = function (setupFile) {
+        
+    return global.runtimePaths.root + fm.dirSep() + StringUtils.getPathElementWithoutExt(setupFile) + '.release.json';
+}
+
+
+/**
+ * Check if the .release.json file exists for the provided setup file (for example turbobuilder.json)
+ */
+exports.isReleaseSetupPresent = function (setupFile) {
+        
+    return fm.isFile(this.getReleaseSetupFilePath(setupFile));
+}
+
+
+/**
+ * Get the contents for the .release.json file that is related to the provided setup file.
+ * Note that this method does not check if it exsits, it must be previously verified with this.isReleaseSetupPresent()
+ */
+exports.getReleaseSetupFileContents = function (setupFile) {
+        
+    return fm.readFile(this.getReleaseSetupFilePath(setupFile));
+}
+
+
+/**
+ * Read the specified json setup file from the project root and return a valid parsed object that represents it.
+ * If isRelease is true and a .release.json setup file also exists, it will be merged with the base one.
+ */
+exports.loadSetupFromDisk = function (setupFile, isRelease) {
 
     // Read the specified setup data from disk
     let sep = fm.dirSep();
@@ -144,10 +173,14 @@ exports.loadSetupFromDisk = function (setupFile) {
         
             for(let wildCard of turbobuilderSetup.wildCards.setupWildCards){
 
-                if(wildCard.enabled){
+                if(wildCard.enabled && wildCard.wildCard){
                     
-                    setupContents = StringUtils.replace(setupContents, wildCard.wildCard,
-                        (global.isRelease ? wildCard.releaseValue : wildCard.buildValue));
+                    let replacement = isRelease ? wildCard.releaseValue : wildCard.buildValue;
+
+                    if(replacement){
+                        
+                        setupContents = StringUtils.replace(setupContents, wildCard.wildCard, replacement);
+                    }
                 }
             }
         }
@@ -168,18 +201,16 @@ exports.loadSetupFromDisk = function (setupFile) {
         cm.error("Corrupted JSON for " + global.runtimePaths.setupFile + ":\n" + e.toString());
     }
     
-    // Check if .release.json must be also merged into the setup
-    let releaseSetupPath = global.runtimePaths.root + sep + StringUtils.getPathElementWithoutExt(setupFile) + '.release.json';
-        
-    if(global.isRelease && fm.isFile(releaseSetupPath)){
+    // Check if .release.json must be also merged into the setup      
+    if(isRelease && this.isReleaseSetupPresent(setupFile)){
 
         try{
             
-            ObjectUtils.merge(setup, JSON.parse(fm.readFile(releaseSetupPath)));
+            ObjectUtils.merge(setup, JSON.parse(this.getReleaseSetupFileContents(setupFile)));
             
         }catch(e){
             
-            cm.error("Corrupted JSON for " + releaseSetupPath + ":\n" + e.toString());
+            cm.error("Corrupted JSON for " + this.getReleaseSetupFilePath(setupFile) + ":\n" + e.toString());
         }
     }
     

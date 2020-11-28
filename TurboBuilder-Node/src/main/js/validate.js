@@ -90,18 +90,37 @@ exports.validateBuilderVersion = function () {
  * Validates all the possible existing JSON Schemas
  */
 let validateAllJSONSchemas = function () {
+    
+    let turbobuilderSetupPath = global.runtimePaths.root + fm.dirSep() + global.fileNames.setup;
+    let turbodepotSetupPath = global.runtimePaths.root + fm.dirSep() + 'turbodepot.json';
+    let turbositeSetupPath = global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup;
 
-    validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.setup, 'turbobuilder.schema.json');
+    // Validate the turbobuilder.json file and its release extension if it exists
+    validateJSONSchema(validateJSONContents(turbobuilderSetupPath), 'turbobuilder.json', 'turbobuilder.schema.json');
+
+    if(setupModule.isReleaseSetupPresent(global.fileNames.setup)){
+        
+        validateJSONContents(setupModule.getReleaseSetupFilePath(global.fileNames.setup));
+        validateJSONSchema(setupModule.loadSetupFromDisk(global.fileNames.setup, true), 'turbobuilder.release.json', 'turbobuilder.schema.json');    
+    }    
     
-    if(fm.isFile(global.runtimePaths.root + fm.dirSep() + 'turbodepot.json')){
+    // Validate the turbodepot.json file and its release extension if it exists
+    if(fm.isFile(turbodepotSetupPath)){
     
-        validateJSONSchema(global.runtimePaths.root + fm.dirSep() + 'turbodepot.json', 'turbodepot.schema.json');
+        validateJSONSchema(validateJSONContents(turbodepotSetupPath), 'turbodepot.json', 'turbodepot.schema.json');
+        
+        if(setupModule.isReleaseSetupPresent('turbodepot.json')){
+            
+            validateJSONContents(setupModule.getReleaseSetupFilePath('turbodepot.json'));
+            validateJSONSchema(setupModule.loadSetupFromDisk('turbodepot.json', true), 'turbodepot.release.json', 'turbodepot.schema.json');    
+        } 
     }
     
+    // Validate the turbosite.json file and its release extension if it exists
     if(global.setup.build.site_php || global.setup.build.server_php ||
-       fm.isFile(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup)){
+       fm.isFile(turbositeSetupPath)){
     
-        let turbositeSetup = validateJSONSchema(global.runtimePaths.root + fm.dirSep() + global.fileNames.turboSiteSetup, 'turbosite.schema.json');
+        let turbositeSetup = validateJSONSchema(validateJSONContents(turbositeSetupPath), 'turbosite.json', 'turbosite.schema.json');
         
         // Validate the api section of the turbosite.json file
         for (let api of turbositeSetup.webServices.api){
@@ -112,26 +131,30 @@ let validateAllJSONSchemas = function () {
                 errors.push(`All URIs defined inside the api section on ${global.fileNames.turboSiteSetup} must start with api/ (found: ${api.uri})`);
             }
         }
+        
+        if(setupModule.isReleaseSetupPresent('turbosite.json')){
+            
+            validateJSONContents(setupModule.getReleaseSetupFilePath('turbosite.json'));
+            validateJSONSchema(setupModule.loadSetupFromDisk('turbosite.json', true), 'turbosite.release.json', 'turbosite.schema.json');    
+        } 
     }
 }
 
 
 /**
- * Validates a single json schema given its file name and related schema.
+ * Validates that the provided json file contains valid json code
  *
- * This method returns the parsed json object representing the read schema.
+ * returns the parsed json object
  */
-let validateJSONSchema = function (filePath, schemaFileName) {
+let validateJSONContents = function (filePath) {
     
-    let schemasPath = global.installationPaths.mainResources + fm.dirSep() + 'json-schema';
-    
-    // Validate the received path
+    // Validate the received path exists
     if(!fm.isFile(filePath)){
         
         cm.error("Could not find " + StringUtils.getPathElement(filePath) + " at " + filePath);
     }
     
-    // Check the JSON file is not corrupt
+    // Check the JSON file is readable and parseable
     let fileJsonAsObject = null;
     let fileContents = fm.readFile(filePath);
     
@@ -152,17 +175,29 @@ let validateJSONSchema = function (filePath, schemaFileName) {
         cm.error("Duplicate keys found on JSON for " + StringUtils.getPathElement(filePath) + ":\n" + jsonDupKeysResult);
     }
     
+    return fileJsonAsObject;
+}
+
+
+/**
+ * Validates a single json schema given a parsed json file and the related schema.
+ *
+ * Returns the parsed json object
+ */
+let validateJSONSchema = function (jsonAsObject, jsonFileName, schemaFileName) {
+    
     // Validate that the JSON matches the respective schema
+    let schemasPath = global.installationPaths.mainResources + fm.dirSep() + 'json-schema';
     let schemaContent = JSON.parse(fm.readFile(schemasPath + fm.dirSep() + schemaFileName));
     
-    let results = validate(fileJsonAsObject, schemaContent);
+    let results = validate(jsonAsObject, schemaContent);
     
     if(!results.valid){
         
-        errors.push("Invalid JSON schema for " + StringUtils.getPathElement(filePath) + ":\n" + results.errors[0]);
+        errors.push("Invalid JSON schema for " + jsonFileName + ":\n" + results.errors[0]);
     }
     
-    return fileJsonAsObject;
+    return jsonAsObject;
 }
 
 

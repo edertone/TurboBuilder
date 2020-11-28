@@ -659,15 +659,17 @@ describe('cmd-parameter-release', function() {
         let sep = fm.dirSep();
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
+        // Add an incomplete wildcards property to the json, so error must happen
         setup.wildCards = {
             "setupWildCards": [{
                 "enabled": true
             }]
         };
         expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);        
-        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/Corrupted JSON for .*turbobuilder.json/);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/.*wildCards.setupWildCards.* requires property "wildCard"/);
         
-         setup.wildCards = {
+        // Add more properties but still missing the releaseValue property which is mandatory
+        setup.wildCards = {
             "setupWildCards": [{
                 "enabled": true,
                 "wildCard": "$somewildcard",
@@ -676,6 +678,12 @@ describe('cmd-parameter-release', function() {
         };
         expect(fm.saveFile('.' + sep + 'turbobuilder.json', JSON.stringify(setup))).toBe(true);
         expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/.*wildCards.setupWildCards.* requires property "releaseValue"/);
+        
+        // Corrupt the json file to make sure the corrupted file error raises
+        expect(fm.saveFile('.' + sep + 'turbobuilder.json',
+            StringUtils.replace(fm.readFile('.' + sep + 'turbobuilder.json'), '"wildCards":', '"wildCards"'))).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/Corrupted JSON for .*turbobuilder.json[\s\S]*SyntaxError: Unexpected token/);
     });
     
     
