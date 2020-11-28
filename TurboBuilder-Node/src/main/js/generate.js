@@ -48,7 +48,7 @@ let validate = function (type) {
 
     if(validTypes.indexOf(type) < 0){
         
-        cm.error("invalid project type. Allowed types: " + validTypes.join(', '));
+        cm.error("invalid project type. Allowed types:\n\n" + validTypes.join("\n"));
     }
     
     let templateSetupPath = global.installationPaths.mainResources + fm.dirSep() + 'project-templates' + fm.dirSep() + 'shared' + fm.dirSep() + global.fileNames.setup;

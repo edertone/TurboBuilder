@@ -37,12 +37,12 @@ describe('cmd-parameter-generate', function(){
     it('should fail when -g and --generate arguments are passed without parameters or with wrong parameters', function(){
 
         expect(testsGlobalHelper.execTbCmd('-g')).toContain("argument missing");
-        expect(testsGlobalHelper.execTbCmd('-g someinvalidvalue')).toContain("invalid project type. Allowed types: " +
-            ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '));
+        expect(testsGlobalHelper.execTbCmd('-g someinvalidvalue')).toContain("invalid project type. Allowed types:\n\n" +
+            ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join("\n"));
 
         expect(testsGlobalHelper.execTbCmd('--generate')).toContain("argument missing");
-        expect(testsGlobalHelper.execTbCmd('--generate someinvalidvalue')).toContain("invalid project type. Allowed types: " +
-            ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join(', '));
+        expect(testsGlobalHelper.execTbCmd('--generate someinvalidvalue')).toContain("invalid project type. Allowed types:\n\n" +
+            ObjectUtils.getKeys(global.setupBuildTypes).concat(ObjectUtils.getKeys(global.folderStructures)).join("\n"));
     });
 
 

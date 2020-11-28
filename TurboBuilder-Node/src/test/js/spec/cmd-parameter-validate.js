@@ -844,6 +844,50 @@ describe('cmd-parameter-validate', function() {
         expect(lintResult).toContain('Duplicate keys found on JSON for turbosite.json');
         expect(lintResult).toContain('duplicated keys "homeView"');
     });
+    
+    
+    it('should fail validation when a turbobuilder.release.json file has invalid properties', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let turbobuilderReleaseSetup = {invalidProp: ''};
+        
+        expect(testsGlobalHelper.saveToSetupFile(turbobuilderReleaseSetup, 'turbobuilder.release.json')).toBe(true);
+        
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbobuilder.release.json');
+        expect(lintResult).toContain('instance is not allowed to have the additional property "invalidProp"');
+    });
+    
+    
+    it('should fail validation when a turbodepot.release.json file has invalid properties', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let turbodepotReleaseSetup = {invalidProp: ''};
+        
+        expect(testsGlobalHelper.saveToSetupFile(turbodepotReleaseSetup, 'turbodepot.release.json')).toBe(true);
+        
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbodepot.release.json');
+        expect(lintResult).toContain('instance is not allowed to have the additional property "invalidProp"');
+    });
+    
+    
+    it('should fail validation when a turbosite.release.json file has invalid properties', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let turbositeReleaseSetup = JSON.parse(fm.readFile('./turbosite.release.json'));
+        
+        turbositeReleaseSetup.invalidProp = '';
+        
+        expect(testsGlobalHelper.saveToSetupFile(turbositeReleaseSetup, 'turbosite.release.json')).toBe(true);
+        
+        let lintResult = testsGlobalHelper.execTbCmd('-l');
+        expect(lintResult).toContain('Invalid JSON schema for turbosite.release.json');
+        expect(lintResult).toContain('instance is not allowed to have the additional property "invalidProp"');
+    });
 
     
     it('should fail when turbobuilder.json does not contain a $schema property', function() {
