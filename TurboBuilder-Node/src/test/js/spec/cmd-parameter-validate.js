@@ -1323,7 +1323,59 @@ describe('cmd-parameter-validate', function() {
     });
     
     
-     it('should fail validation when PHP files contain invalid namespace definitions', function() {
+    it('should tell that PHP namespace properties are mandatory on turbobuilder setup file when namespaces.enabled is set to true', function() {
+        
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        // Enable the namespaces validation
+        setup.validate.php.namespaces.enabled = true;
+        setup.validate.php.namespaces.mandatory = true;
+        setup.validate.php.namespaces.mustContain = [];
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
+        
+        delete setup.validate.php.namespaces.mandatory;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        let execResult = testsGlobalHelper.execTbCmd('-l');
+        expect(execResult).toContain('Invalid JSON schema for turbobuilder.json');
+        expect(execResult).toContain('instance.validate.php.namespaces requires property "mandatory"');
+        
+        setup.validate.php.namespaces.mandatory = true;
+        delete setup.validate.php.namespaces.mustContain;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        execResult = testsGlobalHelper.execTbCmd('-l');
+        expect(execResult).toContain('Invalid JSON schema for turbobuilder.json');
+        expect(execResult).toContain('instance.validate.php.namespaces requires property "mustContain"');
+        
+        setup.validate.php.namespaces.mustContain = [];
+        delete setup.validate.php.namespaces.excludes;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        execResult = testsGlobalHelper.execTbCmd('-l');
+        expect(execResult).toContain('Invalid JSON schema for turbobuilder.json');
+        expect(execResult).toContain('instance.validate.php.namespaces requires property "excludes"');
+    });  
+    
+    
+    it('should allow avoiding the definition of PHP namespace properties on turbobuilder setup file when namespaces.enabled is set to false', function() {
+    
+        let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        // Enable the namespaces validation
+        setup.validate.php.namespaces.enabled = false;
+        delete setup.validate.php.namespaces.mandatory;
+        delete setup.validate.php.namespaces.mustContain;
+        delete setup.validate.php.namespaces.excludes;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('validate ok');
+    });
+    
+    
+    it('should fail validation when PHP files contain invalid namespace definitions', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
         

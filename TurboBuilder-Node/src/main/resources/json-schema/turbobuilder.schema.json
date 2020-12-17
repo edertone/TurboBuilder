@@ -376,12 +376,15 @@
                         "namespaces": {
                             "type": "object",
                             "description": "Defines the validation of php namespaces for all the php project files",
-                            "required": [
-                                "enabled",
-                                "mandatory",
-                                "mustContain",
-                                "excludes"
-                            ],
+                            "if": {
+                                "properties": {
+                                  "enabled": { "const": true }
+                                },
+                                "required": ["enabled"]
+                            },
+                            "then": {
+                                "required": ["enabled", "mandatory", "mustContain", "excludes"]
+                            },
                             "additionalProperties": false, 
                             "properties": {
                                 "enabled": {
