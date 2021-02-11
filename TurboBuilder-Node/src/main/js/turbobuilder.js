@@ -85,35 +85,37 @@ program
     .option('-s, --sync', 'Mirror project folders to a remote location as configured in ' + global.fileNames.setup)
     .parse(process.argv);
 
+const options = program.opts();
+
 // If none of the options have been passed, we will show the help
-if(!program.generate &&
-   !program.lint &&
-   !program.clean &&
-   !program.build &&
-   !program.test &&
-   !program.release &&
-   !program.sync){
+if(!options.generate &&
+   !options.lint &&
+   !options.clean &&
+   !options.build &&
+   !options.test &&
+   !options.release &&
+   !options.sync){
     
     program.help();
     process.exit(0);
 }
 
 // Initialize global release flag
-if (program.release){
+if (options.release){
     
     global.isRelease = true;
 }
 
 //Build and release cannot be launched at the same time
-if (program.build && program.release){
+if (options.build && options.release){
  
     cm.error('build and release cannot be executed at the same time. Please launch separately');
 }
 
 // Generate the default project files if necessary
-if (program.generate){
+if (options.generate){
     
-    generateModule.execute(program.generate);
+    generateModule.execute(options.generate);
     process.exit(0);
 }
 
@@ -121,41 +123,41 @@ if (program.generate){
 setupModule.init();
 
 // Perform the project cleanup
-if (program.clean){
+if (options.clean){
  
-    cleanModule.execute(program.sync ||
-        (program.build && global.setup.sync && global.setup.sync.runAfterBuild) ||
-        (program.release && global.setup.sync && global.setup.sync.runAfterBuild));
+    cleanModule.execute(options.sync ||
+        (options.build && global.setup.sync && global.setup.sync.runAfterBuild) ||
+        (options.release && global.setup.sync && global.setup.sync.runAfterBuild));
 }
 
 // Perform the validation as defined on xml setup, except if it is defined
 // to be performed before build, cause it will be executed there
-if (program.lint && 
-    !(program.build && global.setup.validate.runBeforeBuild === true) &&
-    !(program.release && global.setup.validate.runBeforeBuild === true)){
+if (options.lint && 
+    !(options.build && global.setup.validate.runBeforeBuild === true) &&
+    !(options.release && global.setup.validate.runBeforeBuild === true)){
  
     validateModule.execute();
 }
 
 // Perform the build as defined on setup
-if (program.build){
+if (options.build){
     
     buildModule.execute();
 }
 
-if (program.release){
+if (options.release){
     
     releaseModule.execute();
 }
 
-if (program.sync && !global.setup.sync.runAfterBuild){
+if (options.sync && !global.setup.sync.runAfterBuild){
     
     syncModule.execute();
 }
 
-if (program.test){
+if (options.test){
     
-    if (!program.build && !program.release){
+    if (!options.build && !options.release){
     
         let readline = require('readline');
         
@@ -183,8 +185,8 @@ if (program.test){
 }
 
 // Print the todo folder contents on console if necessary
-if((global.setup.release.printTodoFiles && program.release) ||
-        (global.setup.build.printTodoFiles && program.build)){
+if((global.setup.release.printTodoFiles && options.release) ||
+        (global.setup.build.printTodoFiles && options.build)){
     
     printFolderContents(global.runtimePaths.todoFolder, 'TODO file : ');
 }
