@@ -44,7 +44,7 @@ describe('cmd-parameter-test', function() {
     });
 
     
-    it('should fail when test is passed as the only parameter', function() {
+    it('should warn the user when test is passed as the only parameter and warnIfCalledWithoutBuild is set to true', function() {
 
         testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
@@ -57,6 +57,30 @@ describe('cmd-parameter-test', function() {
             ['--test SHOULD be used at the same time with -b --build or -r --release.',
              'IF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT',
              'Do you still want to run the tests (Y/N)?']);
+    });
+    
+    
+    it('should run php unit tests without warn on a generated lib_php project when test is passed as only parameter and warnIfCalledWithoutBuild is false', function() {
+
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
+ 
+        setup.test.warnIfCalledWithoutBuild = true;
+        setup.test.enabledTests[0].coverageReport = false;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-t'),
+            ['--test SHOULD be used at the same time with -b --build or -r --release.',
+             'IF YOU RUN THE PROJECT TESTS WITHOUT PREVIOUSLY COMPILING YOUR PROJECT',
+             'Do you still want to run the tests (Y/N)?']);
+        
+        setup.test.warnIfCalledWithoutBuild = false;
+        setup.test.enabledTests[0].coverageReport = false;        
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        testsGlobalHelper.execTbCmd('-b');
+        let testResult = testsGlobalHelper.execTbCmd('-t');
+        
+        expect(testResult).toContain('launching phpunit tests');
     });
     
     
