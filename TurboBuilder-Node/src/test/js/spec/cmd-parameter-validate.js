@@ -89,15 +89,15 @@ describe('cmd-parameter-validate', function() {
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
         
         // Disable use strict validation on setup and test that it now validates
-        expect(setup.test[0].type).toBe("jasmine");
+        expect(setup.test.enabledTests[0].type).toBe("jasmine");
         
-        setup.test[0].nonexistantProperty = 'somevalue';
+        setup.test.enabledTests[0].nonexistantProperty = 'somevalue';
         
         testsGlobalHelper.saveToSetupFile(setup);
         
         expect(testsGlobalHelper.execTbCmd('-l')).toContain("Invalid JSON schema for turbobuilder.json");
         
-        setup.test = [{
+        setup.test.enabledTests = [{
                 "type": "nonexistant",
                 "jasmineConfig": "src/test/js/jasmine.json"
             }];

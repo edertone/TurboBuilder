@@ -29,7 +29,7 @@ exports.execute = function () {
     
     cm.text("\ntest start");
     
-    if(!ArrayUtils.isArray(global.setup.test) || global.setup.test.length <= 0){
+    if(!ArrayUtils.isArray(global.setup.test.enabledTests) || global.setup.test.enabledTests.length <= 0){
         
         cm.warning("Nothing to test. Please setup some tests on test section in " + global.fileNames.setup);
     }
@@ -46,7 +46,7 @@ exports.execute = function () {
         pathsToTest.push(setupModule.getProjectName());
     }
     
-    for (let testSetup of global.setup.test) {
+    for (let testSetup of global.setup.test.enabledTests) {
         
         if(testSetup.type === 'phpUnit'){
             

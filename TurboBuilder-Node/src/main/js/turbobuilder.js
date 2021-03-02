@@ -157,7 +157,7 @@ if (options.sync && !global.setup.sync.runAfterBuild){
 
 if (options.test){
     
-    if (!options.build && !options.release){
+    if (!options.build && !options.release && global.setup.test.warnIfCalledWithoutBuild){
     
         let readline = require('readline');
         

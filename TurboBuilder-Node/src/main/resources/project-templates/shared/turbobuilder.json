@@ -139,23 +139,26 @@
         "psw": "serverpsw"
     },
     
-    "test": [
-        {
-            "type": "phpUnit",
-            "testsRoot": "src/test",
-            "coverageReport": true,
-            "coverageReportOpenAfterTests": true
-        },        
-        {
-            "type": "jasmine",
-            "jasmineConfig": "src/test/js/jasmine.json"
-        },
-        {
-            "type": "qunit",
-            "testsRoot": "src/test",
-            "httpServerPort": "8185",
-            "targets": ["ts", "es5", "es6"],
-            "browsers": {"chrome": false, "firefox": false, "iexplore": false}
-        }
-    ]
+    "test": {
+        "warnIfCalledWithoutBuild": true,
+        "enabledTests": [
+            {
+                "type": "phpUnit",
+                "testsRoot": "src/test",
+                "coverageReport": true,
+                "coverageReportOpenAfterTests": true
+            },        
+            {
+                "type": "jasmine",
+                "jasmineConfig": "src/test/js/jasmine.json"
+            },
+            {
+                "type": "qunit",
+                "testsRoot": "src/test",
+                "httpServerPort": "8185",
+                "targets": ["ts", "es5", "es6"],
+                "browsers": {"chrome": false, "firefox": false, "iexplore": false}
+            }
+        ]
+    } 
 }

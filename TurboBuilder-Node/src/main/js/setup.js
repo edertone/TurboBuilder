@@ -342,7 +342,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the test section
     let testArray = [];
     
-    for (let testItem of setupContents.test) {
+    for (let testItem of setupContents.test.enabledTests) {
         
         if((type === global.setupBuildTypes.server_php ||
             type === global.setupBuildTypes.lib_php) &&
@@ -361,7 +361,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         }
     }
     
-    setupContents.test = testArray;
+    setupContents.test.enabledTests = testArray;
     
     return setupContents;        
 }

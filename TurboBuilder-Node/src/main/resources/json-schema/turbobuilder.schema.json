@@ -743,43 +743,55 @@
             ]
         },
         "test": {
-            "type": "array",
-            "description": "Defines the parameters for the test process",
-            "items": {
-                "anyOf": [
-                    {
-                        "type": "object",
-                        "required": ["type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
-                        "additionalProperties": false, 
-                        "properties": {
-                            "type": {"type": "string", "enum": ["phpUnit"]},
-                            "testsRoot": {"type": "string"},
-                            "coverageReport": {"type": "boolean"},
-                            "coverageReportOpenAfterTests": {"type": "boolean"}
-                        }
-                    },
-                    {
-                        "type": "object",
-                        "required": ["type", "jasmineConfig"],
-                        "additionalProperties": false, 
-                        "properties": {
-                            "type": {"type": "string", "enum": ["jasmine"]},
-                            "jasmineConfig": {"type": "string"}
-                        }
-                    },
-                    {
-                        "type": "object",
-                        "required": ["type", "testsRoot", "httpServerPort", "targets", "browsers"],
-                        "additionalProperties": false, 
-                        "properties": {
-                            "type": {"type": "string", "enum": ["qunit"]},
-                            "testsRoot": {"type": "string"},
-                            "httpServerPort": {"type": "string"},
-                            "targets": {"type": "array"},
-                            "browsers": {"type": "object"}
-                        }
+            "type": "object",
+            "description": "Defines the parameters and configuration for the project tests",
+            "required": ["enabledTests"],
+            "additionalProperties": false, 
+            "properties": {
+                "warnIfCalledWithoutBuild": {
+                    "type": "boolean",
+                    "description": "Enabled by default, if set to true a warning yes/no question will be shown to the user when trying to execute tests without performing a build of the project"
+                },
+                "enabledTests": {
+                    "type": "array",
+                    "description": "List of test frameworks that are enabled for the different languages of the project, and their respective configuration parameters",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "type": "object",
+                                "required": ["type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
+                                "additionalProperties": false, 
+                                "properties": {
+                                    "type": {"type": "string", "enum": ["phpUnit"]},
+                                    "testsRoot": {"type": "string"},
+                                    "coverageReport": {"type": "boolean"},
+                                    "coverageReportOpenAfterTests": {"type": "boolean"}
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "required": ["type", "jasmineConfig"],
+                                "additionalProperties": false, 
+                                "properties": {
+                                    "type": {"type": "string", "enum": ["jasmine"]},
+                                    "jasmineConfig": {"type": "string"}
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "required": ["type", "testsRoot", "httpServerPort", "targets", "browsers"],
+                                "additionalProperties": false, 
+                                "properties": {
+                                    "type": {"type": "string", "enum": ["qunit"]},
+                                    "testsRoot": {"type": "string"},
+                                    "httpServerPort": {"type": "string"},
+                                    "targets": {"type": "array"},
+                                    "browsers": {"type": "object"}
+                                }
+                            }
+                        ]
                     }
-                ]
+                }
             }
         }
     }

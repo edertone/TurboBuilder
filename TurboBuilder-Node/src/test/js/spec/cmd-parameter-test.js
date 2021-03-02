@@ -64,7 +64,7 @@ describe('cmd-parameter-test', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
  
-        setup.test = [];
+        setup.test.enabledTests = [];
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -86,7 +86,7 @@ describe('cmd-parameter-test', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
-        setup.test[0].coverageReport = false;
+        setup.test.enabledTests[0].coverageReport = false;
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -103,8 +103,8 @@ describe('cmd-parameter-test', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
-        setup.test[0].coverageReport = true;
-        setup.test[0].coverageReportOpenAfterTests = false;
+        setup.test.enabledTests[0].coverageReport = true;
+        setup.test.enabledTests[0].coverageReportOpenAfterTests = false;
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
