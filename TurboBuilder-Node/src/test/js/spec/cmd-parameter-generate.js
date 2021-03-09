@@ -353,4 +353,66 @@ describe('cmd-parameter-generate', function(){
         
         expect(fm.getDirectoryList('./').length).toBe(4);
     });
+    
+    
+    it('should generate test_project project structure', function() {
+        
+        expect(testsGlobalHelper.execTbCmd('-g test_project')).toContain("Generated project structure ok");
+
+        expect(fm.isFile('./extras/help/debug.md')).toBe(true);
+        expect(fm.readFile('./extras/help/debug.md')).toContain('# How to debug tests');
+        expect(fm.isFile('./extras/help/publish-release.md')).toBe(false);
+        expect(fm.isFile('./extras/help/tests.md')).toBe(true);
+        expect(fm.isFile('./extras/todo/features.todo')).toBe(false);
+        expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
+        expect(fm.isDirectory('./src/main')).toBe(false);
+        expect(fm.isFile('./src/test/js/helpers/TestsGlobalHelper.js')).toBe(true);
+        expect(fm.isFile('./src/test/js/spec/test-spec-template.js')).toBe(true);
+        expect(fm.isFile('./src/test/js/jasmine.json')).toBe(true);
+        expect(fm.isFile('.gitignore')).toBe(true);
+        expect(fm.isFile('.gitattributes')).toBe(true);
+        expect(fm.isFile('package.json')).toBe(true);
+                
+        expect(fm.getDirectoryList('./').length).toBe(7);
+    });
+    
+    
+    it('should correctly validate project after being created with test_project', function() {
+        
+        expect(testsGlobalHelper.execTbCmd('-g test_project')).toContain("Generated project structure ok");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("validate ok");
+    });
+    
+    
+    it('should generate a minimal turbobuilder.json file when test_project project is created', function() {
+        
+        let setup = testsGlobalHelper.generateProjectAndSetup('test_project', null, null);
+        
+        expect(setup.hasOwnProperty('validate')).toBe(false);
+        expect(Object.keys(setup.build).length).toBe(1);
+        expect(setup.hasOwnProperty('release')).toBe(false);
+        expect(setup.hasOwnProperty('sync')).toBe(false);
+        expect(setup.test.warnIfCalledWithoutBuild).toBe(false);
+    });
+    
+    
+    it('should correctly execute default empty tests on a newly created test_project project', function() {
+        
+        expect(testsGlobalHelper.execTbCmd('-g test_project')).toContain("Generated project structure ok");
+        terminalManager.exec('npm install');
+        expect(testsGlobalHelper.execTbCmd('-t')).toContain("test done");
+    });
+    
+    
+    it('should fail tests execution if jasmine setup path is not valid', function() {
+        
+        let setup = testsGlobalHelper.generateProjectAndSetup('test_project', null, null);
+        
+        setup.test.enabledTests[0].jasmineConfig = 'src/test/js/jasmineinvalid.json';
+        
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        terminalManager.exec('npm install');
+        expect(testsGlobalHelper.execTbCmd('-t')).toMatch(/Could not find jasmine config file[\s\S]*jasmineinvalid.json/);
+    });
 });

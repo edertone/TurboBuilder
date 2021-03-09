@@ -116,6 +116,8 @@
         "app_angular": {
         },
         "app_node_cmd": {
+        },
+        "test_project" : {
         }
     },
     

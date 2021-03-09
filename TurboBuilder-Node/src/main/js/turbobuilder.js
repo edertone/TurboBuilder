@@ -185,8 +185,8 @@ if (options.test){
 }
 
 // Print the todo folder contents on console if necessary
-if((global.setup.release.printTodoFiles && options.release) ||
-        (global.setup.build.printTodoFiles && options.build)){
+if((options.release && global.setup.release.printTodoFiles) ||
+        (options.build && global.setup.build.printTodoFiles)){
     
     printFolderContents(global.runtimePaths.todoFolder, 'TODO file : ');
 }

@@ -1,7 +1,7 @@
 # Write some title
 
-Write here the description for the main title
+Write here a description about your project
 
 ### Write some subtitle
 
-Write here the subtitle description
+Write here a description about your project

@@ -155,6 +155,13 @@ let createProjectStructure = function (type) {
         fm.copyDirectory(templatesFolder + sep + global.setupBuildTypes.server_php, global.runtimePaths.root, false);
     }
     
+    // Tests project does not require some files
+    if(type === global.setupBuildTypes.test_project){
+
+        fm.deleteFile(global.runtimePaths.root + sep + 'extras' + sep + 'help' + sep + 'publish-release.md');
+        fm.deleteFile(global.runtimePaths.root + sep + 'extras' + sep + 'todo' + sep + 'features.todo');
+    }
+    
     // Create readme file
     if(!fm.copyFile(templatesFolder + sep + 'shared' + sep + global.fileNames.readme,
        global.runtimePaths.root + sep + global.fileNames.readme)){
@@ -183,8 +190,15 @@ let createProjectStructure = function (type) {
     // Generate a custom project setup and save it to file
     try{
         
-        fm.saveFile(global.runtimePaths.setupFile,
-            JSON.stringify(setupModule.customizeSetupTemplateToProjectType(type), null, 4));
+        let generatedSetup = setupModule.customizeSetupTemplateToProjectType(type);
+        
+        if(type === global.setupBuildTypes.test_project){
+
+            delete generatedSetup.release;
+            delete generatedSetup.validate;            
+        }
+        
+        fm.saveFile(global.runtimePaths.setupFile, JSON.stringify(generatedSetup, null, 4));
             
     }catch(e){
         

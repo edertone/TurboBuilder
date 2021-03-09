@@ -486,7 +486,8 @@
                 {"required": ["lib_ts"]},
                 {"required": ["lib_angular"]},
                 {"required": ["app_angular"]},
-                {"required": ["app_node_cmd"]}
+                {"required": ["app_node_cmd"]},
+                {"required": ["test_project"]}
             ],
             "additionalProperties": false, 
             "properties": {
@@ -613,6 +614,11 @@
                 "app_node_cmd": {
                     "type": "object",
                     "description": "A command line nodejs application project type",
+                    "additionalProperties": false
+                },
+                "test_project": {
+                    "type": "object",
+                    "description": "A project type that is specifically oriented to automated testing",
                     "additionalProperties": false
                 }
             }

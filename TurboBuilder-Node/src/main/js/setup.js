@@ -255,7 +255,7 @@ exports.detectProjectTypeFromSetup = function (setup) {
 
 
 /**
- * Generate a turbobuilder json setup file based on the specified project type
+ * Generate a turbobuilder json setup object based on the specified project type
  */
 exports.customizeSetupTemplateToProjectType = function (type) {
     
@@ -309,6 +309,12 @@ exports.customizeSetupTemplateToProjectType = function (type) {
         setupContents.release = {};
     }
     
+    if(type === global.setupBuildTypes.test_project){
+
+        setupContents.build = {};
+        setupContents.build[global.setupBuildTypes.test_project] = {};
+    }
+    
     // Customize the sync section
     delete setupContents.sync;
     
@@ -357,6 +363,13 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             type === global.setupBuildTypes.app_node_cmd) &&
             testItem.type === 'jasmine'){
 
+            testArray.push(testItem);
+        }
+        
+        if(type === global.setupBuildTypes.test_project &&
+            testItem.type === 'jasmine'){
+
+            setupContents.test.warnIfCalledWithoutBuild = false;
             testArray.push(testItem);
         }
     }
