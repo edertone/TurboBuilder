@@ -19,7 +19,7 @@ export class AppInitializerService {
 
         return (): Promise<any> => {
 
-            return new Promise((resolve) => {
+            return new Promise<void>((resolve) => {
 
                 // Perform all the application initializations
                 // TODO

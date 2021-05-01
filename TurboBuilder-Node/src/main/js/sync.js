@@ -35,9 +35,9 @@ exports.execute = function (verbose = true) {
             syncFileSystem();
         }
 
-        if(global.setup.sync.type === "ftp"){
+        if(global.setup.sync.type === "ftp" || global.setup.sync.type === "sftp"){
             
-            syncFtp();
+            syncFtpSftp();
         }
     }
 }
@@ -107,9 +107,9 @@ let syncFileSystem = function () {
 
 
 /**
- * Execute the project sync via ftp
+ * Execute the project sync via ftp or via sftp
  */
-let syncFtp = function () {
+let syncFtpSftp = function () {
     
     buildModule.checkWinSCPAvailable();
     
@@ -121,16 +121,63 @@ let syncFtp = function () {
         cm.error('Folder does not exist: ' + sourcePath);
     }
     
-    // TODO - apply excludes option
+    validateEnviromentVars();
     
-    winscpExec += ' "open ftp://' + global.setup.sync.user + ':' + global.setup.sync.psw + '@' + global.setup.sync.host + '/"';
+    cm.text(`\n${global.setup.sync.type.toUpperCase()} connect to ${global.setup.sync.host} with user ${process.env[global.setup.sync.user]}`);
+    cm.text(`Remote path: ${global.setup.sync.remotePath}`);
+    
+    winscpExec += ' "open ' + global.setup.sync.type + '://' + process.env[global.setup.sync.user] + ':' + process.env[global.setup.sync.psw] + '@' + global.setup.sync.host + '/"';
     winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + global.setup.sync.remotePath + '"';
     winscpExec += ' "exit"';
-    
+        
     if(terminalManager.exec(winscpExec, true).failed){
         
         cm.error('Sync errors');
     }
 
-    cm.success('sync ok to ftp: ' + global.setup.sync.host);
+    cm.success(`sync ok to ${global.setup.sync.type}: ${global.setup.sync.host}`);
+}
+
+
+/**
+ * Auxiliary method to verify that the enviroment variables are correctly set for the remote connections (FTP or SFTP)
+ */
+let validateEnviromentVars = function () {
+    
+    if(!process.env[global.setup.sync.user]){
+        
+        cm.error('Could not find environment variable for ' + global.setup.sync.type + ' user: ' + global.setup.sync.user);
+    }
+    
+    if(!process.env[global.setup.sync.psw]){
+        
+        cm.error('Could not find environment variable for ' + global.setup.sync.type + ' password: ' + global.setup.sync.psw);
+    }
+}
+
+
+/**
+ * Clean the configured remote sync ftp or sftp folder
+ */
+exports.deleteRemoteSyncFolder = function (setup) {
+    
+    buildModule.checkWinSCPAvailable();
+    
+    let winscpExec = 'winscp /command';
+    
+    validateEnviromentVars();
+    
+    cm.text(`\n${global.setup.sync.type.toUpperCase()} connect to ${global.setup.sync.host} with user ${process.env[global.setup.sync.user]}`);
+    cm.text(`Remote path: ${global.setup.sync.remotePath}`);
+    
+    winscpExec += ' "open ' + global.setup.sync.type + '://' + process.env[global.setup.sync.user] + ':' + process.env[global.setup.sync.psw] + '@' + setup.sync.host + '/"';
+    winscpExec += ' "rm ' + setup.sync.remotePath + '/*.*"';
+    winscpExec += ' "exit"';
+    
+    if(terminalManager.exec(winscpExec, true).failed){
+        
+        cm.error('Remote clean errors');
+    }
+
+    cm.success(`cleaned remote ftp: ${global.setup.sync.host} ${setup.sync.remotePath}`);
 }

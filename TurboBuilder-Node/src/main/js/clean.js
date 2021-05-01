@@ -8,7 +8,7 @@
 const { FilesManager } = require('turbodepot-node');
 const { ConsoleManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
-const buildModule = require('./build');
+const syncModule = require('./sync');
 
 
 let fm = new FilesManager();
@@ -73,30 +73,8 @@ let cleanSyncDests = function (setup) {
         }
      }
      
-     if(setup.sync && setup.sync.type === "ftp"){
+     if(setup.sync && (setup.sync.type === "ftp" || setup.sync.type === "sftp")){
 
-         deleteRemoteSyncFolder(setup);
+         syncModule.deleteRemoteSyncFolder(setup);
      }
-}
-
-
-/**
- * Clean the configured remote sync ftp folder
- */
-let deleteRemoteSyncFolder = function (setup) {
-    
-    buildModule.checkWinSCPAvailable();
-    
-    let winscpExec = 'winscp /command';
-        
-    winscpExec += ' "open ftp://' + setup.sync.user + ':' + setup.sync.psw + '@' + setup.sync.host + '/"';
-    winscpExec += ' "rm ' + setup.sync.remotePath + '/*.*"';
-    winscpExec += ' "exit"';
-    
-    if(terminalManager.exec(winscpExec, true).failed){
-        
-        cm.error('Remote clean errors');
-    }
-
-    cm.success('cleaned remote ftp: ' + setup.sync.host + ' ' + setup.sync.remotePath);
 }

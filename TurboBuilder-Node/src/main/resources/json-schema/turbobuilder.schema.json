@@ -711,7 +711,7 @@
                         "type": {
                             "type": "string",
                             "description": "Defines the type of task to execute: an ftp or fileSystem synchronization",
-                            "enum": ["ftp"]
+                            "enum": ["ftp", "sftp"]
                         },
                         "excludes": {
                             "type": "array",
@@ -738,11 +738,11 @@
                         },
                         "user": {
                             "type": "string",
-                            "description": "The remote user"
+                            "description": "A system environment variable which contains the username. On windows, you can set it via windows UI or (running cmd as admin and remember to restart cmd and your ide) with: setx MY_ENV_VAR value /M"
                         },
                         "psw": {
                             "type": "string",
-                            "description": "The remote password"
+                            "description": "A system environment variable which contains the password. On windows, you can set it via windows UI or (running cmd as admin and remember to restart cmd and your ide) with: setx MY_ENV_VAR value /M"
                         }
                     }
                 }

@@ -19,11 +19,15 @@ If we want to put our package.json dependencies to their latest versions, we wil
 
 npm update
 
-## Install the project globally to execute in development via cmd "turbobuilder" "tb"
+## Install this project globally (so it can be run while being actively developed via cmd "turbobuilder" or "tb" just like the release one)
+
+At the root of this project, call
 
 npm install -g
 
-## Uninstall the project globally (we stop developing it)
+## Uninstall the project globally (we stop developing it and maybe want to install the official release one)
+
+At the root of this project, call
 
 npm uninstall -g
 
