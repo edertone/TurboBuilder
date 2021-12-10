@@ -29,7 +29,7 @@
             "copyPasteDetect":[
                 {
                     "path": "src/main/js",
-                    "maxPercentErrorLevel": 0.2,
+                    "maxPercentErrorLevel": 0.3,
                     "maxPercentErrorDifference": 1,
                     "report": "html"
                 },

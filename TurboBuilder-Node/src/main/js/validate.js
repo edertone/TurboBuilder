@@ -385,7 +385,7 @@ let validateCopyPasteDetect = function () {
             let jscpdExecCommand = global.installationPaths.jscpdBin + jscpdExecIgnore + jscpdExecMaxLimits + ' --reporters console';
             
             // Define the report output path if necessary
-            if(copyPasteEntry.report  && copyPasteEntry.report !== ''){
+            if(copyPasteEntry.report && copyPasteEntry.report !== ''){
                 
                 let projectName = setupModule.getProjectName();
                 

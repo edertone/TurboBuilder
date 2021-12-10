@@ -1469,8 +1469,8 @@ describe('cmd-parameter-validate', function() {
                 
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/html/index.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/html/index.html')).toBe(true);
         
         setup.validate.filesContent.copyPasteDetect[0].maxPercentErrorLevel = 4;
         setup.validate.filesContent.copyPasteDetect[1].maxPercentErrorLevel = 10;
@@ -1585,8 +1585,7 @@ describe('cmd-parameter-validate', function() {
         
         expect(fm.copyFile('src/main/js/managers/MyInstantiableClass.js', 'src/main/js/managers/MyInstantiableClass2.js')).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), [
-            "ERROR: jscpd found too many duplicates over threshold"]);
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), ["ERROR: jscpd found too many duplicates"]);
         
         expect(fm.isDirectory('./src')).toBe(true);
         expect(fm.isDirectory('./target')).toBe(false);
@@ -1597,13 +1596,12 @@ describe('cmd-parameter-validate', function() {
         setup.validate.filesContent.copyPasteDetect[1].report = 'html';
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
-        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), [
-            "ERROR: jscpd found too many duplicates over threshold"]);
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-l'), ["ERROR: jscpd found too many duplicates"]);
          
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(false);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/html/index.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/html/index.html')).toBe(false);
     });
     
     
@@ -1626,8 +1624,8 @@ describe('cmd-parameter-validate', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/html/index.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/html/index.html')).toBe(true);
     });
     
     
@@ -1652,8 +1650,21 @@ describe('cmd-parameter-validate', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-main/html/index.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/html/index.html')).toBe(false);
+        
+        // Note that the previous expect gives a false value cause there's no code to analyze on the test folder, and so the copypaste detector does not generate any report.
+        // So we will copy now the index.ts file into the test folder and test that the report is now correctly generated
+        expect(fm.copyFile('./src/main/ts/index.ts', './src/test/ts/index.ts')).toBe(true);
+        
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-cbl'), [
+            "clean ok",
+            "Looking for duplicate code",
+            "Percentage of duplicate code: 0 (maximum allowed: 0)",
+            "validate ok",
+            "build ok"]);
+        
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/html/index.html')).toBe(true);
     });
     
     
@@ -1678,7 +1689,20 @@ describe('cmd-parameter-validate', function() {
         
         let folderName = StringUtils.getPathElement(terminalManager.getWorkDir());
 
-        expect(fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-main/jscpd-report.html')).toBe(true);
-        expect(fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-test/jscpd-report.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-main/html/index.html')).toBe(true);
+        expect(fm.isFile('./target/' + folderName + '-0.0.0/reports/copypaste/src-test/html/index.html')).toBe(false);
+        
+        // Note that the previous expect gives a false value cause there's no code to analyze on the test folder, and so the copypaste detector does not generate any report.
+        // So we will copy now the index.ts file into the test folder and test that the report is now correctly generated
+        expect(fm.copyFile('./src/main/ts/index.ts', './src/test/ts/index.ts')).toBe(true);
+        
+        stringTestsManager.assertTextContainsAll(testsGlobalHelper.execTbCmd('-cbl'), [
+            "clean ok",
+            "Looking for duplicate code",
+            "Percentage of duplicate code: 0 (maximum allowed: 0)",
+            "validate ok",
+            "build ok"]);
+        
+        expect(fm.isFile('./target/' + folderName + '/reports/copypaste/src-test/html/index.html')).toBe(true);
     });
 });
