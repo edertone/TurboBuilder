@@ -1115,7 +1115,7 @@ describe('cmd-parameter-validate', function() {
         
         // Add a libs folder on an incorrect place an test that validate fails
         expect(fm.createDirectory('./src/main/php/utils/libs', true)).toBe(true);  
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('Folder <libs> is only allowed inside src/main or src/test, but was found on main\\php\\utils\\libs');
         
         // Set strictfolders to false and make sure it now passes validation
         setup.validate.projectStructure.strictSrcFolders.enabled = false;        
@@ -1125,7 +1125,7 @@ describe('cmd-parameter-validate', function() {
         // Enable again and test it fails
         setup.validate.projectStructure.strictSrcFolders.enabled = true;        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\utils\\libs folder is only allowed at src/main and src/test');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('Folder <libs> is only allowed inside src/main or src/test, but was found on main\\php\\utils\\libs');
         
         // Delete the invalid libs folder and test it passes
         expect(fm.deleteDirectory('./src/main/php/utils/libs')).toBeGreaterThan(-1);  
@@ -1133,7 +1133,7 @@ describe('cmd-parameter-validate', function() {
         
         // Add a resources folder on an incorrect place an test that validate fails
         expect(fm.createDirectory('./src/main/php/managers/resources', true)).toBe(true);  
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('Folder <resources> is only allowed inside src/main or src/test, but was found on main\\php\\managers\\resources');
         
         // Set strictfolders to false and make sure it now passes validation
         setup.validate.projectStructure.strictSrcFolders.enabled = false;        
@@ -1143,7 +1143,7 @@ describe('cmd-parameter-validate', function() {
         // Enable again and test it fails
         setup.validate.projectStructure.strictSrcFolders.enabled = true;        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('Folder <resources> is only allowed inside src/main or src/test, but was found on main\\php\\managers\\resources');  
         
         // Exclude the invalid resources folder location and make sure it passes      
         setup.validate.projectStructure.strictSrcFolders.excludes = ['php\\managers'];        
@@ -1153,7 +1153,7 @@ describe('cmd-parameter-validate', function() {
         // Set a raw value to the excludes list and make sure validation fails again
         setup.validate.projectStructure.strictSrcFolders.excludes = ['some-raw-value'];        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain('main\\php\\managers\\resources folder is only allowed at src/main and src/test');  
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain('Folder <resources> is only allowed inside src/main or src/test, but was found on main\\php\\managers\\resources');  
         
         // Delete the invalid resources folder and test it passes
         expect(fm.deleteDirectory('./src/main/php/managers/resources')).toBeGreaterThan(-1);  

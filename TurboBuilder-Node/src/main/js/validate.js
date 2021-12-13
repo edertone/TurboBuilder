@@ -269,8 +269,9 @@ let validateProjectStructure = function () {
                StringUtils.getPath(folder, 1, '/') !== 'main' &&
                StringUtils.getPath(folder, 1, '/') !== 'test'){
                 
-                errors.push(folder +
-                    " folder is only allowed at src/main and src/test");
+                errors.push("Folder <" + StringUtils.getPathElement(folder) +
+                    "> is only allowed inside src/main or src/test, but was found on " + folder +
+                    "\nIgnore it by adding to " + global.fileNames.setup + " projectStructure.strictSrcFolders.excludes list");
             }
         }
     }
