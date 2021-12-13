@@ -256,6 +256,19 @@ describe('cmd-parameter-build', function() {
     });
     
     
+    it('should fail when a non existant global js file is defined on turbosite.json file for a site_php project', function() {
+        
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        let tsSetup = tsm.getSetup('turbosite');
+        tsSetup.globalJs.push("libs/nofile.js");
+        expect(testsGlobalHelper.saveToSetupFile(tsSetup, 'turbosite.json')).toBe(true);
+        
+        // This regexp makes sure that the last message from the exec result is the expected error and nothing more comes after
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/[\s\S]*Error loading global JS file. Make sure the path on turbosite.json is correct for[\s\S]*nofile.js/);
+    });
+    
+    
     it('should inject globalHtml code to all the project views when "*" is specified and configured to be at the start of the head tag', function() {
         
         testsGlobalHelper.generateProjectAndSetup('site_php');

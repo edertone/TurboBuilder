@@ -227,8 +227,18 @@ exports.buildSitePhp = function (destPath) {
                 mergeFilesFromArray(globalCssFiles, destSite, true));
         
         // Generate the array of js files that will be merged into the global js file
-        let globalJsFiles = ObjectUtils.clone(turboSiteSetup.globalJs);
+        let globalJsFiles = [];
         
+        for (let globalJsFile of turboSiteSetup.globalJs) {
+            
+            if(!fm.isFile(destSite + sep + globalJsFile)){
+            
+                cm.error('Error loading global JS file. Make sure the path on turbosite.json is correct for:\n' + globalJsFile);
+            }
+            
+            globalJsFiles.push(globalJsFile);
+        }
+                
         for (let globalComponent of turboSiteSetup.globalComponents) {
             
             globalJsFiles.push(globalComponent + '.js');
