@@ -7,32 +7,35 @@
 
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager } = require('turbotesting-node');
-const { TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager();
-const tsm = new TurboSiteTestsManager('./');
 
 
 describe('expected-200-ok', function() {
 
-    beforeAll(function() {
+    /* jscpd:ignore-start */
+    beforeAll(async function() {
         
-        this.automatedBrowserManager = new AutomatedBrowserManager();     
-        this.automatedBrowserManager.initializeChrome();
-        this.automatedBrowserManager.wildcards = tsm.getWildcards();
+        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
     });
 
-    
-    afterAll(function() {
 
-        this.automatedBrowserManager.quit();
+    beforeEach(async function() {
+        
+        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
     });
     
     
-    it('should show 200 ok result with urls defined in expected-200-ok.json', function(done) {
+    afterAll(async function() {
+
+        await this.automatedBrowserManager.quit();
+    });
+    
+    /* jscpd:ignore-end */
+    it('should show 200 ok result with urls defined in expected-200-ok.json', async function() {
         
         let list = JSON.parse(fm.readFile('src/test/resources/expected-200-ok/expected-200-ok.json'));
         
-        this.automatedBrowserManager.assertUrlsLoadOk(list, done);
+        await this.automatedBrowserManager.assertUrlsLoadOk(list);
     });
 });

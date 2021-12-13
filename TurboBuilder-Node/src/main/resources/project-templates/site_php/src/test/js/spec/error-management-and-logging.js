@@ -7,21 +7,18 @@
 
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
-const { AutomatedBrowserManager, TurboSiteTestsManager, HTTPTestsManager } = require('turbotesting-node');
+const { AutomatedBrowserManager, TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager();
 const tsm = new TurboSiteTestsManager('./');
-const httpTestsManager = new HTTPTestsManager();
 
 
 describe('error-management-and-logging', function() {
 
-    beforeAll(function() {
+    beforeAll(async function() {
         
-        this.automatedBrowserManager = new AutomatedBrowserManager();     
-        this.automatedBrowserManager.initializeChrome();
-        this.automatedBrowserManager.wildcards = tsm.getWildcards();
-        
+        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
+                
         // Define all required paths       
         this.syncDestPath = tsm.getSyncDestPath();
         this.syncDestIndexPhpPath = this.syncDestPath + '/site/index.php';
@@ -100,8 +97,10 @@ describe('error-management-and-logging', function() {
     });
     
     
-    beforeEach(function() {
+    beforeEach(async function() {
 
+        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        
         this.restoreAlteredFilesAndLogs();
         
         // Set the logs source on the turbodepot setup
@@ -123,25 +122,25 @@ describe('error-management-and-logging', function() {
     });
     
     
-    afterEach(function() {
+    afterEach(async function() {
 
         this.restoreAlteredFilesAndLogs();
     });
     
     
-    afterAll(function() {
+    afterAll(async function() {
 
-        this.automatedBrowserManager.quit();
+        await this.automatedBrowserManager.quit();
     });
     
     
-    it('should show errors on browser for a site_php project type when errors are enabled on setup', function(done) {
+    it('should show errors on browser for a site_php project type when errors are enabled on setup', async function() {
         
         this.defineExceptionsAndWarningsSetup(true);
         
         this.injectCodeIntoHomeView('nonexistantfunction();');
         
-        this.automatedBrowserManager.assertUrlsLoadOk([{
+        await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
             "sourceHtmlContains": ['turbosite-global-error-manager-problem',
@@ -152,17 +151,17 @@ describe('error-management-and-logging', function() {
             "sourceHtmlEndsWith": null,
             "sourceHtmlNotContains": null
         
-        }], done);
+        }]);
     });
     
     
-    it('should show warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
+    it('should show warnings on browser for a site_php project type when warnings are enabled on setup', async function() {
         
         this.defineExceptionsAndWarningsSetup(null, true);
         
         this.injectCodeIntoHomeView('$a=$b;');
                       
-        this.automatedBrowserManager.assertUrlsLoadOk([{
+        await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
             "sourceHtmlContains": ['turbosite-global-error-manager-problem',
@@ -171,18 +170,17 @@ describe('error-management-and-logging', function() {
             "sourceHtmlStartsWith": null,
             "sourceHtmlEndsWith": null,
             "sourceHtmlNotContains": null
-        
-        }], done);
+        }]);
     });
     
     
-    it('should show both errors and warnings on browser for a site_php project type when errors and warnings are enabled on setup', function(done) {
+    it('should show both errors and warnings on browser for a site_php project type when errors and warnings are enabled on setup', async function() {
         
         this.defineExceptionsAndWarningsSetup(true, true);
         
         this.injectCodeIntoHomeView('$a=$b; nonexistantfunction();');
                       
-        this.automatedBrowserManager.assertUrlsLoadOk([{
+        await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
             "sourceHtmlContains": ['turbosite-global-error-manager-problem',
@@ -194,18 +192,17 @@ describe('error-management-and-logging', function() {
             "sourceHtmlStartsWith": null,
             "sourceHtmlEndsWith": null,
             "sourceHtmlNotContains": null
-        
-        }], done);
+        }]);
     });
     
     
-    it('should show multiple warnings on browser for a site_php project type when warnings are enabled on setup', function(done) {
+    it('should show multiple warnings on browser for a site_php project type when warnings are enabled on setup', async function() {
         
         this.defineExceptionsAndWarningsSetup(null, true);
         
         this.injectCodeIntoHomeView('$a=$b; $a=$c; $a=$d;');
         
-        this.automatedBrowserManager.assertUrlsLoadOk([{
+        await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
             "sourceHtmlContains": ['turbosite-global-error-manager-problem',
@@ -216,18 +213,17 @@ describe('error-management-and-logging', function() {
             "sourceHtmlStartsWith": null,
             "sourceHtmlEndsWith": null,
             "sourceHtmlNotContains": null
-        
-        }], done);
+        }]);
     });
     
     
-    it('should not show warnings on browser for a site_php project type when disabled in setup', function(done) {
+    it('should not show warnings on browser for a site_php project type when disabled in setup', async function() {
         
         this.defineExceptionsAndWarningsSetup(null, false);
         
         this.injectCodeIntoHomeView('$a=$b;');
               
-        this.automatedBrowserManager.assertUrlsLoadOk([{
+        await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
             "sourceHtmlContains": null,
@@ -237,17 +233,17 @@ describe('error-management-and-logging', function() {
                             "E_NOTICE",
                             "Undefined variable: b"]
         
-        }], done);
+        }]);
     });
     
     
-    it('should not show errors on browser for a site_php project type when disabled in setup', function(done) {
+    it('should not show errors on browser for a site_php project type when disabled in setup', async function() {
 
         this.defineExceptionsAndWarningsSetup(false);
         
         this.injectCodeIntoHomeView('nonexistantfunction();');
         
-        this.automatedBrowserManager.assertUrlsLoadOk([{
+        await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
             "sourceHtmlContains": null,
@@ -258,11 +254,11 @@ describe('error-management-and-logging', function() {
                             "FATAL EXCEPTION",
                             "Call to undefined function nonexistantfunction()"]
         
-        }], done);
+        }]);
     });
     
     
-    it('should show errors and warnings on separate log files for a site_php project type when log errors are enabled on setup', function(done) {
+    it('should show errors and warnings on separate log files for a site_php project type when log errors are enabled on setup', async function() {
         
         // Enable exceptions and warnings to log on turbosite setup
         this.defineExceptionsAndWarningsSetup(true, true, 'php_errors', 'php_warnings');
@@ -270,7 +266,8 @@ describe('error-management-and-logging', function() {
         // Generate a warning and an exception on home.php file
         this.injectCodeIntoHomeView('$a = $b; nonexistantfunction();');
         
-        this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
+        await this.automatedBrowserManager.loadUrl("https://$host/$locale")
+            .then((results) => {
             
             expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'PHP Problem: E_NOTICE')).toBe(1);
@@ -289,13 +286,11 @@ describe('error-management-and-logging', function() {
             logContents = fm.readFile(this.syncDestPath + '/logs/php_warnings');
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: b')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(1);
-            
-            return done();
         });
     });
     
     
-    it('should show errors and multiple warnings on the same log file for a site_php project type when log warnings and errors are enabled on setup', function(done) {
+    it('should show errors and multiple warnings on the same log file for a site_php project type when log warnings and errors are enabled on setup', async function() {
        
         // Enable exceptions and warnings to log on turbosite setup
         this.defineExceptionsAndWarningsSetup(false, false, 'php_log', 'php_log');
@@ -303,7 +298,8 @@ describe('error-management-and-logging', function() {
         // Generate 3 warnings and an exception on home.php file
         this.injectCodeIntoHomeView('$a = $b; $c = $d; $e = $f; nonexistantfunction();');
         
-        this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
+        await this.automatedBrowserManager.loadUrl("https://$host/$locale")
+            .then((results) => {
             
             expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(0);
             expect(StringUtils.countStringOccurences(results.source, 'E_NOTICE')).toBe(0);
@@ -322,13 +318,11 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: d')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: f')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(4);
-            
-            return done();
         });
     });
     
     
-    it('should not show errors or warnings on log for a site_php project type when log errors are disabled on setup', function(done) {
+    it('should not show errors or warnings on log for a site_php project type when log errors are disabled on setup', async function() {
        
         // Enable exceptions and warnings to log on turbosite setup
         this.defineExceptionsAndWarningsSetup(true, true, '', '');
@@ -336,7 +330,8 @@ describe('error-management-and-logging', function() {
         // Generate 3 warnings and an exception on home.php file
         this.injectCodeIntoHomeView('$a = $b; $c = $d; $e = $f; nonexistantfunction();');
               
-        this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
+        await this.automatedBrowserManager.loadUrl("https://$host/$locale")
+            .then((results) => {
             
             expect(StringUtils.countStringOccurences(results.source, 'PHP Problem: FATAL EXCEPTION')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(1);
@@ -349,18 +344,17 @@ describe('error-management-and-logging', function() {
             // Verify no log
             expect(fm.isFile(this.syncDestPath + '/logs/php_log')).toBe(false);
             expect(fm.isDirectoryEmpty(this.syncDestPath + '/logs')).toBe(true);
-            
-            return done();
         });
     });
     
     
-    it('should show too much time warnings on log for a site_php project when script takes more time than the one defined on setup', function(done) {
+    it('should show too much time warnings on log for a site_php project when script takes more time than the one defined on setup', async function() {
        
         // Enable too much time warnings to log
         this.defineExceptionsAndWarningsSetup(false, true, '', 'timewarnings', 1);
         
-        this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
+        await this.automatedBrowserManager.loadUrl("https://$host/$locale")
+            .then((results) => {
             
             // Verify log contains the time warning
             expect(fm.isFile(this.syncDestPath + '/logs/timewarnings')).toBe(true);
@@ -377,17 +371,18 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'Too much time used by script:')).toBeGreaterThanOrEqual(1);
             
             // Make sure the log file is not accessible via URL
-            httpTestsManager.assertUrlsFail(["https://$host/logs/timewarnings"], done);
+            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/timewarnings"]);
         });
     });
     
     
-    it('should show too much memory warnings on log for a site_php project when script takes more memory than the one defined on setup', function(done) {
+    it('should show too much memory warnings on log for a site_php project when script takes more memory than the one defined on setup', async function() {
        
         // Enable too much memory warnings to log
         this.defineExceptionsAndWarningsSetup(false, true, '', 'timewarnings', null, 1);
        
-        this.automatedBrowserManager.loadUrl("https://$host/$locale", (results) => {
+        await this.automatedBrowserManager.loadUrl("https://$host/$locale")
+            .then((results) => {
             
             expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'PHP Problem: E_WARNING')).toBe(1);
@@ -402,13 +397,11 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(logContents, 'E_WARNING Too much memory used by script:')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'tooMuchMemoryWarning setup memory threshold is 1 bytes')).toBeGreaterThanOrEqual(1);
             expect(StringUtils.countStringOccurences(logContents, '.php line -')).toBe(1);
-            
-            return done();
         });
     });
         
     
-    it('should show errors and warnings on browser and log files for a site_php project type when running a buggy web service and errors are enabled on setup', function(done) {
+    it('should show errors and warnings on browser and log files for a site_php project type when running a buggy web service and errors are enabled on setup', async function() {
     
         let serviceWithoutParamsContents = fm.readFile(this.serviceWithoutParamsPath);
         
@@ -422,10 +415,11 @@ describe('error-management-and-logging', function() {
                     'namespace project\\src\\main\\services\\example; $a = $x; \\nonexistantfunction();', 1))
               ).toBe(true);
         
-        this.automatedBrowserManager.loadUrl("https://$host/api/site/example/example-service-without-params", (results) => {
+        await this.automatedBrowserManager.loadUrl("https://$host/api/site/example/example-service-without-params")
+            .then((results) => {
             
-            expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'PHP Problem: E_NOTICE')).toBe(1);
+            expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'Undefined variable: x')).toBeGreaterThanOrEqual(1);
             expect(StringUtils.countStringOccurences(results.source, 'PHP Problem: FATAL EXCEPTION')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'Call to undefined function nonexistantfunction()')).toBeGreaterThanOrEqual(1);
@@ -438,7 +432,7 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(logContents, 'line 3')).toBe(2);
             
             // Make sure the log file is not accessible via URL
-            httpTestsManager.assertUrlsFail(["https://$host/logs/services_log.txt"], done);
+            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/services_log.txt"]);
         });
     });
 });

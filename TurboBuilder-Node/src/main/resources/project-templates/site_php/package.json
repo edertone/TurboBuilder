@@ -7,11 +7,11 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "devDependencies": {
-        "jasmine": "^3.6.3",
-        "selenium-webdriver": "^4.0.0-alpha.4",
+        "jasmine": "^3.10.0",
+        "selenium-webdriver": "^4.1.0",
         "turbocommons-ts": "^3.7.0",
         "turbodepot-node": "^7.0.1",
-        "turbotesting-node": "^7.8.0"
+        "turbotesting-node": "^9.0.0"
     },
     "author": "",
     "license": ""

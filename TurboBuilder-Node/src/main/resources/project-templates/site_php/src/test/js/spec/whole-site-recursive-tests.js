@@ -6,38 +6,31 @@
  */
 
 const { AutomatedBrowserManager } = require('turbotesting-node');
-const { TurboSiteTestsManager } = require('turbotesting-node');
-
-const tsm = new TurboSiteTestsManager('./');
 
 
 describe('whole-site-recursive-tests', function() {
 
 
-    beforeAll(function() {
+    beforeAll(async function() {
         
-        this.automatedBrowserManager = new AutomatedBrowserManager();     
-        this.automatedBrowserManager.initializeChrome();
-        this.automatedBrowserManager.wildcards = tsm.getWildcards();
+        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
     });
 
 
-    beforeEach(function() {
-    });
-    
-    
-    afterEach(function() {
-    });
-
-    
-    afterAll(function() {
+    beforeEach(async function() {
         
-        this.automatedBrowserManager.quit();
+        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+    });
+
+    
+    afterAll(async function() {
+        
+        await this.automatedBrowserManager.quit();
     });
     
     
-    it('should pass full website recursive tests', function(done) {
+    it('should pass full website recursive tests', async function() {
     
-        this.automatedBrowserManager.assertWholeWebSite("https://$host/$locale/en", done);
+        await this.automatedBrowserManager.assertWholeWebSite("https://$host/$locale/en");
     });
 });

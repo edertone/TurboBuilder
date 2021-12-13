@@ -21,18 +21,6 @@ describe('web-services', function() {
         this.baseUrl = "https://$host/api/site/example/";
         httpTestsManager.wildcards = tsm.getWildcards();
     });
-
-    
-    afterAll(function() {
-    });
-    
-    
-    beforeEach(function() {
-    });
-    
-    
-    afterEach(function() {
-    });
     
     
     it('should correctly load the ExampleServiceWithoutParams when no parameters are passed', function(done) {

@@ -7,36 +7,35 @@
 
 const { FilesManager } = require('turbodepot-node');
 const { AutomatedBrowserManager } = require('turbotesting-node');
-const { TurboSiteTestsManager } = require('turbotesting-node');
 
 const fm = new FilesManager();
-const tsm = new TurboSiteTestsManager('./');
 
 
 describe('expected-301-redirects', function() {
 
-
-    beforeAll(function() {
+    /* jscpd:ignore-start */
+    beforeAll(async function() {
         
-        this.automatedBrowserManager = new AutomatedBrowserManager();
-        this.automatedBrowserManager.wildcards = tsm.getWildcards();     
-        this.automatedBrowserManager.initializeChrome();
+        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
+    });
+
+
+    beforeEach(async function() {
+        
+        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
     });
 
     
-    afterAll(function() {
+    afterAll(async function() {
 
-        this.automatedBrowserManager.quit();
+        await this.automatedBrowserManager.quit();
     });
     
-    
-    it('should redirect urls with 301 as defined in expected-301-redirects.json', function(done) {
+    /* jscpd:ignore-end */
+    it('should redirect urls with 301 as defined in expected-301-redirects.json', async function() {
         
         let list = JSON.parse(fm.readFile('src/test/resources/expected-301-redirects/expected-301-redirects.json'));
         
-        this.automatedBrowserManager.assertUrlsRedirect(list, () => {
-            
-            done();
-        });
+        await this.automatedBrowserManager.assertUrlsRedirect(list);
     });
 });
