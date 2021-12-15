@@ -237,6 +237,10 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     cm.error('Could not create ' + testsTarget);
                 }
                 
+                // Copy sourcemaps (if exist) from generated build sources to tests target
+                fm.copyFile(destPath + sep + 'dist' + sep + tsTargetObject.folder + sep + tsTargetObject.mergedFile + '.js.map',
+                    testsTarget + sep + tsTargetObject.mergedFile + '.js.map');
+        
                 // Merge all tests code into tests target
                 fm.mergeFiles(fm.findDirectoryItems(srcTestsPath, /.*\.js$/i, 'absolute', 'files'),
                         testsTarget + sep + 'tests.js', "\n\n");
@@ -268,12 +272,12 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     htmlIndexCode += '<meta charset="utf-8">';
                     htmlIndexCode += '<meta name="viewport" content="width=device-width">';
                     htmlIndexCode += '<title>Tests results</title>';
-                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.9.2.css">';
+                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.17.2.css">';
                     htmlIndexCode += '</head>';
                     htmlIndexCode += '<body>';
                     htmlIndexCode += '<div id="qunit"></div>';
                     htmlIndexCode += '<div id="qunit-fixture"></div>';
-                    htmlIndexCode += '<script src="qunit-2.9.2.js"></script>';
+                    htmlIndexCode += '<script src="qunit-2.17.2.js"></script>';
                     htmlIndexCode += '<script src="source.js"></script>';
                     htmlIndexCode += '<script src="tests.js"></script>';
                     htmlIndexCode += '</body>';
