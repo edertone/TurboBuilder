@@ -19,6 +19,7 @@ RewriteCond %{REQUEST_URI} !/site/error-404.php [NC]
 RewriteRule ^.*\.php$ - [L,R=404]
 
 # Throw a 404 error for any non js or css file inside the libs folder
+RewriteCond %{REQUEST_URI} !view/views [NC]
 RewriteCond %{REQUEST_URI} libs/ [NC]
 RewriteCond %{REQUEST_URI} !\.(css|js)$ [NC]
 RewriteRule ^.*$ - [L,R=404]

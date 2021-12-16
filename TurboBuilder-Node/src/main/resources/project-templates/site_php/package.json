@@ -9,9 +9,9 @@
     "devDependencies": {
         "jasmine": "^3.10.0",
         "selenium-webdriver": "^4.1.0",
-        "turbocommons-ts": "^3.7.0",
+        "turbocommons-ts": "^3.8.0",
         "turbodepot-node": "^7.0.1",
-        "turbotesting-node": "^9.0.0"
+        "turbotesting-node": "^9.0.1"
     },
     "author": "",
     "license": ""

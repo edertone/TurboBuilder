@@ -278,6 +278,14 @@
         "sourceHtmlNotContains": null
     },
     {
+        "url": "https://$host/site/libs/jquery/jquery.js",
+        "titleContains": null,
+        "sourceHtmlContains": "jQuery",
+        "sourceHtmlStartsWith": null,
+        "sourceHtmlEndsWith": null,
+        "sourceHtmlNotContains": null
+    },
+    {
         "url": "https://$host/api/site/example/example-service-without-params",
         "titleContains": null,
         "sourceHtmlContains": "Any value can be output by the service as a string (json or xml data, plain text, etc..)",
