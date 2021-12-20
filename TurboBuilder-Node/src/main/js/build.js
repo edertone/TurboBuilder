@@ -1011,7 +1011,7 @@ exports.checkGitAvailable = function () {
             
         }catch(e){
 
-            cm.error('Could not find Git cmd executable. Please install git on your system and make sure it is globally accessible via cmd');
+            cm.warning('Warning: Could not find GIT cmd executable. Please install git on your system and make sure it is globally accessible via cmd');
         }
     }
 }
