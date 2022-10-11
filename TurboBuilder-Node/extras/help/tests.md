@@ -48,3 +48,17 @@ mklink /J C:\turbosite-webserver-symlink C:\xampp\htdocs
 To create a hard symlink to the xampp webserver htdocs folder for example
 
 Make sure the web server is running while launching tests!
+
+### Disable Google analytics on your local windows machine to avoid data to be sent to your site by the tests
+
+Edit the windows hosts file: "C:\Windows\System32\drivers\etc\hosts"
+
+Put the following lines at the end:
+
+    127.0.0.1 google-analytics.com
+    127.0.0.1 www.google-analytics.com
+    127.0.0.1 ssl.google-analytics.com
+    127.0.0.1 googletagmanager.com
+    127.0.0.1 www.googletagmanager.com
+    
+Restart your computer
