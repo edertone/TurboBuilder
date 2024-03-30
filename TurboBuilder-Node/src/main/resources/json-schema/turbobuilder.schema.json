@@ -765,9 +765,10 @@
                         "anyOf": [
                             {
                                 "type": "object",
-                                "required": ["type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
+                                "required": ["enabled", "type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
                                 "additionalProperties": false, 
                                 "properties": {
+                                    "enabled": {"type": "boolean"},
                                     "type": {"type": "string", "enum": ["phpUnit"]},
                                     "testsRoot": {"type": "string"},
                                     "coverageReport": {"type": "boolean"},
@@ -776,18 +777,20 @@
                             },
                             {
                                 "type": "object",
-                                "required": ["type", "jasmineConfig"],
+                                "required": ["enabled", "type", "jasmineConfig"],
                                 "additionalProperties": false, 
                                 "properties": {
+                                    "enabled": {"type": "boolean"},
                                     "type": {"type": "string", "enum": ["jasmine"]},
                                     "jasmineConfig": {"type": "string"}
                                 }
                             },
                             {
                                 "type": "object",
-                                "required": ["type", "testsRoot", "httpServerPort", "targets", "browsers"],
+                                "required": ["enabled", "type", "testsRoot", "httpServerPort", "targets", "browsers"],
                                 "additionalProperties": false, 
                                 "properties": {
+                                    "enabled": {"type": "boolean"},
                                     "type": {"type": "string", "enum": ["qunit"]},
                                     "testsRoot": {"type": "string"},
                                     "httpServerPort": {"type": "string"},

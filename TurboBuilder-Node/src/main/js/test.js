@@ -48,20 +48,23 @@ exports.execute = function () {
     
     for (let testSetup of global.setup.test.enabledTests) {
         
-        if(testSetup.type === 'phpUnit'){
+        if(testSetup.enabled === true){
             
-            executePhpUnitTests(testSetup, pathsToTest);
-        }
-        
-        if(testSetup.type === 'jasmine'){
+            if(testSetup.type === 'phpUnit'){
+                
+                executePhpUnitTests(testSetup, pathsToTest);
+            }
             
-            executeJasmineTests(testSetup, pathsToTest);
-        }
-        
-        if(testSetup.type === 'qunit'){
+            if(testSetup.type === 'jasmine'){
+                
+                executeJasmineTests(testSetup, pathsToTest);
+            }
             
-            executeQUnitTests(testSetup, pathsToTest);
-        }
+            if(testSetup.type === 'qunit'){
+                
+                executeQUnitTests(testSetup, pathsToTest);
+            }
+        } 
     }
     
     cm.success('test done');
@@ -272,12 +275,12 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
                     htmlIndexCode += '<meta charset="utf-8">';
                     htmlIndexCode += '<meta name="viewport" content="width=device-width">';
                     htmlIndexCode += '<title>Tests results</title>';
-                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.17.2.css">';
+                    htmlIndexCode += '<link rel="stylesheet" href="qunit-2.19.4.css">';
                     htmlIndexCode += '</head>';
                     htmlIndexCode += '<body>';
                     htmlIndexCode += '<div id="qunit"></div>';
                     htmlIndexCode += '<div id="qunit-fixture"></div>';
-                    htmlIndexCode += '<script src="qunit-2.17.2.js"></script>';
+                    htmlIndexCode += '<script src="qunit-2.19.4.js"></script>';
                     htmlIndexCode += '<script src="source.js"></script>';
                     htmlIndexCode += '<script src="tests.js"></script>';
                     htmlIndexCode += '</body>';

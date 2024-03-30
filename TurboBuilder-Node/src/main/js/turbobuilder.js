@@ -150,7 +150,7 @@ if (options.release){
     releaseModule.execute();
 }
 
-if (options.sync && !global.setup.sync.runAfterBuild){
+if (options.sync && !global.setup?.sync?.runAfterBuild){
     
     syncModule.execute();
 }

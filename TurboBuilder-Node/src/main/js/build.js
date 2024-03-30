@@ -553,7 +553,12 @@ exports.buildLibPhp = function (destPath) {
     phpExecCommand += " $p->compressFiles(Phar::GZ); $p->stopBuffering();";
     phpExecCommand += '"';
     
-    terminalManager.exec(phpExecCommand);
+    let phpExeResult = terminalManager.exec(phpExecCommand);
+    
+    if(!fm.isFile(destDist + sep + pharName)){
+        
+        cm.error(destDist + sep + pharName + ` could not be created.\n${phpExeResult.output}\nMake sure phar generation is enabled on the current php installation`);
+    }
 }
 
 
@@ -701,7 +706,7 @@ exports.buildLibTs = function (destPath) {
  */
 exports.buildLibAngular = function () {
     
-    // Use angular cli to compile the project to the target folder
+    // Use angular cli (the one that is installed on the current project node_modules folder) to compile the project to the target folder
     let angularBuildCommand = 'build ' + setupModule.getProjectName();
     cm.text("\nLaunching ng " + angularBuildCommand + "\n");
     
@@ -715,15 +720,15 @@ exports.buildLibAngular = function () {
 
 
 /**
- * Execute the lib_angular build process
+ * Execute the app_angular build process
  */
 exports.buildAppAngular = function (destPath) {
     
     let sep = fm.dirSep();
     
-    // Use angular cli to compile the project to the target folder
-    // Note that we enable --output-hashing=all to prevent browsers from caching the generated files 
-    let prod = global.isRelease ? ' --prod' : '';
+    // Use angular cli (the one that is installed on the current project node_modules folder) to compile the project to the target folder
+    // Notice that we enable --output-hashing=all to prevent browsers from caching the generated files 
+    let prod = global.isRelease ? ' --configuration production' : ' --configuration development';
      
     let angularBuildCommand = `build${prod} --output-hashing=all --output-path="${destPath + sep}dist"`;
     

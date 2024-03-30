@@ -145,16 +145,19 @@
         "warnIfCalledWithoutBuild": true,
         "enabledTests": [
             {
+                "enabled" : false,
                 "type": "phpUnit",
                 "testsRoot": "src/test",
                 "coverageReport": true,
                 "coverageReportOpenAfterTests": true
             },        
             {
+                "enabled" : false,
                 "type": "jasmine",
                 "jasmineConfig": "src/test/js/jasmine.json"
             },
             {
+                "enabled" : false,
                 "type": "qunit",
                 "testsRoot": "src/test",
                 "httpServerPort": "8185",

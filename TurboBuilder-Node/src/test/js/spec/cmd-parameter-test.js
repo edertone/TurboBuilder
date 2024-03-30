@@ -65,6 +65,7 @@ describe('cmd-parameter-test', function() {
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
         setup.test.warnIfCalledWithoutBuild = true;
+        setup.test.enabledTests[0].enabled = true;
         setup.test.enabledTests[0].coverageReport = false;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
@@ -100,6 +101,10 @@ describe('cmd-parameter-test', function() {
 
         testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
+        let setup = tsm.getSetup('turbobuilder');  
+        setup.test.enabledTests[0].enabled = true;
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
         // This test makes sure that the expected error is found at the execution result and ALSO checks that there's no extra texts after the end of this error.
         // In fact it checks that the execution result ENDS with this error and nothing more
         expect(testsGlobalHelper.execTbCmd('-bt')).toMatch(/[\s\S]*Could not find jasmine config file at[\s\S]*src.test.js.jasmine\.json[\s\S]*Please setup a jasmine\.json file there so jasmine tests can be executed![\s\S]{0,5}$/);
@@ -110,8 +115,8 @@ describe('cmd-parameter-test', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
-        setup.test.enabledTests[0].coverageReport = false;
-        
+        setup.test.enabledTests[0].enabled = true;
+        setup.test.enabledTests[0].coverageReport = false;        
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         let testResult = testsGlobalHelper.execTbCmd('-bt');
@@ -127,6 +132,7 @@ describe('cmd-parameter-test', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_php', null, []);
  
+        setup.test.enabledTests[0].enabled = true;
         setup.test.enabledTests[0].coverageReport = true;
         setup.test.enabledTests[0].coverageReportOpenAfterTests = false;
         
@@ -155,6 +161,7 @@ describe('cmd-parameter-test', function() {
         
         let setup = tsm.getSetup('turbobuilder');  
         setup.validate.filesContent.copyPasteDetect = [];
+        setup.test.enabledTests[0].enabled = true;
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         let testsLaunchResult = testsGlobalHelper.execTbCmd('-bt');        
@@ -170,6 +177,8 @@ describe('cmd-parameter-test', function() {
         let sep = fm.dirSep();
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.test.enabledTests[0].enabled = true;
         
         // Modify the project setup to sync the files to /
         setup.metadata.name = 'project-name';
@@ -208,6 +217,8 @@ describe('cmd-parameter-test', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
                 
+        setup.test.enabledTests[0].enabled = true;
+        
         // Modify the project setup to sync the files to /subfolder
         setup.metadata.name = 'project-name';
         setup.sync.destPath = 'C:/turbosite-webserver-symlink/subfolder';        
@@ -251,6 +262,8 @@ describe('cmd-parameter-test', function() {
         let sep = fm.dirSep();
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        setup.test.enabledTests[0].enabled = true;
         
         // Modify the project setup to sync the files to /subfolder1/subfolder2
         setup.metadata.name = 'project-name';

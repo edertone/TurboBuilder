@@ -30,12 +30,12 @@ exports.execute = function (verbose = true) {
       
     if(verbose || global.setup.sync.runAfterBuild === true){
     
-        if(global.setup.sync.type === "fileSystem"){
+        if(global.setup?.sync?.type === "fileSystem"){
             
             syncFileSystem();
         }
 
-        if(global.setup.sync.type === "ftp" || global.setup.sync.type === "sftp"){
+        if(global.setup?.sync?.type === "ftp" || global.setup?.sync?.type === "sftp"){
             
             syncFtpSftp();
         }

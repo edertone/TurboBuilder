@@ -288,4 +288,20 @@ describe('cmd-parameter-sync', function(){
         expect(fm.isDirectoryEmpty(destFolder + '-release')).toBe(false);
         expect(fm.isDirectory(destFolder + '-release' + fm.dirSep() + 'site')).toBe(true);
     });
+    
+    
+    it('should not fail and not sync anything if sync is called but no sync setup is defined', function(){
+        
+        let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
+        
+        delete setup.sync;
+        delete setup.test;
+
+        expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
+        
+        let launchResult = testsGlobalHelper.execTbCmd('-cbts');
+        expect(launchResult).toContain('build ok');
+        expect(launchResult.toLowerCase()).not.toContain('error');
+        expect(launchResult.toLowerCase()).not.toContain('could not find jasmine config file');
+    });
 });

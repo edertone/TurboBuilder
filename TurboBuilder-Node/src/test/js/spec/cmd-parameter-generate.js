@@ -408,6 +408,7 @@ describe('cmd-parameter-generate', function(){
         
         let setup = testsGlobalHelper.generateProjectAndSetup('test_project', null, null);
         
+        setup.test.enabledTests[0].enabled = true;
         setup.test.enabledTests[0].jasmineConfig = 'src/test/js/jasmineinvalid.json';
         
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);

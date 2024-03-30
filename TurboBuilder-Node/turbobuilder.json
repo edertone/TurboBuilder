@@ -71,7 +71,8 @@
     
     "test": {
         "enabledTests": [
-           {
+            {
+                "enabled": true,
                 "type": "jasmine",
                 "jasmineConfig": "src/test/js/jasmine.json"
             }

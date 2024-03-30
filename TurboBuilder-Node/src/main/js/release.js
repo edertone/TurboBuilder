@@ -345,6 +345,8 @@ let minifyHtmlFiles = function (destPath) {
  */
 let minifyPhpFiles = function (destPath) {
     
+    buildModule.checkPhpAvailable();
+    
     let sep = fm.dirSep();
     let destDist = destPath + sep + 'dist';
     
@@ -360,7 +362,7 @@ let minifyPhpFiles = function (destPath) {
             
         }catch(e){
 
-            cm.error("Php minify failed");
+            cm.error("Php minify failed ");
         }
         
         fm.deleteFile(phpFile);
