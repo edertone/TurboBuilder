@@ -561,13 +561,13 @@ let validatePhp = function () {
                 
                 if(!isFileOnExcludeList(fileToValidate, global.setup.validate.php.namespaces.excludes)){
                     
-                    var fileContents = fm.readFile(fileToValidate);
+                    let fileContents = fm.readFile(fileToValidate);
                     
                     if(fileContents.indexOf("namespace") >= 0){
         
-                        var namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
+                        let namespace = StringUtils.trim(fileContents.split("namespace")[1].split(";")[0]);
                         
-                        var validateNamespace = validateAux(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
+                        let validateNamespace = validateAux(namespace, fileToValidate, global.setup.validate.php.namespaces.mustContain);
                         
                         if(validateNamespace !== ''){
                         
@@ -657,6 +657,17 @@ let validateSitePhp = function () {
         
         validateView(turbositeSetup.homeView, 'Home view');
         validateView(turbositeSetup.singleParameterView, 'Single parameter view');
+        
+        // Validate that all services defined on the services folder end with "Service.php"
+        let servicesToValidate = fm.findDirectoryItems(global.runtimePaths.main + '/services', /.*\.php$/i, 'relative', 'files', -1);
+        
+        for (let serviceToValidate of servicesToValidate){
+        
+            if(!serviceToValidate.endsWith('Service.php')){
+                                
+                errors.push(StringUtils.formatPath('src/main/services/' + serviceToValidate, '/') + ' must end with "Service.php"');
+            }
+        }  
             
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }

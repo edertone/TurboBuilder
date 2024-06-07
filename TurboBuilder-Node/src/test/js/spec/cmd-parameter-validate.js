@@ -1570,6 +1570,16 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation for a site_php project when there is a service that does not end with Service.php', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        fm.renameFile('./src/main/services/example/ExampleServiceThatCallsAnotherOneService.php', './src/main/services/example/ExampleServiceThatCallsAnotherOne.php');
+                
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/ExampleServiceThatCallsAnotherOne\.php must end with "Service.php"/);
+    });
+    
+    
     it('should fail validation for a newly generated lib_js project containing duplicate code. Report must be generated if configured, and not if not configured', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, null);

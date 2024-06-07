@@ -34,9 +34,9 @@
     "sass": "^1.53.0",
     "selenium-webdriver": "^4.3.1",
     "sharp": "^0.30.7",
-    "turbocommons-ts": "^3.8.0",
-    "turbodepot-node": "^7.0.1",
-    "turbotesting-node": "^9.1.4",
+    "turbocommons-ts": "^3.11.0",
+    "turbodepot-node": "^7.1.0",
+    "turbotesting-node": "^10.1.1",
     "typedoc": "^0.19.2",
     "typescript": "^3.8.3",
     "uglify-es": "3.3.9"

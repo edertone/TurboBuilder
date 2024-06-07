@@ -592,7 +592,7 @@ describe('web-services', function() {
                        '{"info":"this object is returned as a json string with the optionally received URL and POST parameters values","received-POST-param-data":"datavalue","received-URL-param-0-value":"p1","received-URL-param-1-value":"p2","received-URL-param-2-value":""}',
                        'ExampleServiceThatThrows400BadRequest called. Result:',
                        '{"code":400,"title":"This is a bad request example","message":"And this is the error message","trace":"',
-                       'ExampleServiceThatThrows400BadRequest.php']
+                       'ExampleServiceThatThrows400BadRequestService.php']
         }], (responses) => { done() });
     });
     

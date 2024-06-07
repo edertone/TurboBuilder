@@ -23,7 +23,7 @@ describe('error-management-and-logging', function() {
         this.syncDestPath = tsm.getSyncDestPath();
         this.syncDestIndexPhpPath = this.syncDestPath + '/site/index.php';
         this.syncDestHomeViewFilePath = this.syncDestPath + '/site/view/views/home/home.php';
-        this.serviceWithoutParamsPath = this.syncDestPath + '/site/services/example/ExampleServiceWithoutParams.php';
+        this.serviceWithoutParamsPath = this.syncDestPath + '/site/services/example/ExampleServiceWithoutParamsService.php';
         
         this.indexPhpBackup = fm.readFile(this.syncDestIndexPhpPath);
         this.homeViewFileContentsBackup = fm.readFile(this.syncDestHomeViewFilePath);

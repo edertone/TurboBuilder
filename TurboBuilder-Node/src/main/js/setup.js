@@ -363,6 +363,12 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             type === global.setupBuildTypes.app_node_cmd) &&
             testItem.type === 'jasmine'){
 
+            // site_php projects will have tests enabled by default
+            if(type === global.setupBuildTypes.site_php) {
+                
+                testItem.enabled = true;
+            }
+                
             testArray.push(testItem);
         }
         
