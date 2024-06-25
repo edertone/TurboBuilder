@@ -200,7 +200,7 @@ describe('cmd-parameter-validate', function() {
     });
 
     
-    it('should validate ok a newly generated site_php project with a turbobuilder setup containing only $schema, metadata and build', function() {
+    it('should validate ok a newly generated site_php project with a turbobuilder setup containing only $schema, metadata, containers and build', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
@@ -210,6 +210,7 @@ describe('cmd-parameter-validate', function() {
                 description: '',
                 builderVersion: setupModule.getBuilderVersion()
             },
+            containers: { docker: [] },
             build: {site_php: {}},
             validate: {filesContent: {copyPasteDetect: []}}}))
                 .toBe(true);
@@ -298,7 +299,11 @@ describe('cmd-parameter-validate', function() {
         
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_ts', null, []);
         
-        expect(testsGlobalHelper.saveToSetupFile({"$schema": setup.$schema, metadata: {builderVersion: setupModule.getBuilderVersion()}, build: {lib_ts: {}}}))
+        expect(testsGlobalHelper.saveToSetupFile({
+                "$schema": setup.$schema,
+                metadata: {builderVersion: setupModule.getBuilderVersion()},
+                containers: { docker: [] },
+                build: {lib_ts: {}}}))
             .toBe(true);
         
         expect(fm.saveFile('./src/main/ts/index.ts', '')).toBe(true);
@@ -321,6 +326,7 @@ describe('cmd-parameter-validate', function() {
                 description: '',
                 builderVersion: setupModule.getBuilderVersion()
             },
+            containers: { docker: [] },
             build: {site_php: {}},
             validate: {filesContent: {copyPasteDetect: []}}}))
                 .toBe(true);

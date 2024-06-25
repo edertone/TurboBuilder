@@ -52,8 +52,8 @@ describe('cmd-parameter-sync', function(){
 
         testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
 
-        expect(testsGlobalHelper.execTbCmd('-s')).toContain('Source path does not exist:');
-        expect(testsGlobalHelper.execTbCmd('--sync')).toContain('Source path does not exist:');
+        expect(testsGlobalHelper.execTbCmd('-s')).toContain('Source filesystem sync path does not exist:');
+        expect(testsGlobalHelper.execTbCmd('--sync')).toContain('Source filesystem sync path does not exist:');
     });
 
 

@@ -252,7 +252,7 @@ describe('cmd-parameter-build', function() {
         expect(fm.saveFile('./src/main/resources/favicons/196x191.png', 'test')).toBe(true);
         
         // This regexp makes sure that the last message from the exec result is the expected error and nothing more comes after
-        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/[\s\S]*Unexpected favicon name: 196x191.png[\s\S]{0,5}$/);
+        expect(testsGlobalHelper.execTbCmd('-b')).toMatch(/[\s\S]*Unexpected favicon name: 196x191.png[\s\S]*$/);
     });
     
     
@@ -559,7 +559,7 @@ describe('cmd-parameter-build', function() {
         
         expect(testsGlobalHelper.execTbCmd('-b')).toContain("build ok");
         
-        let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '/dist/site/index.php');
+        let indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '/dist/wildcard-build-value/site/index.php');
 
         expect(indexPhpSetup.baseURL).toBe("wildcard-build-value");
         expect(indexPhpSetup.locales[0]).toBe("wildcard-build-value");

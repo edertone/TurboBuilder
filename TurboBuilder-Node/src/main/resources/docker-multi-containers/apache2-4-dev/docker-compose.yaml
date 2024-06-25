@@ -1,0 +1,19 @@
+# Build all containers in this file with: docker compose build
+# Launch this file with : docker compose up -d
+# Unload this file with : docker compose down -v
+
+services:
+
+    apache:
+    
+        build: ./apache
+        
+        working_dir: /usr/local/apache2/htdocs/
+        
+        volumes:
+            # Our Project target folder must be specified on the PROJECT_TARGET_FOLDER environment variable.
+            # It will be mounted on the apache root folder inside the docker container.
+            - ${PROJECT_TARGET_FOLDER}:/usr/local/apache2/htdocs/ 
+            
+        ports:
+            - 8080:80

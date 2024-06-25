@@ -22,7 +22,7 @@ describe('html-full-page-cache-management', function() {
         this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
         
         // Define used paths
-        this.syncDestPath = tsm.getSyncDestPath();
+        this.syncDestPath = tsm.getPathToPublishFolder();
         this.testResourcesPath = './src/test/resources';
         this.syncDestViewsPath = this.syncDestPath + '/site/view/views';
         this.viewsCacheFolder = this.syncDestPath + '/site/___views_cache___';

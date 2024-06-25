@@ -20,7 +20,7 @@ const { TurboSiteTestsManager } = require('turbotesting-node');
 const tsm = new TurboSiteTestsManager('./');
 
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 45000;
 
 
 /**
@@ -29,13 +29,19 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000;
  */
 global.testsGlobalHelper = {
     
+
+    /**
+     * Set this to false if you want to see what is happening on the browser
+     */
+    isHeadless: true,
+    
     
     /**
      * Globally prepare the tests
      */
     setupBrowser: function(automatedBrowserManager) {
     
-        automatedBrowserManager.initializeChrome();
+        automatedBrowserManager.initializeChrome('en', '', true, this.isHeadless);
         automatedBrowserManager.wildcards = tsm.getWildcards();
         
         return automatedBrowserManager;

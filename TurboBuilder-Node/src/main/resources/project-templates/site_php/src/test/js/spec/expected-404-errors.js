@@ -17,7 +17,7 @@ describe('expected-404-errors', function() {
     /* jscpd:ignore-start */
     beforeAll(async function() {
         
-        this.syncDestPath = tsm.getSyncDestPath();
+        this.syncDestPath = tsm.getPathToPublishFolder();
         this.syncDestViewFilePath = this.syncDestPath + '/site/view/views';
         
         this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());

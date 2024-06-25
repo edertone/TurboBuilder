@@ -1,0 +1,17 @@
+# Build all containers in this file with: docker compose build
+# Launch this file with : docker compose up -d
+# Unload this file with : docker compose down -v
+
+services:
+
+    database:
+  
+        image: mariadb:10.4
+    
+        container_name: mariadb
+    
+        environment:
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+
+        ports:
+            - 3306:3306

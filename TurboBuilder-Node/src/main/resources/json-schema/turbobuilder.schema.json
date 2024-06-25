@@ -6,6 +6,7 @@
     "required": [
         "$schema",
         "metadata",
+        "containers",
         "build"
     ],
     "additionalProperties": false, 
@@ -157,6 +158,38 @@
                 "builderVersion": {
                     "type": "string",
                     "description": "The turbo builder version that is used by this project"
+                }
+            }
+        },
+        "containers": {
+            "type": "object",
+            "description": "Contains the setup for runtime containers that must be used with the project. Turbobuilder comes with several bundled containers, but also custom ones can be used.",
+            "required": ["docker"],
+            "additionalProperties": false, 
+            "properties": {
+                "docker": {
+                    "type": "array",
+                    "description": "Contains the setup for all the docker containers that will be used by the project",
+                    "items": {
+                        "type": "object",
+                        "description": "Definition for a docker compose container to activate with the project",
+                        "required": [
+                            "path",
+                            "startPolicy"
+                        ],
+                        "additionalProperties": false, 
+                        "properties": {
+                            "path": {
+                                "type": "string",
+                                "description": "Path to a docker compose container. If we want to use a Turbobuilder predefined one, we will put its folder name. If we want to use a custom one, we must specify a path starting with ./ (relative to project root)"
+                            },
+                            "startPolicy": {
+                                "type": "string",
+                                "enum": ["always", "lazy"],
+                                "description": "Defines when this docker container will be started. 'always' will launch the container every time turbobuilder is called, 'lazy' will let turbobuilder decide"
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -654,7 +687,7 @@
         },
         "sync": {
             "type": "object",
-            "description": "Defines the parameters for the sync process",
+            "description": "Defines how to transfer the project built files into another folders o remote locations via tb -s. You can remove this section if not needed",
             "anyOf": [
                 {
                     "type": "object",

@@ -441,7 +441,7 @@ describe('cmd-parameter-release', function() {
         
         tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
 
-        expect(tsSetup.baseURL).toBe("_dev");
+        expect(tsSetup.baseURL).toBe("");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
         expect(tsSetup.errorSetup.exceptionsToMail).toBe("");
         expect(tsSetup.errorSetup.warningsToMail).toBe("");
@@ -478,7 +478,7 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("release ok");
         
-        let tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
+        let tsSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/some custom base url/site/index.php');
         
         expect(tsSetup.baseURL).toBe("some custom base url");
         expect(tsSetup.errorSetup.exceptionsToBrowser).toBe(false);
@@ -764,7 +764,7 @@ describe('cmd-parameter-release', function() {
         
         expect(testsGlobalHelper.execTbCmd('-r')).toContain("release ok");
         
-        indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/site/index.php');
+        indexPhpSetup = tsm.getSetupFromIndexPhp('turbosite', './target/' + folderName + '-0.0.0/dist/wildcard-release-value/site/index.php');
 
         expect(indexPhpSetup.baseURL).toBe("wildcard-release-value");
         expect(indexPhpSetup.locales[0]).toBe("wildcard-release-value");  

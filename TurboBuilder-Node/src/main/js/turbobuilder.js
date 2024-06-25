@@ -16,6 +16,7 @@ const { FilesManager } = require('turbodepot-node');
 const setupModule = require('./setup');
 const generateModule = require('./generate');
 const validateModule = require('./validate');
+const appsModule = require('./apps');
 const buildModule = require('./build');
 const releaseModule = require('./release');
 const testModule = require('./test');
@@ -40,7 +41,7 @@ let printVersionInfo = function () {
     }
     
     return result;
-}
+};
 
 
 /**
@@ -66,7 +67,7 @@ let printFolderContents = function (path, headlineText) {
             }
         }
     }
-}
+};
 
 
 /**
@@ -83,6 +84,7 @@ program
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
     .option('-r, --release', 'Generate the project production ready version as configured in ' + global.fileNames.setup)
     .option('-s, --sync', 'Mirror project folders to a remote location as configured in ' + global.fileNames.setup)
+    .option('-d, --docker', 'Startup the docker containers that are configured in ' + global.fileNames.setup + ' till a key is pressed to be shut down')
     .parse(process.argv);
 
 const options = program.opts();
@@ -94,7 +96,8 @@ if(!options.generate &&
    !options.build &&
    !options.test &&
    !options.release &&
-   !options.sync){
+   !options.sync &&
+   !options.docker){
     
     program.help();
     process.exit(0);
@@ -120,7 +123,15 @@ if (options.generate){
 }
 
 // Initialize the builder setup and global variables
-setupModule.init();
+setupModule.init();    
+
+// Launch docker containers if requested
+if (options.docker){
+    
+    appsModule.startDockerProjectContainers();
+    cm.waitForKeyPress();
+    process.exit(0);
+}
 
 // Perform the project cleanup
 if (options.clean){
@@ -142,11 +153,13 @@ if (options.lint &&
 // Perform the build as defined on setup
 if (options.build){
     
+    appsModule.checkContainersStartPolicy();
     buildModule.execute();
 }
 
 if (options.release){
     
+    appsModule.checkContainersStartPolicy();
     releaseModule.execute();
 }
 
@@ -157,11 +170,13 @@ if (options.sync && !global.setup?.sync?.runAfterBuild){
 
 if (options.test){
     
+    appsModule.checkContainersStartPolicy();
+    
     if (!options.build && !options.release && global.setup.test.warnIfCalledWithoutBuild){
     
         let readline = require('readline');
         
-        var rl = readline.createInterface({
+        let rl = readline.createInterface({
           input: process.stdin,
           output: process.stdout
         });

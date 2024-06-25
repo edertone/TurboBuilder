@@ -14,6 +14,7 @@ const validateModule = require('./validate');
 const syncModule = require('./sync');
 const setupModule = require('./setup');
 const buildModule = require('./build');
+const appsModule = require('./apps');
 const UglifyJS = require("uglify-es");
 const CleanCSS = require('clean-css');
 const imagemin = require('imagemin');
@@ -93,7 +94,7 @@ exports.execute = function () {
     
     if(global.setup.build.lib_php){
         
-        buildModule.buildLibPhp(releaseFullPath);
+        buildModule.buildLibPhp(this.getReleaseRelativePath());
     }
     
     if(global.setup.build.lib_js){
@@ -110,7 +111,7 @@ exports.execute = function () {
     minifyCss(releaseFullPath);
     minifyHtaccess(releaseFullPath);
     minifyHtmlFiles(releaseFullPath);
-    minifyPhpFiles(releaseFullPath);
+    minifyPhpFiles(this.getReleaseRelativePath() + '/dist');
     
     if(global.setup.release.optimizePictures){
     
@@ -284,7 +285,7 @@ let minifyImages = function (destPath) {
  */
 let minifyHtmlFiles = function (destPath) {
     
-    var minify = require('html-minifier').minify;
+    const minify = require('html-minifier').minify;
         
     let sep = fm.dirSep();
     let destDist = destPath + sep + 'dist';
@@ -339,18 +340,16 @@ let minifyHtmlFiles = function (destPath) {
 
 
 /**
- * Minifies (overwrites) all the php files that exist on the provided path
+ * Minifies (overwrites) all the php files that exist on the provided path (relative to target root)
  * Note that phar files won't be affected by this minification cause they are generated before this method is called
  * and do not have a php extension. We don't want to lose phpdoc comments on phar files
  */
-let minifyPhpFiles = function (destPath) {
-    
-    buildModule.checkPhpAvailable();
+let minifyPhpFiles = function (targetRelativePath) {
     
     let sep = fm.dirSep();
-    let destDist = destPath + sep + 'dist';
+    let targetAbsolutePath = global.runtimePaths.target + sep + targetRelativePath;
     
-    let phpFiles = fm.findDirectoryItems(destDist, /.*\.php$/i, 'absolute', 'files');
+    let phpFiles = fm.findDirectoryItems(targetAbsolutePath, /.*\.php$/i, 'relative', 'files');
     
     for (let phpFile of phpFiles) {
         
@@ -358,15 +357,17 @@ let minifyPhpFiles = function (destPath) {
         
         try{
             
-            phpMinified = execSync('php -w "' + phpFile + '"', {stdio : 'pipe'}).toString();
+            phpMinified = appsModule.callPhpCmd('-w "' + StringUtils.formatPath(targetRelativePath + '/' + phpFile, '/') + '"', false).output;
             
         }catch(e){
 
             cm.error("Php minify failed ");
         }
         
-        fm.deleteFile(phpFile);
-        fm.saveFile(phpFile, phpMinified); 
+        let phpFileAbsolutePath = targetAbsolutePath + sep + phpFile;
+        
+        fm.deleteFile(phpFileAbsolutePath);
+        fm.saveFile(phpFileAbsolutePath, phpMinified); 
     }
     
     if(phpFiles.length > 0){
@@ -427,17 +428,15 @@ let generateCodeDocumentation = function (destPath) {
             cm.error('Could not create docs folder ' + docsPath + sep + 'php');
         }
         
-        let phpDocExec = 'php';
-        
-        phpDocExec += ' "' + global.installationPaths.main + sep + 'libs' + sep + 'phpDocumentor.phar"';
+        let phpDocExec = '"../phpDocumentor.phar"';
         phpDocExec += ' --template="responsive-twig"';
         phpDocExec += ' --visibility="public"';
         phpDocExec += ' --title="' + setupModule.getProjectName() + "-" + setupModule.getProjectRepoSemVer() + '"';
-        phpDocExec += ' -i "' + destMain + '/php/libs,autoloader.php"';
-        phpDocExec += ' -d "' + destMain + sep + 'php"';
-        phpDocExec += ' -t "' + docsPath + sep + 'php"';
+        phpDocExec += ' -i "' + releaseRelativePath + '/main/php/libs,autoloader.php"';
+        phpDocExec += ' -d "' + releaseRelativePath + '/main/php"';
+        phpDocExec += ' -t "' + releaseRelativePath + '/docs/php"';
         
-        let phpDocExecResult = terminalManager.exec(phpDocExec);
+        let phpDocExecResult = appsModule.callPhpCmd(phpDocExec);
         
         if(phpDocExecResult.failed){
             
@@ -482,7 +481,7 @@ let generateCodeDocumentation = function (destPath) {
  */
 let createGitChangeLog = function (destPath) {
     
-    buildModule.checkGitAvailable();
+    appsModule.checkGitAvailable();
     
     // Define the changelog text
     let changeLogContents = setupModule.getProjectName() + ' DEV CHANGELOG ---------------------------------------------';

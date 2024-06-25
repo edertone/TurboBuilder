@@ -512,7 +512,7 @@ let validateStyleSheets = function () {
         let cssContents = fm.readFile(cssFile);
         
         if(global.setup.validate.styleSheets.cssHardcodedColorForbid &&
-           /^(?!\$).*:.*(#|rgb).*$/im.test(cssContents)) {
+           /^(?!\$).*:.*(#|rgb).*;.*$/im.test(cssContents)) {
                 
             errors.push("File contains hardcoded css color: " + cssFile);
         }

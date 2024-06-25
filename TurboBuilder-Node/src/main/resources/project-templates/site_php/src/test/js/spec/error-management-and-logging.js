@@ -19,8 +19,9 @@ describe('error-management-and-logging', function() {
         
         this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
                 
-        // Define all required paths       
-        this.syncDestPath = tsm.getSyncDestPath();
+        // Define all required paths
+        this.syncDestPath = tsm.getPathToPublishFolder();
+        this.tmpLogsPath = tsm.getTargetPath() + '/logs/tmp-testlogs';
         this.syncDestIndexPhpPath = this.syncDestPath + '/site/index.php';
         this.syncDestHomeViewFilePath = this.syncDestPath + '/site/view/views/home/home.php';
         this.serviceWithoutParamsPath = this.syncDestPath + '/site/services/example/ExampleServiceWithoutParamsService.php';
@@ -37,9 +38,9 @@ describe('error-management-and-logging', function() {
             expect(fm.saveFile(this.serviceWithoutParamsPath, this.serviceWithoutParamsContentsBackup)).toBe(true);
             
             // Delete the logs folder if it exists
-            if(fm.isDirectory(this.syncDestPath + '/logs')){
+            if(fm.isDirectory(this.tmpLogsPath)){
                 
-                expect(fm.deleteDirectory(this.syncDestPath + '/logs', true)).toBeGreaterThan(-1);
+                expect(fm.deleteDirectory(this.tmpLogsPath, true)).toBeGreaterThan(-1);
             }
         };
         
@@ -109,16 +110,16 @@ describe('error-management-and-logging', function() {
         turbodepotSetup.sources.fileSystem = [
             {
                 "name": "logs_source",
-                "path": this.syncDestPath + '/logs'
+                "path": '/var/www/target/logs/tmp-testlogs'
             }
         ];
         turbodepotSetup.depots[0].logs.source = 'logs_source';
         expect(tsm.saveSetupToIndexPhp(turbodepotSetup, "turbodepot", this.syncDestIndexPhpPath)).toBe(true);        
         
         // Create the logs folder and make sure it exists and it is empty
-        expect(fm.isDirectory(this.syncDestPath + '/logs')).toBe(false);
-        expect(fm.createDirectory(this.syncDestPath + '/logs')).toBe(true);
-        expect(fm.isDirectoryEmpty(this.syncDestPath + '/logs')).toBe(true);
+        expect(fm.isDirectory(this.tmpLogsPath)).toBe(false);
+        expect(fm.createDirectory(this.tmpLogsPath)).toBe(true);
+        expect(fm.isDirectoryEmpty(this.tmpLogsPath)).toBe(true);
     });
     
     
@@ -276,14 +277,14 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'Call to undefined function nonexistantfunction()')).toBeGreaterThanOrEqual(1);
             
             // Verify generated errors log
-            expect(fm.isFile(this.syncDestPath + '/logs/php_errors')).toBe(true);
-            let logContents = fm.readFile(this.syncDestPath + '/logs/php_errors');
+            expect(fm.isFile(this.tmpLogsPath + '/php_errors')).toBe(true);
+            let logContents = fm.readFile(this.tmpLogsPath + '/php_errors');
             expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(1);
             
             // Verify generated warnings log
-            expect(fm.isFile(this.syncDestPath + '/logs/php_warnings')).toBe(true);
-            logContents = fm.readFile(this.syncDestPath + '/logs/php_warnings');
+            expect(fm.isFile(this.tmpLogsPath + '/php_warnings')).toBe(true);
+            logContents = fm.readFile(this.tmpLogsPath + '/php_warnings');
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: b')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'home.php line 1')).toBe(1);
         });
@@ -311,8 +312,8 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'Call to undefined function nonexistantfunction()')).toBe(0);
             
             // Verify generated log
-            expect(fm.isFile(this.syncDestPath + '/logs/php_log')).toBe(true);
-            let logContents = fm.readFile(this.syncDestPath + '/logs/php_log');
+            expect(fm.isFile(this.tmpLogsPath + '/php_log')).toBe(true);
+            let logContents = fm.readFile(this.tmpLogsPath + '/php_log');
             expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: b')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: d')).toBe(1);
@@ -342,8 +343,8 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'Call to undefined function nonexistantfunction()')).toBeGreaterThanOrEqual(1);
             
             // Verify no log
-            expect(fm.isFile(this.syncDestPath + '/logs/php_log')).toBe(false);
-            expect(fm.isDirectoryEmpty(this.syncDestPath + '/logs')).toBe(true);
+            expect(fm.isFile(this.tmpLogsPath + '/php_log')).toBe(false);
+            expect(fm.isDirectoryEmpty(this.tmpLogsPath)).toBe(true);
         });
     });
     
@@ -357,8 +358,8 @@ describe('error-management-and-logging', function() {
             .then((results) => {
             
             // Verify log contains the time warning
-            expect(fm.isFile(this.syncDestPath + '/logs/timewarnings')).toBe(true);
-            let logContents = fm.readFile(this.syncDestPath + '/logs/timewarnings');
+            expect(fm.isFile(this.tmpLogsPath + '/timewarnings')).toBe(true);
+            let logContents = fm.readFile(this.tmpLogsPath + '/timewarnings');
 
             expect(StringUtils.countStringOccurences(logContents, 'E_WARNING Too much time used by script:')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION')).toBe(0);
@@ -369,9 +370,9 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'turbosite-global-error-manager-problem')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'PHP Problem: E_WARNING')).toBe(1);
             expect(StringUtils.countStringOccurences(results.source, 'Too much time used by script:')).toBeGreaterThanOrEqual(1);
-            
+
             // Make sure the log file is not accessible via URL
-            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/timewarnings"]);
+            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/tmp-testlogs/timewarnings"]);
         });
     });
     
@@ -390,8 +391,8 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'FATAL EXCEPTION')).toBe(0);
             
             // Verify log contains the time warning
-            expect(fm.isFile(this.syncDestPath + '/logs/timewarnings')).toBe(true);
-            let logContents = fm.readFile(this.syncDestPath + '/logs/timewarnings');
+            expect(fm.isFile(this.tmpLogsPath + '/timewarnings')).toBe(true);
+            let logContents = fm.readFile(this.tmpLogsPath + '/timewarnings');
 
             expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION')).toBe(0);
             expect(StringUtils.countStringOccurences(logContents, 'E_WARNING Too much memory used by script:')).toBe(1);
@@ -425,14 +426,14 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'Call to undefined function nonexistantfunction()')).toBeGreaterThanOrEqual(1);
             
             // Verify generated log
-            expect(fm.isFile(this.syncDestPath + '/logs/services_log.txt')).toBe(true);
-            let logContents = fm.readFile(this.syncDestPath + '/logs/services_log.txt');
+            expect(fm.isFile(this.tmpLogsPath + '/services_log.txt')).toBe(true);
+            let logContents = fm.readFile(this.tmpLogsPath + '/services_log.txt');
             expect(StringUtils.countStringOccurences(logContents, 'FATAL EXCEPTION Call to undefined function nonexistantfunction()')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'E_NOTICE Undefined variable: x')).toBe(1);
             expect(StringUtils.countStringOccurences(logContents, 'line 3')).toBe(2);
             
             // Make sure the log file is not accessible via URL
-            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/services_log.txt"]);
+            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/tmp-testlogs/services_log.txt"]);
         });
     });
 });

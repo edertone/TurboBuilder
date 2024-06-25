@@ -5,7 +5,7 @@
  */
 
 
-const buildModule = require('./build');
+const appsModule = require('./apps');
 const setupModule = require('./setup');
 const { StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
@@ -68,17 +68,17 @@ let calculateSourcePath = function () {
  * Execute the project sync via file system
  */
 let syncFileSystem = function () {
-    
+
     let sourcePath = calculateSourcePath();
     
     if(!fm.isDirectory(sourcePath)){
         
-        cm.error('Source path does not exist: ' + sourcePath);
+        cm.error('Source filesystem sync path does not exist: ' + sourcePath);
     }
-    
+        
     if(!fm.isDirectory(global.setup.sync.destPath)){
         
-        cm.error('Destination path does not exist: ' + global.setup.sync.destPath);
+        cm.error('Destination filesystem sync path does not exist: ' + global.setup.sync.destPath);
     }
     
     // TODO - apply excludes option
@@ -111,7 +111,7 @@ let syncFileSystem = function () {
  */
 let syncFtpSftp = function () {
     
-    buildModule.checkWinSCPAvailable();
+    appsModule.checkWinSCPAvailable();
     
     let winscpExec = 'winscp /command';
     let sourcePath = calculateSourcePath();
@@ -161,7 +161,7 @@ let validateEnviromentVars = function () {
  */
 exports.deleteRemoteSyncFolder = function (setup) {
     
-    buildModule.checkWinSCPAvailable();
+    appsModule.checkWinSCPAvailable();
     
     let winscpExec = 'winscp /command';
     

@@ -19,7 +19,7 @@ describe('view-url-parameters', function() {
         this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
         
         // Define the path to the views root so we can copy all our test views there
-        this.syncDestPath = tsm.getSyncDestPath();
+        this.syncDestPath = tsm.getPathToPublishFolder();
         this.testResourcesPath = './src/test/resources';
         this.syncDestViewsPath = this.syncDestPath + '/site/view/views';
         

@@ -8,10 +8,10 @@
     },
     "devDependencies": {
         "jasmine": "^5.1.0",
-        "selenium-webdriver": "^4.21.0",
+        "selenium-webdriver": "^4.22.0",
         "turbocommons-ts": "^3.11.0",
         "turbodepot-node": "^7.1.0",
-        "turbotesting-node": "^9.2.1"
+        "turbotesting-node": "^10.2.0"
     },
     "author": "",
     "license": ""

@@ -116,29 +116,7 @@ global.runtimePaths = {
 
 
 /**
- * This is a function that performs a hardblock of the current execution till the provided function returns a true value or
- * the provided number of miliseconds is complete
- *
- * TODO - move it to some global lib or similar
- */
-global.blockingSleepTill = function (verificationFun, maxTimeMs, timeExceededErrorMessage) {
-
-    let currentTime = Date.now();
-    
-    while(Date.now() < currentTime + maxTimeMs){
-        
-        if(verificationFun()){
-        
-            return;
-        }
-    }
-    
-    cm.error(timeExceededErrorMessage);
-}
-
-
-/**
- * Generates a list of absolute paths for files on the specified folder which full path that matches any of the patterns
+ * Generates a list of absolute paths for files on the specified folder which full path matches any of the patterns
  * specified on the includeList parameter.
  *
  * TODO - Improve docs and move it to some global lib or similar

@@ -7,7 +7,9 @@
         "description": "",
         "builderVersion": ""
     },
-    
+    "containers": {
+        "docker":[]
+    },
     "validate": {
         "runBeforeBuild": true,
         "projectStructure" : {                    

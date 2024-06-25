@@ -13,7 +13,7 @@ const { ConsoleManager } = require('turbodepot-node');
 const { execSync } = require('child_process');
 const { StringUtils } = require('turbocommons-ts');
 const validateModule = require('./validate');
-const buildModule = require('./build');
+const appsModule = require('./apps');
 
 
 let fm = new FilesManager();
@@ -77,7 +77,7 @@ exports.getBuilderVersion = function () {
  */
 exports.getProjectRepoSemVer = function (includeGitCommits = false) {
         
-    buildModule.checkGitAvailable();
+    appsModule.checkGitAvailable();
 
     let commitsCount = this.countCommitsSinceLatestTag();
     
@@ -101,7 +101,7 @@ exports.getProjectRepoSemVer = function (includeGitCommits = false) {
  */
 exports.countCommitsSinceLatestTag = function () {
     
-    buildModule.checkGitAvailable();
+    appsModule.checkGitAvailable();
     
     try{
         
@@ -268,6 +268,17 @@ exports.customizeSetupTemplateToProjectType = function (type) {
     // Customize the metadata section
     setupContents.metadata.builderVersion = this.getBuilderVersion();
     
+    // Customize the containers section
+    if(type === global.setupBuildTypes.site_php ||
+       type === global.setupBuildTypes.server_php ||
+       type === global.setupBuildTypes.lib_php){
+                
+        setupContents.containers.docker = [{
+            "path": "php7-4_apache2-4_mariadb10-4-dev",
+            "startPolicy": "always"
+        }];
+    }
+    
     // Customize the validate section
     setupContents.validate.filesContent.copyrightHeaders = [];
     
@@ -338,9 +349,9 @@ exports.customizeSetupTemplateToProjectType = function (type) {
             "runAfterBuild": false,
             "type": "fileSystem",
             "excludes": [],
-            "sourcePath": "dist/",
-            "destPath": "C:/turbosite-webserver-symlink/_dev",
-            "remoteUrl": "https://localhost/_dev",
+            "sourcePath": "dist",
+            "destPath": "",
+            "remoteUrl": "https://localhost",
             "deleteDestPathContents": true
         };
     }

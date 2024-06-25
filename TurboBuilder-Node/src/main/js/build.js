@@ -10,8 +10,8 @@ const { TurboSiteTestsManager } = require('turbotesting-node');
 const { FilesManager } = require('turbodepot-node');
 const { ConsoleManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
-const { execSync } = require('child_process');
 const setupModule = require('./setup');
+const appsModule = require('./apps');
 const validateModule = require('./validate');
 const syncModule = require('./sync');
 const sass = require('sass');
@@ -37,7 +37,7 @@ process.on('exit', () => {
  * Execute the build process
  */
 exports.execute = function () {
-    
+
     cm.text("\nbuild start: " + setupModule.detectProjectTypeFromSetup(global.setup));
     
     let buildFullPath = global.runtimePaths.target + fm.dirSep() + setupModule.getProjectName();
@@ -79,7 +79,7 @@ exports.execute = function () {
         
         if(global.setup.build.lib_php){
             
-            this.buildLibPhp(buildFullPath);
+            this.buildLibPhp(setupModule.getProjectName());
         }
         
         if(global.setup.build.lib_js){
@@ -135,52 +135,53 @@ exports.copyMainFiles = function (destPath) {
 /**
  * Execute the site_php build process to the specified dest folder
  */
-exports.buildSitePhp = function (destPath) {
+exports.buildSitePhp = function (targetPath) {
     
     let sep = fm.dirSep();
-    let destMain = destPath + sep + 'main';
-    let destDist = destPath + sep + 'dist-tmp';
-    let destSite = destDist + sep + 'site';
-    let tsm = new TurboSiteTestsManager('./');
-    
-    // Validate turbosite setup exists
+        
+    // Validate turbosite setup existsists
     if(!fm.isFile(global.runtimePaths.root + sep + global.fileNames.turboSiteSetup)){
     
         cm.error(global.fileNames.turboSiteSetup + ' does not exist');
     }
     
+    let tsm = new TurboSiteTestsManager('./');
+    let turboSiteSetup = setupModule.loadSetupFromDisk(global.fileNames.turboSiteSetup, global.isRelease);
+    let baseUrlPath = (StringUtils.isEmpty(turboSiteSetup.baseURL) ? '' : (sep + turboSiteSetup.baseURL));
+    let targetMainPath = targetPath + sep + 'main';
+    let targetTmpPath = targetPath + sep + 'dist-tmp' + baseUrlPath;
+    let targetTmpSitePath = targetTmpPath + sep + 'site';
+                
     // Create the dist and site folders if not exists
-    if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
+    if(!fm.createDirectory(targetTmpPath, true)){
         
-        cm.error('Could not create ' + destDist);
+        cm.error('Could not create ' + targetTmpPath);
     }
     
-    if(!fm.isDirectory(destSite) && !fm.createDirectory(destSite)){
+    if(!fm.createDirectory(targetTmpSitePath)){
         
-        cm.error('Could not create ' + destSite);
+        cm.error('Could not create ' + targetTmpSitePath);
     }
     
-    fm.copyDirectory(destMain, destSite);
+    fm.copyDirectory(targetMainPath, targetTmpSitePath);
     
     // Move htaccess file from site to dist
-    fm.copyFile(destSite + sep + 'htaccess.txt', destDist + sep + '.htaccess');
-    fm.deleteFile(destSite + sep + 'htaccess.txt');
+    fm.copyFile(targetTmpSitePath + sep + 'htaccess.txt', targetTmpPath + sep + '.htaccess');
+    fm.deleteFile(targetTmpSitePath + sep + 'htaccess.txt');
     
     // Read the turbodepot.json file if exists and add its contents to the index php file
     if(fm.isFile(global.runtimePaths.root + sep + 'turbodepot.json')){
     
         let turboDepotSetup = setupModule.loadSetupFromDisk('turbodepot.json', global.isRelease);
         
-        tsm.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', destSite + sep + 'index.php');
+        tsm.saveSetupToIndexPhp(turboDepotSetup, 'turbodepot', targetTmpSitePath + sep + 'index.php');
     }
-    
-    let turboSiteSetup = setupModule.loadSetupFromDisk(global.fileNames.turboSiteSetup, global.isRelease);
     
     // Generate a random hash to avoid browser caches
     turboSiteSetup.cacheHash = StringUtils.generateRandom(15, 15);
     
     // Save the turbosite setup to the index php file
-    tsm.saveSetupToIndexPhp(turboSiteSetup, 'turbosite', destSite + sep + 'index.php');
+    tsm.saveSetupToIndexPhp(turboSiteSetup, 'turbosite', targetTmpSitePath + sep + 'index.php');
 
     // Fail if errors or warnings are configured to be sent to browser
     if(global.isRelease && (turboSiteSetup.errorSetup.exceptionsToBrowser || turboSiteSetup.errorSetup.warningsToBrowser)){
@@ -190,7 +191,7 @@ exports.buildSitePhp = function (destPath) {
     }
     
     // Process all sass scss files to css
-    let scssFiles = fm.findDirectoryItems(destSite, /^.*\.scss$/i, 'absolute', 'files');
+    let scssFiles = fm.findDirectoryItems(targetTmpSitePath, /^.*\.scss$/i, 'absolute', 'files');
     
     for (let scssFile of scssFiles) {
 
@@ -207,7 +208,7 @@ exports.buildSitePhp = function (destPath) {
     }
     
     // Generate all missing favicons
-    generateFavicons(destSite + sep + 'resources' + sep + 'favicons', destSite, turboSiteSetup.cacheHash);
+    generateFavicons(targetTmpSitePath + sep + 'resources' + sep + 'favicons', targetTmpSitePath, turboSiteSetup.cacheHash);
     
     // Generate the array of css files that will be merged into the global css file
     let globalCssFiles = ObjectUtils.clone(turboSiteSetup.globalCss);
@@ -217,21 +218,21 @@ exports.buildSitePhp = function (destPath) {
         globalCssFiles.push(globalComponent + '.css');
     }
     
-    let viewsRoot = destSite + sep + 'view' + sep + 'views';
+    let viewsRoot = targetTmpSitePath + sep + 'view' + sep + 'views';
         
     // Create all the css and js files
     if(fm.isDirectory(viewsRoot)){
         
         // Global css file
-        fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
-                mergeFilesFromArray(globalCssFiles, destSite, true));
+        fm.saveFile(targetTmpSitePath + sep + 'glob-' + turboSiteSetup.cacheHash +'.css',
+                mergeFilesFromArray(globalCssFiles, targetTmpSitePath, true));
         
         // Generate the array of js files that will be merged into the global js file
         let globalJsFiles = [];
         
         for (let globalJsFile of turboSiteSetup.globalJs) {
             
-            if(!fm.isFile(destSite + sep + globalJsFile)){
+            if(!fm.isFile(targetTmpSitePath + sep + globalJsFile)){
             
                 cm.error('Error loading global JS file. Make sure the path on turbosite.json is correct for:\n' + globalJsFile);
             }
@@ -245,8 +246,8 @@ exports.buildSitePhp = function (destPath) {
         }
         
         // Create global Js file
-        fm.saveFile(destSite + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
-                mergeFilesFromArray(globalJsFiles, destSite, true));
+        fm.saveFile(targetTmpSitePath + sep + 'glob-' + turboSiteSetup.cacheHash +'.js',
+                mergeFilesFromArray(globalJsFiles, targetTmpSitePath, true));
         
         // Process all the project views to inject global html code, and create the view js merged and css files
         for (let viewName of fm.getDirectoryList(viewsRoot)) {
@@ -282,7 +283,7 @@ exports.buildSitePhp = function (destPath) {
                             }catch(e){
                     
                                 cm.error('Error loading globalHtml path for <' + globalHtmlItem.element + '>: ' + e.toString() + '\n' +
-                                    destSite + sep + globalHtmlItem.path + '\n');
+                                    targetTmpSitePath + sep + globalHtmlItem.path + '\n');
                             }
                         }                        
                     }
@@ -303,14 +304,14 @@ exports.buildSitePhp = function (destPath) {
                         
                         for (let component of viewComponent.components) {
                             
-                            cssFiles.push(destSite + sep + component + '.css');
+                            cssFiles.push(targetTmpSitePath + sep + component + '.css');
                             
                             if(!fm.isFile(cssFiles[cssFiles.length - 1])){
                                 
                                 cm.error('Missing component file ' + component + '.css');
                             }                    
                             
-                            jsFiles.push(destSite + sep + component + '.js');
+                            jsFiles.push(targetTmpSitePath + sep + component + '.js');
                             
                             if(!fm.isFile(jsFiles[jsFiles.length - 1])){
                                 
@@ -325,7 +326,7 @@ exports.buildSitePhp = function (destPath) {
                 
                 if(!StringUtils.isEmpty(cssContent)){
                     
-                    fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.css', cssContent);
+                    fm.saveFile(targetTmpSitePath + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.css', cssContent);
                 }
                             
                 let jsContent = mergeFilesFromArray(jsFiles, '', true);
@@ -333,21 +334,22 @@ exports.buildSitePhp = function (destPath) {
                 // Minify the js code to check if it is empty or contains only "use strict". In that case it will be ignored 
                 if(!StringUtils.isEmpty(UglifyJS.minify(jsContent).code, ['"use strict"', ';'])){
                     
-                    fm.saveFile(destSite + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
+                    fm.saveFile(targetTmpSitePath + sep + 'view-view-views-' + viewName + '-' + turboSiteSetup.cacheHash +'.js', jsContent);    
                 }
             }
         }
     }
     
     // Mirror the generated tmp site to the previous one
-    let finalDestDist = destPath + sep + 'dist';
+    let targetDistPath = targetPath + sep + 'dist' + baseUrlPath;
     
-    if(!fm.isDirectory(finalDestDist) && !fm.createDirectory(finalDestDist)){
+    if(!fm.isDirectory(targetDistPath, true) &&
+       !fm.createDirectory(targetDistPath, true)){
         
-        cm.error('Could not create ' + finalDestDist);
+        cm.error('Could not create ' + targetDistPath);
     }
     
-    fm.mirrorDirectory(destDist, finalDestDist);
+    fm.mirrorDirectory(targetTmpPath, targetDistPath);
 }
 
 
@@ -482,7 +484,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                     });
                 
                 // Hard block: wait till we are sure the file is created
-                blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + faviconExpectedFile.name);}, 60000,
+                appsModule.blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + faviconExpectedFile.name);}, 60000,
                     'Could not generate favicon : ' + faviconsDest + sep + faviconExpectedFile.name);
                                     
             }else{
@@ -504,7 +506,7 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
                     });
                 
                 // Hard block: wait till we are sure the file is created
-                blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + destFaviconWithHash);}, 60000,
+                appsModule.blockingSleepTill(() => {return fm.isFile(faviconsDest + sep + destFaviconWithHash);}, 60000,
                     'Could not generate favicon: ' + faviconsDest + sep + faviconExpectedFile.name);
             }
         }
@@ -513,15 +515,13 @@ let generateFavicons = function (faviconsSource, faviconsDest, addHash = '') {
 
 
 /**
- * Execute the lib_php build process to the specified dest folder
+ * Execute the lib_php build process to the specified folder (relative to the root of the target path)
+ * And place the resulting files into the targetRelativePath/dist folder
  */
-exports.buildLibPhp = function (destPath) {
+exports.buildLibPhp = function (targetRelativePath) {
     
     let sep = fm.dirSep();
-    let destMain = destPath + sep + 'main';
-    let destDist = destPath + sep + 'dist';
-    
-    this.checkPhpAvailable();
+    let targetAbsoluteDistPath = global.runtimePaths.target + fm.dirSep() + targetRelativePath + sep + 'dist';
     
     // autoloader.php must exist on src/main/php/ for the phar to be correctly generated
     let autoLoaderPath = global.runtimePaths.main + sep + 'php' + sep + 'autoLoader.php';
@@ -537,27 +537,25 @@ exports.buildLibPhp = function (destPath) {
     let phpStubFile = "<?php Phar::mapPhar(); include \\'phar://" + pharName + "/php/autoloader.php\\'; __HALT_COMPILER(); ?>";
     
     // Create the dist folder if not exists
-    if(!fm.isDirectory(destDist) && !fm.createDirectory(destDist)){
+    if(!fm.isDirectory(targetAbsoluteDistPath) && !fm.createDirectory(targetAbsoluteDistPath)){
         
-        cm.error('Could not create ' + destDist);
+        cm.error('Could not create ' + targetAbsoluteDistPath);
     }
     
     // Create the phar using the current project name
-    let phpExecCommand = 'php -d display_errors -r';
-    
-    phpExecCommand += ' "';
-    phpExecCommand += " $p = new Phar('" + destDist + sep + pharName + "', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '" + pharName + "');";
+    let phpExecCommand = `-d display_errors -r "`;
+    phpExecCommand += " $p = new Phar('" + targetRelativePath + "/dist/" + pharName + "', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, '" + pharName + "');";
     phpExecCommand += " $p->startBuffering();";
     phpExecCommand += " $p->setStub('" + phpStubFile + "');";
-    phpExecCommand += " $p->buildFromDirectory('" + destMain + "');";
+    phpExecCommand += " $p->buildFromDirectory('" + targetRelativePath + "/main');";
     phpExecCommand += " $p->compressFiles(Phar::GZ); $p->stopBuffering();";
     phpExecCommand += '"';
     
-    let phpExeResult = terminalManager.exec(phpExecCommand);
+    let phpExeResult = appsModule.callPhpCmd(phpExecCommand);
     
-    if(!fm.isFile(destDist + sep + pharName)){
+    if(!fm.isFile(targetAbsoluteDistPath + sep + pharName)){
         
-        cm.error(destDist + sep + pharName + ` could not be created.\n${phpExeResult.output}\nMake sure phar generation is enabled on the current php installation`);
+        cm.error(targetAbsoluteDistPath + sep + pharName + ` could not be created.\n${phpExeResult.output}\nMake sure phar generation is enabled on the current php installation`);
     }
 }
 
@@ -969,78 +967,6 @@ exports.removeUnusedTargetFiles = function (destPath) {
         }catch(e){
             
             cm.error('Could not delete folder: ' + destDist);
-        }
-    }
-}
-
-
-let isWinSCPAvailable = false;
-
-
-/**
- * Check if the WinSCP cmd executable is available or not on the system
- */
-exports.checkWinSCPAvailable = function () {
-
-    if(!isWinSCPAvailable){
-        
-        try{
-            
-            execSync('winscp /help', {stdio : 'pipe'});
-            
-            isWinSCPAvailable = true;
-            
-        }catch(e){
-
-            cm.error('Could not find winscp cmd executable. Please install winscp and make sure is available globally via cmd (add to PATH enviroment variable if necessary) to perform sync operations');
-        }
-    }
-}
-
-
-let isGitAvailable = false;
-
-
-/**
- * Check if the git cmd executable is available or not on the system
- */
-exports.checkGitAvailable = function () {
-
-    if(!isGitAvailable){
-        
-        try{
-            
-            execSync('git --version', {stdio : 'pipe'});
-            
-            isGitAvailable = true;
-            
-        }catch(e){
-
-            cm.warning('Warning: Could not find GIT cmd executable. Please install git on your system and make sure it is globally accessible via cmd');
-        }
-    }
-}
-
-
-let isPhpAvailable = false;
-
-
-/**
- * Check if the php cmd executable is available or not on the system
- */
-exports.checkPhpAvailable = function () {
-
-    if(!isPhpAvailable){
-        
-        try{
-            
-            execSync('php -v', {stdio : 'pipe'});
-            
-            isPhpAvailable = true;
-            
-        }catch(e){
-
-            cm.error('Could not find Php cmd executable. Please install php and make sure is available globally via cmd (add to enviroment variables).');
         }
     }
 }

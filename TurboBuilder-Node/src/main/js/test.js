@@ -11,8 +11,8 @@ const { ArrayUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { ConsoleManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
-const { spawn } = require('child_process');
 const setupModule = require('./setup');
+const appsModule = require('./apps');
 const releaseModule = require('./release');
 const opn = require('opn');
 
@@ -71,26 +71,6 @@ exports.execute = function () {
 };
 
 
-/**
- * Initiate an http server instance using the project target folder as the root.
- * If a server is already using the currently configured port, the new instance will not start.
- * This is useful cause we will be able to leave the created http server instance open all the time
- * while we perform different test executions
- */
-let launchHttpServer = function (root, port) {
-    
-    // Initialize an http server as an independent terminal instance, with the dest folder as the http root
-    // and with the cache disabled. It will silently fail if a server is already listening the configured port
-    let httpServerCmd = global.installationPaths.httpServerBin;
-    
-    httpServerCmd += ' "' + root + '"';
-    httpServerCmd += ' -c-1';
-    httpServerCmd += ' -p ' + port;
-    
-    spawn(httpServerCmd, [], {shell: true, stdio: 'ignore', detached: true}).unref();    
-   
-    cm.success('started http-server');
-}
 
 
 /**
@@ -138,21 +118,19 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         cm.success(destTestsPath);
         
         // Launch unit tests via php executable
-        let phpExecCommand = 'php';
-        
-        phpExecCommand += ' "' + global.installationPaths.test + sep + 'libs' + sep + 'phpunit-7.5.20.phar"';
+        let phpExecCommand = '"../phpunit-7.5.20.phar"';
         
         if(testSetup.coverageReport){
             
             cm.warning("Warning: Enabling Php coverage report in unit tests is many times slower");
             
-            phpExecCommand += ' --coverage-html "' + coverageReportPath + '"';                           
+            phpExecCommand += ' --coverage-html "' + setupModule.getProjectName() + '/reports/coverage/php"';                           
         }
-                
-        phpExecCommand += ' --configuration "' + phpUnitSetupPath + '"';     
-        phpExecCommand += ' "' + destPath + '/"';
         
-        let testsResult = terminalManager.exec(phpExecCommand, true);
+        phpExecCommand += ' --configuration "' + setupModule.getProjectName() + '/test/php/PhpUnitSetup.xml"';     
+        phpExecCommand += ' "' + relativeBuildPath + '/"';
+        
+        let testsResult = appsModule.callPhpCmd(phpExecCommand, true);
         
         if(testsResult.failed){
     
@@ -213,7 +191,7 @@ let executeQUnitTests = function (testSetup, relativeBuildPaths) {
     let sep = fm.dirSep();
     let srcTestsPath = global.runtimePaths.root + sep + testSetup.testsRoot;
     
-    launchHttpServer(global.runtimePaths.target, testSetup.httpServerPort);
+    appsModule.launchHttpServer(global.runtimePaths.target, testSetup.httpServerPort);
     
     for (let relativeBuildPath of relativeBuildPaths) {
         

@@ -10,6 +10,9 @@ const filesManager = new FilesManager();
 const terminalManager = new TerminalManager('', false);
 
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 45000;
+
+
 /**
  * Helper that defines global methods to use with the turbobuilder tests
  * Helper modules are always executed once before all the tests run
