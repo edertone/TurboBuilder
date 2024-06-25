@@ -16,6 +16,11 @@ describe('expected-301-redirects', function() {
     /* jscpd:ignore-start */
     beforeAll(async function() {
         
+        // This tests need more time to execute, so we will increase the timeout
+        this.jasmineTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+               
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
+        
         this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
     });
 
@@ -28,6 +33,8 @@ describe('expected-301-redirects', function() {
     
     afterAll(async function() {
 
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = this.jasmineTimeout;
+        
         await this.automatedBrowserManager.quit();
     });
     

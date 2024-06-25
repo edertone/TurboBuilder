@@ -1,6 +1,6 @@
 {
   "name": "turbobuilder",
-  "version": "7.0.2",
+  "version": "8.0.0",
   "description": "Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, and many more features",
   "files": [
     "src/main",
@@ -26,23 +26,23 @@
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^7.0.0",
     "imagemin-pngquant": "^9.0.1",
-    "jasmine": "^3.10.0",
+    "jasmine": "^5.1.0",
     "jscpd": "^3.4.5",
     "json-dup-key-validator": "^1.0.3",
     "jsonschema": "^1.4.1",
     "opn": "^6.0.0",
-    "sass": "^1.53.0",
-    "selenium-webdriver": "^4.3.1",
+    "sass": "^1.77.6",
+    "selenium-webdriver": "^4.22.0",
     "sharp": "^0.33.4",
     "turbocommons-ts": "^3.11.0",
-    "turbodepot-node": "^7.1.0",
-    "turbotesting-node": "^10.1.1",
+    "turbodepot-node": "^8.0.0",
+    "turbotesting-node": "^10.2.0",
     "typedoc": "^0.19.2",
     "typescript": "^3.8.3",
     "uglify-es": "3.3.9"
   },
   "devDependencies": {
-    "webpack": "^5.73.0",
+    "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   },
   "keywords": [

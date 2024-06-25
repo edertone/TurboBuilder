@@ -1,13 +1,13 @@
 # TurboBuilder
 
-Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, and many more features
+Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, start / stop docker containers, and many more features
 
 ## Main features
 
 - Runs via node command line
 - Totally configurable with a single turbobuilder.json setup file
 - Build projects with several languages: JavaScript, Typescript, Php, Css, Java
-- Covers the whole project development cycle: Build, deploy, validate, test and generate a production release 
+- Covers the whole project development cycle: Build, deploy, validate, test and generate a production release
 
 ### Build features
 
@@ -21,6 +21,7 @@ Command line tool with a massive amount of features to help with daily developme
 - Improved building process for Angular applications (typescript)
 - Improved building process for Angular libraries (typescript)
 - Automatic version number generation
+- Automatically manages docker containers required by the project
 - Generates a 'target' folder containing all the results of the build
 
 ### Deploy features

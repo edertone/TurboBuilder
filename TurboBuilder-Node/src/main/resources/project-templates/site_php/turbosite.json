@@ -9,7 +9,7 @@
         "warningsToBrowser": true,
         "warningsToLog": "",
         "warningsToMail": "",
-        "tooMuchTimeWarning": 1000,
+        "tooMuchTimeWarning": 3000,
         "tooMuchMemoryWarning": 5000000
     },
     
