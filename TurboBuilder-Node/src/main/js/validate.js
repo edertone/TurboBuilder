@@ -659,15 +659,18 @@ let validateSitePhp = function () {
         validateView(turbositeSetup.singleParameterView, 'Single parameter view');
         
         // Validate that all services defined on the services folder end with "Service.php"
-        let servicesToValidate = fm.findDirectoryItems(global.runtimePaths.main + '/services', /.*\.php$/i, 'relative', 'files', -1);
-        
-        for (let serviceToValidate of servicesToValidate){
-        
-            if(!serviceToValidate.endsWith('Service.php')){
-                                
-                errors.push(StringUtils.formatPath('src/main/services/' + serviceToValidate, '/') + ' must end with "Service.php"');
-            }
-        }  
+        if(fm.isDirectory(global.runtimePaths.main + '/services')){
+            
+            let servicesToValidate = fm.findDirectoryItems(global.runtimePaths.main + '/services', /.*\.php$/i, 'relative', 'files', -1);
+            
+            for (let serviceToValidate of servicesToValidate){
+            
+                if(!serviceToValidate.endsWith('Service.php')){
+                                    
+                    errors.push(StringUtils.formatPath('src/main/services/' + serviceToValidate, '/') + ' must end with "Service.php"');
+                }
+            }  
+        }
             
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }

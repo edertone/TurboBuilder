@@ -160,6 +160,18 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should validate ok a newly generated site_php project with the services folder removed', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
+        
+        expect(fm.deleteDirectory('./src/main/services')).toBeGreaterThan(-1);
+        
+        let buildResult = testsGlobalHelper.execTbCmd('-l');
+        expect(buildResult).toContain("validate start");
+        expect(buildResult).toContain("validate ok");
+    });
+    
+    
     it('should not show the empty logs source property warning on a newly generated site_php project when the value is specifically set on the turbodepot.json file', function() {
         
         testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
