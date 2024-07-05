@@ -146,8 +146,8 @@ describe('cmd-parameter-generate', function(){
         expect(fm.isFile('./extras/help/debug.md')).toBe(true);
         expect(fm.isFile('./extras/help/publish-release.md')).toBe(true);
         expect(fm.isFile('./extras/help/tests.md')).toBe(true);
-        expect(fm.isFile('./extras/help/upgrade-dependencies.md')).toBe(true);
-        expect(fm.readFile('./extras/help/upgrade-dependencies.md')).toContain('Update the library versions at the index.php file');
+        expect(fm.isFile('./extras/help/dependencies-upgrade.md')).toBe(true);
+        expect(fm.readFile('./extras/help/dependencies-upgrade.md')).toContain('Update the library versions at the index.php file');
         expect(fm.isFile('./extras/todo/features.todo')).toBe(true);
         expect(fm.isFile('./extras/todo/tests.todo')).toBe(true);
         expect(fm.isDirectory('./src/main/resources')).toBe(true);
@@ -238,7 +238,7 @@ describe('cmd-parameter-generate', function(){
 
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
 
-        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Warning: Current turbobuilder version");
+        expect(testsGlobalHelper.execTbCmd('-l')).toContain("Warning: Installed turbobuilder version");
     });
     
     

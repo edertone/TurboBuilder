@@ -97,7 +97,7 @@ exports.startDockerProjectContainers = function () {
     // Check if the docker container on setup is a bundled one or a custom one   
     if(!dockerSetupPath.startsWith('./')){
         
-        let bundledTemplatesPath = global.installationPaths.mainResources + '/docker-multi-containers';
+        let bundledTemplatesPath = global.installationPaths.mainResources + '/docker';
         let listOfTemplatesAvailable = fm.getDirectoryList(bundledTemplatesPath);
         
         if(!listOfTemplatesAvailable.includes(dockerSetupPath)){

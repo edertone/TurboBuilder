@@ -114,7 +114,7 @@
                         "description": "Defines the setup for the google drive client",
                         "required": [
                             "accountCredentialsPath",
-                            "apiClientRoot",
+                            "composerVendorPath",
                             "cacheRootPath",
                             "cacheZone",
                             "listsTimeToLive",
@@ -126,9 +126,9 @@
                                 "type": "string",
                                 "description": "A full file system path to the file that contains the service account credentials that will be used to authenticate with the google drive API"
                             },
-                            "apiClientRoot": {
+                            "composerVendorPath": {
                                 "type": "string",
-                                "description": "A full file system path to the root of the google-api-php-client library. See GoogleDriveManager class for more info"
+                                "description": "A full file system path to the root of the composer vendor folder were the google-api-php-client library library is installed. See GoogleDriveManager class for more info"
                             },
                             "cacheRootPath": {
                                 "type": "string",
@@ -272,6 +272,70 @@
                             "prefix": {
                                 "type": "string",
                                 "description": ""
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "mailing": {
+            "type": "object",
+            "description": "Defines the setup for various emailing configurations to use with our application",
+            "required": [
+                "smtp"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "smtp": {
+                    "type": "array",
+                    "description": "Defines the setup for smtp servers that will be used to send emails. You can acquire PHPMailer class instances via DepotManager",
+                    "items": {
+                        "type": "object",
+                        "description": "",
+                        "required": [
+                            "name",
+                            "host",
+                            "port",
+                            "SMTPAuth",
+                            "security",
+                            "address",
+                            "username",
+                            "password"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "A name we want to use as an alias for this smtp connection setup"
+                            },
+                            "host": {
+                                "type": "string",
+                                "description": "The address of the SMTP server to connect"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "description": "The SMTP server port"
+                            },
+                            "SMTPAuth": {
+                                "type": "boolean",
+                                "description": "Enable or disable the SMTP authentication on PHPMailer"
+                            },
+                            "security": {
+                                "type": "string",
+                                "enum": ["TLS"],
+                                "description": "The type of security to apply to this SMTP connection"
+                            },
+                            "address": {
+                                "type": "string",
+                                "description": "The address that will be used as sender email for this SMTP setup"
+                            },
+                            "username": {
+                                "type": "string",
+                                "description": "The user name to login into the SMTP server. Usually the same as the address"
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "The password to connect to the SMTP server"
                             }
                         }
                     }

@@ -81,7 +81,7 @@ exports.validateBuilderVersion = function () {
     
     if(expectedVersion !== setupModule.getBuilderVersion()){
     
-        cm.warning("Warning: Current turbobuilder version (" + setupModule.getBuilderVersion() + ") does not match expected (" + expectedVersion + ")");
+        cm.warning("Warning: Installed turbobuilder version (" + setupModule.getBuilderVersion() + ") does not match expected by project (" + expectedVersion + ")");
     }
 }
 
