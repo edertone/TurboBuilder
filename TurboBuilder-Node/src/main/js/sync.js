@@ -60,6 +60,9 @@ let calculateSourcePath = function () {
         result += setupModule.getProjectName() + fm.dirSep() + global.setup.sync.sourcePath;
     }
     
+    // Append the turbosite baseUrl if it exists (only on site_php and server_php project types)
+    result += fm.dirSep() + setupModule.getTurboSiteBaseUrl();
+            
     return StringUtils.formatPath(result, fm.dirSep());
 }
 

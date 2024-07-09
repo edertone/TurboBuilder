@@ -755,7 +755,7 @@
                         },
                         "sourcePath": {
                             "type": "string",
-                            "description": "A path relative to the target compiled folder root (target/project-name/)"
+                            "description": "A path relative to the target compiled folder root (target/project-name/). usually we will use the dist folder"
                         },
                         "remotePath": {
                             "type": "string",

@@ -219,6 +219,24 @@ exports.loadSetupFromDisk = function (setupFile, isRelease) {
 
 
 /**
+ * Obtain the baseUrl that is defined at the turbosite json file if it exists.
+ * This will take into consideration any overriden or extended values if a turbosite.release.json exists
+ */
+exports.getTurboSiteBaseUrl = function () {
+    
+    // If the project is a site_php or server_php one, we will compute the baseUrl relative path
+    if(global.setup.build.site_php || global.setup.build.server_php){
+            
+        let turboSiteSetup = this.loadSetupFromDisk(global.fileNames.turboSiteSetup, global.isRelease);
+    
+        return (StringUtils.isEmpty(turboSiteSetup.baseURL) ? '' : (fm.dirSep() + turboSiteSetup.baseURL));
+    }
+    
+    return '';
+};   
+
+
+/**
  * Detect the project type that is specified on the provided setup object
  */
 exports.detectProjectTypeFromSetup = function (setup) {

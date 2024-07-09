@@ -146,8 +146,8 @@ exports.buildSitePhp = function (targetPath) {
     }
     
     let tsm = new TurboSiteTestsManager('./');
+    let baseUrlPath = setupModule.getTurboSiteBaseUrl();
     let turboSiteSetup = setupModule.loadSetupFromDisk(global.fileNames.turboSiteSetup, global.isRelease);
-    let baseUrlPath = (StringUtils.isEmpty(turboSiteSetup.baseURL) ? '' : (sep + turboSiteSetup.baseURL));
     let targetMainPath = targetPath + sep + 'main';
     let targetTmpPath = targetPath + sep + 'dist-tmp' + baseUrlPath;
     let targetTmpSitePath = targetTmpPath + sep + 'site';
