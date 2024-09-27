@@ -658,7 +658,7 @@ let validateSitePhp = function () {
         validateView(turbositeSetup.homeView, 'Home view');
         validateView(turbositeSetup.singleParameterView, 'Single parameter view');
         
-        // Validate that all services defined on the services folder end with "Service.php"
+        // Validate that all services defined on the services folder end with "Service.php". Also file and folder name must have no strange characters
         if(fm.isDirectory(global.runtimePaths.main + '/services')){
             
             let servicesToValidate = fm.findDirectoryItems(global.runtimePaths.main + '/services', /.*\.php$/i, 'relative', 'files', -1);
@@ -669,9 +669,16 @@ let validateSitePhp = function () {
                                     
                     errors.push(StringUtils.formatPath('src/main/services/' + serviceToValidate, '/') + ' must end with "Service.php"');
                 }
+                
+                // Only numbers, letters . \ and / are allowed on service name and relative path
+                if(!/^[a-zA-Z0-9./\\]+$/.test(serviceToValidate)){
+                    
+                    errors.push(StringUtils.formatPath('src/main/services/' + serviceToValidate, '/') + ' must have only alphanumeric characters: a-z, A-Z, 0-9');
+                }
             }  
+        
         }
-            
+                    
         // TODO - echo and print_r commands are not allowed on webservices. If found, a warning will be launched on build and an error on release      
     }
     

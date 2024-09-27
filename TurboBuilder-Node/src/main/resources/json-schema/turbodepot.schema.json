@@ -97,15 +97,20 @@
                     },
                     "objects": {
                         "type": "object",
-                        "description": "",
+                        "description": "Defines the default setup for the DabataseObjectsManager class that is accessed through the turbodepot manager class",
                         "required": [
-                            "source"
+                            "source",
+                            "prefix"
                         ],
                         "additionalProperties": false,
                         "properties": {
                             "source": {
                                 "type": "string",
-                                "description": ""
+                                "description": "The name for a source that will be used to store the database objects that are handled by default via the DabataseObjectsManager"
+                            },
+                            "prefix": {
+                                "type": "string",
+                                "description": "The prefix to use with database table names for all the database tables related to database objects. This will help with avoiding table name collisions on a database"
                             }
                         }
                     },

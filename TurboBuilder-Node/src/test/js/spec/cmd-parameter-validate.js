@@ -1598,6 +1598,26 @@ describe('cmd-parameter-validate', function() {
     });
     
     
+    it('should fail validation for a site_php project when there is a service that contains non alphanumeric characters in its name or relative path', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        fm.renameFile('./src/main/services/example/ExampleServiceThatCallsAnotherOneService.php', './src/main/services/example/ExampleServiceThatCallsAnotherOne-Service.php');
+                
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/must have only alphanumeric characters/);
+    });
+    
+    
+    it('should fail validation for a site_php project when there is a service that contains non alphanumeric characters in its name or relative path', function() {
+
+        testsGlobalHelper.generateProjectAndSetup('site_php');
+        
+        fm.renameDirectory('./src/main/services/example', './src/main/services/example-to');
+                
+        expect(testsGlobalHelper.execTbCmd('-l')).toMatch(/must have only alphanumeric characters/);
+    });
+    
+    
     it('should fail validation for a newly generated lib_js project containing duplicate code. Report must be generated if configured, and not if not configured', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('lib_js', null, null);
