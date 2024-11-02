@@ -400,6 +400,7 @@ describe('cmd-parameter-build', function() {
             "versionWildCard":{
                 "enabled": true,       
                 "wildCard": "@@--build-version--@@",
+                "encodeAsBase64": false,
                 "code":{
                     "includes": [".js", ".php", ".json"]
                 },
@@ -460,6 +461,7 @@ describe('cmd-parameter-build', function() {
             "versionWildCard":{
                 "enabled": true,         
                 "wildCard": "",
+                "encodeAsBase64": false,                
                 "code":{
                     "includes": [".js", ".php", ".json"]
                 },
@@ -642,6 +644,7 @@ describe('cmd-parameter-build', function() {
             "versionWildCard":{
                 "enabled": true,         
                 "wildCard": "",
+                "encodeAsBase64": false,
                 "code":{
                     "includes": []
                 },
@@ -697,6 +700,7 @@ describe('cmd-parameter-build', function() {
             "versionWildCard":{
                 "enabled": true,         
                 "wildCard": "",
+                "encodeAsBase64": false,
                 "code":{
                     "includes": []
                 },
@@ -737,6 +741,7 @@ describe('cmd-parameter-build', function() {
             "versionWildCard":{
                 "enabled": true,         
                 "wildCard": "",
+                "encodeAsBase64": false,
                 "code":{
                     "includes": []
                 },
@@ -777,6 +782,7 @@ describe('cmd-parameter-build', function() {
             "versionWildCard":{
                 "enabled": true,         
                 "wildCard": "",
+                "encodeAsBase64": false,
                 "code":{
                     "includes": []
                 },

@@ -15,7 +15,7 @@ The specific contens for each folder are detailed next:
 
 - data
 
-    Contains all the data and files which may be used by our application to persist information
+    Contains all the data and files which may be used by our application to persist or read information
 
 - db
 

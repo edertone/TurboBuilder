@@ -5,7 +5,7 @@
  */
 
 
-const { StringUtils, ObjectUtils } = require('turbocommons-ts');
+const { StringUtils, ObjectUtils, EncodingUtils, ConversionUtils } = require('turbocommons-ts');
 const { TurboSiteTestsManager } = require('turbotesting-node');
 const { FilesManager } = require('turbodepot-node');
 const { ConsoleManager } = require('turbodepot-node');
@@ -804,7 +804,8 @@ exports.applyVersionWildCard = function (destPath) {
 
     let sep = fm.dirSep();
     
-    if(!global.setup.wildCards || !global.setup.wildCards.versionWildCard ||
+    if(!global.setup.wildCards ||
+       !global.setup.wildCards.versionWildCard ||
        !global.setup.wildCards.versionWildCard.enabled){
     
         return;
@@ -812,6 +813,12 @@ exports.applyVersionWildCard = function (destPath) {
 
     let wildCard = global.setup.wildCards.versionWildCard.wildCard;    
     let version = setupModule.getProjectRepoSemVer(false);
+   
+    // Encode the project version to base 64 if configured
+    if(global.setup.wildCards.versionWildCard.encodeAsBase64){
+    
+        version = ConversionUtils.stringToBase64(version);
+    }
     
     if(global.setup.wildCards.versionWildCard.files.includes.length > 0){
         

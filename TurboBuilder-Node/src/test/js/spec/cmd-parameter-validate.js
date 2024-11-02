@@ -666,6 +666,7 @@ describe('cmd-parameter-validate', function() {
         setup.wildCards = {
             "versionWildCard":{             
                 "wildCard": "--build-version--",
+                "encodeAsBase64": false,
                 "code":{
                     "includes": [".js"],
                     "excludes": []
@@ -684,6 +685,7 @@ describe('cmd-parameter-validate', function() {
             "versionWildCard":{
                 "enabled": true,       
                 "wildCard": "--build-version--",
+                "encodeAsBase64": false,
                 "files": {
                     "includes": [],
                     "excludes": []    

@@ -7,7 +7,7 @@
 
 require('./globals');
 
-const { ArrayUtils } = require('turbocommons-ts');
+const { ArrayUtils, StringUtils } = require('turbocommons-ts');
 const { FilesManager } = require('turbodepot-node');
 const { ConsoleManager } = require('turbodepot-node');
 const { TerminalManager } = require('turbodepot-node');
@@ -120,6 +120,11 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         // Launch unit tests via php executable
         let phpExecCommand = '"../phpunit-7.5.20.phar"';
         
+        if(!StringUtils.isEmpty(testSetup.filter)){
+            
+            phpExecCommand += ' --filter ' + testSetup.filter;          
+        }
+        
         if(testSetup.coverageReport){
             
             cm.warning("Warning: Enabling Php coverage report in unit tests is many times slower");
@@ -142,7 +147,13 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         
             // opn is a node module that opens resources in a cross OS manner
             opn(coverageReportPath + sep + 'index.html', {wait: false});
-        }           
+        }  
+
+        // Enabling test filters means a failure will be shown to the user, to prevent projects with missing tests
+        if(!StringUtils.isEmpty(testSetup.filter)){
+            
+            cm.error('TEST FILTERS ENABLED, not all tests have been executed!');         
+        }         
     }
 }
 

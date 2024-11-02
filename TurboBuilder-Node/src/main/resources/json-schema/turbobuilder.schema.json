@@ -92,6 +92,7 @@
                     "required": [
                         "enabled",
                         "wildCard",
+                        "encodeAsBase64",
                         "code",
                         "files"
                     ],
@@ -104,6 +105,10 @@
                         "wildCard": {
                             "type": "string",
                             "description": "A pattern to search inside the files which will be replaced by the project version number"
+                        },
+                        "encodeAsBase64": {
+                            "type": "boolean",
+                            "description": "If set to true, the wildcard will be replaced with the build version BUT encoded as base 64"
                         },
                         "code": {
                            "type": "object",
@@ -798,14 +803,15 @@
                         "anyOf": [
                             {
                                 "type": "object",
-                                "required": ["enabled", "type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests"],
+                                "required": ["enabled", "type", "testsRoot", "coverageReport", "coverageReportOpenAfterTests", "filter"],
                                 "additionalProperties": false, 
                                 "properties": {
                                     "enabled": {"type": "boolean"},
                                     "type": {"type": "string", "enum": ["phpUnit"]},
                                     "testsRoot": {"type": "string"},
                                     "coverageReport": {"type": "boolean"},
-                                    "coverageReportOpenAfterTests": {"type": "boolean"}
+                                    "coverageReportOpenAfterTests": {"type": "boolean"},
+                                    "filter": {"type": "string", "description" : "Used to run a subset of tests, it works the same as the phpunit filter parameter. We can set here the name of a TestClass or TestClass::testName. Important: Tests will always fail if a filter is set, to avoid submiting a project with incomplete tests"}
                                 }
                             },
                             {

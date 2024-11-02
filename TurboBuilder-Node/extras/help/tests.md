@@ -3,7 +3,7 @@
 
 ### Chrome driver must be available on OS to run selenium tests. Download and help available here:
 
-https://sites.google.com/a/chromium.org/chromedriver/
+https://developer.chrome.com/docs/chromedriver/downloads
 
 To avoid losing the executable, copy it inside program files / chromedriver
 
@@ -13,18 +13,9 @@ via standard windows cmd
 test it by opening a cmd and typing chromedriver -v. It should show its version and other info
 
 
-### A web server with mysql / mariadb database must be available and running
+### Docker runtime must be available
 
-Make sure the web server and database server are running while launching tests!
-
-
-### Create a symlink from C:/turbosite-webserver-symlink to your local http webserver web root folder
-
-Launch the following command:
-
-mklink /J C:\turbosite-webserver-symlink C:\xampp\htdocs
-
-To create a hard symlink to the webserver htdocs folder for example
+Make sure the docker agent is running!
 
 
 ### Disable Google analytics on your local windows machine to avoid data to be sent to your site by the tests
@@ -74,7 +65,8 @@ And modify the "spec_files" section to look only for the spec file or files you 
 
 site_php template contains multiple tests by default to verify that it works as expected. If we only want to launch these, we can use the following method:
 
-    - Copy the file site_php-build-and-test-template.bat from the extras/bats folder into your desktop
-    - Edit the file variables located at the top to fit your OS paths
-    - Launch the bat file
-    - All tests must launch and pass 
+    - Create a temporary folder and run the following commands:
+    - tb -g site_php
+    - npm ci
+    - tb -cbt
+    - All tests must launch and pass
