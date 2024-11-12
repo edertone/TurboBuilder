@@ -71,9 +71,9 @@
                                 "type": "array",
                                 "description": "The list of locales that will be used to perform translations on the item names. Sorted by preference, like: 'en_US', 'es_ES' (see TurboCommons LocalizedFilesManager constructor docs for more info)"
                             },
-                            "locations": {
+                            "localesPaths": {
                                 "type": "array",
-                                "description": "A list (sorted by preference) where each item defines a translations location (see TurboCommons LocalizedFilesManager constructor docs for more info)"
+                                "description": "An array of filesystem paths where translations are stored"
                             },
                             "failIfKeyNotFound": {
                                 "type": "boolean",
