@@ -36,5 +36,5 @@ COPY php.ini "$PHP_INI_DIR/conf.d/php-custom.ini"
 
 # Copy the phpunit library to /var/www
 # Copy the phpdocumentor library to /var/www
-COPY phpunit-7.5.20.phar /var/www/phpunit-7.5.20.phar
+COPY phpunit.phar /var/www/phpunit.phar
 COPY phpDocumentor.phar /var/www/phpDocumentor.phar

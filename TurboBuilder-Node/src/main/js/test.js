@@ -118,7 +118,7 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         cm.success(destTestsPath);
         
         // Launch unit tests via php executable
-        let phpExecCommand = '"../phpunit-7.5.20.phar"';
+        let phpExecCommand = '"../phpunit.phar"';
         
         if(!StringUtils.isEmpty(testSetup.filter)){
             
