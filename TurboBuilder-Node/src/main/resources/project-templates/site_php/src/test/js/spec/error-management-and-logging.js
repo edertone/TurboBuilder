@@ -161,7 +161,9 @@ describe('error-management-and-logging', function() {
         this.defineExceptionsAndWarningsSetup(null, true);
         
         this.injectCodeIntoHomeView('$a=$b;');
-                      
+                    
+        this.automatedBrowserManager.ignoreConsoleErrors.push('favicon.ico - Failed to load resource');
+                  
         await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
@@ -172,6 +174,8 @@ describe('error-management-and-logging', function() {
             "sourceHtmlEndsWith": null,
             "sourceHtmlNotContains": null
         }]);
+        
+        this.automatedBrowserManager.ignoreConsoleErrors.pop();
     });
     
     
@@ -203,6 +207,8 @@ describe('error-management-and-logging', function() {
         
         this.injectCodeIntoHomeView('$a=$b; $a=$c; $a=$d;');
         
+        this.automatedBrowserManager.ignoreConsoleErrors.push('favicon.ico - Failed to load resource');
+                
         await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
             "titleContains": null,
@@ -215,6 +221,8 @@ describe('error-management-and-logging', function() {
             "sourceHtmlEndsWith": null,
             "sourceHtmlNotContains": null
         }]);
+        
+        this.automatedBrowserManager.ignoreConsoleErrors.pop();
     });
     
     
@@ -223,6 +231,8 @@ describe('error-management-and-logging', function() {
         this.defineExceptionsAndWarningsSetup(null, false);
         
         this.injectCodeIntoHomeView('$a=$b;');
+        
+        this.automatedBrowserManager.ignoreConsoleErrors.push('favicon.ico - Failed to load resource');
               
         await this.automatedBrowserManager.assertUrlsLoadOk([{
             "url": "https://$host/$locale",
@@ -235,6 +245,8 @@ describe('error-management-and-logging', function() {
                             "Undefined variable: b"]
         
         }]);
+        
+        this.automatedBrowserManager.ignoreConsoleErrors.pop();
     });
     
     

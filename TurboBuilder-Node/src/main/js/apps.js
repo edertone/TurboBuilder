@@ -19,11 +19,11 @@ const terminalManager = new TerminalManager();
 
 
 /**
- * Stop active docker containers on process exit
+ * Stop active docker containers on process exit if necessary
  */
 process.on('exit', () => {
     
-    if(dockerProjectInstanceName !== ''){
+    if(dockerProjectInstanceName !== '' && stopDockerProjectContainersOnExit){
         
         this.stopDockerProjectContainers();
     }
@@ -41,6 +41,9 @@ let isGitAvailable = false;
 
 
 let isWinSCPAvailable = false;
+
+
+let stopDockerProjectContainersOnExit = true;
 
 
 /**
@@ -74,18 +77,24 @@ exports.checkContainersStartPolicy = function () {
 
 /**
  * Initializes the docker containers for the current project if necessary
+ * 
+ * @param {boolean} showContainerReadme - If true, the contents of the readme file inside the docker containers folder will be output by the console
+ * @param {boolean} stopOnExit - If true, the docker containers will be stopped on process exit
+ * 
+ * @returns {number} - 1 if the docker containers were started successfully, 0 otherwise
  */
-exports.startDockerProjectContainers = function () {
+exports.startDockerProjectContainers = function (showContainerReadme = false, stopOnExit = true) {
 
+    // If the docker containers are already started, nothing to do
     if(dockerProjectInstanceName !== ''){
         
-        return;
+        return 0;
     }
     
     // if no docker container is specified, nothing to do
     if(global.setup.containers.docker.length <= 0){
         
-        return;
+        return 0;
     }
     
     // Get the path value specified for the first docker container
@@ -93,6 +102,7 @@ exports.startDockerProjectContainers = function () {
     let dockerSetupPath = global.setup.containers.docker[0].path;
     
     let result; 
+    let containerPath = '';
      
     // Check if the docker container on setup is a bundled one or a custom one   
     if(!dockerSetupPath.startsWith('./')){
@@ -105,7 +115,7 @@ exports.startDockerProjectContainers = function () {
             cm.error(`invalid Docker container template name '${dockerSetupPath}'. Must be one of the following:\n` + listOfTemplatesAvailable.join('\n'));
         }
             
-        let containerPath = bundledTemplatesPath + '/' + dockerSetupPath;
+        containerPath = bundledTemplatesPath + '/' + dockerSetupPath;
 
         cm.text(`\nDocker start containers (${dockerSetupPath})`);
         
@@ -132,6 +142,7 @@ exports.startDockerProjectContainers = function () {
             
     }else{
         
+        // TODO - this seems to be not working properly
         cm.text(`\nDocker start project custom containers`);
                
         // Mount the docker containers on the project extras directory
@@ -146,19 +157,43 @@ exports.startDockerProjectContainers = function () {
     
     }else{
     
-        cm.success('ok');    
+        // Check if we should output the contents of the readme file inside the docker containers folder
+        let readmeFile = containerPath + fm.dirSep() + 'README.txt';
+                    
+        if(showContainerReadme && fm.isFile(readmeFile)){
+            
+            cm.success('\n' + fm.readFile(readmeFile));            
+        }
+
+        // Set the flag to stop the docker containers on process exit if necessary
+        // This is useful to avoid leaving the containers running after the process is done
+        stopDockerProjectContainersOnExit = stopOnExit;
+        
+        cm.text(`\nDocker containers started successfully`);
+        cm.success('ok');
+        
+        return 1;  
     }
 }
 
 
 /**
  * Stops the docker containers for the current project
+ * 
+ * @param {boolean} force - If true, the docker container specified on the turbobuilder setup file will be stopped regardless of the current state
  */
-exports.stopDockerProjectContainers = function () {
+exports.stopDockerProjectContainers = function (force = false) {
 
     if(global.setup.containers.docker.length < 1 || dockerProjectInstanceName === ''){
+    
+        if(force){
         
-        return;
+            dockerProjectInstanceName = global.setup.containers.docker[0].path;    
+
+        }else{
+            
+            return;
+        }        
     }
         
     cm.text('\nDocker stop containers (please wait)');
@@ -171,6 +206,7 @@ exports.stopDockerProjectContainers = function () {
     
     }else{
     
+        dockerProjectInstanceName = '';
         cm.success('ok');    
     }
 }

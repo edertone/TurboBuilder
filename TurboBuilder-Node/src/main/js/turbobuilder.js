@@ -84,7 +84,8 @@ program
     .option('-t, --test', 'Execute all tests as configured in ' + global.fileNames.setup)
     .option('-r, --release', 'Generate the project production ready version as configured in ' + global.fileNames.setup)
     .option('-s, --sync', 'Mirror project folders to a remote location as configured in ' + global.fileNames.setup)
-    .option('-d, --docker', 'Startup the docker containers that are configured in ' + global.fileNames.setup + ' till a key is pressed to be shut down')
+    .option('-du, --dockerUp', 'Startup the docker containers that are configured in ' + global.fileNames.setup + '. Important to stop them when not needed anymore with -dd')
+    .option('-dd, --dockerDown', 'Stop the docker containers that are configured in ' + global.fileNames.setup + ' and were previously started with -du.')
     .parse(process.argv);
 
 const options = program.opts();
@@ -97,7 +98,8 @@ if(!options.generate &&
    !options.test &&
    !options.release &&
    !options.sync &&
-   !options.docker){
+   !options.dockerUp &&
+   !options.dockerDown){
     
     program.help();
     process.exit(0);
@@ -126,10 +128,21 @@ if (options.generate){
 setupModule.init();    
 
 // Launch docker containers if requested
-if (options.docker){
+if (options.dockerUp){
     
-    appsModule.startDockerProjectContainers();
-    cm.waitForKeyPress();
+    // if no docker container is specified, raise an error
+    if(appsModule.startDockerProjectContainers(true, false) === 0){
+        
+        cm.error(`\nNo docker containers could be started. Check turbobuilder setup`);
+    }
+    
+    process.exit(0);
+}
+
+// Stop docker containers if requested
+if (options.dockerDown){
+    
+    appsModule.stopDockerProjectContainers(true);
     process.exit(0);
 }
 
