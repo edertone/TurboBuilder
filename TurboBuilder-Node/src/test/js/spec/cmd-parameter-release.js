@@ -470,7 +470,8 @@ describe('cmd-parameter-release', function() {
         expect(launchResult).toContain("release start");
         expect(launchResult).toContain("Exceptions or warnings are enabled to be shown on browser. This is a security problem. Please disable them");
         
-        expect(fm.isDirectoryEmpty('./target/' + folderName + '-0.0.0')).toBe(true);
+        expect(fm.isDirectoryEmpty('./target/' + folderName + '-0.0.0/dist')).toBe(true);
+        expect(fm.countDirectoryItems('./target/' + folderName + '-0.0.0')).toBe(1);
         
         tsRelease.errorSetup.exceptionsToBrowser = false;
         tsRelease.errorSetup.warningsToBrowser = false;

@@ -128,14 +128,17 @@ let syncFtpSftp = function () {
     
     cm.text(`\n${global.setup.sync.type.toUpperCase()} connect to ${global.setup.sync.host} with user ${process.env[global.setup.sync.user]}`);
     cm.text(`Remote path: ${global.setup.sync.remotePath}`);
+    cm.text(`Starting ${global.setup.sync.type} SYNC! it may take some time, Please wait...`);
     
     winscpExec += ' "open ' + global.setup.sync.type + '://' + process.env[global.setup.sync.user] + ':' + process.env[global.setup.sync.psw] + '@' + global.setup.sync.host + '/"';
     winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + global.setup.sync.remotePath + '"';
     winscpExec += ' "exit"';
+    
+    let terminalResult = terminalManager.exec(winscpExec, false);
         
-    if(terminalManager.exec(winscpExec, true).failed){
+    if(terminalResult.failed){
         
-        cm.error('Sync errors');
+        cm.error('Sync errors:\n' + terminalResult.output);
     }
 
     cm.success(`sync ok to ${global.setup.sync.type}: ${global.setup.sync.host}`);
@@ -172,14 +175,17 @@ exports.deleteRemoteSyncFolder = function (setup) {
     
     cm.text(`\n${global.setup.sync.type.toUpperCase()} connect to ${global.setup.sync.host} with user ${process.env[global.setup.sync.user]}`);
     cm.text(`Remote path: ${global.setup.sync.remotePath}`);
-    
+    cm.text(`Starting ${global.setup.sync.type} CLEAN! it may take some time, Please wait...`);
+        
     winscpExec += ' "open ' + global.setup.sync.type + '://' + process.env[global.setup.sync.user] + ':' + process.env[global.setup.sync.psw] + '@' + setup.sync.host + '/"';
     winscpExec += ' "rm ' + setup.sync.remotePath + '/*.*"';
     winscpExec += ' "exit"';
     
-    if(terminalManager.exec(winscpExec, true).failed){
+    let terminalResult = terminalManager.exec(winscpExec, false);
+    
+    if(terminalResult.failed){
         
-        cm.error('Remote clean errors');
+        cm.error('Remote clean errors:\n' + terminalResult.output);
     }
 
     cm.success(`cleaned remote ftp: ${global.setup.sync.host} ${setup.sync.remotePath}`);
