@@ -1,0 +1,52 @@
+{
+    # Specify your email for Let's Encrypt notifications
+    email your-email@example.com
+    
+    log {
+        output file /var/log/caddy/caddy.log {
+            roll_size 8MB
+            roll_keep 2
+        }
+    }
+}
+
+
+# Snippet with the common settings for all static sites
+(staticSites) {
+
+    file_server
+    encode gzip zstd
+    
+    @staticFiles {
+        path *.ico *.css *.js *.gif *.webp *.avif *.jpg *.jpeg *.png *.svg *.woff *.woff2
+    }
+    
+    header @staticFiles cache-control max-age=31536000
+}
+
+
+# Snippet with the common settings for all api sites
+(apiSites) {
+
+    encode gzip zstd  
+}
+
+
+# Use this setup for any websites that contain static files (you can create as many as you need)
+# This will serve the files directly from the folder static-sites-content that must be placed
+# in the same directory as the Caddyfile
+some-static-site.com {
+
+    root * /var/www/static-sites/some-static-site.com
+    import staticSites
+}
+
+
+# Use this setup for sites or services that are hosted on a different server or vps.
+# This will reverse proxy the requests to the server with the IP address and port specified.
+# https and ssl certificates will be automatically generated for all domains specified in caddy.
+some-api-site.com {
+
+    reverse_proxy 146.190.56.103:80
+    import apiSites
+}

@@ -1,0 +1,7 @@
+Create folders for each static website you want to host.
+
+The folder name should be the domain name of the website:
+
+    For example, if you want to host a website with the domain name example.com, create a folder named example.com.
+
+Inside the folder, create a file named index.html and all all the other static files you want to host.

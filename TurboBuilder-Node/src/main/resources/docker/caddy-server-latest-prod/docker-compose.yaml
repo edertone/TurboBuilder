@@ -1,0 +1,29 @@
+services:
+    
+  caddy:
+    
+    image: caddy:latest
+    
+    container_name: caddy
+    
+    restart: always
+    
+    volumes:
+          # Mount the local Caddyfile to the container
+          - ./Caddyfile:/etc/caddy/Caddyfile
+          
+          # Mount a volume for persistent data (certificates, etc.)
+          - ./caddy_data:/data   
+          
+          # Mount a volume for persistent config (optional, but good practice)
+          - ./caddy_config:/config 
+          
+          # Mount a local folder that will contain the static sites folders
+          - ./static-sites-content:/var/www/static-sites
+          
+          # Mount a local folder that will contain the logs
+          - ./logs:/var/log/caddy
+          
+    ports:
+      - "80:80"
+      - "443:443"
