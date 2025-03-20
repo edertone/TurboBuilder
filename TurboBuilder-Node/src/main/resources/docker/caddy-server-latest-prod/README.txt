@@ -3,6 +3,8 @@ This is a docker project containing the following elements:
     Caddy server (latest version)
         - A web server with automatic ssl certificates that can also be used as a reverse proxy on production projects.
 
+You only need to modify the Caddyfile to configure the caddy server, and add static sites content to the static-sites-content folder if needed.
+
 
 The container folders are mapped to the following relevant folders:
 
