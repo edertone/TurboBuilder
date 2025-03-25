@@ -24,10 +24,11 @@
 
 
 # Snippet to apply several https headers that will make a site more secure and compliant with modern standards
+# But be careful, some of these headers can break some sites or services
 (securityHeaders) {
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';"
+        Content-Security-Policy "default-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data: *; img-src 'self' https: data:; worker-src 'self' blob:;"
         X-Frame-Options "SAMEORIGIN"
         X-Content-Type-Options "nosniff"
         Referrer-Policy "no-referrer-when-downgrade"
