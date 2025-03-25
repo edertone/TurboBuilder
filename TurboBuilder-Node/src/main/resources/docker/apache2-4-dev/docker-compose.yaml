@@ -7,6 +7,10 @@ services:
     apache:
     
         build: ./apache
+
+        container_name: apache
+
+        restart: ${DOCKER_RESTART_POLICY:-no}
         
         working_dir: /usr/local/apache2/htdocs/
         

@@ -9,6 +9,8 @@ services:
         image: mariadb:10.4
     
         container_name: mariadb
+
+        restart: ${DOCKER_RESTART_POLICY:-no}
     
         environment:
             MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
