@@ -2,7 +2,7 @@ services:
     
   caddy:
     
-    image: caddy:latest
+    build: .
     
     container_name: caddy
     
@@ -16,7 +16,7 @@ services:
           - ./caddy/caddy_data:/data   
           
           # Mount a volume for persistent config (optional, but good practice)
-          - ./caddy/caddy_config:/config 
+          - ./caddy/caddy_config:/config
           
           # Mount a local folder that will contain the static sites folders
           - ./static-sites-content:/var/www/static-sites

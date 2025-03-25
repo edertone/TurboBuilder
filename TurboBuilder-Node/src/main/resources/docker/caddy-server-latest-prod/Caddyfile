@@ -4,6 +4,12 @@
 
 # Global settings for caddy server
 {
+    cache {
+        badger
+        allowed_http_verbs GET HEAD
+        ttl 48h
+    }
+
     log {
         output file /var/log/caddy/caddy.log {
             roll_size 8MB
@@ -79,6 +85,9 @@ some-static-site.com {
 # Make sure to replace some.domain with the domain you want to load
 # Notice that invalid ssl certificates will be ignored
 localhost {
+
+    cache
+
     reverse_proxy https://91.134.85.5:443 {
         header_up Host some.domain
         transport http {
