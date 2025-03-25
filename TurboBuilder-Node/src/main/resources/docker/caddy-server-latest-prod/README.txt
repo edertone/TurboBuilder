@@ -3,9 +3,11 @@ This is a docker project containing the following elements:
     Caddy server (latest version)
         - A web server with automatic ssl certificates that can also be used as a reverse proxy on production projects.
         
-        cache-handler plugin
-            - A plugin that helps with caching the responses of proxied sites. It is configured using the badger storage engine.
-
+        cache-handler plugin (https://github.com/caddyserver/cache-handler)
+            - A plugin that helps with caching the responses of proxied sites. It is configured using the badger storage engine, which
+              works in memory, so it will not persist the cache between server restarts.
+                
+                
 You only need to modify the Caddyfile to configure the caddy server, and add static sites content to the static-sites-content folder if needed.
 
 The container folders are mapped to the following relevant folders:
