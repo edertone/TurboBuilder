@@ -1,7 +1,9 @@
+# GLOBAL SETTINGS AND SNIPPETS -----------------------------------------------------------------------------------------
+# DO NOT EDIT - Some common settings that can be reused in multiple sites
+
+
+# Global settings for caddy server
 {
-    # Specify your email for Let's Encrypt notifications
-    email your-email@example.com
-    
     log {
         output file /var/log/caddy/caddy.log {
             roll_size 8MB
@@ -11,12 +13,8 @@
 }
 
 
-# Snippet with the common settings for all static sites
-(staticSites) {
-
-    file_server
-    encode gzip zstd
-    
+# Snippet to apply cache headers to static files
+(cachedHeaders) {
     @staticFiles {
         path *.ico *.css *.js *.gif *.webp *.avif *.jpg *.jpeg *.png *.svg *.woff *.woff2
     }
@@ -25,20 +23,82 @@
 }
 
 
-# Snippet with the common settings for all api sites
-(apiSites) {
-
-    encode gzip zstd  
+# Snippet to apply several https headers that will make a site more secure and compliant with modern standards
+(securityHeaders) {
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';"
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer-when-downgrade"
+        Permissions-Policy "geolocation=(self), microphone=()"
+    }
 }
 
 
-# Use this setup for any websites that contain static files (you can create as many as you need)
+# Snippet with the common settings for all static sites
+(staticLocalSites) {
+    file_server
+    encode gzip zstd    
+    import cachedHeaders
+    import securityHeaders
+}
+
+
+# Snippet with the common settings for all static sites that are hosted on a remote server
+(staticRemoteSites) {
+    encode gzip zstd    
+    import cachedHeaders
+    import securityHeaders
+}
+
+
+# Snippet with the common settings for all api sites
+(apiSites) {
+    encode gzip zstd  
+    import securityHeaders
+}
+
+
+# CUSTOM SETUP -----------------------------------------------------------------------------------------
+# YOU CAN MODIFY THIS SECTION TO ADD YOUR OWN SITES AND SERVICES
+
+
+# Use this setup for any websites that contain local static files (you can create as many as you need)
 # This will serve the files directly from the folder static-sites-content that must be placed
 # in the same directory as the Caddyfile
+# https and ssl certificates will be automatically generated for all domains specified in caddy.
 some-static-site.com {
-
     root * /var/www/static-sites/some-static-site.com
-    import staticSites
+    import staticLocalSites
+}
+
+
+# Use this setup if you want to load any remote site on your local host
+# Make sure to replace some.domain with the domain you want to load
+# Notice that invalid ssl certificates will be ignored
+localhost {
+    reverse_proxy https://91.134.85.5:443 {
+        header_up Host some.domain
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+    import staticRemoteSites
+}
+
+
+# Use this setup for any websites that contain static files and are hosted on a remote server
+# that must be cached locally to avoid performance issues
+some-cached-remote-static-site.com {
+    reverse_proxy https://91.134.85.5:443 {
+        header_up Host some-cached-remote-static-site.com
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+    import staticRemoteSites
+    # TODO: these type of sites must be locally cached to avoid performance issues
 }
 
 
@@ -46,7 +106,6 @@ some-static-site.com {
 # This will reverse proxy the requests to the server with the IP address and port specified.
 # https and ssl certificates will be automatically generated for all domains specified in caddy.
 some-api-site.com {
-
     reverse_proxy 146.190.56.103:80
     import apiSites
 }
