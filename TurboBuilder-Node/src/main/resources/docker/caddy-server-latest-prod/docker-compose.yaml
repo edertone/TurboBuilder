@@ -18,6 +18,9 @@ services:
           # Mount a volume for persistent config (optional, but good practice)
           - ./caddy/caddy_config:/config
           
+          # Mount a volume to persist local cache data
+          - ./caddy/caddy_cache:/var/cache/caddycache
+          
           # Mount a local folder that will contain the static sites folders
           - ./static-sites-content:/var/www/static-sites
           

@@ -5,9 +5,15 @@
 # Global settings for caddy server
 {
     cache {
-        badger
+        badger {
+            configuration {
+                Dir "/var/cache/caddycache"
+                ValueDir "/var/cache/caddycache"
+            }
+        }
         allowed_http_verbs GET HEAD
         ttl 48h
+        stale 200s
     }
 
     log {
