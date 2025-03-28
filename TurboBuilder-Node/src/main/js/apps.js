@@ -135,7 +135,8 @@ exports.startDockerProjectContainers = function (showContainerReadme = false, st
         // We also assign a project name via -p so we can refer to this multicontainer everywhere via its name instead of its path
         result = terminalManager.exec(`docker compose -f "${containerPath}/docker-compose.yaml" -p ${dockerSetupPath} up -d`, false, {
             'PROJECT_TARGET_FOLDER': global.runtimePaths.target,
-            'PROJECT_DIST_FOLDER': distFolderAbsolutePath + '/dist'           
+            'PROJECT_DIST_FOLDER': distFolderAbsolutePath + '/dist',   
+            'DOCKER_RESTART_POLICY': 'no'   
         });
         
         dockerProjectInstanceName = dockerSetupPath;
@@ -260,8 +261,15 @@ exports.checkGitAvailable = function () {
 exports.callPhpCmd = function (cmdString, liveOutput = false) {
 
     this.startDockerProjectContainers();
+    
+    const result = terminalManager.exec(`docker compose -p ${dockerProjectInstanceName} exec web-app php ${cmdString}`, liveOutput);
        
-    return terminalManager.exec(`docker compose -p ${dockerProjectInstanceName} exec web-app php ${cmdString}`, liveOutput);
+    if(result.failed){
+        
+        throw new Error("Php cmd call failed: " + result.output);
+    }
+    
+    return result;
 }
 
 

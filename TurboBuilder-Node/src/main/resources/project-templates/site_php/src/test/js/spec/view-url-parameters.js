@@ -16,8 +16,6 @@ describe('view-url-parameters', function() {
 
     beforeAll(async function() {
         
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
-        
         // Define the path to the views root so we can copy all our test views there
         this.syncDestPath = tsm.getPathToPublishFolder();
         this.testResourcesPath = './src/test/resources';
@@ -33,11 +31,11 @@ describe('view-url-parameters', function() {
     
     beforeEach(async function() {
         
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
     });
     
     
-    afterAll(async function() {
+    afterEach(async function() {
 
         await this.automatedBrowserManager.quit();
     });

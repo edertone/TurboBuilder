@@ -551,11 +551,18 @@ exports.buildLibPhp = function (targetRelativePath) {
     phpExecCommand += " $p->compressFiles(Phar::GZ); $p->stopBuffering();";
     phpExecCommand += '"';
     
-    let phpExeResult = appsModule.callPhpCmd(phpExecCommand);
-    
-    if(!fm.isFile(targetAbsoluteDistPath + sep + pharName)){
+    try{
+                        
+        let phpExeResult = appsModule.callPhpCmd(phpExecCommand);
         
-        cm.error(targetAbsoluteDistPath + sep + pharName + ` could not be created.\n${phpExeResult.output}\nMake sure phar generation is enabled on the current php installation`);
+        if(!fm.isFile(targetAbsoluteDistPath + sep + pharName)){
+                
+            cm.error(targetAbsoluteDistPath + sep + pharName + ` could not be created.\n${phpExeResult.output}\nMake sure phar generation is enabled on the current php installation`);
+        }
+        
+    }catch(e){
+
+        cm.error('Phar create error: ' + e.message);
     }
 }
 

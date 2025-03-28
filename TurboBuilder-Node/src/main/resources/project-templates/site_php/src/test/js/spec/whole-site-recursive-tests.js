@@ -11,20 +11,14 @@ const { AutomatedBrowserManager } = require('turbotesting-node');
 describe('whole-site-recursive-tests', function() {
 
 
-    beforeAll(async function() {
-        
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
-    });
-
-
     beforeEach(async function() {
         
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
     });
 
-    
-    afterAll(async function() {
-        
+
+    afterEach(async function() {
+
         await this.automatedBrowserManager.quit();
     });
     

@@ -19,8 +19,6 @@ describe('html-full-page-cache-management', function() {
 
     beforeAll(async function() {
         
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
-        
         // Define used paths
         this.syncDestPath = tsm.getPathToPublishFolder();
         this.testResourcesPath = './src/test/resources';
@@ -34,7 +32,7 @@ describe('html-full-page-cache-management', function() {
     
     beforeEach(async function() {
         
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
         
         // Delete the views cache folder if it exists on the published folder
         if(fm.isDirectory(this.viewsCacheFolder)){
@@ -55,10 +53,6 @@ describe('html-full-page-cache-management', function() {
             
             fm.deleteDirectory(this.viewsCacheFolder);
         }
-    });
-    
-    
-    afterAll(async function() {
         
         await this.automatedBrowserManager.quit();
     });

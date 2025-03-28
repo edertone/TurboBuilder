@@ -13,20 +13,13 @@ const fm = new FilesManager();
 
 describe('expected-200-ok', function() {
 
-    /* jscpd:ignore-start */
-    beforeAll(async function() {
-        
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
-    });
-
-
     beforeEach(async function() {
         
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
     });
     
     
-    afterAll(async function() {
+    afterEach(async function() {
 
         await this.automatedBrowserManager.quit();
     });

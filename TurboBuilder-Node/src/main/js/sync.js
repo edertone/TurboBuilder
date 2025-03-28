@@ -130,7 +130,14 @@ let syncFtpSftp = function () {
     cm.text(`Remote path: ${global.setup.sync.remotePath}`);
     cm.text(`Starting ${global.setup.sync.type} SYNC! it may take some time, Please wait...`);
     
-    winscpExec += ' "open ' + global.setup.sync.type + '://' + process.env[global.setup.sync.user] + ':' + process.env[global.setup.sync.psw] + '@' + global.setup.sync.host + '/"';
+    // Encode the password to avoid issues with special characters
+    const encodedPassword = encodeURIComponent(process.env[global.setup.sync.psw]);
+    
+    // Build the connection string
+    const connectionString = `${global.setup.sync.type}://${process.env[global.setup.sync.user]}:${encodedPassword}@${setup.sync.host}/`;
+
+    // Construct the WinSCP commands
+    winscpExec += ` "open ${connectionString}"`; 
     winscpExec += ' "synchronize remote -delete ""' + sourcePath + '"" ' + global.setup.sync.remotePath + '"';
     winscpExec += ' "exit"';
     
@@ -176,10 +183,17 @@ exports.deleteRemoteSyncFolder = function (setup) {
     cm.text(`\n${global.setup.sync.type.toUpperCase()} connect to ${global.setup.sync.host} with user ${process.env[global.setup.sync.user]}`);
     cm.text(`Remote path: ${global.setup.sync.remotePath}`);
     cm.text(`Starting ${global.setup.sync.type} CLEAN! it may take some time, Please wait...`);
-        
-    winscpExec += ' "open ' + global.setup.sync.type + '://' + process.env[global.setup.sync.user] + ':' + process.env[global.setup.sync.psw] + '@' + setup.sync.host + '/"';
-    winscpExec += ' "rm ' + setup.sync.remotePath + '/*.*"';
-    winscpExec += ' "exit"';
+    
+    // Encode the password to avoid issues with special characters
+    const encodedPassword = encodeURIComponent(process.env[global.setup.sync.psw]);
+    
+    // Build the connection string
+    const connectionString = `${global.setup.sync.type}://${process.env[global.setup.sync.user]}:${encodedPassword}@${setup.sync.host}/`;
+
+    // Construct the WinSCP commands
+    winscpExec += ` "open ${connectionString}"`; 
+    winscpExec += ` "rm ${setup.sync.remotePath}/*.*"`;
+    winscpExec += ` "exit"`;
     
     let terminalResult = terminalManager.exec(winscpExec, false);
     

@@ -19,21 +19,20 @@ describe('expected-404-errors', function() {
         
         this.syncDestPath = tsm.getPathToPublishFolder();
         this.syncDestViewFilePath = this.syncDestPath + '/site/view/views';
-        
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
     });
 
 
     beforeEach(async function() {
         
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
     });
 
-    
-    afterAll(async function() {
+
+    afterEach(async function() {
 
         await this.automatedBrowserManager.quit();
     });
+    
     
     /* jscpd:ignore-end */
     it('should correctly execute all the 404 expected error requests', async function() {
@@ -107,9 +106,9 @@ describe('expected-404-errors', function() {
         expect(fm.deleteFile(this.syncDestPath + '/site/libs/test.js')).toBe(true);
         expect(fm.deleteFile(this.syncDestPath + '/site/libs/test.txt')).toBe(true);
         expect(fm.deleteFile(this.syncDestPath + '/site/libs/test.svg')).toBe(true);
-        expect(fm.deleteFile(this.syncDestPath + '/site/libs/somelib/test.js')).toBe(true);
-        expect(fm.deleteFile(this.syncDestPath + '/site/libs/somelib/test.txt')).toBe(true);
-        expect(fm.deleteFile(this.syncDestPath + '/site/libs/somelib/test.svg')).toBe(true); 
-        expect(fm.deleteDirectory(this.syncDestPath + '/site/libs/somelib', true)).toBe(0);        
+        expect(fm.isFile(this.syncDestPath + '/site/libs/somelib/test.js')).toBe(true);
+        expect(fm.isFile(this.syncDestPath + '/site/libs/somelib/test.txt')).toBe(true);
+        expect(fm.isFile(this.syncDestPath + '/site/libs/somelib/test.svg')).toBe(true); 
+        expect(fm.deleteDirectory(this.syncDestPath + '/site/libs/somelib', true)).toBe(3);        
     });
 });

@@ -1,4 +1,4 @@
-This is a docker project containing the following elements:
+This is a DEVELOPMENT docker project containing the following elements:
 
     PHP 7.4.33
     PHPUNIT 12.0.5

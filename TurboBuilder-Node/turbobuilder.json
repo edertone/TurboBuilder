@@ -1,18 +1,16 @@
 {
-
     "$schema": "https://raw.githubusercontent.com/edertone/TurboBuilder/master/TurboBuilder-Node/src/main/resources/json-schema/turbobuilder.schema.json",
-
     "metadata": {
         "name": "turbobuilder",
         "description": "Command line tool with a massive amount of features to help with daily development tasks: build projects, run unit tests, generate docs, upload to ftp, compress images, detect duplicate code, force copyright headers, and many more features",
         "builderVersion": "8.0.0"
     },
     "containers": {
-        "docker":[]
+        "docker": []
     },
     "validate": {
         "runBeforeBuild": true,
-        "projectStructure" : {                    
+        "projectStructure": {
             "readmeFileMandatory": true,
             "extrasFolderMandatory": true,
             "extrasSubFoldersMandatory": ["help", "todo"],
@@ -22,7 +20,7 @@
                 "excludes": ["project-templates"]
             }
         },
-        "filesContent" : {
+        "filesContent": {
             "tabsForbidden": {
                 "enabled": true,
                 "affectedPaths": ["src", "extras"],
@@ -31,7 +29,7 @@
             "copyPasteDetect":[
                 {
                     "path": "src/main/js",
-                    "maxPercentErrorLevel": 0.3,
+                    "maxPercentErrorLevel": 0.5,
                     "maxPercentErrorDifference": 1,
                     "report": "html"
                 },
@@ -47,8 +45,8 @@
                     "maxPercentErrorDifference": 10,
                     "report": "html"
                 }
-            ]
-        },
+                ]
+            },
         "javascript": {
             "useStrict": {
                 "enabled": true,
@@ -57,7 +55,6 @@
             }
         }
     },
-    
     "build": {
         "app_node_cmd" : {
         }

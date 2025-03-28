@@ -20,22 +20,24 @@ describe('expected-301-redirects', function() {
         this.jasmineTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
                
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
-        
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
     });
 
 
     beforeEach(async function() {
         
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
+    });
+    
+    
+    afterEach(async function() {
+
+        await this.automatedBrowserManager.quit();
     });
 
     
     afterAll(async function() {
 
         jasmine.DEFAULT_TIMEOUT_INTERVAL = this.jasmineTimeout;
-        
-        await this.automatedBrowserManager.quit();
     });
     
     /* jscpd:ignore-end */

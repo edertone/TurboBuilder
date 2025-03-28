@@ -35,7 +35,7 @@ describe('cmd-parameter-build', function() {
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         let upResult = testsGlobalHelper.execTbCmd('-du');
-        expect(upResult).toContain("This is a docker project");
+        expect(upResult).toContain("This is a DEVELOPMENT docker project");
         expect(upResult).toContain("Docker containers started successfully");
         
         let downResult = testsGlobalHelper.execTbCmd('-dd');

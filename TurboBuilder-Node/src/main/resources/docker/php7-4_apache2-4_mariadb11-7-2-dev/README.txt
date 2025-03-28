@@ -1,4 +1,4 @@
-This is a docker project containing the following elements:
+This is a DEVELOPMENT docker project containing the following elements:
 
     PHP 7.4.33
     PHPUNIT 7.5.20
@@ -18,3 +18,13 @@ Database is available at:
 
     localhost:3306 (or database:3306 from inside the container)
     user: root (No password required)
+    
+    
+How to debug php code:
+
+
+
+How to profile php code:
+TODO
+You can enable the profiler by placing xdebug_start_profiling and xdebug_stop_profiling methods on your code.
+You can then load the generated cachegrind files from the logs folder with Wincachegrind to analyze the performance.

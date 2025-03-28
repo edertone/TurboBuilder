@@ -9,11 +9,13 @@ services:
         build: ./web-app
         
         container_name: web-app
+
+        restart: ${DOCKER_RESTART_POLICY:-always}
         
         working_dir: /var/www/target
         
         volumes:
-            # Map the host logs to the project target logs folder
+            # Map the container logs to the project target/logs/docker folder
             - ${PROJECT_TARGET_FOLDER}/logs/docker:/var/log
         
             # Our Project target folder must be specified on the PROJECT_TARGET_FOLDER environment variable.
@@ -37,6 +39,8 @@ services:
         image: mariadb:11.7.2
     
         container_name: database
+
+        restart: ${DOCKER_RESTART_POLICY:-always}
     
         environment:
             MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1

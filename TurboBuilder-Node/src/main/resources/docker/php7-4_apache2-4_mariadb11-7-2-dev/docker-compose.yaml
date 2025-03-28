@@ -6,24 +6,30 @@ services:
 
     web-app:
     
-        build: ./web-app
+        build: ./docker/web-app
         
         container_name: web-app
+        
+        restart: ${DOCKER_RESTART_POLICY:-always}
         
         working_dir: /var/www/target
         
         volumes:
-            # Map the host logs to the project target logs folder
-            - ${PROJECT_TARGET_FOLDER}/logs/docker:/var/log
-        
-            # Our Project target folder must be specified on the PROJECT_TARGET_FOLDER environment variable.
-            # It will be mounted on a custom empty folder (/var/www/target) inside the docker container.
-            - ${PROJECT_TARGET_FOLDER}:/var/www/target
             
             # Our Project dist folder must be specified on the PROJECT_DIST_FOLDER environment variable.
             # It will be mounted on the apache root folder (/var/www/html) inside the docker container.
             # This will be used to launch web projects that require a webserver
-            - ${PROJECT_DIST_FOLDER}:/var/www/html
+            - ${PROJECT_DIST_FOLDER:-./data/htdocs}:/var/www/html
+            
+            # Our Project target folder must be specified on the PROJECT_TARGET_FOLDER environment variable.
+            # It will be mounted on a custom empty folder (/var/www/target) inside the docker container.
+            - ${PROJECT_TARGET_FOLDER:-./docker/target}:/var/www/target
+            
+            # Map the storage folder to PROJECT_TARGET_FOLDER/storage folder or simply to ./data/storage if no PROJECT_TARGET_FOLDER is set
+            - ${PROJECT_TARGET_FOLDER:-./data}/storage:/var/www/storage
+                        
+            # Map the container logs to PROJECT_TARGET_FOLDER/storage/logs/docker folder or simply to ./data/storage/logs/docker if no PROJECT_TARGET_FOLDER is set
+            - ${PROJECT_TARGET_FOLDER:-./data}/storage/logs/docker:/var/log
                   
         ports:
             - 80:80
@@ -34,16 +40,30 @@ services:
   
     database:
   
-        image: mariadb:11.7.2
+        build: ./docker/database
     
         container_name: database
+        
+        restart: ${DOCKER_RESTART_POLICY:-always}
     
         environment:
-            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
-
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: ${MARIADB_ALLOW_EMPTY_ROOT_PASSWORD:-1} # Defaults to 1 unless set to false via environment var
+            MARIADB_ROOT_HOST: '%' # Allow connections from any host
+            MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-} # Set root psw from DB_ROOT_PASSWORD environment var or default to 'root'
+            MARIADB_DATABASE: ${MARIADB_DATABASE:-mariadb-dev} # Set default db name from DB_NAME environment var or default to 'mariadb11-7-2-dev'
+            
         ports:
             - 3306:3306
             
+        volumes:
+            
+            # Map the container database data to a dbdata folder in the project target folder
+            # If no environment variable is set, the database data will be stored in ./dbdata
+            - ${PROJECT_TARGET_FOLDER:-./data}/dbdata:/var/lib/mysql
+            
+            # Map the db logs to the project target/logs/docker/mysql folder or simply to ./data/storage/logs/docker/mysql if no PROJECT_TARGET_FOLDER is set
+            - ${PROJECT_TARGET_FOLDER:-./data}/storage/logs/docker/mysql:/var/log/mysql
+                
         networks:
             - custom-network
         

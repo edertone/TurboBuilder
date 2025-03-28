@@ -17,11 +17,9 @@ describe('error-management-and-logging', function() {
 
     beforeAll(async function() {
         
-        this.automatedBrowserManager = testsGlobalHelper.setupBrowser(new AutomatedBrowserManager());
-                
         // Define all required paths
         this.syncDestPath = tsm.getPathToPublishFolder();
-        this.tmpLogsPath = tsm.getTargetPath() + '/logs/tmp-testlogs';
+        this.tmpLogsPath = tsm.getTargetPath() + '/storage/logs/tmp-testlogs';
         this.syncDestIndexPhpPath = this.syncDestPath + '/site/index.php';
         this.syncDestHomeViewFilePath = this.syncDestPath + '/site/view/views/home/home.php';
         this.serviceWithoutParamsPath = this.syncDestPath + '/site/services/example/ExampleServiceWithoutParamsService.php';
@@ -100,7 +98,7 @@ describe('error-management-and-logging', function() {
     
     beforeEach(async function() {
 
-        await testsGlobalHelper.setupBeforeEach(this.automatedBrowserManager);
+        this.automatedBrowserManager = await testsGlobalHelper.setupBeforeEach(new AutomatedBrowserManager());
         
         this.restoreAlteredFilesAndLogs();
         
@@ -110,7 +108,7 @@ describe('error-management-and-logging', function() {
         turbodepotSetup.sources.fileSystem = [
             {
                 "name": "logs_source",
-                "path": '/var/www/target/logs/tmp-testlogs'
+                "path": '/var/www/target/storage/logs/tmp-testlogs'
             }
         ];
         turbodepotSetup.depots[0].logs.source = 'logs_source';
@@ -126,11 +124,6 @@ describe('error-management-and-logging', function() {
     afterEach(async function() {
 
         this.restoreAlteredFilesAndLogs();
-    });
-    
-    
-    afterAll(async function() {
-
         await this.automatedBrowserManager.quit();
     });
     
@@ -384,7 +377,7 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(results.source, 'Too much time used by script:')).toBeGreaterThanOrEqual(1);
 
             // Make sure the log file is not accessible via URL
-            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/tmp-testlogs/timewarnings"]);
+            return this.automatedBrowserManager.assertUrlsFail(["https://$host/storage/logs/tmp-testlogs/timewarnings"]);
         });
     });
     
@@ -445,7 +438,7 @@ describe('error-management-and-logging', function() {
             expect(StringUtils.countStringOccurences(logContents, 'line 3')).toBe(2);
             
             // Make sure the log file is not accessible via URL
-            return this.automatedBrowserManager.assertUrlsFail(["https://$host/logs/tmp-testlogs/services_log.txt"]);
+            return this.automatedBrowserManager.assertUrlsFail(["https://$host/storage/logs/tmp-testlogs/services_log.txt"]);
         });
     });
 });

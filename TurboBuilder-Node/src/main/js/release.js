@@ -56,10 +56,11 @@ exports.execute = function () {
     
     let releaseFullPath = global.runtimePaths.target + fm.dirSep() + this.getReleaseRelativePath();
     
-    // Delete all files inside the release path folder
-    if(fm.isDirectory(releaseFullPath)){
+    // Delete all files inside the release/dist path folder
+    // Notice that we don't delete the dist folder itself to avoid docker volume issues
+    if(fm.isDirectory(releaseFullPath + '/dist')){
 
-        fm.deleteDirectory(releaseFullPath);
+        fm.deleteDirectory(releaseFullPath + '/dist', false);
     }
     
     if(global.setup.validate.runBeforeBuild){
@@ -361,7 +362,7 @@ let minifyPhpFiles = function (targetRelativePath) {
             
         }catch(e){
 
-            cm.error("Php minify failed ");
+            cm.error("Php minify error:\n" + e.message);
         }
         
         let phpFileAbsolutePath = targetAbsolutePath + sep + phpFile;
@@ -436,11 +437,13 @@ let generateCodeDocumentation = function (destPath) {
         phpDocExec += ' -d "' + releaseRelativePath + '/main/php"';
         phpDocExec += ' -t "' + releaseRelativePath + '/docs/php"';
         
-        let phpDocExecResult = appsModule.callPhpCmd(phpDocExec);
-        
-        if(phpDocExecResult.failed){
+        try{
+                    
+            appsModule.callPhpCmd(phpDocExec);
             
-            cm.error('php doc command failed: ' + phpDocExec + '\n' + StringUtils.limitLen(phpDocExecResult.output, 3000));
+        }catch(e){
+    
+            cm.error('Documentation generate error: ' + phpDocExec + '\n' + StringUtils.limitLen(e.message, 3000));
         }
         
         cm.success('php doc ok');

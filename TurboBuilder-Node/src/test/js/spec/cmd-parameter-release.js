@@ -644,7 +644,7 @@ describe('cmd-parameter-release', function() {
         
         testsGlobalHelper.generateSitePhpFilesWithWildcard('$somewildcard');
                        
-        let execResult = testsGlobalHelper.execTbCmd('-r');       
+        let execResult = testsGlobalHelper.execTbCmd('-r');
         
         expect(execResult).toContain("replaced code wildcards on 0 files");
         expect(execResult).toContain("release ok");

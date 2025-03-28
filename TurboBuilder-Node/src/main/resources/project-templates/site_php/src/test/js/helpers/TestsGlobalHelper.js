@@ -34,25 +34,19 @@ global.testsGlobalHelper = {
      * Set this to false if you want to see what is happening on the browser
      */
     isHeadless: true,
-    
-    
-    /**
-     * Globally prepare the tests
-     */
-    setupBrowser: function(automatedBrowserManager) {
-    
-        automatedBrowserManager.initializeChrome('en', '', true, this.isHeadless);
-        automatedBrowserManager.wildcards = tsm.getWildcards();
         
-        return automatedBrowserManager;
-    },
-    
     
     /**
      * Global beforeeach method
      */
-    setupBeforeEach: function(automatedBrowserManager) {
-    
-        return automatedBrowserManager.setBrowserSizeAndPosition(1024, 768, 0, 0);
+    setupBeforeEach: async function(automatedBrowserManager) {
+              
+        await automatedBrowserManager.initializeChrome('en', '', true, this.isHeadless);
+                         
+        automatedBrowserManager.wildcards = tsm.getWildcards();
+        
+        await automatedBrowserManager.setBrowserSizeAndPosition(1024, 768, 0, 0);
+                
+        return automatedBrowserManager;
     },
 };

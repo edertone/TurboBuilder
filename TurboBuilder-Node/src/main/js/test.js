@@ -135,11 +135,13 @@ let executePhpUnitTests = function (testSetup, relativeBuildPaths) {
         phpExecCommand += ' --configuration "' + setupModule.getProjectName() + '/test/php/PhpUnitSetup.xml"';     
         phpExecCommand += ' "' + relativeBuildPath + '/"';
         
-        let testsResult = appsModule.callPhpCmd(phpExecCommand, true);
-        
-        if(testsResult.failed){
-    
-            cm.error('There are PHP unit test failures\n\n' + testsResult.output);
+        try{
+                   
+            appsModule.callPhpCmd(phpExecCommand, true);
+           
+        }catch(e){
+
+            cm.error('There are PHP unit test failures\n\n' + e.message);
         }
         
         // Open the coverage report if necessary
