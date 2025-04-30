@@ -74,20 +74,20 @@ describe('cmd-parameter-build', function() {
     });  
     
     
-    it('should correctly start the basic apache2-4-dev docker container when setting it on the project setup for a created site_php project', function() {
+    it('should correctly start the basic php7-4_apache2-4-dev docker container when setting it on the project setup for a created site_php project', function() {
 
         let setup = testsGlobalHelper.generateProjectAndSetup('site_php', null, []);
         
         setup.containers.docker = [
             {
-                "path": "apache2-4-dev",
+                "path": "php7-4_apache2-4-dev",
                 "startPolicy": "always"
             }];
             
         expect(testsGlobalHelper.saveToSetupFile(setup)).toBe(true);
         
         let upResult = testsGlobalHelper.execTbCmd('-du');
-        expect(upResult).toContain("Docker start containers (apache2-4-dev)");
+        expect(upResult).toContain("Docker start containers (php7-4_apache2-4-dev)");
         expect(upResult).toContain("Docker containers started successfully");
         
         let downResult = testsGlobalHelper.execTbCmd('-dd');

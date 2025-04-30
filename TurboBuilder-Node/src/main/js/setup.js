@@ -292,7 +292,7 @@ exports.customizeSetupTemplateToProjectType = function (type) {
        type === global.setupBuildTypes.lib_php){
                 
         setupContents.containers.docker = [{
-            "path": "php7-4_apache2-4_mariadb11-7-2-dev",
+            "path": "php7-4_apache2-4-dev",
             "startPolicy": "always"
         }];
     }

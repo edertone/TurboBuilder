@@ -1,0 +1,31 @@
+# Build all containers in this file with: docker compose build
+# Launch this file with : docker compose up -d
+# Unload this file with : docker compose down -v
+
+services:
+    
+    database:
+  
+        build: ../php7-4_apache2-4_mariadb11-7-2-dev/docker/database
+    
+        container_name: mariadb11-7-2-dev
+        
+        restart: ${DOCKER_RESTART_POLICY:-always}
+    
+        environment:
+            MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: ${MARIADB_ALLOW_EMPTY_ROOT_PASSWORD:-1} # Defaults to 1 unless set to false via environment var
+            MARIADB_ROOT_HOST: '%' # Allow connections from any host
+            MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-} # Set root psw from DB_ROOT_PASSWORD environment var or default to 'root'
+            MARIADB_DATABASE: ${MARIADB_DATABASE:-mariadb-dev} # Set default db name from DB_NAME environment var or default to 'mariadb11-7-2-dev'
+            
+        ports:
+            - 3306:3306
+            
+        volumes:
+            
+            # Map the container database data to a dbdata folder in the project target folder
+            # If no environment variable is set, the database data will be stored in ./dbdata
+            - ${PROJECT_TARGET_FOLDER:-./data}/dbdata:/var/lib/mysql
+            
+            # Map the db logs to the project target/logs/docker/mysql folder or simply to ./data/storage/logs/docker/mysql if no PROJECT_TARGET_FOLDER is set
+            - ${PROJECT_TARGET_FOLDER:-./data}/storage/logs/docker/mysql:/var/log/mysql

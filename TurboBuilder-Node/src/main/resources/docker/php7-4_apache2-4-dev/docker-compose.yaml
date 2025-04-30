@@ -1,0 +1,36 @@
+# Build all containers in this file with: docker compose build
+# Launch this file with : docker compose up -d
+# Unload this file with : docker compose down -v
+
+services:
+
+    web-app:
+    
+        build: ../php7-4_apache2-4_mariadb11-7-2-dev/docker/web-app
+        
+        container_name: php7-4_apache2-4-dev
+        
+        restart: ${DOCKER_RESTART_POLICY:-always}
+        
+        working_dir: /var/www/target
+        
+        volumes:
+            
+            # Our Project dist folder must be specified on the PROJECT_DIST_FOLDER environment variable.
+            # It will be mounted on the apache root folder (/var/www/html) inside the docker container.
+            # This will be used to launch web projects that require a webserver
+            - ${PROJECT_DIST_FOLDER:-./data/htdocs}:/var/www/html
+            
+            # Our Project target folder must be specified on the PROJECT_TARGET_FOLDER environment variable.
+            # It will be mounted on a custom empty folder (/var/www/target) inside the docker container.
+            - ${PROJECT_TARGET_FOLDER:-./docker/target}:/var/www/target
+            
+            # Map the storage folder to PROJECT_TARGET_FOLDER/storage folder or simply to ./data/storage if no PROJECT_TARGET_FOLDER is set
+            - ${PROJECT_TARGET_FOLDER:-./data}/storage:/var/www/storage
+                        
+            # Map the container logs to PROJECT_TARGET_FOLDER/storage/logs/docker folder or simply to ./data/storage/logs/docker if no PROJECT_TARGET_FOLDER is set
+            - ${PROJECT_TARGET_FOLDER:-./data}/storage/logs/docker:/var/log
+                  
+        ports:
+            - 80:80
+            - 443:443
